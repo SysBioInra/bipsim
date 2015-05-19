@@ -1,0 +1,81 @@
+
+
+/**
+ * @file FILE.cpp
+ * @brief Implementation of the CLASSNAME class.
+ * 
+ * @authors Marc Dinh, Stephan Fischer
+ */
+
+
+// ==================
+//  General Includes
+// ==================
+//
+#include <iostream>
+
+// ==================
+//  Project Includes
+// ==================
+//
+#include "FILE.h"
+
+// ==========================
+//  Constructors/Destructors
+// ==========================
+//
+CLASSNAME::CLASSNAME (void)
+{
+}
+
+// Not needed for this class (use of default copy constructor) !
+// CLASSNAME::CLASSNAME (CLASSNAME& other_CLASSNAME);
+
+CLASSNAME::~CLASSNAME (void)
+{
+}
+
+// ===========================
+//  Public Methods - Commands
+// ===========================
+//
+
+
+// ============================
+//  Public Methods - Accessors
+// ============================
+//
+
+
+// ==========================
+//  Public Methods - Setters
+// ==========================
+//
+
+
+// =======================================
+//  Public Methods - Operator overloading
+// =======================================
+//
+// Not needed for this class (use of default overloading) !
+// CLASSNAME& CLASSNAME::operator= (CLASSNAME& other_CLASSNAME);
+
+// ==================================
+//  Public Methods - Class invariant
+// ==================================
+//
+/**
+ * Checks all the conditions that must remain true troughout the life cycle of
+ * every object.
+ */
+bool CLASSNAME::check_invariant (void)
+{
+  bool result = true;
+  return result;
+}
+
+
+// =================
+//  Private Methods
+// =================
+//
