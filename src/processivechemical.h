@@ -17,7 +17,7 @@
 //  General Includes
 // ==================
 //
-
+#include <list> // std::list
 
 // ==================
 //  Project Includes
@@ -44,9 +44,13 @@ public:
   // ==========================
   //
   /**
-   * @brief Default constructor
+   * @brief Constructor
+   * @param stalled_form 
+   *  BoundChemical that results when the processive chemical encounters
+   *  a termination site (for example).
    */
-  ProcessiveChemical (void);
+  ProcessiveChemical ( BoundChemical& stalled_form )
+    :_stalled_form ( stalled_form ) {}
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -64,22 +68,35 @@ public:
   // ===========================
   //
   /**
-   * @brief Actions to perform when moving beyond sequence limits.
+   * @brief Adds a termination site family that is recognized by the
+   *  chemical.
+   * @param termination_site_family
+   *  Integer identifier for the family recognized by the chemical.
    */
-  void handle_out_of_bounds (void);
-
-
+  void add_recognized_termination_site ( int termination_site_family );
+  
   /**
-   * @brief Actions to perform when moving onto a termination site.
-   */
-  void handle_termination_site (void);
+   * @brief Move focused unit by a step of a given size.
+   * @param step_size Size of step.
+   */  
+  void step_forward ( int step_size );
 
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
+  /**
+   * @brief Checks wether focused unit is on a termination site.
+   * @return True if focused unit is on a termination site.
+   */
+  bool is_terminating ( void );
 
+  /**
+   * @brief Stalled form of processive chemical.
+   * @return BoundChemical that represents the stalled form.
+   */
+  BoundChemical& stalled_form ( void );
 
   // ==========================
   //  Public Methods - Setters
@@ -105,7 +122,7 @@ public:
   /**
    * @return True if class invariant is preserved
    */
-  virtual bool check_invariant (void);
+  virtual bool check_invariant (void) const;
 
 
 private:
@@ -114,8 +131,15 @@ private:
   //  Attributes
   // ============
   //
-  
+  /** @brief The list of termination sites the chemical recognizes. */
+  std::list< int > _termination_site_families;
 
+  /** 
+   * BoundChemical that results when the processive chemical encounters
+   * a termination site (for example).
+   */
+  BoundChemical& _stalled_form;
+  
   // =================
   //  Private Methods
   // =================
@@ -127,8 +151,15 @@ private:
 //  Inline declarations
 // ======================
 //
+inline void ProcessiveChemical::add_recognized_termination_site ( int termination_site_family )
+{
+  _termination_site_families.push_back ( termination_site_family );
+}
 
-
+inline BoundChemical& ProcessiveChemical::stalled_form ( void )
+{
+  return _stalled_form;
+}
 
 
 #endif // PROCESSIVECHEMICAL_H

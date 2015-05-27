@@ -15,12 +15,17 @@ test_SOURCES =    \
 		bindingsitehandler.cpp bindingsitehandler.h \
 		boundchemical.cpp boundchemical.h \
 		chemical.cpp chemical.h \
+		chemicalreaction.cpp chemicalreaction.h \
 		chemicalsequence.cpp chemicalsequence.h \
+		complexation.cpp complexation.h \
+		elongation.cpp elongation.h \
 		identifiedlist.cpp identifiedlist.h \
 		processivechemical.cpp processivechemical.h \
 		randomhandler.cpp randomhandler.h \
 		reaction.cpp reaction.h \
+		site.cpp site.h \
+		sitehandler.cpp sitehandler.h \
 		sitelocation.cpp sitelocation.h \
-		terminationsite.cpp terminationsite.h
+		terminationsitehandler.cpp terminationsitehandler.h
 
 ###############################################################################

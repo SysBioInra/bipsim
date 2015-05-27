@@ -29,7 +29,7 @@ CLASSNAME::CLASSNAME (void)
 }
 
 // Not needed for this class (use of default copy constructor) !
-// CLASSNAME::CLASSNAME (CLASSNAME& other_CLASSNAME);
+// CLASSNAME::CLASSNAME ( const CLASSNAME& other_CLASSNAME );
 
 CLASSNAME::~CLASSNAME (void)
 {
@@ -58,7 +58,7 @@ CLASSNAME::~CLASSNAME (void)
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// CLASSNAME& CLASSNAME::operator= (CLASSNAME& other_CLASSNAME);
+// CLASSNAME& CLASSNAME::operator= ( const CLASSNAME& other_CLASSNAME );
 
 // ==================================
 //  Public Methods - Class invariant
@@ -68,7 +68,7 @@ CLASSNAME::~CLASSNAME (void)
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool CLASSNAME::check_invariant (void)
+bool CLASSNAME::check_invariant (void) const
 {
   bool result = true;
   return result;

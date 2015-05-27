@@ -48,9 +48,19 @@ public:
   // ==========================
   //
   /**
-   * @brief Default constructor
+   * @brief Constructor
+   * @param unit_to_bind
+   *  Chemical element that can potentially bind to a binding site.
+   * @param binding_result
+   *  A bound chemical element that corresponds to the original chemical in its
+   *  bound form.
+   * @param  binding_site_type
+   *  The type (not a specific instance) of binding sites the chemical can bind
+   *  onto.
+   * @sa BindingSite
    */
-  Binding (void);
+  Binding ( Chemical& unit_to_bind, BoundChemical& binding_result, int binding_site_family);
+    
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -87,45 +97,20 @@ public:
    * @brief Returns the forward reaction rate.
    * @return The forward reaction rate.
    */
-  double forward_rate( void );
+  double forward_rate( void ) const;
 
 
   /**
    * @brief Returns the backward reaction rate.
    * @return The backward reaction rate.
    */
-  double backward_rate( void );
+  double backward_rate( void ) const;
 
 
   // ==========================
   //  Public Methods - Setters
   // ==========================
   //
-  /**
-   * @brief Defines the chemical that binds to a specific binding site.
-   * @param unit_to_bind
-   *  Chemical element that can potentially bind to a binding site.
-   */
-  void set_unit_to_bind (Chemical& unit_to_bind);
-
-  /**
-   * @brief Defines the chemical in its bound form.
-   * @param binding_result
-   *  A bound chemical element that corresponds to the original chemical in its
-   *  bound form.
-   */
-  void set_binding_result (BoundChemical& binding_result);
-
-  /**
-   * @brief Defines the type of binding sites that the chemical is able to
-   *  recognize.
-   * @param  binding_site_type
-   *  The type (not a specific instance) of binding sites the chemical can bind
-   *  onto.
-   * @sa BindingSite
-   */
-  void set_binding_site_family ( int binding_site_family );
-
   /**
    * @brief Sets binding site handler used by binding reactions.
    * @param  binding_site_handler
@@ -152,7 +137,7 @@ public:
   /**
    * @return True if class invariant is preserved
    */
-  virtual bool check_invariant (void);
+  virtual bool check_invariant (void) const;
 
 private:
 
@@ -161,13 +146,13 @@ private:
   // ============
   //
   /** @brief Chemical element that can potentially bind to a binding site. */
-  Chemical *_unit_to_bind;
+  Chemical& _unit_to_bind;
   
   /**
    * @brief A bound chemical element that corresponds to the original chemical
    * in its bound form.
    */
-  BoundChemical *_binding_result;
+  BoundChemical& _binding_result;
   
   /**
    * @brief The type (not a specific instance) of binding sites the chemical can
@@ -181,7 +166,7 @@ private:
    *  Unique to all binding instances.
    */
   static BindingSiteHandler *_binding_site_handler;
-  
+
   // =================
   //  Private Methods
   // =================
@@ -193,15 +178,6 @@ private:
 //  Inline Declarations
 // =====================
 //
-inline void Binding::set_unit_to_bind ( Chemical& unit_to_bind )
-{ _unit_to_bind = &unit_to_bind; }
-
-inline void Binding::set_binding_result ( BoundChemical& binding_result )
-{ _binding_result = &binding_result; }
-
-inline void Binding::set_binding_site_family ( int binding_site_family )
-{ _binding_site_family = binding_site_family; }
-
 inline void Binding::set_binding_site_handler ( BindingSiteHandler& binding_site_handler )
 { _binding_site_handler = &binding_site_handler; }
 

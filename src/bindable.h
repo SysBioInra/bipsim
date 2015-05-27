@@ -17,7 +17,8 @@
 //  General Includes
 // ==================
 //
-#include <list>
+#include <list> // std::list
+#include <map> // std::map
 
 // ==================
 //  Project Includes
@@ -69,7 +70,7 @@ class Bindable
    * @param length Size occupied by bound element on sequence.
    * @sa BindingSite
    */
-  virtual void bind_unit ( BoundChemical& chemical_to_bind, int position, int length ) = 0;
+  virtual void bind_unit ( const BoundChemical& chemical_to_bind ) = 0;
 
 
   /**
@@ -78,7 +79,7 @@ class Bindable
    * @param  chemical_to_unbind
    *  The element to unbind.
    */
-  virtual void unbind_unit ( BoundChemical& chemical_to_unbind, int position, int length ) = 0;
+  virtual void unbind_unit ( const BoundChemical& chemical_to_unbind ) = 0;
 
 
   /**
@@ -88,7 +89,7 @@ class Bindable
    * @param new_chemical
    *  The new nature of the bound unit.
    */
-  virtual void replace_bound_unit ( BoundChemical& old_chemical, BoundChemical& new_chemical ) = 0;
+  virtual void replace_bound_unit ( const BoundChemical& old_chemical, const BoundChemical& new_chemical ) = 0;
 
 
   /**
@@ -99,6 +100,15 @@ class Bindable
    *  The number of steps by which it moves.
    */
   virtual void move_bound_unit ( ProcessiveChemical& chemical_to_move, int number_steps ) = 0;
+
+
+  /**
+   * @brief Add termination site on element.
+   * @param termination_site
+   *  Termination site located on bindable element.
+   */
+  void add_termination_site ( const Site& termination_site );
+
 
   // ============================
   //  Public Methods - Accessors
@@ -112,13 +122,29 @@ class Bindable
    * @param length Length of the site.
    * @sa BindingSite
    */
-  virtual int number_available_sites ( int position, int length ) = 0;
+  virtual int number_available_sites ( int position, int length ) const = 0;
  
+  /**
+   * @brief Returns whether the given site can be logically found on the sequence.
+   * @return True if position + length exceeds sequence length or position is negative.
+   * @param position Position of the site.
+   * @param length Length of the site.
+   */
+  bool is_out_of_bounds ( int position, int length ) const;
+    
+  /**
+   * @brief Returns the number of available sites at a given position.
+   * @return True if position + length exceeds sequence length.
+   * @param position Position of the site.
+   * @param length Length of the site.
+   */
+  bool is_termination_site ( int position, const std::list<int>& termination_site_families ) const;
+
   /**
    * @brief Returns length of bindable element.
    * @return Length of bindable element.
    */
-  int length ( void );
+  int length ( void ) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -148,9 +174,9 @@ class Bindable
   /**
    * @return True if class invariant is preserved
    */
-  virtual bool check_invariant (void);
+  virtual bool check_invariant (void) const;
 
-private:
+protected:
 
   // ============
   //  Attributes
@@ -158,6 +184,9 @@ private:
   //
   /** @brief Length of the bindable element. */
   int _length;
+
+  /** @brief Termination sites on the bindable element. */
+  std::map< int, std::list<int> > _termination_sites;
   
   // =================
   //  Private Methods
@@ -170,12 +199,17 @@ private:
 //  Inline declarations
 // ======================
 //
-inline int Bindable::length ( void ) { return _length; }
+inline int Bindable::length ( void ) const { return _length; }
 
 inline void Bindable::set_length ( int length )
 {
   REQUIRE( length > 0 ); /** @pre Length must be positive. */
   _length = length;
+}
+
+inline bool Bindable::is_out_of_bounds ( int position, int length ) const
+{
+  return ( ( position + length > _length ) || ( position < 0 ) );
 }
 
 #endif // BINDABLE_H

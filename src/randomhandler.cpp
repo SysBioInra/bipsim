@@ -28,9 +28,6 @@
 //
 boost::mt19937 RandomHandler::_generator;
 
-RandomHandler::RandomHandler (void)
-{
-}
 
 // Not needed for this class (use of default copy constructor) !
 // RandomHandler::RandomHandler (RandomHandler& other_random_handler);
@@ -104,7 +101,7 @@ int RandomHandler::draw_uniform ( int a, int b )
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool RandomHandler::check_invariant (void)
+bool RandomHandler::check_invariant ( void ) const
 {
   bool result = true;
   return result;

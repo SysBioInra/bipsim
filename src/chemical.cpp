@@ -71,7 +71,7 @@ Chemical::~Chemical (void)
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool Chemical::check_invariant (void)
+bool Chemical::check_invariant (void) const
 {
   bool result = (_number >= 0);  /** _number >= 0 */
   return result;

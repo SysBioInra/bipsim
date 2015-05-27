@@ -24,11 +24,6 @@
 //  Constructors/Destructors
 // ==========================
 //
-IdentifiedList::IdentifiedList (void)
-{
-  _last_attributed_id = 0;
-}
-
 // Not needed for this class (use of default copy constructor) !
 // IdentifiedList::IdentifiedList (IdentifiedList& other_identified_list);
 
@@ -57,31 +52,31 @@ void IdentifiedList::create_id ( std::string element_name )
 //  Public Methods - Accessors
 // ============================
 //
-int IdentifiedList::id ( std::string element_name)
+int IdentifiedList::id ( std::string element_name) const
 {
   // We initialize the return value to "not found"
   int result = IdentifiedList::NOT_FOUND;
 
   // Look for element_name in the map
-  IdMap::iterator it = _identifiers.find ( element_name );
+  IdMap::const_iterator it = _identifiers.find ( element_name );
   if ( it != _identifiers.end() ) { result = it->second; }
 
   return result;
 }
 
-bool IdentifiedList::exists (std::string element_name)
+bool IdentifiedList::exists (std::string element_name) const
 {
   // Look for element_name in the map
   return ( _identifiers.count ( element_name ) > 0 );
 }
 
-std::string IdentifiedList::name (int element_id)
+std::string IdentifiedList::name (int element_id) const
 {
   std::string result = "";
 
   // Look for element_id in the map
   bool found = false;
-  IdMap::iterator it = _identifiers.begin ();
+  IdMap::const_iterator it = _identifiers.begin ();
   while ( ( found == false ) &&  ( it != _identifiers.end() ) )
     {
       if ( it->second == element_id )
@@ -117,7 +112,7 @@ std::string IdentifiedList::name (int element_id)
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool IdentifiedList::check_invariant (void)
+bool IdentifiedList::check_invariant (void) const
 {
   bool result = true;
   return result; /** No invariant. */

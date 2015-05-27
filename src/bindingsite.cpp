@@ -25,13 +25,12 @@
 //  Constructors/Destructors
 // ==========================
 //
-BindingSite::BindingSite (void)
+BindingSite::BindingSite ( int family_id, Bindable& location, int position,
+			   int length, double k_on, double k_off )
+  : Site ( family_id, location, position, length )
+  , _k_on ( k_on )
+  , _k_off ( k_off )
 {
-  _family = 0;
-  _location = 0;
-  _position = 1;
-  _length = 1;
-  _affinity = 0;
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -50,17 +49,6 @@ BindingSite::~BindingSite (void)
 //  Public Methods - Accessors
 // ============================
 //
-int BindingSite::number_available_sites (void)
-{
-  REQUIRE( _location != 0 ); /** @pre Binding site location must be initializied */
-
-  int result = _location->number_available_sites( _position, _length );
-
-  ENSURE( result >= 0 ); /** @post Returned value >= 0 */
-
-  return result;
-}
-
 
 // ==========================
 //  Public Methods - Setters
@@ -82,11 +70,11 @@ int BindingSite::number_available_sites (void)
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool BindingSite::check_invariant (void)
+bool BindingSite::check_invariant (void) const
 {
-  bool result = ( _affinity >= 0); /** Affinity must be nonnegative. */
-  result = result && ( _length > 0 ); /** Length must be positive. */
-  result = result && ( _position > 0 ); /** Position must positive. */
+  bool result = Site::check_invariant()
+    && ( _k_on > 0 ) /** on-rate must be positive. */
+    && ( _k_off > 0 ); /** off-rate must be positive. */
   return result;
 }
 

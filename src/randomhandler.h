@@ -39,10 +39,11 @@ class RandomHandler
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Default constructor
-   */
-  RandomHandler (void);
+  // not needed here
+  // /**
+  //  * @brief Default constructor
+  //  */
+  // RandomHandler (void);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -104,7 +105,7 @@ class RandomHandler
   /**
    * @return True if class invariant is preserved
    */
-  virtual bool check_invariant (void);
+  virtual bool check_invariant (void) const;
 
 
 private:

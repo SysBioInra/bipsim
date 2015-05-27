@@ -31,7 +31,7 @@
 #include "bindable.h"
 
 typedef std::list<SiteLocation> SiteLocationList;
-typedef std::map< BoundChemical*, SiteLocationList > ChemicalMap;
+typedef std::map< const BoundChemical*, SiteLocationList > ChemicalMap;
 
 /**
  * @brief This class stores chemicals that can be described by a sequence.
@@ -86,7 +86,7 @@ public:
    * @param length Size occupied by bound element on sequence.
    * @sa BindingSite
    */
-  void bind_unit ( BoundChemical& chemical_to_bind, int position, int length );
+  void bind_unit ( const BoundChemical& chemical_to_bind );
 
 
   /**
@@ -98,7 +98,7 @@ public:
    * @param length Size occupied by bound element on sequence.
    * @sa BindingSite
    */
-  void unbind_unit ( BoundChemical& chemical_to_unbind, int position, int length );
+  void unbind_unit ( const BoundChemical& chemical_to_unbind );
 
 
   /**
@@ -108,17 +108,17 @@ public:
    * @param new_chemical
    *  The new nature of the bound unit.
    */
-  void replace_bound_unit (BoundChemical& old_chemical, BoundChemical& new_chemical);
+  void replace_bound_unit ( const BoundChemical& old_chemical, const BoundChemical& new_chemical );
 
 
   /**
-   * @brief 
+   * @brief Move a bound unit
    * @param chemical_to_move
    *  The processive element that is moving along the bindable element.
    * @param number_steps
    *  The number of steps by which it moves.
    */
-  void move_bound_unit (ProcessiveChemical& chemical_to_move, int number_steps);
+  void move_bound_unit ( ProcessiveChemical& chemical_to_move, int number_steps );
 
 
   /**
@@ -140,13 +140,12 @@ public:
   //
   /**
    * @brief Returns the number of available sites at a given position.
-   * @return int
-   *  Number of available sites.
+   * @return Number of available sites.
    * @param position Position of the site.
    * @param length Length of the site.
    * @sa BindingSite
    */
-  int number_available_sites ( int position, int length );
+  int number_available_sites ( int position, int length ) const;
 
 
   // ==========================
@@ -178,7 +177,7 @@ public:
   /**
    * @return True if class invariant is preserved
    */
-  virtual bool check_invariant (void);
+  virtual bool check_invariant (void) const;
 
 
 private:
@@ -197,6 +196,13 @@ private:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Remove a specific reference from the bound chemical map.
+   * @param chemical The type of chemical to remove.
+   * @param position Its position along the sequence.
+   * @param length Its length.
+   */
+  void remove_reference_from_map ( const BoundChemical& chemical, int position, int length );
 
 };
 

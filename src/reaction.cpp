@@ -68,7 +68,7 @@ Reaction::~Reaction (void)
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool Reaction::check_invariant (void)
+bool Reaction::check_invariant (void) const
 {
   bool result = true;
   return result;

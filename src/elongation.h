@@ -24,7 +24,8 @@
 //  Project Includes
 // ==================
 //
-#include "forwarddeclarations"
+#include "forwarddeclarations.h"
+#include "reaction.h"
 
 /**
  * @brief Class that represents elongation of a polymerase.
@@ -42,9 +43,17 @@ public:
   // ==========================
   //
   /**
-   * @brief Default constructor
+   * @brief Constructor
+   * @param  processive_chemical 
+   *  Polymerase that does the elongation.
+   * @param  elongated_chemical
+   *  Chemical that is elongated.
+   * @param  step_size
+   *  Number of bases processed at each elongation step.
    */
-  Elongation (void);
+  Elongation ( ProcessiveChemical& processive_chemical, int step_size )
+    : _processive_chemical ( processive_chemical )
+    , _step_size ( step_size ) {} 
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -61,38 +70,39 @@ public:
   //  Public Methods - Commands
   // ===========================
   //
+  /**
+   * @brief Update chemical quantities according to the forward reaction.
+   */
+  void perform_forward( void );
 
+  /**
+   * @brief Update chemical quantities according to the backward reaction.
+   */
+  void perform_backward( void );
+  
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
+  /**
+   * @brief Returns the forward reaction rate.
+   * @return The forward reaction rate.
+   */
+  double forward_rate( void ) const;
+
+
+  /**
+   * @brief Returns the backward reaction rate.
+   * @return The backward reaction rate.
+   */
+  double backward_rate( void ) const;
 
 
   // ==========================
   //  Public Methods - Setters
   // ==========================
   //
-  /**
-   * @brief Defines the chemical element responsible for the elongation.
-   * @param  processive_chemical 
-   *  A reference to the polymerase that does the elongation.
-   */
-  void set_processive_chemical (ProcessiveChemical *processive_chemical);
-
-  /**
-   * @brief Defines the chemical that is synthesized.
-   * @param  elongated_chemical
-   *  A reference to the chemical that is elongated.
-   */
-  void set_elongated_chemical (SequenceChemical *elongated_chemical);
-
-  /**
-   * @brief Defines by how many bases the polymerase advances along the tepmlate
-   *  at every elongation step.
-   * @param  step_size Number of bases processed at each elongation step.
-   */
-  void set_step_size (int step_size);
 
 
   // =======================================
@@ -113,7 +123,7 @@ public:
   /**
    * @return True if class invariant is preserved
    */
-  bool check_invariant (void);
+  bool check_invariant (void) const;
 
 
 private:
@@ -122,7 +132,11 @@ private:
   //  Attributes
   // ============
   //
-  
+  /** @brief Polymerase that does the elongation. */
+  ProcessiveChemical& _processive_chemical;
+
+  /** @brief Number of bases processed at each elongation step. */
+  int _step_size;
 
   // =================
   //  Private Methods

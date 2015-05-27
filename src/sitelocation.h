@@ -40,16 +40,13 @@ class SiteLocation
   // ==========================
   //
   /**
-   * @brief Default constructor.
-   */
-  SiteLocation (void);
-
-  /**
    * @brief Constructor based on position and length.
    * @param position Position of site.
    * @param length Length of site.
    */
-  SiteLocation ( int position, int length );
+  SiteLocation ( int position, int length )
+    : _position ( position )
+    , _length ( length ) {}
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -76,14 +73,14 @@ class SiteLocation
    * @brief Returns position of the site.
    * @return Position of site.
    */
-  int position ( void );
+  int position ( void ) const;
 
 
   /**
    * @brief Returns length of the site.
    * @return Length of site.
    */
-  int length ( void );
+  int length ( void ) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -120,7 +117,7 @@ class SiteLocation
   /**
    * @return True if class invariant is preserved
    */
-  virtual bool check_invariant (void);
+  virtual bool check_invariant (void) const;
 
 
 private:
@@ -146,9 +143,9 @@ private:
 //  Inline declarations
 // ======================
 //
-inline int SiteLocation::length ( void ) { return _length; }
+inline int SiteLocation::length ( void ) const { return _length; }
 
-inline int SiteLocation::position ( void ) { return _position; }
+inline int SiteLocation::position ( void ) const { return _position; }
 
 inline void SiteLocation::set_length ( int length )
 { 

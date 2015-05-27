@@ -80,7 +80,7 @@ public:
   /**
    * @return The number of elements in the current pool.
    */
-  int number (void);
+  int number (void) const;
 
  
   // ==========================
@@ -106,9 +106,9 @@ public:
   /**
    * @return True if class invariant is preserved
    */
-  virtual bool check_invariant (void);
+  virtual bool check_invariant (void) const;
 
-private:
+protected:
 
   // ============
   //  Attributes
@@ -128,7 +128,7 @@ private:
 //  Inline declarations
 // ======================
 //
-inline int Chemical::number (void) { return _number; }
+inline int Chemical::number (void) const { return _number; }
 
 inline void Chemical::add (int quantity)
 {

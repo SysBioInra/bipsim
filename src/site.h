@@ -1,7 +1,7 @@
 
 
 /**
- * @file bindingsite.h
+ * @file site.h
  * @brief Header for the BindingSite class.
  * 
  * @authors Marc Dinh, Stephan Fischer
@@ -10,8 +10,8 @@
 
 // Multiple include protection
 //
-#ifndef BINDINGSITE_H
-#define BINDINGSITE_H
+#ifndef SITE_H
+#define SITE_H
 
 // ==================
 //  General Includes
@@ -25,7 +25,6 @@
 #include "forwarddeclarations.h"
 #include "bindable.h"
 #include "macros.h"
-#include "site.h"
 
 /**
  * @brief Class that represents binding sites on bindable elements.
@@ -34,7 +33,7 @@
  * belongs to a family of binding sites (e.g. Ribosome Binding Site) but also
  * has a specific location along a specific chemical sequence.
  */
-class BindingSite : public Site
+class Site
 {
 public:
 
@@ -51,52 +50,64 @@ public:
    * @param affinity Affinity value.   
    * @sa BindingSiteHandler
    */
-  BindingSite ( int family_id, Bindable& location, int position,
-		int length, double k_on, double k_off );
+  Site ( int family_id, Bindable& location, int position, int length )
+    : _family ( family_id )
+    , _location ( location )
+    , _position ( position )
+    , _length ( length ) {}
 
   // Not needed for this class (use of default copy constructor) ! 
   // /*
   //  * @brief Copy constructor
   //  */
-  // BindingSite (BindingSite& other_binding_site);
+  // Site (Site& other_site);
 
   /**
    * @brief Destructor
    */
-  virtual ~BindingSite (void);
+  virtual ~Site (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Bind a chemical at the binding site.
-   * @param unit_to_bind Chemical to bind.
-   */
-  void bind_unit ( BoundChemical& unit_to_bind ) const;
-
-  /**
-   * @brief Unbind a chemical at the binding site.
-   * @param unit_to_unbind Chemical to unbind.
-   */
-  void unbind_unit ( BoundChemical& unit_to_unbind ) const;
 
   // ============================
   //  Public Methods - Accessors
   // ============================
-  //
+  //  
   /**
-   * @brief k_on accessor.
-   * @return on-rate constant of the binding site.
+   * @brief Family accessor.
+   * @return Integer family identifier.
+   * @sa BindingSiteList
    */
-  double k_on ( void ) const;
+  int family ( void ) const;
+ 
+  /**
+   * @brief Number of available sites in the cell.
+   * @return Number of available sites in the cell.
+   */
+  int number_available_sites ( void ) const;
 
   /**
-   * @brief k_off accessor.
-   * @return off-rate constant of the binding site.
+   * @brief Binding site location.
+   * @return Bindable that carries the binding site.
    */
-  double k_off ( void ) const;
-  
+  Bindable& location ( void ) const;
+
+  /**
+   * @brief Position accessor.
+   * @return Position along the bearer.
+   */
+  int position ( void ) const;
+ 
+  /**
+   * @brief Length accessor.
+   * @return Length of the motif.
+   */
+  int length ( void ) const;
+ 
+
   // ==========================
   //  Public Methods - Setters
   // ==========================
@@ -125,18 +136,23 @@ public:
   virtual bool check_invariant (void) const;
   
 
- private:
+ protected:
 
   // ============
   //  Attributes
   // ============
   //
-  /** @brief on-rate constant of the motif. */
-  double _k_on;
+  /** @brief Family to which the binding site belongs */
+  int _family;
+
+  /** @brief Chemical on which the binding site is located. */
+  Bindable& _location;
+
+  /** @brief Exact position of the binding site along the sequence. */
+  int _position;
   
-  /** @brief off-rate constant of the motif. */
-  double _k_off;
-  
+  /** @brief Length of the binding motif. */
+  int _length;
 
   // =================
   //  Private Methods
@@ -149,15 +165,26 @@ public:
 //  Inline declarations
 // ======================
 //
-inline double BindingSite::k_on ( void ) const
+inline int Site::family ( void ) const
 {
-  return _k_on;
+  return _family;
 }
 
-inline double BindingSite::k_off ( void ) const
+inline int Site::position ( void ) const
 {
-  return _k_off;
+  return _position;
+}
+
+inline int Site::length ( void ) const
+{
+  return _length;
+}
+
+inline Bindable& Site::location ( void ) const
+{
+  return _location;
 }
 
 
-#endif // BINDINGSITE_H
+
+#endif // SITE_H

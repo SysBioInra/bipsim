@@ -17,8 +17,6 @@
 //  General Includes
 // ==================
 //
-#include <list>  // std::list
-#include <map>  // std::map
 #include <string>  //std::string
 
 // ==================
@@ -27,9 +25,7 @@
 //
 #include "forwarddeclarations.h"
 #include "identifiedlist.h"
-
-typedef std::list< BindingSite* > BindingSiteList;
-typedef std::map< int, BindingSiteList > ReferenceMap;
+#include "sitehandler.h"
 
 /**
  * @brief The BindingSiteHandler class manages binding sites.
@@ -37,7 +33,7 @@ typedef std::map< int, BindingSiteList > ReferenceMap;
  * It creates, destroys and classifies binding sites in different families. It
  * also enables other classes to access to these binding sites.
  */
-class BindingSiteHandler
+class BindingSiteHandler : public SiteHandler
 {
 public:
 
@@ -45,15 +41,16 @@ public:
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Default constructor
-   */
-  BindingSiteHandler ( void );
+  // Not needed here !
+  // /*
+  //  * @brief Default constructor
+  //  */
+  // BindingSiteHandler ( void );
    
-  /**
-   * @brief Copy constructor
-   */
-  BindingSiteHandler ( BindingSiteHandler& other_binding_site_handler );
+  // /*
+  //  * @brief Copy constructor
+  //  */
+  // BindingSiteHandler ( BindingSiteHandler& other_binding_site_handler );
 
   /**
    * @brief Destructor
@@ -75,44 +72,32 @@ public:
    *  Position of the binding site on the bearing element.
    * @param length
    *  Length of the binding site.
-   * @param affinity
-   *  Affinity of the binding site.
+   * @param k_on
+   *  on-rate of the binding site.
+   * @param k_off
+   *  off-rate of the binding site.
    */
-  void create_binding_site ( std::string family_name, Bindable& location, int position,
-			     int length, double affinity );
+  virtual void create_site ( std::string family_name, Bindable& location, int position,
+			     int length, double k_on, double k_off );
 
-  /**
-   * @brief Bind element on a random available site belonging to a specific family.
-   * @param family_id Integer identifier of the binding site family.
-   * @param unit_to_bind Element to bind.
-   */
-  void add_unit_on_random_available_site ( int family_id, BoundChemical& unit_to_bind );
-
-  /**
-   * @brief for fun
-   */
-  void print ( void );
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
   /**
-   * @brief Returns id corresponding to family name.
-   * @return Integer identfier of the binding site family
-   *  (BindingSiteHandler::NOT_FOUND if unknown family).
-   * @param  family_name Name of the binding site family.   
+   * @brief Return a random available site belonging to a specific family.
+   * @param family_id Integer identifier of the binding site family.
+   * @return Random available site belonging to a specific family.
    */
-  int retrieve_id ( std::string family_name );
+  const BindingSite& get_random_available_site ( int family_id ) const;
 
   /**
-   * @brief Returns family name corresponding to id.
-   * @return Name of the binding site family.
-   *  (empty if unknown family).
-   * @param family_id Integer identfier of the binding site family
+   * @brief Return total contribution to binding rate for a specific family.
+   * @param family_id Integer identifier of the binding site family.
+   * @return Contribution to binding rate for a specific family.
    */
-  std::string retrieve_name ( int family_id );
-  
+  double get_total_binding_rate_contribution ( int family_id ) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -124,10 +109,10 @@ public:
   //  Public Methods - Operator overloading
   // =======================================
   //
-  /**
-   * @brief Assignment operator
-   */
-  BindingSiteHandler& operator= ( BindingSiteHandler& other_binding_site_handler );
+  // /*
+  //  * @brief Assignment operator
+  //  */
+  // BindingSiteHandler& operator= ( BindingSiteHandler& other_binding_site_handler );
 
 
   // ==================================
@@ -137,13 +122,13 @@ public:
   /**
    * @return True if class invariant is preserved
    */
-  virtual bool check_invariant ( void );
+  virtual bool check_invariant ( void ) const;
 
   // ==================
   //  Public Constants
   // ==================
   //
-  static const int NOT_FOUND = IdentifiedList::NOT_FOUND;
+  static const int NO_SPECIFIC_SITE_ID = -1;
 
 private:
 
@@ -151,18 +136,11 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief The list that contains the family identifiers. */
-  IdentifiedList _family_ids;
-  /** @brief The map that contains the references to binding sites. */
-  ReferenceMap _references;
 
   // =================
   //  Private Methods
   // =================
   //
-  void copy_reference_map ( BindingSiteHandler& other_binding_site_handler );
-  void create_binding_site ( int family_id, BindingSite& binding_site );
-  void clear_binding_sites ( void );
   
 };
 
@@ -170,14 +148,5 @@ private:
 //  Inline declarations
 // ======================
 //
-inline int BindingSiteHandler::retrieve_id ( std::string family_name )
-{
-  return _family_ids.id ( family_name );
-}
-
-inline std::string BindingSiteHandler::retrieve_name ( int family_id )
-{
-  return _family_ids.name ( family_id );
-}
 
 #endif // BINDINGSITEHANDLER_H

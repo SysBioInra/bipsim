@@ -1,8 +1,8 @@
 
 
 /**
- * @file sitelocation.cpp
- * @brief Implementation of the SiteLocation class.
+ * @file site.cpp
+ * @brief Implementation of the Site class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -18,16 +18,17 @@
 //  Project Includes
 // ==================
 //
-#include "sitelocation.h"
+#include "site.h"
+#include "bindable.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
 // Not needed for this class (use of default copy constructor) !
-// SiteLocation::SiteLocation (SiteLocation& other_site_location);
+// Site::Site (Site& other_site);
 
-SiteLocation::~SiteLocation (void)
+Site::~Site (void)
 {
 }
 
@@ -36,11 +37,18 @@ SiteLocation::~SiteLocation (void)
 // ===========================
 //
 
-
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
+int Site::number_available_sites (void) const
+{
+  int result = _location.number_available_sites( _position, _length );
+
+  ENSURE( result >= 0 ); /** @post Returned value >= 0 */
+
+  return result;
+}
 
 
 // ==========================
@@ -48,13 +56,12 @@ SiteLocation::~SiteLocation (void)
 // ==========================
 //
 
-
 // =======================================
 //  Public Methods - Operator overloading
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// SiteLocation& SiteLocation::operator= (SiteLocation& other_site_location);
+// Site& Site::operator= (Site& other_site);
 
 // ==================================
 //  Public Methods - Class invariant
@@ -64,10 +71,10 @@ SiteLocation::~SiteLocation (void)
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool SiteLocation::check_invariant (void) const
+bool Site::check_invariant (void) const
 {
-  bool result = ( _length > 0 ); /** Length must be positive. */
-  result = result && ( _position > 0 ); /** Position must be positive. */
+  bool result = _length > 0 /** Length must be positive. */
+    && ( _position > 0 ); /** Position must positive. */
   return result;
 }
 

@@ -20,15 +20,17 @@ class BindingSiteHandler;
 class BoundChemical;
 class Chemical;
 // class ChemicalList;
-// class ChemicalReaction;
+class ChemicalReaction;
 class ChemicalSequence;
-// class Complexation;
-// class Elongation;
+class Complexation;
+class Elongation;
 class IdentifiedList;
 class ProcessiveChemical;
 class RandomHandler;
 class Reaction;
+class Site;
+class SiteHandler;
 class SiteLocation;
-class TerminationSite;
+class TerminationSiteHandler;
 
 #endif // FORWARDDECLARATIONS_H

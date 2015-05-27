@@ -47,7 +47,7 @@ class CLASSNAME
   // /*
   //  * @brief Copy constructor
   //  */
-  // CLASSNAME (CLASSNAME& other_CLASSNAME);
+  // CLASSNAME ( const CLASSNAME& other_CLASSNAME );
 
   /**
    * @brief Destructor
@@ -80,7 +80,7 @@ class CLASSNAME
   // /*
   //  * @brief Assignment operator
   //  */
-  // CLASSNAME& operator= (CLASSNAME& other_CLASSNAME);
+  // CLASSNAME& operator= ( const CLASSNAME& other_CLASSNAME );
 
   // ==================================
   //  Public Methods - Class invariant
@@ -89,7 +89,7 @@ class CLASSNAME
   /**
    * @return True if class invariant is preserved
    */
-  virtual bool check_invariant (void);
+  virtual bool check_invariant (void) const;
 
 
 private:

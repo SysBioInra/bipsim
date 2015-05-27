@@ -1,8 +1,8 @@
 
 
 /**
- * @file terminationsite.h
- * @brief Header for the TerminationSite class.
+ * @file terminationsitehandler.h
+ * @brief Header for the TerminationSiteHandler class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -10,28 +10,32 @@
 
 // Multiple include protection
 //
-#ifndef TERMINATIONSITE_H
-#define TERMINATIONSITE_H
+#ifndef TERMINATIONSITEHANDLER_H
+#define TERMINATIONSITEHANDLER_H
 
 // ==================
 //  General Includes
 // ==================
 //
-
+#include <list>  // std::list
+#include <map>  // std::map
+#include <string>  //std::string
 
 // ==================
 //  Project Includes
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "identifiedlist.h"
+#include "sitehandler.h"
 
 /**
- * @brief Represents termination sites for processive chemicals.
+ * @brief The BindingSiteHandler class manages binding sites.
  *
- * Usually associated with the ending of synthesis processes. A termination site
- * is simply a motif found on a sequence.
+ * It creates, destroys and classifies binding sites in different families. It
+ * also enables other classes to access to these binding sites.
  */
-class TerminationSite
+class TerminationSiteHandler : public SiteHandler
 {
 public:
 
@@ -40,32 +44,34 @@ public:
   // ==========================
   //
   /**
-   * @brief Default constructor
-   */
-  TerminationSite (void);
-
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // TerminationSite (TerminationSite& other_termination_site);
-
-  /**
    * @brief Destructor
    */
-  virtual ~TerminationSite (void);
+  virtual ~TerminationSiteHandler ( void );
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
+  /**
+   * @brief Create a new site.
+   * @param family_name
+   *  Name of the family the site belongs to (e.g. Ribosome Binding
+   *  Site).
+   * @param location
+   *  Chemical element that bears the binding site.
+   * @param position
+   *  Position of the binding site on the bearing element.
+   * @param length
+   *  Length of the binding site.
+   */
+  virtual void create_site ( std::string family_name, Bindable& location,
+			     int position, int length );
 
 
   // ============================
   //  Public Methods - Accessors
   // ============================
-  //
-
+  //  
 
   // ==========================
   //  Public Methods - Setters
@@ -77,11 +83,6 @@ public:
   //  Public Methods - Operator overloading
   // =======================================
   //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // TerminationSite& operator= (TerminationSite& other_termination_site);
 
   // ==================================
   //  Public Methods - Class invariant
@@ -90,21 +91,25 @@ public:
   /**
    * @return True if class invariant is preserved
    */
-  bool check_invariant (void) const;
+  virtual bool check_invariant ( void ) const;
 
-private:
+  // ==================
+  //  Public Constants
+  // ==================
+  //
+
+protected:
 
   // ============
   //  Attributes
   // ============
   //
-  
 
   // =================
   //  Private Methods
   // =================
   //
-
+  
 };
 
 // ======================
@@ -112,5 +117,4 @@ private:
 // ======================
 //
 
-
-#endif // TERMINATIONSITE_H
+#endif // TERMINATIONSITEHANDLER_H

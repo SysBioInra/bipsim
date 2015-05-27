@@ -42,7 +42,7 @@ public:
   /**
    * @brief Default constructor
    */
-  Reaction( void );
+  Reaction (void);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -53,7 +53,7 @@ public:
   /**
    * @brief Destructor
    */
-  virtual ~Reaction( void );
+  virtual ~Reaction ( void );
 
   // ===========================
   //  Public Methods - Commands
@@ -62,12 +62,12 @@ public:
   /**
    * @brief Update chemical quantities according to the forward reaction.
    */
-  virtual void perform_forward( void ) = 0;
+  virtual void perform_forward ( void ) = 0;
 
   /**
    * @brief Update chemical quantities according to the backward reaction.
    */
-  virtual void perform_backward( void ) = 0;
+  virtual void perform_backward ( void ) = 0;
 
 
   // ============================
@@ -78,14 +78,14 @@ public:
    * @brief Returns the forward reaction rate.
    * @return The forward reaction rate.
    */
-  virtual double forward_rate( void ) = 0;
+  virtual double forward_rate ( void ) const = 0;
 
 
   /**
    * @brief Returns the backward reaction rate.
    * @return The backward reaction rate.
    */
-  virtual double backward_rate( void ) = 0;
+  virtual double backward_rate ( void ) const = 0;
 
 
   // ==========================
@@ -112,16 +112,15 @@ public:
   /**
    * @return True if class invariant is preserved
    */
-  virtual bool check_invariant( void );
+  virtual bool check_invariant( void ) const;
 
 
-private:
+protected:
 
   // ============
   //  Attributes
   // ============
   //
-  
 
   // =================
   //  Private Methods

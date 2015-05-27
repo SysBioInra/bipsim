@@ -22,6 +22,7 @@
 #include "chemicalsequence.h"
 #include "sitelocation.h"
 #include "boundchemical.h"
+#include "processivechemical.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -44,59 +45,75 @@ ChemicalSequence::~ChemicalSequence ( void )
 //  Public Methods - Commands
 // ===========================
 //
-void ChemicalSequence::bind_unit ( BoundChemical& chemical_to_bind, int position, int length )
+void ChemicalSequence::bind_unit ( const BoundChemical& chemical_to_bind )
 {
+  int position = chemical_to_bind.focused_unit_position();
+  int length = chemical_to_bind.focused_unit_length();
   REQUIRE( position > 0 ); /** @pre Position must be positive. */
   REQUIRE( length > 0 ); /** @pre Length must be positive. */
   /** @pre Position and length must be consistent with sequence length. */
-  REQUIRE( position + length <= this->length() );
-
+  int last_position = position + length - 1;
+  REQUIRE( last_position <= this->length() );
+  
   // add the reference and position to the chemicals map
   _chemical_map[ &chemical_to_bind ].push_back ( SiteLocation( position, length ) );
-
+  
   // update occupancy status
-  for ( int i = position; i < position + length; i++ ) { _occupancy_map [ i-1 ] +=1; }
+  for ( int i = position; i <= last_position; i++ ) { _occupancy_map [ i-1 ] +=1; }
 }
 
-void ChemicalSequence::unbind_unit ( BoundChemical& chemical_to_unbind, int position, int length )
+void ChemicalSequence::unbind_unit ( const BoundChemical& chemical_to_unbind )
 {
+  int position = chemical_to_unbind.focused_unit_position();
+  int length = chemical_to_unbind.focused_unit_length();
   REQUIRE( position > 0 ); /** @pre Position must be positive. */
   REQUIRE( length > 0 ); /** @pre Length must be positive. */
   /** @pre Position and length must be consistent with sequence length. */
-  REQUIRE( position + length <= this->length() );
+  int last_position = position + length - 1;
+  REQUIRE( last_position <= this->length() );
 
   // remove the reference and position from the chemicals map
-  SiteLocationList& location_list = _chemical_map[ &chemical_to_unbind ];
-  if ( location_list.size() == 1 ) // there is only one element in the list
-    {
-      // the list will be empty, we can remove it from the map
-      // (no more chemical of the same type is bound to the sequence)
-      _chemical_map.erase( &chemical_to_unbind );
-    }
-  else // at least one chemical of same type will be left on the sequence
-    {
-      // we erase a chemical at the right location
-      SiteLocationList::iterator site_location = location_list.begin();
-      while ( ( site_location->position() != position )
-	      || ( site_location->length() != length ))
-	{ 
-	  site_location++;
-	}
-      location_list.erase ( site_location );
-    }
+  remove_reference_from_map ( chemical_to_unbind, position, length );
 
   // update occupancy status
-  for ( int i = position; i < position + length; i++ ) { _occupancy_map [ i-1 ] -=1; }
+  for ( int i = position; i <= last_position; i++ ) { _occupancy_map [ i-1 ] -=1; }
 }
 
-void ChemicalSequence::replace_bound_unit (BoundChemical& old_chemical, BoundChemical& new_chemical)
+void ChemicalSequence::replace_bound_unit ( const BoundChemical& old_chemical, const BoundChemical& new_chemical )
 {
-  std::cout << "Function " << __func__ << " remains to be defined in " << __FILE__ << __LINE__ << std::endl;
+  int old_position = old_chemical.focused_unit_position();
+  int old_length = old_chemical.focused_unit_length();
+  int old_last_position = old_position + old_length - 1;
+  int new_position = new_chemical.focused_unit_position();
+  int new_length = new_chemical.focused_unit_length();
+  int new_last_position = new_position + new_length - 1;
+
+  // update occupancy status
+  for ( int i = old_position; i <= old_last_position; i++ ) { _occupancy_map [ i-1 ] -=1; }
+  for ( int i = new_position; i <= new_last_position; i++ ) { _occupancy_map [ i-1 ] +=1; }
+
+  // add the reference and position to the chemicals map
+  remove_reference_from_map( old_chemical, old_position, old_length );
+  _chemical_map[ &new_chemical ].push_back ( SiteLocation( new_position, new_length ) );
 }
 
-void ChemicalSequence::move_bound_unit (ProcessiveChemical& chemical_to_move, int number_steps)
+void ChemicalSequence::move_bound_unit ( ProcessiveChemical& chemical_to_move, int number_steps )
 {
-  std::cout << "Function " << __func__ << " remains to be defined in " << __FILE__ << __LINE__ << std::endl;
+  int old_position = chemical_to_move.focused_unit_position();
+  int new_position = old_position + number_steps;
+  int length = chemical_to_move.focused_unit_length();
+  int old_last_position = old_position + length - 1;
+  int new_last_position = new_position + length - 1;
+
+  // update occupancy status
+  for ( int i = old_position; i <= old_last_position; i++ ) { _occupancy_map [ i-1 ] -=1; }
+  for ( int i = new_position; i <= new_last_position; i++ ) { _occupancy_map [ i-1 ] +=1; }
+  
+  // add the reference and position to the chemicals map
+  remove_reference_from_map( chemical_to_move, old_position, length );
+  _chemical_map[ &chemical_to_move ].push_back ( SiteLocation( new_position, length ) );
+
+  // TODO: handle collisions
 }
 
 void ChemicalSequence::elongate_nascent (void)
@@ -126,7 +143,7 @@ void ChemicalSequence::remove ( int quantity )
 //  Public Methods - Accessors
 // ============================
 //
-int ChemicalSequence::number_available_sites ( int position, int length )
+int ChemicalSequence::number_available_sites ( int position, int length ) const
 {
   REQUIRE( position > 0 ); /** @pre Position must be positive. */
   REQUIRE( length > 0 ); /** @pre Length must be positive. */
@@ -148,7 +165,6 @@ int ChemicalSequence::number_available_sites ( int position, int length )
   ENSURE( result <= this->number() );
   return result;
 }
-
 
 // ==========================
 //  Public Methods - Setters
@@ -178,7 +194,7 @@ void ChemicalSequence::set_length ( int length )
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool ChemicalSequence::check_invariant (void)
+bool ChemicalSequence::check_invariant (void) const
 {
   /** The invariants of parent classes must be verified. */
   bool result = Chemical::check_invariant(); 
@@ -191,3 +207,24 @@ bool ChemicalSequence::check_invariant (void)
 //  Private Methods
 // =================
 //
+void ChemicalSequence::remove_reference_from_map ( const BoundChemical& chemical, int position, int length )
+{
+  SiteLocationList& location_list = _chemical_map[ &chemical ];
+  if ( location_list.size() == 1 ) // there is only one element in the list
+    {
+      // the list will be empty, we can remove it from the map
+      // (no more chemical of the same type is bound to the sequence)
+      _chemical_map.erase( &chemical );
+    }
+  else // at least one chemical of same type will be left on the sequence
+    {
+      // we erase a chemical at the right location
+      SiteLocationList::iterator site_location = location_list.begin();
+      while ( ( site_location->position() != position )
+	      || ( site_location->length() != length ))
+	{ 
+	  site_location++;
+	}
+      location_list.erase ( site_location );
+    }
+}

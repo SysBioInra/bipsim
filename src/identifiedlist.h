@@ -43,8 +43,10 @@ public:
   /**
    * @brief Default constructor
    */
-  IdentifiedList (void);
+  IdentifiedList ( void )
+    : _last_attributed_id ( 0 ) {}
    
+
   // Not needed for this class (use of default copy constructor) !
   // /*
   //  * @brief Copy constructor
@@ -77,21 +79,21 @@ public:
    *  unknown).
    * @param element_name Name of the element.   
    */
-  int id ( std::string element_name );
+  int id ( std::string element_name ) const;
 
   /**
    * @brief Check whether an element is identified in the list.
    * @return True if the element is already listed.
    * @param element_name Name of the element to look for.   
    */
-  bool exists ( std::string element_name );
+  bool exists ( std::string element_name ) const;
 
   /**
    * @brief Return name corresponding to element identifier.
    * @return String containing element name (empty if id is unknown).
    * @param element_id Identifier of the element to look for.   
    */
-  std::string name (int element_id);
+  std::string name (int element_id) const;
   
 
   // ==========================
@@ -118,7 +120,7 @@ public:
   /**
    * @return True if class invariant is preserved
    */
-  virtual bool check_invariant (void);
+  virtual bool check_invariant (void) const;
 
   // ==================
   //  Public Constants
