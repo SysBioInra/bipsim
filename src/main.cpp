@@ -69,7 +69,7 @@ int main ( )
   int RBS_id = binding_sites.retrieve_id ( "RBS" );
   Binding::set_binding_site_handler( binding_sites );
   Binding ribosome_binding ( free_ribosome, bound_ribosome, RBS_id );
-  Elongation ribosome_elongation ( bound_ribosome, 3 );
+  Elongation ribosome_elongation ( bound_ribosome, 3, 10 );
 
   
   // perform some bindings

@@ -27,13 +27,16 @@
 //  Constructors/Destructors
 // ==========================
 //
-ChemicalReaction::ChemicalReaction ( int number_components, const std::vector<Chemical*>& components,
-				     const std::vector<int>& stoichiometry )
+ChemicalReaction::ChemicalReaction (int number_components, const std::vector<Chemical*>& components,
+				    const std::vector<int>& stoichiometry, double forward_rate_constant,
+				    double backward_rate_constant)
   : _number_components ( number_components )
-  , _components ( components )
-  , _stoichiometry ( stoichiometry )
-  , _bound_product_index ( number_components )
-  , _bound_reactant_index ( number_components )
+  , _components (components)
+  , _stoichiometry (stoichiometry)
+  , _k_1 (forward_rate_constant)
+  , _k_m1 (backward_rate_constant)
+  , _bound_product_index (number_components)
+  , _bound_reactant_index (number_components)
 {
   /** @pre Component container size must match number of components. */
   REQUIRE( _components.size() == _number_components ); 
@@ -155,14 +158,34 @@ void ChemicalReaction::perform_backward (void)
 //
 double ChemicalReaction::forward_rate ( void ) const
 {
-  std::cout << "Function " << __func__ << " remains to be defined in " << __FILE__ << __LINE__ << std::endl;
-  return 0;
+  /**
+   * Forward rate is simply defined by r = k_1 x product ( [reactant_i] ).
+   */
+  double rate = _k_1;
+  for (int i = 0; i < _number_components; i++)
+    {
+      if ( _stoichiometry[i] > 0 )
+	{
+	  rate *= _components[i]->number();
+	}
+    }  
+  return rate;
 }
 
 double ChemicalReaction::backward_rate ( void ) const
 {
-  std::cout << "Function " << __func__ << " remains to be defined in " << __FILE__ << __LINE__ << std::endl;
-  return 0;
+  /**
+   * Backward rate is simply defined by r = k_-1 x product ( [product_i] ).
+   */
+  double rate = _k_m1;
+  for (int i = 0; i < _number_components; i++)
+    {
+      if ( _stoichiometry[i] < 0 )
+	{
+	  rate *= _components[i]->number();
+	}
+    }  
+  return rate;
 }
 
 

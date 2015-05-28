@@ -27,6 +27,13 @@
 //  Constructors/Destructors
 // ==========================
 //
+Elongation::Elongation ( ProcessiveChemical& processive_chemical, int step_size, double rate )
+  : _processive_chemical ( processive_chemical )
+  , _step_size ( step_size )
+  , _rate ( rate )
+{
+}
+ 
 // Not needed for this class (use of default copy constructor) !
 // Elongation::Elongation (Elongation& other_elongation);
 
@@ -40,22 +47,34 @@ Elongation::~Elongation( void )
 //
 void Elongation::perform_forward( void )
 {
+  bool stall = false;
+  
   // choose one unit to move randomly
-  _processive_chemical.focus_random_unit ();
-  // update position on its location
-  _processive_chemical.focused_unit_location().move_bound_unit( _processive_chemical, _step_size );
-  // move it
-  _processive_chemical.step_forward ( _step_size );
+  _processive_chemical.focus_random_unit();
+  
+  // update position on location if it is possible
+  Bindable& location = _processive_chemical.focused_unit_location();
+  if ( not location.is_out_of_bounds (_processive_chemical.position() + step_size,
+				      _processive_chemical.length()))
+    {
+      location.move_bound_unit ( _processive_chemical, _step_size );
+      _processive_chemical.step_forward ( _step_size );
+    }
+  else 
+    {
+      stall = true;
+    }
 
   // check whether the unit has reached a termination site
-  if ( _processive_chemical.is_terminating() == true )
+  if ( _processive_chemical.is_terminating() == true ) { stall = true; }
+
+  if ( stall = true )
     {
-      // stall the processive chemical
       // create a stalled form of the chemical
       BoundChemical& stalled_form = _processive_chemical.stalled_form();
       stalled_form.add_unit_in_place_of ( _processive_chemical );
       // update location status
-      _processive_chemical.focused_unit_location().replace_bound_unit ( _processive_chemical, stalled_form );
+      location.replace_bound_unit ( _processive_chemical, stalled_form );
       // delete processive chemical
       _processive_chemical.remove_focused_unit();
     }
@@ -73,13 +92,17 @@ void Elongation::perform_backward( void )
 //
 double Elongation::forward_rate( void ) const
 {
-  std::cout << "Function " << __func__ << " remains to be defined in " << __FILE__ << __LINE__ << std::endl;
-  return 0;
+  /**
+   * Elongation rate is simply r = #(processive_chemical) * elongation_rate / step_size.
+   */
+  return (_rate * _processive_chemical.number()) / step_size;
 }
 
 double Elongation::backward_rate( void ) const
 {
-  std::cout << "Function " << __func__ << " remains to be defined in " << __FILE__ << __LINE__ << std::endl;
+  /**
+   * There is no backward reaction to elongation. Result is always 0.
+   */
   return 0;
 }
 

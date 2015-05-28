@@ -114,12 +114,18 @@ void Complexation::perform_backward ( void )
 //
 double Complexation::forward_rate ( void ) const
 {
-  return 0;
+  /**
+   * Complexation rate is simply defined by r = k_on x [A] x [B].
+   */
+  return _k_on * _component_a.number() * _component_b.number();
 }
 
 double Complexation::backward_rate ( void ) const
 {
-  return 0;
+  /**
+   * Backward complexation rate is simply defined by r = k_off x [AB].
+   */
+  return _k_off * _complex.number();
 }
 
 

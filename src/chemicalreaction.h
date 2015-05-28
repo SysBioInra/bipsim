@@ -53,7 +53,8 @@ public:
    *  reactants.
    */
   ChemicalReaction (int number_components, const std::vector<Chemical*>& components,
-		    const std::vector<int>& stoichiometry);
+		    const std::vector<int>& stoichiometry, double forward_rate_constant,
+		    double backward_rate_constant);
   
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -151,7 +152,12 @@ private:
   
   /** @brief Index of the bound reactant of the reaction (_number_components if none). */
   int _bound_reactant_index;
- 
+
+  /** @brief Forward rate constant k_1. */
+  double _k_1;
+
+  /** @brief Forward rate constant k_-1. */
+  double _k_m1;
 
   // =================
   //  Private Methods

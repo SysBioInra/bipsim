@@ -51,9 +51,7 @@ public:
    * @param  step_size
    *  Number of bases processed at each elongation step.
    */
-  Elongation ( ProcessiveChemical& processive_chemical, int step_size )
-    : _processive_chemical ( processive_chemical )
-    , _step_size ( step_size ) {} 
+  Elongation ( ProcessiveChemical& processive_chemical, int step_size, double rate );
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -137,6 +135,9 @@ private:
 
   /** @brief Number of bases processed at each elongation step. */
   int _step_size;
+
+  /** @brief Elongation rate (in s^-1). */
+  double _rate;
 
   // =================
   //  Private Methods
