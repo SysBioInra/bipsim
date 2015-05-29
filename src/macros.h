@@ -32,7 +32,7 @@
  * postconditions of all classes, else it is empty.
  */
 #ifdef CHECK_POSTCONDITIONS 
-#define ENSURE( postcondition ) assert(condition)
+#define ENSURE( postcondition ) assert(postcondition)
 #else
 #define ENSURE( postcondition ) // Empty macro: no check performed
 #endif // CHECK POSTCONDITIONS

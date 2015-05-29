@@ -61,12 +61,18 @@ class RandomHandler
   // ===========================
   //
   /**
-   * @brief Draw an index from a weighted array of integers.
+   * @brief Draw an index from a weight vector of integers.
    * @return Index within the array drawn according to weights within the array.
-   * @param number_items Size of array.
-   * @param weights Array containing weights.
+   * @param weights Vector containing weights.
    */ 
   int draw_index ( const std::vector<int>& weights );
+
+  /**
+   * @brief Draw an index from a weight vector of doubles.
+   * @return Index within the array drawn according to weights within the array.
+   * @param weights Array containing weights.
+   */ 
+  int draw_index ( const std::vector<double>& weights );
 
   /**
    * @brief Draw an integer uniformly from an interval [a,b].
@@ -75,6 +81,13 @@ class RandomHandler
    * @param b Last integer of the interval.
    */ 
   int draw_uniform ( int a, int b );
+
+  /**
+   * @brief Draw a real value from an exponential distribution with paramter lambda.
+   * @return Random non-negative double.
+   * @param lambda Parameter of the exponential distribution.
+   */ 
+  double draw_exponential ( double lambda );
 
   // ============================
   //  Public Methods - Accessors
@@ -121,7 +134,9 @@ private:
   //  Private Methods
   // =================
   //
+  template<typename T> int find_index ( T drawn_weight, const std::vector<T>& cumulated_weights );
 
+  template<typename T> int cumulate_vector_and_strip ( std::vector<T>& vector_to_cumulate, std::vector<int>& original_indices );
 };
 
 // ======================

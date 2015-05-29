@@ -26,6 +26,7 @@ test_SOURCES =    \
 		site.cpp site.h \
 		sitehandler.cpp sitehandler.h \
 		sitelocation.cpp sitelocation.h \
+		solver.cpp solver.h \
 		terminationsitehandler.cpp terminationsitehandler.h
 
 ###############################################################################

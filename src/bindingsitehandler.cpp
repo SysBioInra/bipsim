@@ -81,13 +81,12 @@ const BindingSite& BindingSiteHandler::get_random_available_site ( int family_id
   // vector
   int number_binding_sites = family_site_list.size();
   std::vector<int> number_available_sites ( number_binding_sites, 0 );
-  
   SiteList::const_iterator site = family_site_list.begin();
   for ( int index = 0; site != family_site_list.end(); site++, index++ )
     {
       number_available_sites [ index ] = (*site)->number_available_sites();
     }
-
+  
   // draw a site according to the number of available sites
   RandomHandler random_handler;
   int index_drawn = random_handler.draw_index ( number_available_sites );
@@ -123,7 +122,7 @@ double BindingSiteHandler::get_total_binding_rate_contribution ( int family_id )
       const BindingSite& binding_site = *dynamic_cast< const BindingSite* > (*site);
       rate_contribution += binding_site.k_on() * binding_site.number_available_sites();
     }
-
+  return rate_contribution;
 }
 
 // ==========================

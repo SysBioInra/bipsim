@@ -31,6 +31,7 @@ class Reaction;
 class Site;
 class SiteHandler;
 class SiteLocation;
+class Solver;
 class TerminationSiteHandler;
 
 #endif // FORWARDDECLARATIONS_H

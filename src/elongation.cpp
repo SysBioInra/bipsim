@@ -54,8 +54,8 @@ void Elongation::perform_forward( void )
   
   // update position on location if it is possible
   Bindable& location = _processive_chemical.focused_unit_location();
-  if ( not location.is_out_of_bounds (_processive_chemical.position() + step_size,
-				      _processive_chemical.length()))
+  if ( not location.is_out_of_bounds (_processive_chemical.focused_unit_position() + _step_size,
+				      _processive_chemical.focused_unit_length()))
     {
       location.move_bound_unit ( _processive_chemical, _step_size );
       _processive_chemical.step_forward ( _step_size );
@@ -66,9 +66,12 @@ void Elongation::perform_forward( void )
     }
 
   // check whether the unit has reached a termination site
-  if ( _processive_chemical.is_terminating() == true ) { stall = true; }
+  if ( _processive_chemical.is_terminating() == true )
+    { 
+      stall = true;
+    }
 
-  if ( stall = true )
+  if ( stall == true )
     {
       // create a stalled form of the chemical
       BoundChemical& stalled_form = _processive_chemical.stalled_form();
@@ -95,7 +98,7 @@ double Elongation::forward_rate( void ) const
   /**
    * Elongation rate is simply r = #(processive_chemical) * elongation_rate / step_size.
    */
-  return (_rate * _processive_chemical.number()) / step_size;
+  return (_rate * _processive_chemical.number()) / _step_size;
 }
 
 double Elongation::backward_rate( void ) const
