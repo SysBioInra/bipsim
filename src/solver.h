@@ -18,6 +18,7 @@
 // ==================
 //
 #include <vector> // std::vector
+#include <list> // std::list
 
 // ==================
 //  Project Includes
@@ -67,6 +68,12 @@ class Solver
   void add_reaction (Reaction& reaction);
 
   /**
+   * @brief Add reaction to reactions to integrate.
+   * @param reactions List of reactions to add.
+   */
+  void add_reaction_list (std::list< Reaction* >& reactions);
+
+  /**
    * @brief Update system according to the reaction system during given time step.
    * @param time_step Time during which the reactions should be integrated.
    */
@@ -87,7 +94,6 @@ class Solver
    * @return Simulation time.
    */
   double time (void) const;
-
 
   // ==========================
   //  Public Methods - Setters

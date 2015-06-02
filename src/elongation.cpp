@@ -89,6 +89,11 @@ void Elongation::perform_backward( void )
 }
 
 
+void Elongation::print (std::ostream& output) const
+{
+  output << "Elongation reaction.";
+}
+
 // ============================
 //  Public Methods - Accessors
 // ============================

@@ -52,8 +52,8 @@ public:
    *  Vector of stoichiometry of the chemicals, positive for products, negative for
    *  reactants.
    */
-  ChemicalReaction (int number_components, const std::vector<Chemical*>& components,
-		    const std::vector<int>& stoichiometry, double forward_rate_constant,
+  ChemicalReaction (std::vector<Chemical*>& components,
+		    std::vector<int>& stoichiometry, double forward_rate_constant,
 		    double backward_rate_constant);
   
   // Not needed for this class (use of default copy constructor) !
@@ -98,6 +98,14 @@ public:
    * @return The backward reaction rate.
    */
   virtual double backward_rate ( void ) const;
+
+
+  /**
+   * @return Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const;
+
 
   // ============================
   //  Public Methods - Accessors

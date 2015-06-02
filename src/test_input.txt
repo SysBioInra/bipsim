@@ -1,0 +1,31 @@
+
+# units
+unit ChemicalSequence rna 300 3
+unit ChemicalSequence rna2 300 3
+
+unit Chemical free_30S 100
+unit Chemical free_50S 100
+
+unit BoundChemical stalled_ribosome
+unit BoundChemical bound_ribosome
+
+unit ProcessiveChemical moving_ribosome stalled_ribosome hairpin
+
+
+# binding sites
+unit BindingSite RBS rna 100 5 10 1
+unit BindingSite RBS rna 200 5 10 1
+unit BindingSite RBS rna2 100 5 10 1
+unit BindingSite other_binding_site rna 200 5 10 1
+
+
+# termination sites
+unit TerminationSite hairpin rna 142 9
+unit TerminationSite hairpin rna 251 9
+unit TerminationSite hairpin rna2 199 9
+
+
+# reactions
+reaction Binding free_30S bound_ribosome RBS
+reaction Complexation bound_ribosome free_50S moving_ribosome 0.01 0
+reaction Elongation moving_ribosome 3 10

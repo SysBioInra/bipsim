@@ -134,6 +134,14 @@ public:
    */
   void remove ( int quantity );
 
+
+  /**
+   * @return Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const;
+
+
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -168,7 +176,6 @@ public:
   //  * @brief Assignment operator
   //  */
   // ChemicalSequence& operator= (ChemicalSequence& other_chemical_sequence);
-
   
   // ==================================
   //  Public Methods - Class invariant

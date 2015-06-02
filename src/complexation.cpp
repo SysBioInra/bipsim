@@ -107,6 +107,10 @@ void Complexation::perform_backward ( void )
     }
 }
 
+void Complexation::print (std::ostream& output) const
+{
+  output << "Complexation reaction.";
+}
 
 // ============================
 //  Public Methods - Accessors

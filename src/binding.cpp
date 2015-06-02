@@ -79,6 +79,12 @@ void Binding::perform_backward( void )
 }
 
 
+void Binding::print (std::ostream& output) const
+{
+  output << "Binding reaction.";
+}
+
+
 // ============================
 //  Public Methods - Accessors
 // ============================

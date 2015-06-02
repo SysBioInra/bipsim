@@ -80,7 +80,6 @@ public:
   virtual void create_site ( std::string family_name, Bindable& location, int position,
 			     int length, double k_on, double k_off );
 
-
   // ============================
   //  Public Methods - Accessors
   // ============================

@@ -138,6 +138,13 @@ void ChemicalSequence::remove ( int quantity )
 }
 
 
+void ChemicalSequence::print (std::ostream& output) const
+{
+  output << "Chemical sequence of length " << _length << " with currently "
+	 << _number << " molecules.";
+}
+
+
 
 // ============================
 //  Public Methods - Accessors

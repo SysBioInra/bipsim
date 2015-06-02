@@ -41,7 +41,10 @@ Chemical::~Chemical (void)
 //  Public Methods - Commands
 // ===========================
 //
-
+void Chemical::print (std::ostream& output) const
+{
+  output << "Chemical with currently " << _number << " molecules.";
+}
 
 // ============================
 //  Public Methods - Accessors
@@ -61,6 +64,12 @@ Chemical::~Chemical (void)
 //
 // Not needed for this class (use of default overloading) !
 // Chemical& Chemical::operator= (Chemical& other_Chemical);
+
+std::ostream& operator<< (std::ostream& output, const Chemical& chemical)
+{
+  chemical.print (output);
+  return output;
+}
 
 
 // ==================================

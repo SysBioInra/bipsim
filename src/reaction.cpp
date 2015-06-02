@@ -60,6 +60,12 @@ Reaction::~Reaction (void)
 // Not needed for this class (use of default overloading) !
 // Reaction& Reaction::operator= (Reaction& other_reaction);
 
+std::ostream& operator<< (std::ostream& output, const Reaction& reaction)
+{
+  reaction.print (output);
+  return output;
+}
+
 // ==================================
 //  Public Methods - Class invariant
 // ==================================

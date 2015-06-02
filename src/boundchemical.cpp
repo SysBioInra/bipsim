@@ -193,7 +193,7 @@ double BoundChemical::get_total_unbinding_rate_contribution ( int binding_site_f
   return r_total;
 }
 
-void BoundChemical::print ( void ) const
+void BoundChemical::print ( std::ostream& output ) const
 {
   for ( UnitFamilyMap::const_iterator family = _family_map.begin();
 	family != _family_map.end(); family ++ )
@@ -202,11 +202,11 @@ void BoundChemical::print ( void ) const
 	for ( BoundUnitList::const_iterator unit = family_units.begin();
 	      unit != family_units.end(); unit++ )
 	  {
-	    std::cout << "Bound chemical initially bound at position "
-		      << unit->first->position()
-		      << " and now at position "
-		      << unit->second
-		      << "." << std::endl;
+	    output << "Bound chemical initially bound at position "
+		   << unit->first->position()
+		   << " and now at position "
+		   << unit->second
+		   << "." << std::endl;
 	  }
     }
 }
@@ -224,6 +224,7 @@ void BoundChemical::print ( void ) const
 //
 // Not needed for this class (use of default overloading) !
 // BoundChemical& BoundChemical::operator= (BoundChemical& other_bound_chemical);
+
 
 // ==================================
 //  Public Methods - Class invariant

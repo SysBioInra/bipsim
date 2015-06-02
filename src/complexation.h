@@ -73,6 +73,12 @@ public:
    */
   virtual void perform_backward ( void );
 
+  /**
+   * @return Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const;
+
 
   // ============================
   //  Public Methods - Accessors

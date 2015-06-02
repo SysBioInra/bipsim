@@ -69,6 +69,12 @@ public:
    */
   virtual void perform_backward ( void ) = 0;
 
+  /**
+   * @return Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const = 0;
+
 
   // ============================
   //  Public Methods - Accessors
@@ -103,7 +109,14 @@ public:
   //  * @brief Assignment operator
   //  */
   // Reaction& operator= (Reaction& other_reaction);
-
+  
+  /**
+   * @brief Standard output.
+   * @return A reference to the stream containing the output.
+   * @param output Stream where output should be written.
+   * @param reaction Reference to the reaction whose information should be written.
+   */
+  friend std::ostream& operator<< (std::ostream& output, const Reaction& reaction);
   
   // ==================================
   //  Public Methods - Class invariant

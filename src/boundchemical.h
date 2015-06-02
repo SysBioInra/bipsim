@@ -148,9 +148,11 @@ public:
   double get_total_unbinding_rate_contribution ( int binding_site_family ) const;
 
   /**
-   * @brief Prints general information about the bound chemicals.
+   * @return Print class content.
+   * @param output Stream where output should be written.
    */
-  void print ( void ) const;
+  virtual void print (std::ostream& output) const;
+
 
   // ==========================
   //  Public Methods - Setters
@@ -167,7 +169,6 @@ public:
   //  * @brief Assignment operator
   //  */
   // CLASSNAME& operator= (CLASSNAME& other_CLASSNAME);
-
 
   // ==================================
   //  Public Methods - Class invariant

@@ -27,19 +27,18 @@
 //  Constructors/Destructors
 // ==========================
 //
-ChemicalReaction::ChemicalReaction (int number_components, const std::vector<Chemical*>& components,
-				    const std::vector<int>& stoichiometry, double forward_rate_constant,
+ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
+				    std::vector<int>& stoichiometry, double forward_rate_constant,
 				    double backward_rate_constant)
-  : _number_components ( number_components )
+  : _number_components (_components.size())
   , _components (components)
   , _stoichiometry (stoichiometry)
   , _k_1 (forward_rate_constant)
   , _k_m1 (backward_rate_constant)
-  , _bound_product_index (number_components)
-  , _bound_reactant_index (number_components)
+  , _bound_product_index (_number_components)
+  , _bound_reactant_index (_number_components)
 {
-  /** @pre Component container size must match number of components. */
-  REQUIRE( _components.size() == _number_components ); 
+
   /** @pre Stoichiometry container size must match number of components. */
   REQUIRE( _stoichiometry.size() == _number_components );
 
@@ -47,7 +46,7 @@ ChemicalReaction::ChemicalReaction (int number_components, const std::vector<Che
   compute_bound_component_indices();
 
   // move them at the end of the vector
-  if (_bound_product_index < number_components)
+  if (_bound_product_index < _number_components)
     {
       // swap contents
       int desired_index = _number_components-1;
@@ -64,7 +63,7 @@ ChemicalReaction::ChemicalReaction (int number_components, const std::vector<Che
 	}
       _bound_product_index = desired_index;
     }
-  if (_bound_reactant_index < number_components)
+  if (_bound_reactant_index < _number_components)
     {
       // swap contents
       int desired_index = _number_components-2;
@@ -149,6 +148,11 @@ void ChemicalReaction::perform_backward (void)
       product->focused_unit_location().replace_bound_unit (*product, *reactant);      
       product->remove_focused_unit();
     }
+}
+
+void ChemicalReaction::print (std::ostream& output) const
+{
+  output << "Chemical reaction.";
 }
 
 

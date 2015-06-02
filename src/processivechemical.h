@@ -114,7 +114,6 @@ public:
   //  */
   // ProcessiveChemical& operator= (ProcessiveChemical& other_processive_chemical);
 
-
   // ==================================
   //  Public Methods - Class invariant
   // ==================================

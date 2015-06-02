@@ -17,6 +17,7 @@
 //  General Includes
 // ==================
 //
+#include <iostream>
 
 // ==================
 //  Project Includes
@@ -72,6 +73,11 @@ public:
    */
   virtual void remove (int quantity);
 
+  /**
+   * @return Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const;
 
   // ============================
   //  Public Methods - Accessors
@@ -98,6 +104,14 @@ public:
   //  * @brief Assignment operator
   //  */
   // Chemical& operator= (Chemical& other_chemical);
+  
+  /**
+   * @brief Standard output.
+   * @return A reference to the stream containing the output.
+   * @param output Stream where output should be written.
+   * @param chemical Reference to the chemical whose information should be written.
+   */
+  friend std::ostream& operator<< (std::ostream& output, const Chemical& chemical);
 
   // ==================================
   //  Public Methods - Class invariant

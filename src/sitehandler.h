@@ -89,6 +89,13 @@ public:
   // ============================
   //
   /**
+   * @brief Returns whether family name is known.
+   * @return True if family is known.
+   * @param  family_name Name of the site family.   
+   */
+  bool exists ( std::string family_name ) const;
+
+  /**
    * @brief Returns id corresponding to family name.
    * @return Integer identfier of the site family
    *  (BindingSiteHandler::NOT_FOUND if unknown family).
@@ -161,6 +168,11 @@ protected:
 //  Inline declarations
 // ======================
 //
+inline bool SiteHandler::exists ( std::string family_name ) const
+{
+  return _family_ids.exists ( family_name );
+}
+
 inline int SiteHandler::retrieve_id ( std::string family_name ) const
 {
   return _family_ids.id ( family_name );

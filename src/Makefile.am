@@ -8,25 +8,28 @@ bin_PROGRAMS = test
 
 # list of sources for the 'test' binary
 test_SOURCES =    \
-		main.cpp macros.h forwarddeclarations.h \
-		bindable.cpp bindable.h \
-		binding.cpp binding.h \
-		bindingsite.cpp bindingsite.h \
-		bindingsitehandler.cpp bindingsitehandler.h \
-		boundchemical.cpp boundchemical.h \
-		chemical.cpp chemical.h \
-		chemicalreaction.cpp chemicalreaction.h \
-		chemicalsequence.cpp chemicalsequence.h \
-		complexation.cpp complexation.h \
-		elongation.cpp elongation.h \
-		identifiedlist.cpp identifiedlist.h \
-		processivechemical.cpp processivechemical.h \
-		randomhandler.cpp randomhandler.h \
-		reaction.cpp reaction.h \
-		site.cpp site.h \
-		sitehandler.cpp sitehandler.h \
-		sitelocation.cpp sitelocation.h \
-		solver.cpp solver.h \
-		terminationsitehandler.cpp terminationsitehandler.h
+	main.cpp macros.h forwarddeclarations.h \
+	bindable.cpp bindable.h \
+	binding.cpp binding.h \
+	bindingsite.cpp bindingsite.h \
+	bindingsitehandler.cpp bindingsitehandler.h \
+	boundchemical.cpp boundchemical.h \
+	chemical.cpp chemical.h \
+	chemicalhandler.cpp chemicalhandler.h \
+	chemicalreaction.cpp chemicalreaction.h \
+	chemicalsequence.cpp chemicalsequence.h \
+	complexation.cpp complexation.h \
+	elongation.cpp elongation.h \
+	identifiedlist.cpp identifiedlist.h \
+	parser.cpp parser.h \
+	processivechemical.cpp processivechemical.h \
+	randomhandler.cpp randomhandler.h \
+	reaction.cpp reaction.h \
+	reactionhandler.cpp reactionhandler.h \
+	site.cpp site.h \
+	sitehandler.cpp sitehandler.h \
+	sitelocation.cpp sitelocation.h \
+	solver.cpp solver.h \
+	terminationsitehandler.cpp terminationsitehandler.h
 
 ###############################################################################

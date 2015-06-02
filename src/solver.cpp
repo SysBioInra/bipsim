@@ -55,17 +55,40 @@ void Solver::add_reaction (Reaction& reaction)
 {
   _number_reactions++;
 
-  // we check whether vector size is exceeded
+  // check whether vector size is exceeded
   if ( _number_reactions > _reactions.size() )
     {
-      // if yes we resize vector size twofold
+      // if yes resize vector size twofold
       _reactions.resize (_reactions.size()*2, 0);
       // same goes for rate vector
       _rates.resize (_rates.size()*2, 0);      
     }
 
-  // we add the reaction to the vector
+  // add the reaction to the vector
   _reactions[_number_reactions-1] = &reaction;
+}
+
+void Solver::add_reaction_list (std::list<Reaction*>& reactions_to_add)
+{
+  int next_reaction_index = _number_reactions;
+
+  // check whether vector size is exceeded
+  _number_reactions += reactions_to_add.size();
+  while ( _number_reactions > _reactions.size() )
+    {
+      // if yes resize vector size twofold
+      _reactions.resize (_reactions.size()*2, 0);
+      // same goes for rate vector
+      _rates.resize (_rates.size()*2, 0);      
+    }
+
+  // add reactions to vector
+  for ( std::list<Reaction*>::iterator next_reaction = reactions_to_add.begin();
+	next_reaction != reactions_to_add.end();
+	next_reaction++, next_reaction_index++ )
+    {
+      _reactions[next_reaction_index] = *next_reaction;
+    }
 }
 
 void Solver::solve (double time_step)
@@ -108,7 +131,7 @@ void Solver::go_to_next_reaction (void)
   // update reaction rates
   update_rates();
 
-  if (_total_rate > 0)
+ if (_total_rate > 0)
     {
       set_next_reaction_time();
       compute_next_reaction();
