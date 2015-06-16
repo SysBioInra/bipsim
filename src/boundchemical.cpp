@@ -38,19 +38,27 @@ BoundChemical::~BoundChemical (void)
 //  Public Methods - Commands
 // ===========================
 //
-void BoundChemical::handle_collision (void)
+void BoundChemical::release (void)
 {
-  std::cout << "Function" << __func__ << "remains to be defined in" << __FILE__ << __LINE__ << std::endl;
+  remove_focused_unit();
 }
+
 
 void BoundChemical::add_unit_at_site ( const BindingSite& binding_site )
 {
-  add ( 1 );
-
-  _family_map[ binding_site.family() ].push_front( BoundUnit ( &binding_site, binding_site.position() ) );
-
-  _focused_unit = _family_map[ binding_site.family() ].begin();
+  add_unit (binding_site, binding_site.position());
 }
+
+void BoundChemical::add_unit_in_place_of ( const BoundChemical& precursor )
+{
+  // here we add a new unit but we copy the characteristics of the focused unit
+  // of the precursor species
+  const BindingSite& binding_site = precursor.focused_unit_binding_site();
+  int position = precursor.focused_unit_position();
+
+  add_unit (binding_site, position);  
+}
+
 
 void BoundChemical::focus_random_unit ( void )
 {
@@ -73,7 +81,7 @@ void BoundChemical::focus_random_unit ( void )
     }
   // then loop through units for the exact index
   BoundUnitList::iterator unit = family_units.begin();
-  for ( int index = current_index; index < index_drawn; index++ )
+  for (int index = current_index; index < index_drawn; index++)
     { 
       unit++; 
     }
@@ -86,18 +94,18 @@ void BoundChemical::focus_random_unit ( void )
 void BoundChemical::focus_random_unit ( int family_id )
 {
   // get the list of positions of chemicalts bound to requested family
-  UnitFamilyMap::iterator family = _family_map.find ( family_id );
+  UnitFamilyMap::iterator family = _family_map.find (family_id);
   REQUIRE( family != _family_map.end() ); /** @pre family_id is already defined */
   BoundUnitList& family_units = family->second;
   
   // draw a random chemical to unbind
   int number_units = family_units.size();
   RandomHandler random_handler;
-  int index_drawn = random_handler.draw_uniform ( 0, number_units-1 );
+  int index_drawn = random_handler.draw_uniform (0, number_units-1);
 
   // retrieve the corresponding position
   BoundUnitList::iterator unit = family_units.begin();
-  for ( int index = 0; index < index_drawn; index++ )
+  for (int index = 0; index < index_drawn; index++)
     { 
       unit++; 
     }
@@ -106,20 +114,6 @@ void BoundChemical::focus_random_unit ( int family_id )
   _focused_unit = unit;
 }
 
-void BoundChemical::add_unit_in_place_of ( const BoundChemical& precursor )
-{
-  // here we add a new unit but we copy the characteristics of the focused unit
-  // of the precursor species
-  add ( 1 );
-  const BindingSite& binding_site = precursor.focused_unit_binding_site();
-  int family_id = binding_site.family();
-  int position = precursor.focused_unit_position();
-
-  _family_map[ family_id ].push_front( BoundUnit ( &binding_site, position ) );
-
-  _focused_unit = _family_map[ family_id ].begin();
-  
-}
 
 
 void BoundChemical::remove_focused_unit ( void )
@@ -129,8 +123,8 @@ void BoundChemical::remove_focused_unit ( void )
   BoundUnitList& family_units = family->second;
 
   // remove chemical
-  family_units.erase ( _focused_unit );
-  remove ( 1 );
+  family_units.erase (_focused_unit);
+  remove (1);
 
   // if there are no more binding sites belonging to the family
   if ( family_units.size() == 0 ) 
@@ -245,3 +239,10 @@ bool BoundChemical::check_invariant (void) const
 //  Private Methods
 // =================
 //
+void BoundChemical::add_unit (const BindingSite& binding_site, int position)
+{
+  add (1);
+  _family_map[ binding_site.family() ].push_front (BoundUnit (&binding_site, position));
+  _focused_unit = _family_map[ binding_site.family() ].begin();
+}
+

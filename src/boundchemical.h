@@ -30,8 +30,20 @@
 #include "chemical.h"
 #include "bindingsite.h"
 
+/**
+ * @brief A pair associating a BindingSite of a BoundChemical and its current position.
+ */
 typedef std::pair< const BindingSite *, int > BoundUnit;
+
+/**
+ * @brief A list of BoundUnit.
+ */
 typedef std::list< BoundUnit > BoundUnitList;
+
+/**
+ * @brief A map that classifies all BoundChemical depending on the family of BindingSite they
+ * bound to.
+ */
 typedef std::map< int, BoundUnitList > UnitFamilyMap;
 
 /**
@@ -71,37 +83,45 @@ public:
   // ===========================
   //
   /**
-   * @brief Actions to be taken when the chemical has collided with another
-   * chemical.
-   */
-  void handle_collision ( void );
+   * @brief Release chemical and the product it may have synthesized.
+   */  
+  void release (void);
 
   /**
    * @brief Add a new unit specific binding site.
    * @param binding_site The binding site to which it bound.
    */
-  void add_unit_at_site ( const BindingSite& binding_site );
+  void add_unit_at_site (const BindingSite& binding_site);
 
   /**
    * @brief Add a new unit in place of an existing new chemical.
    */
-  void add_unit_in_place_of ( const BoundChemical& precursor );
+  void add_unit_in_place_of (const BoundChemical& precursor);
   
+  /**
+   * @brief Add a new unit in place of an existing new chemical.
+   *
+   * This function MUST be called every time a unit is added.
+   * @param binding_site The binding site to which it bound.
+   * @param position Current position.
+   */
+  virtual void add_unit (const BindingSite&, int position);
+
   /**
    * @brief Remove focused unit.
    */
-  void remove_focused_unit ( void );
+  void remove_focused_unit (void);
 
   /**
    * @brief Focus a unit randomly.
    */
-  void focus_random_unit ( void );
+  void focus_random_unit (void);
 
   /**
    * @brief Focus a unit that bound to a specific binding site family.
-   * @param binding_site The binding site family to inspect.
+   * @param binding_site_family The binding site family to inspect.
    */
-  void focus_random_unit ( int binding_site_family );
+  void focus_random_unit (int binding_site_family);
 
   // ============================
   //  Public Methods - Accessors
@@ -110,33 +130,33 @@ public:
   /**
    * @brief Returns the number of elements bound to a specific binding site family.
    * @return Number of elements bound to the binding site family.
-   * @param binding_site The binding site family to inspect.
+   * @param binding_site_family The binding site family to inspect.
    */
-  int number_bound_to_family ( int binding_site_family ) const;
+  int number_bound_to_family (int binding_site_family) const;
 
   /**
    * @brief Returns the binding site of focused unit.
    * @return Binding site of focused unit.
    */
-  const BindingSite& focused_unit_binding_site ( void ) const;
+  const BindingSite& focused_unit_binding_site (void) const;
 
   /**
    * @brief Returns the position of focused unit.
    * @return Position of focused unit.
    */
-  int focused_unit_position ( void ) const;
+  int focused_unit_position (void) const;
 
   /**
    * @brief Returns the position of focused unit.
    * @return Length of focused unit.
    */
-  int focused_unit_length ( void ) const;
+  int focused_unit_length (void) const;
 
   /**
    * @brief Returns the location of focused unit.
    * @return Bindable that bears the bound chemical.
    */
-  Bindable& focused_unit_location ( void ) const;
+  Bindable& focused_unit_location (void) const;
 
   /**
    * @brief Returns the total unbinding rate for a subset of chemicals.
@@ -145,7 +165,7 @@ public:
    *   bound.
    * @return Total unbinding rate for chemicals bound to given family.
    */
-  double get_total_unbinding_rate_contribution ( int binding_site_family ) const;
+  double get_total_unbinding_rate_contribution (int binding_site_family) const;
 
   /**
    * @return Print class content.
@@ -186,9 +206,14 @@ public:
   //  Attributes
   // ============
   //
-  /** @brief Binding site to which the focused unit bound and current position. */
+  /** @brief Iterator to the focused unit. */
   BoundUnitList::iterator _focused_unit;
 
+  // =================
+  //  Private Methods
+  // =================
+  //
+  
 
  private:
 
@@ -198,6 +223,7 @@ public:
   //
   /** @brief Binding sites to which chemicals bound and current position (sorted by family). */
   UnitFamilyMap _family_map;
+
     
   // =================
   //  Private Methods
@@ -210,22 +236,22 @@ public:
 //  Inline declarations
 // ======================
 //
-inline const BindingSite& BoundChemical::focused_unit_binding_site ( void ) const
+inline const BindingSite& BoundChemical::focused_unit_binding_site (void) const
 {
   return *(_focused_unit->first);
 }
 
-inline int BoundChemical::focused_unit_length ( void ) const
+inline int BoundChemical::focused_unit_length (void) const
 {
   return (_focused_unit->first)->length();
 }
 
-inline Bindable& BoundChemical::focused_unit_location ( void ) const
+inline Bindable& BoundChemical::focused_unit_location (void) const
 {
   return (_focused_unit->first)->location();
 }
 
-inline int BoundChemical::focused_unit_position ( void ) const
+inline int BoundChemical::focused_unit_position (void) const
 {
   return _focused_unit->second;
 }

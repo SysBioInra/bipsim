@@ -48,7 +48,8 @@ public:
    * @param location Chemical sequence containing the site.
    * @param position Position along the sequence.
    * @param length Length of the binding site.
-   * @param affinity Affinity value.   
+   * @param k_on On rate of binding on the site.
+   * @param k_off Off rate of unbinding on the site.
    * @sa BindingSiteHandler
    */
   BindingSite ( int family_id, Bindable& location, int position,

@@ -49,8 +49,7 @@ public:
    *  BoundChemical that results when the processive chemical encounters
    *  a termination site (for example).
    */
-  ProcessiveChemical ( BoundChemical& stalled_form )
-    :_stalled_form ( stalled_form ) {}
+  ProcessiveChemical ( BoundChemical& stalled_form );
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -81,6 +80,7 @@ public:
    */  
   void step_forward ( int step_size );
 
+  
 
   // ============================
   //  Public Methods - Accessors

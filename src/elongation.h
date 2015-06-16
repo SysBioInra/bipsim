@@ -46,12 +46,13 @@ public:
    * @brief Constructor
    * @param  processive_chemical 
    *  Polymerase that does the elongation.
-   * @param  elongated_chemical
-   *  Chemical that is elongated.
+   * @param  bound_chemical
+   *  Chemical after elongation.
    * @param  step_size
    *  Number of bases processed at each elongation step.
+   * @param rate Elongation rate (in steps/s).
    */
-  Elongation ( ProcessiveChemical& processive_chemical, int step_size, double rate );
+  Elongation (ProcessiveChemical& processive_chemical, BoundChemical& chemical_after_step, int step_size, double rate );
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -138,6 +139,9 @@ private:
   //
   /** @brief Polymerase that does the elongation. */
   ProcessiveChemical& _processive_chemical;
+
+  /** @brief New polymerase from after stepping. */
+  BoundChemical& _chemical_after_step;
 
   /** @brief Number of bases processed at each elongation step. */
   int _step_size;

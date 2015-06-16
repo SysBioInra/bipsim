@@ -208,10 +208,12 @@ void Solver::compute_next_reaction (void)
   // perform reaction
   if ( (random_index % 2) == 0 )
     {
+      // std::cout << "f" << *_reactions[reaction_index] << " " << _rates[reaction_index*2] << std::endl;
       _reactions[reaction_index]->perform_forward();
     }
   else
     {
+      // std::cout << *_reactions[reaction_index] << " " << _rates[reaction_index*2+1] << std::endl;
       _reactions[reaction_index]->perform_backward();
     }
 }

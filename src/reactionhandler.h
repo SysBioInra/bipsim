@@ -63,17 +63,28 @@ public:
   //
   /**
    * @brief Add new chemical reaction to list.
-   * @param number_components Number of chemicals involved in the reaction.
    * @param components
    *  Vector of chemicals involved in the reaction.
    * @param stoichiometry
    *  Vector of stoichiometry of the chemicals, positive for products, negative for
    *  reactants.
+   * @param forward_rate_constant Forward rate constant.
+   * @param backward_rate_constant Backward rate constant.
    * @sa ChemicalReaction
    */
   void create_chemical_reaction (std::vector<Chemical*>& components,
 				 std::vector<int>& stoichiometry, double forward_rate_constant,
 				 double backward_rate_constant);
+
+  /**
+   * @brief Add new base loading reaction to list.
+   * @param base_loader
+   *  Chemical that matches templates with bases.
+   * @param occupied_form
+   *  Same chemical in its occupied form.
+   * @sa BaseLoading
+   */
+  void create_base_loading (BaseLoader& base_loader, BoundChemical& occupied_form);
 
   /**
    * @brief Add new binding reaction to list.
@@ -82,8 +93,8 @@ public:
    * @param binding_result
    *  A bound chemical element that corresponds to the original chemical in its
    *  bound form.
-   * @param  binding_site_type
-   *  The type (not a specific instance) of binding sites the chemical can bind
+   * @param  binding_site_family
+   *  The family identfier of binding sites the chemical can bind
    *  onto.
    * @sa Binding
    */
@@ -94,6 +105,8 @@ public:
    * @param  component_a Reference to the first chemical involved.
    * @param  component_b Reference to the second chemical involved.
    * @param  complex Reference to the complex.
+   * @param k_on Association constant.
+   * @param k_off Dissociation constant.
    * @sa Complexation
    */
   void create_complexation (Chemical& component_a, Chemical& component_b, Chemical& complex, double k_on, double k_off);
@@ -102,14 +115,26 @@ public:
    * @brief Add new elongation reaction to list.
    * @param  processive_chemical 
    *  Polymerase that does the elongation.
-   * @param  elongated_chemical
-   *  Chemical that is elongated.
    * @param  step_size
    *  Number of bases processed at each elongation step.
+   * @param rate Elongation rate (in steps/s).
    * @sa Elongation
    */
-  void create_elongation (ProcessiveChemical& processive_chemical, int step_size, double rate);
+  void create_elongation (ProcessiveChemical& processive_chemical, BoundChemical& chemical_after_step, int step_size, double rate);
 
+  /**
+   * @brief Add new release reaction to list.
+   * @param unit_to_release Unit that is released from its template.
+   * @param components
+   *  Vector of chemicals involved in the reaction.
+   * @param stoichiometry
+   *  Vector of stoichiometry of the chemicals, positive for products, negative for
+   *  reactants.
+   * @param rate Reaction rate constant.
+   * @sa Release
+   */
+  void create_release (BoundChemical& unit_to_release, std::vector<Chemical*>& components,
+		       std::vector<int>& stoichiometry, double rate);
 
 
   // ============================

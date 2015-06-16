@@ -13,6 +13,8 @@
 #ifndef FORWARDDECLARATIONS_H
 #define FORWARDDECLARATIONS_H
 
+class BaseLoader;
+class BaseLoading;
 class Bindable;
 class Binding;
 class BindingSite;
@@ -23,6 +25,7 @@ class ChemicalHandler;
 class ChemicalReaction;
 class ChemicalSequence;
 class Complexation;
+class DecodingTable;
 class Elongation;
 class IdentifiedList;
 class Parser;
@@ -30,10 +33,12 @@ class ProcessiveChemical;
 class RandomHandler;
 class Reaction;
 class ReactionHandler;
+class Release;
 class Site;
 class SiteHandler;
 class SiteLocation;
 class Solver;
+class TableHandler;
 class TerminationSiteHandler;
 
 #endif // FORWARDDECLARATIONS_H

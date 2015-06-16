@@ -23,6 +23,8 @@
 #include "boundchemical.h"
 #include "chemicalsequence.h"
 #include "processivechemical.h"
+#include "decodingtable.h"
+#include "baseloader.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -53,79 +55,90 @@ ChemicalHandler::~ChemicalHandler (void)
 //
 void ChemicalHandler::create_chemical (std::string chemical_name, int initial_quantity /*= 0*/)
 {
-  // create chemical if it does not already exist and append it to the reference map
-  if ( not _identifiers.exists (chemical_name) )
-    {
-      // get a new id for the entity
-      _identifiers.create_id (chemical_name);
-      _last_id = _identifiers.id (chemical_name);
+  /** @pre Chemical should not be defined already. */
+  REQUIRE( _identifiers.exists (chemical_name) == false );
 
-      // create it and store the reference
-      Chemical* new_chemical= new Chemical;
-      new_chemical->add (initial_quantity);
-      _references [_last_id] = new_chemical;
-      _last_reference = new_chemical;
-    }
+  // get a new id for the entity
+  _identifiers.create_id (chemical_name);
+  _last_id = _identifiers.id (chemical_name);
+  
+  // create it and store the reference
+  Chemical* new_chemical= new Chemical;
+  new_chemical->add (initial_quantity);
+  _references [_last_id] = new_chemical;
+  _last_reference = new_chemical;
 }
 
 void ChemicalHandler::create_bound_chemical (std::string chemical_name, int initial_quantity /*= 0*/)
 {
-  // create bound chemical if it does not already exist and append it to the reference map
-  if ( not _identifiers.exists (chemical_name) )
-    {
-      // get a new id for the entity
-      _identifiers.create_id (chemical_name);
-      _last_id = _identifiers.id (chemical_name);
+  /** @pre Chemical should not be defined already. */
+  REQUIRE( _identifiers.exists (chemical_name) == false );
 
-      // create it and store the reference
-      BoundChemical* new_chemical= new BoundChemical;
-      new_chemical->add (initial_quantity);
-      _references [_last_id] = new_chemical;
-      _last_reference = new_chemical;
-    }  
+  // get a new id for the entity
+  _identifiers.create_id (chemical_name);
+  _last_id = _identifiers.id (chemical_name);
+  
+  // create it and store the reference
+  BoundChemical* new_chemical= new BoundChemical;
+  new_chemical->add (initial_quantity);
+  _references [_last_id] = new_chemical;
+  _last_reference = new_chemical;
+}
+
+void ChemicalHandler::create_base_loader (std::string chemical_name, const DecodingTable& decoding_table, int initial_quantity /*= 0*/)
+{
+  /** @pre Chemical should not be defined already. */
+  REQUIRE( _identifiers.exists (chemical_name) == false );
+
+  // get a new id for the entity
+  _identifiers.create_id (chemical_name);
+  _last_id = _identifiers.id (chemical_name);
+  
+  // create it and store the reference
+  BaseLoader* new_chemical= new BaseLoader (decoding_table);
+  new_chemical->add (initial_quantity);
+  _references [_last_id] = new_chemical;
+  _last_reference = new_chemical;
 }
 
 void ChemicalHandler::create_processive_chemical (std::string chemical_name, std::string stalled_name, int initial_quantity /*= 0*/)
 {
-  // create processive chemical if it does not already exist and append it to the reference map
-  if ( not _identifiers.exists (chemical_name) )
-    {
-      // get a new id for the entity
-      _identifiers.create_id (chemical_name);
-      _last_id = _identifiers.id (chemical_name);
+  /** @pre Chemical should not be defined already. */
+  REQUIRE( _identifiers.exists (chemical_name) == false );
 
-      // load the stalled form
-      int stalled_id = _identifiers.id (stalled_name);
-      /** @pre Stalled form must be defined already. */
-      REQUIRE( stalled_id != IdentifiedList::NOT_FOUND );
-      BoundChemical* stalled_form = dynamic_cast< BoundChemical* > (_references[stalled_id]);
-      /** @pre Stalled form must be a bound chemical. */
-      REQUIRE( stalled_form != 0 );
-
-      // create the entity and store reference
-      ProcessiveChemical* new_chemical= new ProcessiveChemical (*stalled_form);
-      new_chemical->add (initial_quantity);
-      _references [_last_id] = new_chemical;
-      _last_reference = new_chemical;
-    }
+  // get a new id for the entity
+  _identifiers.create_id (chemical_name);
+  _last_id = _identifiers.id (chemical_name);
+  
+  // load the stalled form
+  int stalled_id = _identifiers.id (stalled_name);
+  /** @pre Stalled form must be defined already. */
+  REQUIRE( stalled_id != IdentifiedList::NOT_FOUND );
+  BoundChemical* stalled_form = dynamic_cast< BoundChemical* > (_references[stalled_id]);
+  /** @pre Stalled form must be a bound chemical. */
+  REQUIRE( stalled_form != 0 );
+  
+  // create the entity and store reference
+  ProcessiveChemical* new_chemical= new ProcessiveChemical (*stalled_form);
+  new_chemical->add (initial_quantity);
+  _references [_last_id] = new_chemical;
+  _last_reference = new_chemical;
 }
 
-void ChemicalHandler::create_chemical_sequence (std::string chemical_name, int length, int initial_quantity /*= 0*/)
+void ChemicalHandler::create_chemical_sequence (std::string chemical_name, const std::string& sequence, int initial_quantity /*= 0*/)
 {
-  // create bound chemical if it does not already exist and append it to the reference map
-  if ( not _identifiers.exists (chemical_name) )
-    {
-      // get a new id for the entity
-      _identifiers.create_id (chemical_name);
-      _last_id = _identifiers.id (chemical_name);
+  /** @pre Chemical should not be defined already. */
+  REQUIRE( _identifiers.exists (chemical_name) == false );
 
-      // create it and store the reference
-      ChemicalSequence* new_chemical= new ChemicalSequence;
-      new_chemical->set_length (length);
-      new_chemical->add (initial_quantity);
-      _references [_last_id] = new_chemical;
-      _last_reference = new_chemical;
-    }
+  // get a new id for the entity
+  _identifiers.create_id (chemical_name);
+  _last_id = _identifiers.id (chemical_name);
+  
+  // create it and store the reference
+  ChemicalSequence* new_chemical= new ChemicalSequence (sequence);
+  new_chemical->add (initial_quantity);
+  _references [_last_id] = new_chemical;
+  _last_reference = new_chemical;
 }
 
 
@@ -154,7 +167,8 @@ std::ostream& operator<< (std::ostream& output, const ChemicalHandler& chemical_
        next_reference != chemical_handler._references.end();
        next_reference++ )
     {
-      output << chemical_handler._identifiers.name (next_reference->first) << ": "
+      output << chemical_handler._identifiers.name (next_reference->first)
+	     << "(" << next_reference->second << "): "
 	     << *(next_reference->second) << std::endl;
     }
   

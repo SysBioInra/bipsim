@@ -66,8 +66,6 @@ class Bindable
    * @brief Binds a chemical element to a binding site of the bindable element.
    * @param chemical_to_bind
    *  The chemical element to bind.
-   * @param position Position of binding site.
-   * @param length Size occupied by bound element on sequence.
    * @sa BindingSite
    */
   virtual void bind_unit ( const BoundChemical& chemical_to_bind ) = 0;
@@ -133,10 +131,11 @@ class Bindable
   bool is_out_of_bounds ( int position, int length ) const;
     
   /**
-   * @brief Returns the number of available sites at a given position.
-   * @return True if position + length exceeds sequence length.
-   * @param position Position of the site.
-   * @param length Length of the site.
+   * @brief Returns whether a specific termination site can be found at a given position.
+   * @return True if a requested termination site is present at requested position.
+   * @param position Position to look at.
+   * @param termination_site_families 
+   *  List of termination sites to look for.
    */
   bool is_termination_site ( int position, const std::list<int>& termination_site_families ) const;
 
@@ -150,11 +149,6 @@ class Bindable
   //  Public Methods - Setters
   // ==========================
   //
-  /**
-   * @brief Sets element length.
-   * @param length Length of bindable element.
-   */
-  virtual void set_length ( int length );
   
   // =======================================
   //  Public Methods - Operator overloading
@@ -200,12 +194,6 @@ protected:
 // ======================
 //
 inline int Bindable::length ( void ) const { return _length; }
-
-inline void Bindable::set_length ( int length )
-{
-  REQUIRE( length > 0 ); /** @pre Length must be positive. */
-  _length = length;
-}
 
 inline bool Bindable::is_out_of_bounds ( int position, int length ) const
 {

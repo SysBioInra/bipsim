@@ -24,6 +24,8 @@
 #include "chemicalreaction.h"
 #include "complexation.h"
 #include "elongation.h"
+#include "release.h"
+#include "baseloading.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -63,6 +65,14 @@ void ReactionHandler::create_chemical_reaction (std::vector<Chemical*>& componen
   _last_reference = reaction;
 }
 
+void ReactionHandler::create_base_loading (BaseLoader& base_loader, BoundChemical& occupied_form)
+{
+  BaseLoading* reaction = new BaseLoading (base_loader, occupied_form);
+  _references.push_back (reaction);
+  _last_reference = reaction;
+}
+
+
 void ReactionHandler::create_binding (Chemical& unit_to_bind, BoundChemical& binding_result, int binding_site_family)
 {
   Binding* reaction = new Binding (unit_to_bind, binding_result, binding_site_family);
@@ -77,13 +87,20 @@ void ReactionHandler::create_complexation (Chemical& component_a, Chemical& comp
   _last_reference = reaction;
 }
 
-void ReactionHandler::create_elongation (ProcessiveChemical& processive_chemical, int step_size, double rate)
+void ReactionHandler::create_elongation (ProcessiveChemical& processive_chemical, BoundChemical& chemical_after_step, int step_size, double rate)
 {
-  Elongation* reaction = new Elongation (processive_chemical, step_size, rate);
+  Elongation* reaction = new Elongation (processive_chemical, chemical_after_step, step_size, rate);
   _references.push_back (reaction);
   _last_reference = reaction;
 }
 
+void ReactionHandler::create_release ( BoundChemical& unit_to_release, std::vector<Chemical*>& components,
+				       std::vector<int>& stoichiometry,	double rate)
+{
+  ChemicalReaction* reaction = new Release (unit_to_release, components, stoichiometry, rate);
+  _references.push_back (reaction);
+  _last_reference = reaction;
+}
 
 
 // ============================

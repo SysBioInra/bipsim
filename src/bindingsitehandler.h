@@ -127,7 +127,7 @@ public:
   //  Public Constants
   // ==================
   //
-  static const int NO_SPECIFIC_SITE_ID = -1;
+  // static const int NO_SPECIFIC_SITE_ID = -1;
 
 private:
 

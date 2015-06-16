@@ -74,7 +74,7 @@ public:
   virtual void remove (int quantity);
 
   /**
-   * @return Print class content.
+   * @brief Print class content.
    * @param output Stream where output should be written.
    */
   virtual void print (std::ostream& output) const;
@@ -84,6 +84,7 @@ public:
   // ============================
   //
   /**
+   * @brief Number of elements in current pool.
    * @return The number of elements in the current pool.
    */
   int number (void) const;
@@ -118,6 +119,7 @@ public:
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   virtual bool check_invariant (void) const;

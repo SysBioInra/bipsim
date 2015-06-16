@@ -9,6 +9,8 @@ bin_PROGRAMS = test
 # list of sources for the 'test' binary
 test_SOURCES =    \
 	main.cpp macros.h forwarddeclarations.h \
+	baseloader.cpp baseloader.h \
+	baseloading.cpp baseloading.h \
 	bindable.cpp bindable.h \
 	binding.cpp binding.h \
 	bindingsite.cpp bindingsite.h \
@@ -19,6 +21,7 @@ test_SOURCES =    \
 	chemicalreaction.cpp chemicalreaction.h \
 	chemicalsequence.cpp chemicalsequence.h \
 	complexation.cpp complexation.h \
+	decodingtable.cpp decodingtable.h \
 	elongation.cpp elongation.h \
 	identifiedlist.cpp identifiedlist.h \
 	parser.cpp parser.h \
@@ -26,10 +29,12 @@ test_SOURCES =    \
 	randomhandler.cpp randomhandler.h \
 	reaction.cpp reaction.h \
 	reactionhandler.cpp reactionhandler.h \
+	release.cpp release.h \
 	site.cpp site.h \
 	sitehandler.cpp sitehandler.h \
 	sitelocation.cpp sitelocation.h \
 	solver.cpp solver.h \
+	tablehandler.cpp tablehandler.h \
 	terminationsitehandler.cpp terminationsitehandler.h
 
 ###############################################################################

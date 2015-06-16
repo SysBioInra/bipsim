@@ -28,7 +28,14 @@
 #include "forwarddeclarations.h"
 #include "identifiedlist.h"
 
+/**
+ * @brief A list of references to Site.
+ */
 typedef std::list< const Site* > SiteList;
+
+/**
+ * @brief A map associating a family integer identifer with a SiteList.
+ */
 typedef std::map< int, SiteList > SiteFamilyMap;
 
 /**
@@ -141,6 +148,9 @@ public:
   //  Public Constants
   // ==================
   //
+  /**
+   * @brief Identifier associated with unknown site families.
+   */
   static const int NOT_FOUND = IdentifiedList::NOT_FOUND;
 
 protected:
@@ -158,8 +168,22 @@ protected:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Copy the SiteFamilyMap of another handler.
+   * @param other_site_handler Template to copy.
+   */
   void copy_family_map ( const SiteHandler& other_site_handler );
+
+  /**
+   * @brief Create a site by copying an existing site.
+   * @param family_id Family of the site to copy.
+   * @param site Site to copy.
+   */
   void create_site ( int family_id, const Site& site );
+
+  /**
+   * @brief Erase all sites.
+   */
   void clear_sites ( void );
   
 };

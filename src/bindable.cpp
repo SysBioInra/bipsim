@@ -27,8 +27,8 @@
 // ==========================
 //
 Bindable::Bindable (void)
+  : _length (1)
 {
-  _length = 1;
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -50,7 +50,14 @@ Bindable::~Bindable (void)
 //
 void Bindable::add_termination_site ( const Site& termination_site )
 {
-  _termination_sites[ termination_site.position() ].push_back ( termination_site.family() );
+  // as a first approximation, we consider that reaching any base of the termination 
+  // site sends a termination signal
+  int first_position = termination_site.position();
+  int last_position = first_position + termination_site.length();
+  for ( int i = first_position; i < last_position; i++ )
+    {
+      _termination_sites[ i ].push_back ( termination_site.family() );
+    }
 }
 
 bool Bindable::is_termination_site ( int position,

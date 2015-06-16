@@ -45,6 +45,8 @@ public:
    * @param  component_a Reference to the first chemical involved.
    * @param  component_b Reference to the second chemical involved.
    * @param  complex Reference to the complex.
+   * @param k_on Association constant.
+   * @param k_off Dissociation constant.
    */
   Complexation (Chemical& component_a, Chemical& component_b, Chemical& complex, double k_on, double k_off);
 

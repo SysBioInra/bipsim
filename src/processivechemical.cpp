@@ -28,6 +28,8 @@
 //  Constructors/Destructors
 // ==========================
 //
+ProcessiveChemical::ProcessiveChemical (BoundChemical& stalled_form)
+  :_stalled_form ( stalled_form ) {}
 // Not needed for this class (use of default copy constructor) !
 // ProcessiveChemical::ProcessiveChemical (ProcessiveChemical& other_processive_chemical);
 

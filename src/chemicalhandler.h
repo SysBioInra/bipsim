@@ -19,6 +19,7 @@
 //
 #include <string> // std::string
 #include <map> // std::map
+#include <list> // std::list
 #include <iostream>
 
 // ==================
@@ -75,6 +76,14 @@ public:
   void create_bound_chemical (std::string chemical_name, int initial_quantity = 0);
 
   /**
+   * @brief Add new base_loader to the list.
+   * @param chemical_name Name usually given to the chemical.
+   * @param decoding_table Table used by the BaseLoader to match chemicals with templates.
+   * @param initial_quantity Number of molecules present at beginning of simulation.
+   */
+  void create_base_loader (std::string chemical_name, const DecodingTable& decoding_table, int initial_quantity = 0);
+
+  /**
    * @brief Add new processive chemical to the list.
    * @param chemical_name Name usually given to the chemical.
    * @param stalled_name Name given to stalled form of the chemical.
@@ -85,11 +94,10 @@ public:
   /**
    * @brief Add new processive chemical to the list.
    * @param chemical_name Name usually given to the chemical.
-   * @param length Sequence length.
+   * @param sequence Sequence of the chemical.
    * @param initial_quantity Number of molecules present at beginning of simulation.
    */
-  void create_chemical_sequence (std::string chemical_name, int length, int initial_quantity = 0);
-
+  void create_chemical_sequence (std::string chemical_name, const std::string& sequence, int initial_quantity = 0);
 
   // ============================
   //  Public Methods - Accessors
@@ -168,7 +176,7 @@ public:
    * @brief Standard output.
    * @return A reference to the stream containing the output.
    * @param output Stream where output should be written.
-   * @param chemical Reference to the chemical handler whose information should be written.
+   * @param chemical_handler Reference to the chemical handler whose information should be written.
    */
   friend std::ostream& operator<< (std::ostream& output,const ChemicalHandler& chemical_handler);
 
@@ -185,6 +193,9 @@ public:
   //  Public Constants
   // ==================
   //
+  /**
+   * @brief Standard identifier for unknown chemicals.
+   */
   static const int NOT_FOUND = IdentifiedList::NOT_FOUND;
 
 

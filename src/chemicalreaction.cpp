@@ -30,7 +30,7 @@
 ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
 				    std::vector<int>& stoichiometry, double forward_rate_constant,
 				    double backward_rate_constant)
-  : _number_components (_components.size())
+  : _number_components (components.size())
   , _components (components)
   , _stoichiometry (stoichiometry)
   , _k_1 (forward_rate_constant)
@@ -57,7 +57,7 @@ ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
       _stoichiometry [_bound_product_index] = tmp_stoichiometry;
       _components[_bound_product_index] = tmp_chemical;
       // update indices
-      if (_bound_reactant_index = desired_index)
+      if (_bound_reactant_index == desired_index)
 	{
 	  _bound_reactant_index = _bound_product_index;
 	}
@@ -164,11 +164,14 @@ double ChemicalReaction::forward_rate ( void ) const
 {
   /**
    * Forward rate is simply defined by r = k_1 x product ( [reactant_i] ).
+   * It is 0 if there are not enough reactants.
    */
+  if (is_forward_reaction_possible() == false) return 0;
+
   double rate = _k_1;
   for (int i = 0; i < _number_components; i++)
     {
-      if ( _stoichiometry[i] > 0 )
+      if ( _stoichiometry[i] < 0 )
 	{
 	  rate *= _components[i]->number();
 	}
@@ -180,11 +183,14 @@ double ChemicalReaction::backward_rate ( void ) const
 {
   /**
    * Backward rate is simply defined by r = k_-1 x product ( [product_i] ).
+   * It is 0 if there are not enough reactants.
    */
+  if (is_backward_reaction_possible() == false) return 0;
+
   double rate = _k_m1;
   for (int i = 0; i < _number_components; i++)
     {
-      if ( _stoichiometry[i] < 0 )
+      if ( _stoichiometry[i] > 0 )
 	{
 	  rate *= _components[i]->number();
 	}
@@ -230,7 +236,7 @@ bool ChemicalReaction::is_forward_reaction_possible (void) const
 {
   for (int i = 0; i < _number_components; i++)
     {
-      if (_components[i]->number() < _stoichiometry[i]) return false;
+      if (_components[i]->number() < -_stoichiometry[i]) return false;
     }
   return true;
 }
@@ -239,7 +245,7 @@ bool ChemicalReaction::is_backward_reaction_possible (void) const
 {
   for (int i = 0; i < _number_components; i++)
     {
-      if (_components[i]->number() < -_stoichiometry[i]) return false;
+      if (_components[i]->number() < _stoichiometry[i]) return false;
     }
   return true;
 }
@@ -296,17 +302,17 @@ void ChemicalReaction::compute_bound_component_indices ( void )
     }
   
   // check that the stoichiometry is 1
-  if ( _stoichiometry [_bound_product_index] != 1 )
+  if ( (_bound_product_index < _number_components) && (_stoichiometry [_bound_product_index] != 1) )
     {
        std::cerr << "ERROR: trying to define a chemical reaction in which the stoichiometry of a bound "
-		 << "product is not equal to 1."
+		 << "product is not equal to 1 (" << _stoichiometry [_bound_product_index] << ")."
 		 << std::endl;
     }
 
-  if ( _stoichiometry [_bound_reactant_index] != -1 )
+  if ( (_bound_reactant_index < _number_components) && (_stoichiometry [_bound_reactant_index] != -1) )
     {
        std::cerr <<  "ERROR: trying to define a chemical reaction in which the stoichiometry of a bound "
-		 << "reactant is not equal to -1."
+		 << "reactant is not equal to -1 (" << _stoichiometry [_bound_reactant_index] << ")."
 		 << std::endl;
     }
 }

@@ -99,6 +99,10 @@ class RandomHandler
   //  Public Methods - Setters
   // ==========================
   //
+  /**
+   * @brief Change seed of the random generator.
+   * @param seed Integer used to seed the generator.
+   */
   void set_seed ( int seed );
 
   // =======================================

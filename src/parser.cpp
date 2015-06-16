@@ -25,10 +25,14 @@
 #include "bindable.h"
 #include "chemical.h"
 #include "boundchemical.h"
+#include "decodingtable.h"
+#include "baseloader.h"
 #include "processivechemical.h"
 #include "chemicalhandler.h"
 #include "reactionhandler.h"
+#include "tablehandler.h"
 #include "bindingsitehandler.h"
+#include "tablehandler.h"
 #include "terminationsitehandler.h"
 
 
@@ -37,10 +41,12 @@
 // ==========================
 //
 Parser::Parser (ChemicalHandler& chemical_handler, ReactionHandler& reaction_handler,
-		BindingSiteHandler& binding_site_handler, TerminationSiteHandler& termination_site_handler)
+		BindingSiteHandler& binding_site_handler, TerminationSiteHandler& termination_site_handler,
+		TableHandler& table_handler)
   : _chemical_handler (chemical_handler)
   , _reaction_handler (reaction_handler)
   , _binding_site_handler (binding_site_handler)
+  , _table_handler (table_handler)
   , _termination_site_handler (termination_site_handler)
   , _read (0)
   , _line (0)
@@ -159,8 +165,10 @@ void Parser::parse_unit_line (std::string& line)
   std::string BS ("BindingSite");
   std::string TS ("TerminationSite");
   std::string BC ("BoundChemical");
+  std::string BL ("BaseLoader");
   std::string CS ("ChemicalSequence");
   std::string PC ("ProcessiveChemical");
+  std::string DT ("DecodingTable");
   std::istringstream line_stream (line);
   if (line_stream >> word)
     {
@@ -191,6 +199,14 @@ void Parser::parse_unit_line (std::string& line)
 	    {
 	      parse_processive_chemical (line_stream);
 	    }
+	  else if ( word == BL )
+	    {
+	      parse_base_loader (line_stream);
+	    }
+	  else if ( word == DT )
+	    {
+	      parse_decoding_table (line_stream);
+	    }
 	  else
 	    {
 	      std::cerr << "ERROR (line " << _line << "): " << word
@@ -201,6 +217,8 @@ void Parser::parse_unit_line (std::string& line)
     }
 }
 
+
+
 void Parser::parse_reaction_line (std::string& line)
 {
   // parse the first word and hand the rest of the line over to 
@@ -209,7 +227,9 @@ void Parser::parse_reaction_line (std::string& line)
   std::string CR ("ChemicalReaction");
   std::string CN ("Complexation");
   std::string BG ("Binding");
+  std::string BL ("BaseLoading");
   std::string EN ("Elongation");
+  std::string RE ("Release");
   std::istringstream line_stream (line);
   if (line_stream >> word)
     {
@@ -232,6 +252,14 @@ void Parser::parse_reaction_line (std::string& line)
 	    {
 	      parse_elongation (line_stream);
 	    }
+	  else if ( word == RE )
+	    {
+	      parse_release (line_stream);
+	    }
+	  else if ( word == BL )
+	    {
+	      parse_base_loading (line_stream);
+	    }
 	  else
 	    {
 	      std::cerr << "ERROR (line " << _line << "): " << word
@@ -243,6 +271,10 @@ void Parser::parse_reaction_line (std::string& line)
 }
 
 
+// --------------
+//  Unit Parsers
+// --------------
+//
 void Parser::parse_binding_site ( std::istringstream& line_stream )
 {
   // read base data
@@ -293,6 +325,7 @@ void Parser::parse_binding_site ( std::istringstream& line_stream )
 }
 
 
+
 void Parser::parse_termination_site ( std::istringstream& line_stream )
 {
   // read base data
@@ -340,6 +373,70 @@ void Parser::parse_termination_site ( std::istringstream& line_stream )
   _termination_site_handler.create_site (family_name, *bindable, position, length);
 }
 
+
+
+void Parser::parse_decoding_table ( std::istringstream& line_stream )
+{
+  // read base data
+  std::string name;
+  std::string template_;
+  std::string base;
+  double rate;
+  std::list < std::string > template_list;
+  std::list < Chemical* > base_list;
+  std::list < double > rate_list;
+
+  if (not (line_stream >> name))
+    {
+      std::cerr << "ERROR (line " << _line << "): corrupt data, ignoring line." << std::endl;
+      return;
+    }
+
+  while (line_stream >> template_ >> base >> rate)
+    {
+      // we check whether the base is already known
+      if (_chemical_handler.exists (base))
+	{
+	  template_list.push_back (template_);
+	  base_list.push_back (&_chemical_handler.reference (base));
+	  rate_list.push_back (rate);
+	}
+      else // if not, we need to reread the file (maybe the location is defined later)
+	{
+	  if (_read > 1) // we check that we indeed read the file only once
+	    {
+	      std::cerr << "ERROR (line " << _line << "): trying to define decoding table " << name
+			<< " with unknown chemical " << base
+			<< ". Please define the chemical explicitly somewhere in the "
+			<< "input file." << std::endl;
+	    }
+	  else
+	    {
+	      // we add the line to the list of lines to read again
+	      std::cout << "????????" << std::endl;
+	      _lines_to_reread.push_back (_line);
+	    }
+	  return; // stop parsing in any case
+	}
+    }
+
+  if (template_list.size() > 0)
+    {
+      if (not _table_handler.exists (name))
+	{
+	  _table_handler.create_decoding_table (name, template_list, base_list, rate_list);
+	}
+    }
+  else
+    {
+      std::cerr << "WARNING (line " << _line << "): decoding table " << name
+		<< " is empty, line ignored." << std::endl;
+    }
+}
+
+
+
+
 void Parser::parse_chemical ( std::istringstream& line_stream )
 {
   // read base data
@@ -362,12 +459,15 @@ void Parser::parse_chemical ( std::istringstream& line_stream )
     }
 }
 
+
+
+
 void Parser::parse_chemical_sequence ( std::istringstream& line_stream )
 {
   // read base data
   std::string name;
-  int length;
-  if ( not (line_stream >> name >> length) )
+  std::string sequence;
+  if ( not (line_stream >> name >> sequence) )
     {
       std::cerr << "ERROR (line " << _line << "): corrupt data, ignoring line." << std::endl;
       return;
@@ -381,9 +481,11 @@ void Parser::parse_chemical_sequence ( std::istringstream& line_stream )
 
   if (not _chemical_handler.exists (name) )
     {
-      _chemical_handler.create_chemical_sequence (name, length, initial_quantity);
+      _chemical_handler.create_chemical_sequence (name, sequence, initial_quantity);
     }
 }
+
+
 
 void Parser::parse_bound_chemical ( std::istringstream& line_stream )
 {
@@ -406,6 +508,56 @@ void Parser::parse_bound_chemical ( std::istringstream& line_stream )
       _chemical_handler.create_bound_chemical (name, initial_quantity);
     }
 }
+
+void Parser::parse_base_loader ( std::istringstream& line_stream )
+{
+  // read base data
+  std::string name;
+  std::string decoding_table;
+  if ( not (line_stream >> name >> decoding_table) )
+    {
+      std::cerr << "ERROR (line " << _line << "): corrupt data, ignoring line." << std::endl;
+      return;
+    }
+
+  // check whether the decoding table is known and valid
+  DecodingTable* decoding_table_ptr = 0;
+  if (_table_handler.exists (decoding_table))
+    {
+      decoding_table_ptr =
+	dynamic_cast< DecodingTable* > (&_table_handler.reference(decoding_table));
+      if (decoding_table_ptr == 0)
+	{
+	  std::cerr << "ERROR (line " << _line << "): table " << decoding_table
+		    << " is not a decoding table and cannot be used to define" 
+		    << " a base loader." << std::endl;
+	  return;	  
+	}
+    }
+  else
+    {
+      // if not, we need to reread the file (maybe the stalled form is defined later)
+      if (_read > 1) // we check that we indeed read the file only once
+	{
+	  std::cerr << "ERROR (line " << _line << "): trying to define base loader " << name
+		    << " with unknown decoding table " << decoding_table
+		    << ". Please define the table explicitly somewhere in the "
+		    << "input file." << std::endl;
+	}
+      else
+	{
+	  // we add the line to the list of lines to read again
+	  _lines_to_reread.push_back (_line);
+	}
+      return; // stop parsing in any case
+    }
+
+  if (not _chemical_handler.exists (name) )
+    {
+      _chemical_handler.create_base_loader (name, *decoding_table_ptr, 0);
+    }
+}
+
 
 void Parser::parse_processive_chemical ( std::istringstream& line_stream )
 {
@@ -445,6 +597,13 @@ void Parser::parse_processive_chemical ( std::istringstream& line_stream )
   // parse termination sites
   std::string site_name;
   ProcessiveChemical* chemical = dynamic_cast< ProcessiveChemical* > (&_chemical_handler.reference (name));
+  if ( chemical == 0 )
+    {
+      std::cerr << "ERROR (line " << _line << "): trying to define processive chemical " << name
+		<< " which seems to be already defined somewhere else as being of another type..."
+		<< "Please check your input file." << std::endl;
+      return;
+    }
   while (line_stream >> site_name)
     {
       // check whether termination site is already known
@@ -473,6 +632,11 @@ void Parser::parse_processive_chemical ( std::istringstream& line_stream )
 }
 
 
+
+// ------------------
+//  Reaction Parsers
+// ------------------
+//
 void Parser::parse_chemical_reaction ( std::istringstream& line_stream )
 {
   // read base data
@@ -480,21 +644,30 @@ void Parser::parse_chemical_reaction ( std::istringstream& line_stream )
   std::list< int > stoichiometries;
   std::string chemical;
   int stoichiometry;
-  while (line_stream >> chemical >> stoichiometry)
+  while ( (line_stream >> chemical) && (chemical != std::string ("rates")) )
     {
-      // check that the chemical is known
-      if (_chemical_handler.exists (chemical))
+      if (line_stream >> stoichiometry)
 	{
-	  chemicals.push_back (&_chemical_handler.reference(chemical));
-	  stoichiometries.push_back (stoichiometry);
+	  // check that the chemical is known
+	  if (_chemical_handler.exists (chemical))
+	    {
+	      chemicals.push_back (&_chemical_handler.reference(chemical));
+	      stoichiometries.push_back (stoichiometry);
+	    }
+	  else
+	    {
+	      std::cerr << "ERROR (line " << _line << "): unknown chemical " << chemical
+			<< " in chemical reaction." << std::endl;
+	      return;
+	    }
 	}
       else
 	{
-	  std::cerr << "ERROR (line " << _line << "): unknown chemical " << chemical
-		    << " in chemical reaction." << std::endl;
+	  std::cerr << "ERROR (line " << _line << "): corrupt data, ignoring line." << std::endl;
 	  return;
 	}
     }
+
   double k_1, k_m1;
   if ((chemicals.size() == 0) || (not (line_stream >> k_1 >> k_m1)))
     {
@@ -524,6 +697,63 @@ void Parser::parse_chemical_reaction ( std::istringstream& line_stream )
   // create reaction
   _reaction_handler.create_chemical_reaction (chemicals_vector, stoichiometries_vector, k_1, k_m1);
 }
+
+
+
+void Parser::parse_base_loading ( std::istringstream& line_stream )
+{
+  // read base data
+  std::string base_loader;
+  std::string occupied_form;
+  if (not (line_stream >> base_loader >> occupied_form))
+    {
+      std::cerr << "ERROR (line " << _line << "): corrupt data, ignoring line." << std::endl;
+      return;
+    }
+
+  // check that the chemicals are known and valid
+  BaseLoader* base_loader_ptr = 0;
+  if (_chemical_handler.exists (base_loader))
+    {
+      base_loader_ptr =
+	dynamic_cast< BaseLoader* > (&_chemical_handler.reference(base_loader));
+      if (base_loader_ptr == 0)
+	{
+	  std::cerr << "ERROR (line " << _line << "): chemical " << base_loader
+		    << " is not a base loader and cannot be used to define" 
+		    << " a base loading reaction." << std::endl;
+	  return;	  
+	}
+    }
+  else
+    {
+      std::cerr << "ERROR (line " << _line << "): unknown chemical " << base_loader << std::endl;
+      return;
+    }
+    
+  BoundChemical* occupied_form_ptr = 0;
+  if (_chemical_handler.exists (occupied_form))
+    {
+      occupied_form_ptr =
+	dynamic_cast< BoundChemical* > (&_chemical_handler.reference(occupied_form));
+      if (occupied_form_ptr == 0)
+	{
+	  std::cerr << "ERROR (line " << _line << "): chemical " << occupied_form
+		    << " is not a bound chemical and cannot be used to define" 
+		    << " a base loading reaction." << std::endl;
+	  return;	  
+	}
+    }
+  else
+    {
+      std::cerr << "ERROR (line " << _line << "): unknown chemical " << occupied_form << std::endl;
+      return;
+    }
+
+  // create reaction
+  _reaction_handler.create_base_loading (*base_loader_ptr, *occupied_form_ptr);
+}
+
 
 
 void Parser::parse_complexation ( std::istringstream& line_stream )
@@ -564,19 +794,22 @@ void Parser::parse_complexation ( std::istringstream& line_stream )
 					  k_on, k_off );
 }
 
+
+
 void Parser::parse_elongation ( std::istringstream& line_stream )
 {
   // read base data
   std::string chemical;
+  std::string second_chemical;
   int step_size ;
   double rate;
-  if (not (line_stream >> chemical >> step_size >> rate))
+  if (not (line_stream >> chemical >> second_chemical >> step_size >> rate))
     {
       std::cerr << "ERROR (line " << _line << "): corrupt data, ignoring line." << std::endl;
       return;
     }
 
-  // check that the chemical is valid
+  // check that the chemicals are valid
   ProcessiveChemical* processive_chemical = 0;
   if (_chemical_handler.exists (chemical))
     {
@@ -596,9 +829,30 @@ void Parser::parse_elongation ( std::istringstream& line_stream )
       return;
     }
 
+  BoundChemical* chemical_after_step = 0;
+  if (_chemical_handler.exists (second_chemical))
+    {
+      chemical_after_step =
+	dynamic_cast< BoundChemical* > (&_chemical_handler.reference(second_chemical));
+      if (chemical_after_step == 0)
+	{
+	  std::cerr << "ERROR (line " << _line << "): chemical " << second_chemical
+		    << " is not a bound chemical and cannot be used to define" 
+		    << " an elongation reaction." << std::endl;
+	  return;	  
+	}
+    }
+  else
+    {
+      std::cerr << "ERROR (line " << _line << "): unknown chemical " << chemical << std::endl;
+      return;
+    }
+
   // create reaction
-  _reaction_handler.create_elongation (*processive_chemical, step_size, rate);
+  _reaction_handler.create_elongation (*processive_chemical, *chemical_after_step, step_size, rate);
 }
+
+
 
 void Parser::parse_binding ( std::istringstream& line_stream )
 {
@@ -650,4 +904,86 @@ void Parser::parse_binding ( std::istringstream& line_stream )
   // create reaction
   _reaction_handler.create_binding (_chemical_handler.reference(unit_to_bind),
 				    *bound_chemical, binding_site_family);
+}
+
+void Parser::parse_release ( std::istringstream& line_stream )
+{
+  // read base data
+  std::list< Chemical* > chemicals;
+  std::list< int > stoichiometries;
+  std::string chemical;
+  int stoichiometry;
+
+  // get the chemical to release
+  BoundChemical* unit_to_release = 0;
+  if (line_stream >> chemical)
+    {
+      unit_to_release =
+	dynamic_cast< BoundChemical* > (&_chemical_handler.reference(chemical));
+      if (unit_to_release == 0)
+	{
+	  std::cerr << "ERROR (line " << _line << "): chemical " << chemical
+		    << " is not a bound chemical and cannot be used to define" 
+		    << " a release reaction." << std::endl;
+	  return;	  
+	}
+    }
+  else
+    {
+      std::cerr << "ERROR (line " << _line << "): corrupt data, ignoring line." << std::endl;
+      return;
+    }
+
+  // get other components of the reaction
+  while ( (line_stream >> chemical) && (chemical != std::string ("rate")) )
+    {
+      if (line_stream >> stoichiometry)
+	{
+	  // check that the chemical is known
+	  if (_chemical_handler.exists (chemical))
+	    {
+	      chemicals.push_back (&_chemical_handler.reference(chemical));
+	      stoichiometries.push_back (stoichiometry);
+	    }
+	  else
+	    {
+	      std::cerr << "ERROR (line " << _line << "): unknown chemical " << chemical
+			<< " in chemical reaction." << std::endl;
+	      return;
+	    }
+	}
+      else
+	{
+	  std::cerr << "ERROR (line " << _line << "): corrupt data, ignoring line." << std::endl;
+	  return;
+	}
+    }
+
+  double rate;
+  if ((chemicals.size() == 0) || (not (line_stream >> rate)))
+    {
+      std::cerr << "ERROR (line " << _line << "): corrupt data, ignoring line." << std::endl;
+      return;
+    }
+
+  // transform lists in vectors
+  std::vector< Chemical* > chemicals_vector (chemicals.size(), 0);
+  int i = 0;
+  for ( std::list<Chemical*>::iterator next_chemical = chemicals.begin();
+	next_chemical != chemicals.end();
+	next_chemical++, i++ )
+    {
+      chemicals_vector[i] = *next_chemical;
+    }
+  std::vector< int > stoichiometries_vector (stoichiometries.size(), 0);
+  i = 0;
+  for ( std::list<int>::iterator next_coef = stoichiometries.begin();
+	next_coef != stoichiometries.end();
+	next_coef++, i++ )
+    {
+      stoichiometries_vector[i] = *next_coef;
+    }
+  
+  // create reaction
+  _reaction_handler.create_release (*unit_to_release, chemicals_vector, stoichiometries_vector, rate);
 }

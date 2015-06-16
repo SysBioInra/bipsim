@@ -28,16 +28,19 @@
 //  Constructors/Destructors
 // ==========================
 //
-ChemicalSequence::ChemicalSequence ( void )
+ChemicalSequence::ChemicalSequence (const std::string& sequence)
+  : _sequence (sequence)
 {
+  _length = _sequence.size();
+  
   // intialize occupancy map with zero values
-  _occupancy_map.resize( this->length(), 0 );
+  _occupancy_map.resize( _length, 0 );
 }
 
 // Not needed for this class (use of default copy constructor) !
 // ChemicalSequence::ChemicalSequence (ChemicalSequence& other_chemical_sequence);
 
-ChemicalSequence::~ChemicalSequence ( void )
+ChemicalSequence::~ChemicalSequence (void)
 {
 }
 
@@ -53,7 +56,7 @@ void ChemicalSequence::bind_unit ( const BoundChemical& chemical_to_bind )
   REQUIRE( length > 0 ); /** @pre Length must be positive. */
   /** @pre Position and length must be consistent with sequence length. */
   int last_position = position + length - 1;
-  REQUIRE( last_position <= this->length() );
+  REQUIRE( last_position <= _length );
   
   // add the reference and position to the chemicals map
   _chemical_map[ &chemical_to_bind ].push_back ( SiteLocation( position, length ) );
@@ -70,7 +73,7 @@ void ChemicalSequence::unbind_unit ( const BoundChemical& chemical_to_unbind )
   REQUIRE( length > 0 ); /** @pre Length must be positive. */
   /** @pre Position and length must be consistent with sequence length. */
   int last_position = position + length - 1;
-  REQUIRE( last_position <= this->length() );
+  REQUIRE( last_position <= _length );
 
   // remove the reference and position from the chemicals map
   remove_reference_from_map ( chemical_to_unbind, position, length );
@@ -112,8 +115,6 @@ void ChemicalSequence::move_bound_unit ( ProcessiveChemical& chemical_to_move, i
   // add the reference and position to the chemicals map
   remove_reference_from_map( chemical_to_move, old_position, length );
   _chemical_map[ &chemical_to_move ].push_back ( SiteLocation( new_position, length ) );
-
-  // TODO: handle collisions
 }
 
 void ChemicalSequence::elongate_nascent (void)
@@ -155,35 +156,29 @@ int ChemicalSequence::number_available_sites ( int position, int length ) const
   REQUIRE( position > 0 ); /** @pre Position must be positive. */
   REQUIRE( length > 0 ); /** @pre Length must be positive. */
   /** @pre Position and length must be consistent with sequence length. */
-  REQUIRE( position + length - 1 <= this->length() );
-
+  REQUIRE( position + length - 1 <= _length );
+  
   // check for the lowest occupancy status
   int max_occupied = 0;
   for ( int i = position; i < position + length; i++ )
     {
       if ( _occupancy_map [ i-1 ] > max_occupied ) { max_occupied = _occupancy_map [ i-1 ]; }
     }
-
+  
   int result = 0;
-  if ( max_occupied < this->number() ) { result = this->number() - max_occupied; }
-
+  if ( max_occupied < _number ) { result = _number - max_occupied; }
+  
   ENSURE( result >= 0 ); /** @post The number of available sites is nonnegative. */
   /** @post The number of available sites is smaller than the number of bearing sequences. */
-  ENSURE( result <= this->number() );
+  ENSURE( result <= _number );
   return result;
 }
+  
 
 // ==========================
 //  Public Methods - Setters
 // ==========================
 //
-void ChemicalSequence::set_length ( int length )
-{
-  Bindable::set_length ( length );
-  // set that every position on every chemical is available
-  _occupancy_map.resize ( this->length() );
-  std::fill ( _occupancy_map.begin(), _occupancy_map.end(), 0 );
-}
 
 
 // =======================================
@@ -217,6 +212,8 @@ bool ChemicalSequence::check_invariant (void) const
 void ChemicalSequence::remove_reference_from_map ( const BoundChemical& chemical, int position, int length )
 {
   SiteLocationList& location_list = _chemical_map[ &chemical ];
+  REQUIRE( location_list.size() > 0 ); /** @pre There must be a chemical of this type in the map. */
+
   if ( location_list.size() == 1 ) // there is only one element in the list
     {
       // the list will be empty, we can remove it from the map
@@ -227,11 +224,27 @@ void ChemicalSequence::remove_reference_from_map ( const BoundChemical& chemical
     {
       // we erase a chemical at the right location
       SiteLocationList::iterator site_location = location_list.begin();
-      while ( ( site_location->position() != position )
-	      || ( site_location->length() != length ))
+      while ( (( site_location->position() != position )
+	       || ( site_location->length() != length ))
+	      && (site_location != location_list.end()) )
 	{ 
 	  site_location++;
 	}
-      location_list.erase ( site_location );
+
+      if ( site_location != location_list.end() )
+	{
+	  location_list.erase ( site_location );
+	}
+      else 
+	{
+	  std::cerr << "ERROR: trying to delete bound chemical " << &chemical << " that does not exist at position "
+		    << position << " with length " << length << std::endl;
+	  site_location = location_list.begin();
+	  while (  (site_location != location_list.end()) )
+	    { 
+	      std::cout << site_location->position() << " " << site_location->length() << std::endl;
+	      site_location++;
+	    }
+	}
     }
 }

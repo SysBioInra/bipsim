@@ -20,6 +20,7 @@
 #include <map> // std::map
 #include <list> // std::list
 #include <vector> // std::vector
+#include <string> // std::string
 
 // ==================
 //  Project Includes
@@ -30,7 +31,18 @@
 #include "chemical.h"
 #include "bindable.h"
 
+/**
+ * @brief A simple list of SiteLocation.
+ */
 typedef std::list<SiteLocation> SiteLocationList;
+
+/**
+ * @brief A map that stores the location of all BoundChemical.
+ *
+ * Keys of the map are references to all BoundChemical currently located on
+ * the chemical sequence, data is a SiteLocationList that stores the location
+ * of all chemicals designated by the key.
+ */
 typedef std::map< const BoundChemical*, SiteLocationList > ChemicalMap;
 
 /**
@@ -50,8 +62,9 @@ public:
   //
   /**
    * @brief Default constructor
+   * @param sequence Sequence of the chemical
    */
-  ChemicalSequence (void);
+  ChemicalSequence (const std::string& sequence);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -82,9 +95,6 @@ public:
    * @brief Binds a chemical element to a binding site of the bindable element.
    * @param chemical_to_bind
    *  The chemical element to bind.
-   * @param position Position of binding site.
-   * @param length Size occupied by bound element on sequence.
-   * @sa BindingSite
    */
   void bind_unit ( const BoundChemical& chemical_to_bind );
 
@@ -94,9 +104,6 @@ public:
    *  element.
    * @param  chemical_to_unbind
    *  The element to unbind.
-   * @param position Position of binding site.
-   * @param length Size occupied by bound element on sequence.
-   * @sa BindingSite
    */
   void unbind_unit ( const BoundChemical& chemical_to_unbind );
 
@@ -155,16 +162,21 @@ public:
    */
   int number_available_sites ( int position, int length ) const;
 
+  /**
+   * @brief Returns the sequence between two specific positions.
+   * @return String sequence between two positions.
+   * @param first_position
+   *  Position of the first base of the sequence to return (included).
+   * @param last_position
+   *  Position of the last base of the sequence to return (included).
+   */
+  const std::string get_sequence (int first_position, int last_position) const;
+
 
   // ==========================
   //  Public Methods - Setters
   // ==========================
   //
-  /**
-   * @brief Sets element length.
-   * @param length Length of sequence.
-   */
-  void set_length ( int length );
 
 
   // =======================================
@@ -196,6 +208,9 @@ private:
   /** @brief Tracks available positions along the sequence. */
   std::vector<int> _occupancy_map;
 
+  /** @brief Sequence of the chemical. */
+  std::string _sequence;
+
   /** @brief Map of bound chemicals. */
   ChemicalMap _chemical_map;
 
@@ -217,6 +232,17 @@ private:
 //  Inline declarations
 // ======================
 //
+inline const std::string ChemicalSequence::get_sequence (int first_position, int length) const
+{
+  /* @pre First position must be positive. */
+  REQUIRE( first_position > 0 );
+  /* @pre Length must be positive. */
+  REQUIRE( length > 0 );
+  /* @pre Requested sequence must not exceed sequence length. */
+  REQUIRE( first_position + length - 1 <= this->length() );
+
+  return _sequence.substr (first_position-1, length);
+}
 
 
 #endif // CHEMICALSEQUENCE_H

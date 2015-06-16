@@ -45,12 +45,13 @@ public:
   //
   /**
    * @brief Constructor
-   * @param number_components Number of chemicals involved in the reaction.
    * @param components
    *  Vector of chemicals involved in the reaction.
    * @param stoichiometry
    *  Vector of stoichiometry of the chemicals, positive for products, negative for
    *  reactants.
+   * @param forward_rate_constant Forward rate constant.
+   * @param backward_rate_constant Backward rate constant.
    */
   ChemicalReaction (std::vector<Chemical*>& components,
 		    std::vector<int>& stoichiometry, double forward_rate_constant,
@@ -140,7 +141,7 @@ public:
   bool check_invariant (void) const;
 
 
-private:
+protected:
 
   // ============
   //  Attributes

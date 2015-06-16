@@ -46,7 +46,8 @@ class Parser
    * @brief Default constructor
    */
   Parser (ChemicalHandler& chemical_handler, ReactionHandler& reaction_handler,
-	  BindingSiteHandler& binding_site_handler, TerminationSiteHandler& termination_site_handler);
+	  BindingSiteHandler& binding_site_handler, TerminationSiteHandler& termination_site_handler,
+	  TableHandler& table_handler);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -125,6 +126,9 @@ private:
   /** @brief Handler that creates termination sites. */
   TerminationSiteHandler& _termination_site_handler;
 
+  /** @brief Handler that creates various tables. */
+  TableHandler& _table_handler;
+
   /** @brief Number of times the file has been read. */
   int _read;
 
@@ -151,17 +155,26 @@ private:
   /** @brief Parse a line describing a termination site. */
   void parse_termination_site ( std::istringstream& line_stream );
 
+  /** @brief Parse a line describing a decoding table. */
+  void parse_decoding_table ( std::istringstream& line_stream );
+
   /** @brief Parse a line describing a chemical. */
   void parse_chemical ( std::istringstream& line_stream );
 
   /** @brief Parse a line describing a bound chemical. */
   void parse_bound_chemical ( std::istringstream& line_stream );
 
+  /** @brief Parse a line describing a base loader. */
+  void parse_base_loader ( std::istringstream& line_stream );
+
   /** @brief Parse a line describing a chemical sequence. */
   void parse_chemical_sequence ( std::istringstream& line_stream );
 
   /** @brief Parse a line describing a processive chemical. */
   void parse_processive_chemical ( std::istringstream& line_stream );
+
+  /** @brief Parse a line describing a base loading. */
+  void parse_base_loading ( std::istringstream& line_stream );
 
   /** @brief Parse a line describing a chemical reaction. */
   void parse_chemical_reaction ( std::istringstream& line_stream );
@@ -175,6 +188,8 @@ private:
   /** @brief Parse a line describing a binding. */
   void parse_binding ( std::istringstream& line_stream );
 
+  /** @brief Parse a line describing a release. */
+  void parse_release ( std::istringstream& line_stream );
 };
 
 // ======================

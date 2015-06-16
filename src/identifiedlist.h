@@ -26,6 +26,9 @@
 //
 #include "forwarddeclarations.h"
 
+/**
+ * @brief A map that associates a name with an integer identifier.
+ */
 typedef std::map<std::string,int> IdMap;
 
 /**
@@ -126,6 +129,9 @@ public:
   //  Public Constants
   // ==================
   //
+  /**
+   * @brief Identifier associated with unknown elements.
+   */
   static const int NOT_FOUND = 0;
 
 private:

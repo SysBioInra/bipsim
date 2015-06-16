@@ -1,31 +1,198 @@
 
-# units
-unit ChemicalSequence rna 300 3
-unit ChemicalSequence rna2 300 3
-
-unit Chemical free_30S 100
-unit Chemical free_50S 100
-
-unit BoundChemical stalled_ribosome
-unit BoundChemical bound_ribosome
-
-unit ProcessiveChemical moving_ribosome stalled_ribosome hairpin
-
+########
+# RNAs #
+########
+unit ChemicalSequence rna AUCGAGCGGGCAAUAUGUACAUAUUUACCUCUACAAUGGAUGCGCAAAAACAUUCCCUCAUCACAAUUCAACUCAAGGGCGCGAGACGUAUUCCCCGGUUGCUGCUUGGGACCAUCAAACCUCAUUCACCGCGGAACCCGACUAUGCGACUGGACGGCCUAUUUACCGAGAGCUGUUCGAAGGCUGGUUCAAUACAUGGCAGAAGAUUCAGGUGUCCUCAACUUACGCGGCCAUCACACCUUACCCGUCUCGGGGGAAUCAGUCACCUAUGCACCAGACGCCGCUUGCGAUUUCGACCAACAGCGGGAACGGCUGUGCAGUCACACCGCUGUGUACCGGACAGUCUCAGCUACCCUCUCAAGCACGAGAUCUACAGGGCGGGGUACAAGCCGUCGCUUCGGGUCCAUGCGGGGGGUCAAACCCUGUUUCAGAGGUCCGGGCAGCAUACGCGCGGCACCCAUCUCUCUUCAUUCGCUUAUUGUCAACGUUCGAAAGCACAAUGUGGUUUAUGUGCUACUGUGGAGAGGGUUUGUCAAUCUACGAGCACAAAAAAGCGGCGCACUUCAGGCAUCAAAGGAUGGAUUUUUCACAAUCCCCGAU 50
+unit ChemicalSequence rna2 GUCCAAGCUAUGGUCCCUUCACAGCAAUGCUACGGAGCAAUCAACAUCACCAUCCACAGUCAAUUCAUCCGAAGGGGGUCGGCAUCGGAAGCUUCAAAUUCAGAAGCGGGGAGUUACCGGUCAAUACGAGCAUACAGACAAUCGUCGUCGAUACUCUCCAGCCGACUCAAAACGGGAGAAAAAACCACUGGAAAUGGCAGUACCAGCUCGACAUUCGCGUGCCCCCGGCCAACCGUUCAUUGGAGCAAUCAGUGGAUGGAUCAGCGCCACAUGUAUUGCCUCAUGGGCCUCUUUGGUCAUGCUACGCAACAGCUGGAUCUACAGAAGCGCGAUUGUCGGGCACAUUACAUUAUACUGUUCAAAAAGUCCUUGUUCGACGGCGUGGGGAGUCUCUCCAACGUCAUUUACGGACGCGAAUUUCAACAUCAGUCACAGUCACAGCUUCUACUUGGCUACGUCGUCGUGCGCUCCGUCUGUACGCAGGGGACCAGUCGAUACCUGCUCCUAUACGGCGUCAUCACACCCACAUAUCACGUGGUACAAGGUCAUUCGUGUCCGCGGGCACCUUCAAGCUUCUUGUUGGGACGGCUUUCGUUCAGA 50
 
 # binding sites
 unit BindingSite RBS rna 100 5 10 1
 unit BindingSite RBS rna 200 5 10 1
-unit BindingSite RBS rna2 100 5 10 1
+unit BindingSite RBS rna2 50 5 10 1
 unit BindingSite other_binding_site rna 200 5 10 1
 
-
 # termination sites
-unit TerminationSite hairpin rna 142 9
-unit TerminationSite hairpin rna 251 9
-unit TerminationSite hairpin rna2 199 9
+unit TerminationSite stop_codon rna 502 9
+unit TerminationSite stop_codon rna 500 9
+unit TerminationSite stop_codon rna2 452 9
 
 
-# reactions
-reaction Binding free_30S bound_ribosome RBS
-reaction Complexation bound_ribosome free_50S moving_ribosome 0.01 0
-reaction Elongation moving_ribosome 3 10
+#########
+# tRNAs #
+#########
+unit Chemical fMet 10000
+unit Chemical fMet2a
+unit Chemical fMet2d
+unit Chemical fMet2p
+
+unit Chemical tRNA
+
+unit Chemical tRNA_A_c 4000
+unit Chemical tRNA_C_c 2000
+unit Chemical tRNA_D_c 2000
+unit Chemical tRNA_E_c 2000
+unit Chemical tRNA_F_c 4000
+unit Chemical tRNA_G_c 4000
+unit Chemical tRNA_H_c 2000
+unit Chemical tRNA_I_c 3000
+unit Chemical tRNA_K_c 2000
+unit Chemical tRNA_L_c 4000
+unit Chemical tRNA_M_c 1000
+unit Chemical tRNA_N_c 2000
+unit Chemical tRNA_P_c 4000
+unit Chemical tRNA_Q_c 2000
+unit Chemical tRNA_R_c 6000
+unit Chemical tRNA_S_c 6000
+unit Chemical tRNA_T_c 4000
+unit Chemical tRNA_V_c 4000
+unit Chemical tRNA_W_c 1000
+unit Chemical tRNA_Y_c 2000
+
+unit Chemical EtRNA_A_ca 
+unit Chemical EtRNA_C_ca 
+unit Chemical EtRNA_D_ca 
+unit Chemical EtRNA_E_ca 
+unit Chemical EtRNA_F_ca 
+unit Chemical EtRNA_G_ca 
+unit Chemical EtRNA_H_ca 
+unit Chemical EtRNA_I_ca 
+unit Chemical EtRNA_K_ca 
+unit Chemical EtRNA_L_ca 
+unit Chemical EtRNA_M_ca 
+unit Chemical EtRNA_N_ca 
+unit Chemical EtRNA_P_ca 
+unit Chemical EtRNA_Q_ca 
+unit Chemical EtRNA_R_ca 
+unit Chemical EtRNA_S_ca 
+unit Chemical EtRNA_T_ca 
+unit Chemical EtRNA_V_ca 
+unit Chemical EtRNA_W_ca 
+unit Chemical EtRNA_Y_ca 
+
+
+############
+# Proteins #
+############
+unit Chemical protein
+
+
+############
+# Ribosome #
+############
+# Ribosome subunits
+unit Chemical 30S 50
+unit Chemical 50S 50
+unit Chemical 30S1 
+unit Chemical 30S3 
+unit Chemical 30S31
+
+# Bound 30S variants
+unit BoundChemical m30S31
+unit BoundChemical m30S312a
+unit BoundChemical m30S312d
+unit BoundChemical m30S12a
+
+# Bound ribosome variants
+unit BoundChemical stalled_ribosome
+unit ProcessiveChemical EFt70S stalled_ribosome stop_codon
+unit BaseLoader 70S EtRNAs
+unit BoundChemical Et70Sc
+unit BoundChemical t70Sc
+unit BoundChemical t70Scp
+
+###################
+# Small Chemicals #
+###################
+unit Chemical H2O 1000
+unit Chemical GTP 1000
+unit Chemical GDP 0
+unit Chemical ppGpp 0
+unit Chemical Pi
+
+
+##################################
+# Translation initiation Factors #
+##################################
+unit Chemical IF1 100
+unit Chemical IF2 100
+unit Chemical IF2a
+unit Chemical IF2d
+unit Chemical IF2p
+unit Chemical IF3 100
+
+##################################
+# Translation elongation Factors #
+##################################
+unit Chemical EFTua 20000
+unit Chemical EFTud 
+unit Chemical EFP 100
+unit Chemical EFPa 
+unit Chemical EFPd 
+
+
+##################
+# Decoding table #
+##################
+
+unit DecodingTable EtRNAs UUU EtRNA_F_ca 1 UUC EtRNA_F_ca 1 UUA EtRNA_F_ca 1 UUG EtRNA_F_ca 1 CUU EtRNA_L_ca 1 CUC EtRNA_L_ca 1 CUA EtRNA_L_ca 1 CUG EtRNA_L_ca 1 AUU EtRNA_I_ca 1 AUC EtRNA_I_ca 1 AUA EtRNA_I_ca 1 AUG EtRNA_M_ca 1 GUU EtRNA_V_ca 1 GUC EtRNA_V_ca 1 GUA EtRNA_V_ca 1 GUG EtRNA_V_ca 1 UCU EtRNA_S_ca 1 UCC EtRNA_S_ca 1 UCA EtRNA_S_ca 1 UCG EtRNA_S_ca 1 CCU EtRNA_P_ca 1 CCC EtRNA_P_ca 1 CCA EtRNA_P_ca 1 CCG EtRNA_P_ca 1 ACU EtRNA_T_ca 1 ACC EtRNA_T_ca 1 ACA EtRNA_T_ca 1 ACG EtRNA_T_ca 1 GCU EtRNA_A_ca 1 GCC EtRNA_A_ca 1 GCA EtRNA_A_ca 1 GCG EtRNA_A_ca 1 UAU EtRNA_Y_ca 1 UAC EtRNA_Y_ca 1 CAU EtRNA_H_ca 1 CAC EtRNA_H_ca 1 CAA EtRNA_Q_ca 1 CAG EtRNA_Q_ca 1 AAU EtRNA_N_ca 1 AAC EtRNA_N_ca 1 AAA EtRNA_K_ca 1 AAG EtRNA_K_ca 1 GAU EtRNA_D_ca 1 GAC EtRNA_D_ca 1 GAA EtRNA_E_ca 1 GAG EtRNA_E_ca 1 UGU EtRNA_C_ca 1 UGC EtRNA_C_ca 1 UGG EtRNA_W_ca 1 CGU EtRNA_R_ca 1 CGC EtRNA_R_ca 1 CGA EtRNA_R_ca 1 CGG EtRNA_R_ca 1 AGU EtRNA_S_ca 1 AGC EtRNA_S_ca 1 AGA EtRNA_R_ca 1 AGG EtRNA_R_ca 1 GGU EtRNA_G_ca 1 GGC EtRNA_G_ca 1 GGA EtRNA_G_ca 1 GGG EtRNA_G_ca 1 
+
+#############
+# reactions #
+#############
+
+# pre-initiation
+reaction Complexation 30S IF3 30S3 1 1
+reaction Complexation 30S3 IF1 30S31 1 1
+reaction Binding 30S31 m30S31 RBS
+
+# fMet loading
+reaction Complexation IF2 GTP IF2a 10 1
+reaction Complexation IF2a fMet fMet2a 1 1
+reaction Complexation IF2 GDP IF2d 1 10
+reaction Complexation IF2d fMet fMet2d 1 10
+reaction Complexation IF2 ppGpp IF2p 1 1
+reaction Complexation IF2p fMet fMet2p 1 1
+reaction Complexation fMet2a m30S31 m30S312a 1 0
+reaction Complexation fMet2d m30S31 m30S312d 1 10
+reaction Complexation IF3 m30S12a m30S312a 0 1
+
+# ribosome formation
+reaction ChemicalReaction m30S12a -1 50S -1 70S 1 IF1 1 IF2d 1 Pi 1 H2O 1 rates 1 0
+
+# tRNA activation
+reaction Complexation tRNA_A_c EFTua EtRNA_A_ca 1 0
+reaction Complexation tRNA_C_c EFTua EtRNA_C_ca 1 0
+reaction Complexation tRNA_D_c EFTua EtRNA_D_ca 1 0
+reaction Complexation tRNA_E_c EFTua EtRNA_E_ca 1 0
+reaction Complexation tRNA_F_c EFTua EtRNA_F_ca 1 0
+reaction Complexation tRNA_G_c EFTua EtRNA_G_ca 1 0
+reaction Complexation tRNA_H_c EFTua EtRNA_H_ca 1 0
+reaction Complexation tRNA_I_c EFTua EtRNA_I_ca 1 0
+reaction Complexation tRNA_K_c EFTua EtRNA_K_ca 1 0
+reaction Complexation tRNA_L_c EFTua EtRNA_L_ca 1 0
+reaction Complexation tRNA_M_c EFTua EtRNA_M_ca 1 0
+reaction Complexation tRNA_N_c EFTua EtRNA_N_ca 1 0
+reaction Complexation tRNA_P_c EFTua EtRNA_P_ca 1 0
+reaction Complexation tRNA_Q_c EFTua EtRNA_Q_ca 1 0
+reaction Complexation tRNA_R_c EFTua EtRNA_R_ca 1 0
+reaction Complexation tRNA_S_c EFTua EtRNA_S_ca 1 0
+reaction Complexation tRNA_T_c EFTua EtRNA_T_ca 1 0
+reaction Complexation tRNA_V_c EFTua EtRNA_V_ca 1 0
+reaction Complexation tRNA_W_c EFTua EtRNA_W_ca 1 0
+reaction Complexation tRNA_Y_c EFTua EtRNA_Y_ca 1 0
+
+# ribosome movement
+reaction BaseLoading 70S Et70Sc
+reaction ChemicalReaction Et70Sc -1 H2O -1 t70Sc 1 EFTud 1 Pi 1 rates 1 0
+reaction Complexation EFP GTP EFPa 1 1
+reaction Complexation EFP GDP EFPd 0.1 10
+reaction ChemicalReaction t70Sc -1 EFPa -1 t70Scp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
+reaction ChemicalReaction t70Scp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA 1 rates 1 0 #H2O -1
+reaction Elongation EFt70S 70S 3 10
+
+# ribosome release
+reaction Release stalled_ribosome 30S 1 50S 1 protein 1 rate 1
+
+# small molecule turnover
+reaction ChemicalReaction EFTud -1 GTP -1 EFTua 1 GDP 1 rates 1 0
+reaction ChemicalReaction GDP -1 Pi -1 GTP 1 rates 1 0 

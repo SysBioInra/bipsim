@@ -54,8 +54,8 @@ public:
    * @param binding_result
    *  A bound chemical element that corresponds to the original chemical in its
    *  bound form.
-   * @param  binding_site_type
-   *  The type (not a specific instance) of binding sites the chemical can bind
+   * @param  binding_site_family
+   *  The family identifer of binding sites the chemical can bind
    *  onto.
    * @sa BindingSite
    */
