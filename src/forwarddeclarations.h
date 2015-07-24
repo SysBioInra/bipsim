@@ -26,6 +26,7 @@ class ChemicalReaction;
 class ChemicalSequence;
 class Complexation;
 class DecodingTable;
+class DependencyGraph;
 class Elongation;
 class IdentifiedList;
 class Parser;

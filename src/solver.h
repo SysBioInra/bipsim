@@ -78,10 +78,12 @@ class Solver
   /**
    * @brief Compute dependencies between reactions.
    *
-   * This function is essential for efficient rate updates. It checks for
-   * 
+   * This function is essential for efficient rate updates. It initializes 
+   * a DependencyGraph that determines the smallest subset of reactions to
+   * update at every time step.
+   * @sa DependencyGraph
    */
-  void update_dependencies (void);
+  void compute_dependencies (void);
 
   /**
    * @brief Compute all rates of the _rates vector with current reaction rates.
@@ -109,6 +111,13 @@ class Solver
    * @return Simulation time.
    */
   double time (void) const;
+
+  /**
+   * @brief Accessor to the number of reactions that have occurred.
+   * @return Number of reactions that have occurred from the beginning of simulation.
+   */
+  double number_reactions_performed (void) const;  
+  
 
   // ==========================
   //  Public Methods - Setters
@@ -158,23 +167,17 @@ private:
   /** @brief Vector of reaction rates. */
   std::vector< double > _rates;
 
-  /** @brief Map that stores the list of reactions in which a chemical is involved. */
-  std::map< const Chemical*, std::list<int> > _chemical_to_reactions;
-
-  /** @brief True if the _reaction_dependencies vector is up to date. */
-  bool _dependencies_to_date;
-
-  /** @brief Vector that stores dependency between reactions. */
-  std::vector< std::set<int> > _dependencies;
-
-  /** @brief List of reactions whose rates should always be updated. */
-  std::list<int> _reactions_always_update;
-
   /** @brief Index of the last reaction performed. */
   double _last_reaction_index;
 
+  /** @brief Dependency graph between relations. */
+  DependencyGraph* _dependency_graph;
+
   /** @brief Simulation time. */
   double _t;
+
+  /** @brief Number of reactions that have been performed. */
+  double _number_reactions_performed;
 
   /** @brief Random handler used for determining next reaction. */
   RandomHandler _random_handler;
@@ -206,6 +209,11 @@ private:
 inline double Solver::time (void) const 
 {
   return _t;
+}
+
+inline double Solver::number_reactions_performed (void) const 
+{
+  return _number_reactions_performed;
 }
 
 inline void Solver::set_time (double time)

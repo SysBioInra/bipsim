@@ -22,6 +22,7 @@ test_SOURCES =    \
 	chemicalsequence.cpp chemicalsequence.h \
 	complexation.cpp complexation.h \
 	decodingtable.cpp decodingtable.h \
+	dependencygraph.cpp dependencygraph.h \
 	elongation.cpp elongation.h \
 	identifiedlist.cpp identifiedlist.h \
 	parser.cpp parser.h \

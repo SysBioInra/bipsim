@@ -55,12 +55,11 @@ int main ( )
   // solve system
   Solver solver;
   solver.add_reaction_list (reaction_handler.reference_list());
-  solver.update_dependencies();
+  solver.compute_dependencies();
   
-  int number_reactions = 0;
   while (solver.time() < 1000)
     {
-      solver.go_to_next_reaction(); number_reactions++;
+      solver.go_to_next_reaction();
       //#define DETAILED_DISPLAY
 #ifdef DETAILED_DISPLAY
       std::cout << "Next reaction (t=" << solver.time() << ")" << std::endl;
@@ -71,5 +70,5 @@ int main ( )
   const Chemical& protein = chemical_handler.reference( std::string("protein") );
   std::cout << chemical_handler;
   std::cout << "Proteins: " << protein << std::endl;
-  std::cout << number_reactions << " reactions occurred." << std::endl;
+  std::cout << solver.number_reactions_performed() << " reactions occurred." << std::endl;
 }
