@@ -17,7 +17,7 @@
 //  General Includes
 // ==================
 //
-
+#include <list> // std::list
 
 // ==================
 //  Project Includes
@@ -70,6 +70,11 @@ public:
   virtual void perform_backward ( void ) = 0;
 
   /**
+   * @brief Update reaction rates.
+   */
+  virtual void update_rates ( void ) = 0;
+
+  /**
    * @return Print class content.
    * @param output Stream where output should be written.
    */
@@ -81,17 +86,25 @@ public:
   // ============================
   //
   /**
-   * @brief Returns the forward reaction rate.
-   * @return The forward reaction rate.
+   * @brief Returns previously calculated forward reaction rate.
+   * @return Forward reaction rate value computed at last update.
+   * @sa update_rates
    */
-  virtual double forward_rate ( void ) const = 0;
+  double forward_rate ( void ) const;
 
 
   /**
-   * @brief Returns the backward reaction rate.
-   * @return The backward reaction rate.
+   * @brief Returns previously calculates backward reaction rate.
+   * @return Forward reaction rate value computed at last update.
+   * @sa update_rates
    */
-  virtual double backward_rate ( void ) const = 0;
+  double backward_rate ( void ) const;
+
+  /**
+   * @brief Returns chemicals taking part in the reaction.
+   * @return List of chemicals taking part in the reaction.
+   */
+  const std::list<Chemical*>& components ( void ) const;
 
 
   // ==========================
@@ -134,6 +147,15 @@ protected:
   //  Attributes
   // ============
   //
+  /** @return Forward reaction rate value computed at last update. */
+  double _forward_rate;
+
+  /** @return Backward reaction rate value computed at last update. */
+  double _backward_rate;
+
+  /** @return Backward reaction rate value computed at last update. */
+  std::list< Chemical* > _components;
+
 
   // =================
   //  Private Methods
@@ -146,5 +168,20 @@ protected:
 //  Inline declarations
 // ======================
 //
+inline double Reaction::forward_rate ( void ) const
+{
+  return _forward_rate;
+}
+
+inline double Reaction::backward_rate ( void ) const
+{
+  return _backward_rate;
+}
+
+inline const std::list<Chemical*>& Reaction::components ( void ) const
+{
+  return _components;
+}
+
 
 #endif // REACTION_H

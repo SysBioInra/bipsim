@@ -45,7 +45,7 @@ ProcessiveChemical::~ProcessiveChemical (void)
 void ProcessiveChemical::step_forward ( int step_size )
 {
   // move the focused chemical
-  _focused_unit->second += step_size;
+  _focused_unit->move (step_size);
 }
 
 // ============================
@@ -54,9 +54,9 @@ void ProcessiveChemical::step_forward ( int step_size )
 //
 bool ProcessiveChemical::is_terminating ( void )
 {
-  const Bindable& focused_unit_location = (_focused_unit->first)->location();
-  return focused_unit_location.is_termination_site ( _focused_unit->second,
-						     _termination_site_families );
+  const ChemicalSequence& focused_unit_location = _focused_unit->binding_site().location();
+  return focused_unit_location.is_termination_site (_focused_unit->current_position(),
+						    _termination_site_families);
 }
 
 

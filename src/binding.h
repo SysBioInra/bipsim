@@ -79,14 +79,19 @@ public:
   //
   //
   /**
+   * @brief Update reaction rates.
+   */
+  virtual void update_rates ( void );
+
+  /**
    * @brief Update chemical quantities according to the forward reaction.
    */
-  void perform_forward( void );
+  virtual void perform_forward( void );
 
   /**
    * @brief Update chemical quantities according to the backward reaction.
    */
-  void perform_backward( void );
+  virtual void perform_backward( void );
 
   /**
    * @return Print class content.
@@ -99,19 +104,6 @@ public:
   //  Public Methods - Accessors
   // ============================
   //
-  /**
-   * @brief Returns the forward reaction rate.
-   * @return The forward reaction rate.
-   */
-  double forward_rate( void ) const;
-
-
-  /**
-   * @brief Returns the backward reaction rate.
-   * @return The backward reaction rate.
-   */
-  double backward_rate( void ) const;
-
 
   // ==========================
   //  Public Methods - Setters

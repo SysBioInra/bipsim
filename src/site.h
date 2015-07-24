@@ -23,11 +23,10 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "bindable.h"
 #include "macros.h"
 
 /**
- * @brief Class that represents binding sites on bindable elements.
+ * @brief Class that represents binding sites on chemical sequences.
  *
  * The BindingSite class contains two types of information. Each instance
  * belongs to a family of binding sites (e.g. Ribosome Binding Site) but also
@@ -49,7 +48,7 @@ public:
    * @param length Length of the binding site.
    * @sa BindingSiteHandler
    */
-  Site ( int family_id, Bindable& location, int position, int length )
+  Site ( int family_id, ChemicalSequence& location, int position, int length )
     : _family ( family_id )
     , _location ( location )
     , _position ( position )
@@ -86,13 +85,13 @@ public:
    * @brief Number of available sites in the cell.
    * @return Number of available sites in the cell.
    */
-  int number_available_sites ( void ) const;
+  virtual int number_available_sites ( void ) const;
 
   /**
    * @brief Binding site location.
-   * @return Bindable that carries the binding site.
+   * @return ChemicalSequence that carries the binding site.
    */
-  Bindable& location ( void ) const;
+  ChemicalSequence& location ( void ) const;
 
   /**
    * @brief Position accessor.
@@ -145,7 +144,7 @@ public:
   int _family;
 
   /** @brief Chemical on which the binding site is located. */
-  Bindable& _location;
+  ChemicalSequence& _location;
 
   /** @brief Exact position of the binding site along the sequence. */
   int _position;
@@ -179,7 +178,7 @@ inline int Site::length ( void ) const
   return _length;
 }
 
-inline Bindable& Site::location ( void ) const
+inline ChemicalSequence& Site::location ( void ) const
 {
   return _location;
 }

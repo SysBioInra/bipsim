@@ -27,10 +27,11 @@
 //  Constructors/Destructors
 // ==========================
 //
-BaseLoading::BaseLoading (BaseLoader& base_loader, BoundChemical& occupied_loader)
-  : _base_loader (base_loader)
-  , _occupied_loader (occupied_loader)
+BaseLoading::BaseLoading (BaseLoader& base_loader)
+  : Reaction()
+  , _base_loader (base_loader)
 {
+  _components.push_back (&base_loader);
 }
  
 // Not needed for this class (use of default copy constructor) !
@@ -57,8 +58,9 @@ void BaseLoading::perform_forward (void)
   // when the elongated chemical is released so let us say it does virtually exist :)
   
   // Update the base loader status to occupied
-  _occupied_loader.add_unit_in_place_of (_base_loader);
-  _base_loader.focused_unit_location().replace_bound_unit (_base_loader, _occupied_loader);      
+  BoundChemical& occupied_loader = _base_loader.focused_occupied_state ();
+  occupied_loader.add_unit_in_place_of (_base_loader);
+  _base_loader.focused_unit_location().replace_bound_unit (_base_loader, occupied_loader);      
   _base_loader.remove_focused_unit();
 }
 
@@ -73,12 +75,7 @@ void BaseLoading::print (std::ostream& output) const
   output << "BaseLoading reaction.";
 }
 
-
-// ============================
-//  Public Methods - Accessors
-// ============================
-//
-double BaseLoading::forward_rate (void) const
+void BaseLoading::update_rates (void)
 {
   /**
    * Loading rate is generally defined by r = sum ( k_on_i x [A] x [B_i], where [A] is the
@@ -89,13 +86,16 @@ double BaseLoading::forward_rate (void) const
    * the rest of the formula for us as it holds information about binding rates and binding site
    * concentrations.
    */
-  return _base_loader.loading_rate ();
+  _forward_rate = _base_loader.loading_rate ();
+
+  /** No backward reaction, backward rate stays at 0. */
 }
 
-double BaseLoading::backward_rate (void) const
-{
-  return 0;
-}
+
+// ============================
+//  Public Methods - Accessors
+// ============================
+//
 
 
 // ==========================

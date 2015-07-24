@@ -15,11 +15,11 @@
 
 class BaseLoader;
 class BaseLoading;
-class Bindable;
 class Binding;
 class BindingSite;
 class BindingSiteHandler;
 class BoundChemical;
+class BoundUnit;
 class Chemical;
 class ChemicalHandler;
 class ChemicalReaction;

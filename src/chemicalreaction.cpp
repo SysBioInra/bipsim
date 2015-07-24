@@ -30,8 +30,9 @@
 ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
 				    std::vector<int>& stoichiometry, double forward_rate_constant,
 				    double backward_rate_constant)
-  : _number_components (components.size())
-  , _components (components)
+  : Reaction ()
+  , _number_components (components.size())
+  , _component_vector (components)
   , _stoichiometry (stoichiometry)
   , _k_1 (forward_rate_constant)
   , _k_m1 (backward_rate_constant)
@@ -42,6 +43,12 @@ ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
   /** @pre Stoichiometry container size must match number of components. */
   REQUIRE( _stoichiometry.size() == _number_components );
 
+  // fill in the component list
+  for (int i = 0; i < _number_components; i++)
+    {
+      _components.push_back (_component_vector[i]);
+    }
+
   // look for bound chemicals in the reaction
   compute_bound_component_indices();
 
@@ -51,11 +58,11 @@ ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
       // swap contents
       int desired_index = _number_components-1;
       int tmp_stoichiometry = _stoichiometry[desired_index];
-      Chemical* tmp_chemical = _components[desired_index];
+      Chemical* tmp_chemical = _component_vector[desired_index];
       _stoichiometry[desired_index] = _stoichiometry [_bound_product_index];
-      _components[desired_index] = _components[_bound_product_index];
+      _component_vector[desired_index] = _component_vector[_bound_product_index];
       _stoichiometry [_bound_product_index] = tmp_stoichiometry;
-      _components[_bound_product_index] = tmp_chemical;
+      _component_vector[_bound_product_index] = tmp_chemical;
       // update indices
       if (_bound_reactant_index == desired_index)
 	{
@@ -68,11 +75,11 @@ ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
       // swap contents
       int desired_index = _number_components-2;
       int tmp_stoichiometry = _stoichiometry[desired_index];
-      Chemical* tmp_chemical = _components[desired_index];
+      Chemical* tmp_chemical = _component_vector[desired_index];
       _stoichiometry[desired_index] = _stoichiometry [_bound_reactant_index];
-      _components[desired_index] = _components[_bound_reactant_index];
+      _component_vector[desired_index] = _component_vector[_bound_reactant_index];
       _stoichiometry [_bound_reactant_index] = tmp_stoichiometry;
-      _components[_bound_reactant_index] = tmp_chemical;
+      _component_vector[_bound_reactant_index] = tmp_chemical;
       // update indices
       _bound_reactant_index = desired_index;
     }
@@ -100,19 +107,19 @@ void ChemicalReaction::perform_forward (void)
       int variation = _stoichiometry[i];
       if ( variation > 0 )
 	{
-	  _components[i]->add (variation);
+	  _component_vector[i]->add (variation);
 	}
       else
 	{
-	  _components[i]->remove (-variation);
+	  _component_vector[i]->remove (-variation);
 	}
     }
 
   // update bound chemical number (if applicable)
   if (_bound_reactant_index < _number_components)
     {
-      BoundChemical* product = static_cast<BoundChemical*> (_components[_bound_product_index]);
-      BoundChemical* reactant = static_cast<BoundChemical*> (_components[_bound_reactant_index]);
+      BoundChemical* product = static_cast<BoundChemical*> (_component_vector[_bound_product_index]);
+      BoundChemical* reactant = static_cast<BoundChemical*> (_component_vector[_bound_reactant_index]);
       reactant->focus_random_unit();
       product->add_unit_in_place_of (*reactant);
       reactant->focused_unit_location().replace_bound_unit (*reactant, *product);      
@@ -130,19 +137,19 @@ void ChemicalReaction::perform_backward (void)
       int variation = _stoichiometry[i];
       if ( variation > 0 )
 	{
-	  _components[i]->remove (variation);
+	  _component_vector[i]->remove (variation);
 	}
       else
 	{
-	  _components[i]->add (-variation);
+	  _component_vector[i]->add (-variation);
 	}
     }
 
   // update bound chemical number (if applicable)
   if (_bound_reactant_index < _number_components)
     {
-      BoundChemical* product = static_cast<BoundChemical*> (_components[_bound_product_index]);
-      BoundChemical* reactant = static_cast<BoundChemical*> (_components[_bound_reactant_index]);
+      BoundChemical* product = static_cast<BoundChemical*> (_component_vector[_bound_product_index]);
+      BoundChemical* reactant = static_cast<BoundChemical*> (_component_vector[_bound_reactant_index]);
       product->focus_random_unit ();
       reactant->add_unit_in_place_of (*reactant);
       product->focused_unit_location().replace_bound_unit (*product, *reactant);      
@@ -155,48 +162,54 @@ void ChemicalReaction::print (std::ostream& output) const
   output << "Chemical reaction.";
 }
 
-
-// ============================
-//  Public Methods - Accessors
-// ============================
-//
-double ChemicalReaction::forward_rate ( void ) const
+void ChemicalReaction::update_rates (void)
 {
   /**
    * Forward rate is simply defined by r = k_1 x product ( [reactant_i] ).
    * It is 0 if there are not enough reactants.
    */
-  if (is_forward_reaction_possible() == false) return 0;
-
-  double rate = _k_1;
-  for (int i = 0; i < _number_components; i++)
+  if (is_forward_reaction_possible() == true)
     {
-      if ( _stoichiometry[i] < 0 )
+      _forward_rate = _k_1;
+      for (int i = 0; i < _number_components; i++)
 	{
-	  rate *= _components[i]->number();
-	}
-    }  
-  return rate;
-}
+	  if ( _stoichiometry[i] < 0 )
+	    {
+	      _forward_rate *= _component_vector[i]->number();
+	    }
+	} 
+    }
+  else // forward reaction is not possible
+    {
+      _forward_rate = 0;
+    }
 
-double ChemicalReaction::backward_rate ( void ) const
-{
   /**
    * Backward rate is simply defined by r = k_-1 x product ( [product_i] ).
    * It is 0 if there are not enough reactants.
    */
-  if (is_backward_reaction_possible() == false) return 0;
-
-  double rate = _k_m1;
-  for (int i = 0; i < _number_components; i++)
+  if (is_backward_reaction_possible() == true)
     {
-      if ( _stoichiometry[i] > 0 )
+      _backward_rate = _k_m1;
+      for (int i = 0; i < _number_components; i++)
 	{
-	  rate *= _components[i]->number();
-	}
-    }  
-  return rate;
+	  if ( _stoichiometry[i] > 0 )
+	    {
+	      _backward_rate *= _component_vector[i]->number();
+	    }
+	}  
+    }
+  else // backward reaction is not possible
+    {
+      _backward_rate = 0;
+    }
 }
+
+
+// ============================
+//  Public Methods - Accessors
+// ============================
+//
 
 
 
@@ -236,7 +249,7 @@ bool ChemicalReaction::is_forward_reaction_possible (void) const
 {
   for (int i = 0; i < _number_components; i++)
     {
-      if (_components[i]->number() < -_stoichiometry[i]) return false;
+      if (_component_vector[i]->number() < -_stoichiometry[i]) return false;
     }
   return true;
 }
@@ -245,7 +258,7 @@ bool ChemicalReaction::is_backward_reaction_possible (void) const
 {
   for (int i = 0; i < _number_components; i++)
     {
-      if (_components[i]->number() < _stoichiometry[i]) return false;
+      if (_component_vector[i]->number() < _stoichiometry[i]) return false;
     }
   return true;
 }
@@ -256,7 +269,7 @@ void ChemicalReaction::compute_bound_component_indices ( void )
   _bound_reactant_index = _number_components;
   for (int i = 0; i < _number_components; i++)
     {
-      BoundChemical* test = dynamic_cast< BoundChemical* > (_components[i]);
+      BoundChemical* test = dynamic_cast< BoundChemical* > (_component_vector[i]);
       if ( test != 0 ) // true if a the chemical is a bound chemical !
 	{
 	  if ( _stoichiometry[i] > 0 ) // it is a product

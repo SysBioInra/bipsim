@@ -49,12 +49,14 @@ TableHandler::~TableHandler (void)
 // ===========================
 //
 
-void TableHandler::create_decoding_table (std::string table_name, const std::list<std::string>& template_list, const std::list<Chemical*>& base_list, const std::list<double>& rate_list)
+void TableHandler::create_decoding_table (std::string table_name, const std::list<std::string>& template_list, const std::list<Chemical*>& base_list,
+					  const std::list<BoundChemical*>& polymerase_list, const std::list<double>& rate_list)
 {
   /** @pre Table should not be defined already. */
   REQUIRE( _identifiers.exists (table_name) == false );
   REQUIRE( template_list.size() > 0 ); /** @pre There should be at least one element in the table. */
   REQUIRE( template_list.size() == base_list.size() ); /** @pre The number of templates and bases must be equal. */
+  REQUIRE( template_list.size() == polymerase_list.size() ); /** @pre The number of templates and occupied polymerases must be equal. */
   
   // get a new id for the entity
   _identifiers.create_id (table_name);
@@ -63,6 +65,7 @@ void TableHandler::create_decoding_table (std::string table_name, const std::lis
   // create it and store the reference
   std::list<std::string>::const_iterator template_it = template_list.begin();
   std::list<Chemical*>::const_iterator base_it = base_list.begin();
+  std::list<BoundChemical*>::const_iterator polymerase_it = polymerase_list.begin();
   std::list<double>::const_iterator rate_it = rate_list.begin();
   int template_length = template_it->size();
   DecodingTable* new_table = new DecodingTable (template_length);
@@ -70,14 +73,14 @@ void TableHandler::create_decoding_table (std::string table_name, const std::lis
     {
       if (template_it->size() == template_length)
 	{
-	  new_table->add_template (*template_it, **base_it, *rate_it);
+	  new_table->add_template (*template_it, **base_it, **polymerase_it, *rate_it);
 	}
       else
 	{
 	  std::cerr << "ERROR: trying to define a decoding table with templates of variable "
 		    << "length." << std::endl;
 	}
-      template_it++; base_it++; rate_it++;
+      template_it++; base_it++; polymerase_it++; rate_it++;
     }
   _references [_last_id] = new_table;
   _last_reference = new_table;

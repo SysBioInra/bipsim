@@ -11,11 +11,11 @@ test_SOURCES =    \
 	main.cpp macros.h forwarddeclarations.h \
 	baseloader.cpp baseloader.h \
 	baseloading.cpp baseloading.h \
-	bindable.cpp bindable.h \
 	binding.cpp binding.h \
 	bindingsite.cpp bindingsite.h \
 	bindingsitehandler.cpp bindingsitehandler.h \
 	boundchemical.cpp boundchemical.h \
+	boundunit.h \
 	chemical.cpp chemical.h \
 	chemicalhandler.cpp chemicalhandler.h \
 	chemicalreaction.cpp chemicalreaction.h \

@@ -81,23 +81,16 @@ public:
    */
   virtual void print (std::ostream& output) const;
 
+  /**
+   * @brief Update reaction rates.
+   */
+  virtual void update_rates ( void );
+
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  /**
-   * @brief Returns the forward reaction rate.
-   * @return The forward reaction rate.
-   */
-  virtual double forward_rate ( void ) const;
-
-
-  /**
-   * @brief Returns the backward reaction rate.
-   * @return The backward reaction rate.
-   */
-  virtual double backward_rate ( void ) const;
 
 
 

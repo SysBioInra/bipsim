@@ -80,11 +80,9 @@ public:
    * @brief Add new base loading reaction to list.
    * @param base_loader
    *  Chemical that matches templates with bases.
-   * @param occupied_form
-   *  Same chemical in its occupied form.
    * @sa BaseLoading
    */
-  void create_base_loading (BaseLoader& base_loader, BoundChemical& occupied_form);
+  void create_base_loading (BaseLoader& base_loader);
 
   /**
    * @brief Add new binding reaction to list.
@@ -145,7 +143,7 @@ public:
    * @brief Return the list of reactions.
    * @return List of reactions.
    */
-  std::list< Reaction*>& reference_list (void);
+  const std::list< Reaction*>& reference_list (void) const;
 
   /**
    * @brief Return the last reaction added.
@@ -183,7 +181,8 @@ public:
   // ==================================
   //
   /**
-   * @return True if class invariant is preserved
+   * @brief Check if invariant conditions are fulfilled.
+   * @return True if class invariant is preserved.
    */
   virtual bool check_invariant (void) const;
 
@@ -202,9 +201,9 @@ private:
   /** @brief List of reactions. */
   std::list< Reaction* > _references;
 
-  /** @brief List of reactions. */
+  /** @brief Reference to the last reaction that has been created. */
   Reaction* _last_reference;
-  
+    
 
   // =================
   //  Private Methods
@@ -217,7 +216,7 @@ private:
 //  Inline declarations
 // ======================
 //
-inline std::list< Reaction*>& ReactionHandler::reference_list (void)
+inline const std::list< Reaction*>& ReactionHandler::reference_list (void) const
 {
   return _references;
 }
@@ -226,5 +225,6 @@ inline Reaction& ReactionHandler::last_reference_created (void) const
 {
   return *_last_reference;
 }
+
 
 #endif // REACTIONHANDLER_H

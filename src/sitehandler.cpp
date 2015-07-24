@@ -21,7 +21,7 @@
 //
 #include "sitehandler.h"
 #include "site.h"
-#include "bindable.h"
+#include "chemicalsequence.h"
 #include "macros.h"
 
 
@@ -48,12 +48,12 @@ SiteHandler::~SiteHandler (void)
 //  Public Methods - Commands
 // ===========================
 //
-void SiteHandler::create_site ( std::string family_name, Bindable& location,
+void SiteHandler::create_site ( std::string family_name, ChemicalSequence& location,
 				int position, int length )
 {
   REQUIRE( position > 0 ); /** @pre Position must be positive. */
   REQUIRE( length > 0 ); /** @pre Length must be positive. */
-  /** @pre Site must fit on bindable element 
+  /** @pre Site must fit on chemical sequence 
    *   (position+length <= location->length() ). */
   REQUIRE( position + length <= location.length() );
 

@@ -32,6 +32,7 @@ Release::Release (BoundChemical& unit_to_release, std::vector<Chemical*>& other_
   : ChemicalReaction (other_components, stoichiometry, rate, 0)
   , _unit_to_release (unit_to_release)
 {
+  _components.push_back (&_unit_to_release);
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -64,25 +65,22 @@ void Release::print (std::ostream& output) const
   output << "Release reaction.";
 }
 
-
-// ============================
-//  Public Methods - Accessors
-// ============================
-//
-double Release::forward_rate ( void ) const
+void Release::update_rates (void)
 {
   /**
    * Forward rate is simply defined by r = k_1 x product ( [reactant_i] ).
    * It is 0 if there are not enough reactants.
    */
-  return _unit_to_release.number()*ChemicalReaction::forward_rate();
+  ChemicalReaction::update_rates();
+  _forward_rate = _unit_to_release.number()*ChemicalReaction::forward_rate();
+
+  /** Backward reaction is impossible. Nothing to update (it remains always 0) */
 }
 
-double Release::backward_rate ( void ) const
-{
-  /** Backward reaction is impossible. */
-  return 0;
-}
+// ============================
+//  Public Methods - Accessors
+// ============================
+//
 
 
 

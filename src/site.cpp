@@ -19,7 +19,7 @@
 // ==================
 //
 #include "site.h"
-#include "bindable.h"
+#include "chemicalsequence.h"
 
 // ==========================
 //  Constructors/Destructors

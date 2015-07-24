@@ -83,7 +83,7 @@ public:
    * @param length
    *  Length of the binding site.
    */
-  virtual void create_site ( std::string family_name, Bindable& location,
+  virtual void create_site ( std::string family_name, ChemicalSequence& location,
 			     int position, int length );
 
   /**

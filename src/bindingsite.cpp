@@ -19,18 +19,21 @@
 // ==================
 //
 #include "bindingsite.h"
-#include "bindable.h"
+#include "chemicalsequence.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-BindingSite::BindingSite ( int family_id, Bindable& location, int position,
-			   int length, double k_on, double k_off )
-  : Site ( family_id, location, position, length )
-  , _k_on ( k_on )
-  , _k_off ( k_off )
+BindingSite::BindingSite (int family_id, ChemicalSequence& location, int position,
+			  int length, double k_on, double k_off,
+			  int reading_frame /*= NO_READING_FRAME*/)
+  : Site (family_id, location, position, length)
+  , _k_on (k_on)
+  , _k_off (k_off)
+  , _reading_frame (reading_frame)
 {
+  _focus_area_id = _location.create_focus_area (_position, _length);
 }
 
 // Not needed for this class (use of default copy constructor) !

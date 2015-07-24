@@ -28,13 +28,19 @@
 //
 Complexation::Complexation (Chemical& component_a, Chemical& component_b,
 			    Chemical& complex, double k_on, double k_off)
-  : _component_a (component_a)
+  : Reaction ()
+  , _component_a (component_a)
   , _component_b (component_b)
   , _complex (complex)
   , _k_on (k_on)
   , _k_off (k_off)
   , _bound_component (0)
 {
+  // fill in component list
+  _components.push_back (&component_a);
+  _components.push_back (&component_b);
+  _components.push_back (&complex);
+
   look_for_bound_components();
 }
 
@@ -112,25 +118,24 @@ void Complexation::print (std::ostream& output) const
   output << "Complexation reaction.";
 }
 
-// ============================
-//  Public Methods - Accessors
-// ============================
-//
-double Complexation::forward_rate ( void ) const
+void Complexation::update_rates ( void )
 {
   /**
    * Complexation rate is simply defined by r = k_on x [A] x [B].
    */
-  return _k_on * _component_a.number() * _component_b.number();
-}
+  _forward_rate = _k_on * _component_a.number() * _component_b.number();
 
-double Complexation::backward_rate ( void ) const
-{
   /**
    * Backward complexation rate is simply defined by r = k_off x [AB].
    */
-  return _k_off * _complex.number();
+  _backward_rate = _k_off * _complex.number();
 }
+
+
+// ============================
+//  Public Methods - Accessors
+// ============================
+//
 
 
 // ==========================

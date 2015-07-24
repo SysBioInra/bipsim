@@ -19,6 +19,8 @@
 //
 #include <vector> // std::vector
 #include <list> // std::list
+#include <map> // std::map
+#include <set> // std::set
 
 // ==================
 //  Project Includes
@@ -71,7 +73,20 @@ class Solver
    * @brief Add reaction to reactions to integrate.
    * @param reactions List of reactions to add.
    */
-  void add_reaction_list (std::list< Reaction* >& reactions);
+  void add_reaction_list (const std::list< Reaction* >& reactions);
+
+  /**
+   * @brief Compute dependencies between reactions.
+   *
+   * This function is essential for efficient rate updates. It checks for
+   * 
+   */
+  void update_dependencies (void);
+
+  /**
+   * @brief Compute all rates of the _rates vector with current reaction rates.
+   */
+  void update_all_rates (void);
 
   /**
    * @brief Update system according to the reaction system during given time step.
@@ -143,6 +158,21 @@ private:
   /** @brief Vector of reaction rates. */
   std::vector< double > _rates;
 
+  /** @brief Map that stores the list of reactions in which a chemical is involved. */
+  std::map< const Chemical*, std::list<int> > _chemical_to_reactions;
+
+  /** @brief True if the _reaction_dependencies vector is up to date. */
+  bool _dependencies_to_date;
+
+  /** @brief Vector that stores dependency between reactions. */
+  std::vector< std::set<int> > _dependencies;
+
+  /** @brief List of reactions whose rates should always be updated. */
+  std::list<int> _reactions_always_update;
+
+  /** @brief Index of the last reaction performed. */
+  double _last_reaction_index;
+
   /** @brief Simulation time. */
   double _t;
 
@@ -154,7 +184,7 @@ private:
   // =================
   //
   /**
-   * @brief Fill the _rates vector with current reaction rates.
+   * @brief Update the _rates vector with current reaction rates according to dependency map.
    */
   void update_rates (void);
 

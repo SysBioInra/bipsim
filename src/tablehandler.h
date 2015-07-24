@@ -66,10 +66,13 @@ public:
    * @param table_name Name usually given to the decoding table.
    * @param template_list List of motifs that can be read on a sequence.
    * @param base_list Chemicals that are loaded corresponding to each template.
+   * @param polymerase_list Occupied polymerases corresponding to each template.
    * @param initial_quantity Number of molecules present at beginning of simulation.
+   * @sa DecodingTable
    */
   void create_decoding_table (std::string table_name, const std::list<std::string>& template_list,
-			      const std::list<Chemical*>& base_list, const std::list<double>& rate_list);
+			      const std::list<Chemical*>& base_list, const std::list<BoundChemical*>& polymerase_list,
+			      const std::list<double>& rate_list);
 
   // ============================
   //  Public Methods - Accessors

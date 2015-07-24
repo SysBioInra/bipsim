@@ -28,11 +28,15 @@
 // ==========================
 //
 Elongation::Elongation ( ProcessiveChemical& processive_chemical, BoundChemical& chemical_after_step, int step_size, double rate )
-  : _processive_chemical ( processive_chemical )
+  : Reaction()
+  , _processive_chemical ( processive_chemical )
   , _chemical_after_step (chemical_after_step)
   , _step_size ( step_size )
   , _rate ( rate )
 {
+  _components.push_back (&processive_chemical);
+  _components.push_back (&chemical_after_step);
+  _components.push_back (&_processive_chemical.stalled_form());
 }
  
 // Not needed for this class (use of default copy constructor) !
@@ -54,7 +58,7 @@ void Elongation::perform_forward( void )
   _processive_chemical.focus_random_unit();
   
   // update position on location if it is possible
-  Bindable& location = _processive_chemical.focused_unit_location();
+  ChemicalSequence& location = _processive_chemical.focused_unit_location();
   if ( not location.is_out_of_bounds (_processive_chemical.focused_unit_position() + _step_size,
 				      _processive_chemical.focused_unit_length()))
     {
@@ -104,25 +108,23 @@ void Elongation::print (std::ostream& output) const
   output << "Elongation reaction.";
 }
 
-// ============================
-//  Public Methods - Accessors
-// ============================
-//
-double Elongation::forward_rate( void ) const
+void Elongation::update_rates( void )
 {
   /**
    * Elongation rate is simply r = #(processive_chemical) * elongation_rate / step_size.
    */
-  return (_rate * _processive_chemical.number()) / _step_size;
+  _forward_rate = (_rate * _processive_chemical.number()) / _step_size;
+
+  /**
+   * There is no backward reaction to elongation. Result always stays 0.
+   */
 }
 
-double Elongation::backward_rate( void ) const
-{
-  /**
-   * There is no backward reaction to elongation. Result is always 0.
-   */
-  return 0;
-}
+
+// ============================
+//  Public Methods - Accessors
+// ============================
+//
 
 
 // ==========================

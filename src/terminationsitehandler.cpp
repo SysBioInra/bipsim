@@ -19,9 +19,9 @@
 // ==================
 //
 #include "terminationsitehandler.h"
-#include "bindable.h"
 #include "macros.h"
 #include "site.h"
+#include "chemicalsequence.h"
 
 
 // ==========================
@@ -36,7 +36,7 @@ TerminationSiteHandler::~TerminationSiteHandler (void)
 //  Public Methods - Commands
 // ===========================
 //
-void TerminationSiteHandler::create_site ( std::string family_name, Bindable& location,
+void TerminationSiteHandler::create_site ( std::string family_name, ChemicalSequence& location,
 					   int position, int length )
 {
   REQUIRE( position > 0 ); /** @pre Position must be positive. */

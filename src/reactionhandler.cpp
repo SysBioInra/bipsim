@@ -18,7 +18,13 @@
 //  Project Includes
 // ==================
 //
+#include "chemical.h"
+#include "boundchemical.h"
+#include "baseloader.h"
+#include "processivechemical.h"
+
 #include "reactionhandler.h"
+
 #include "reaction.h"
 #include "binding.h"
 #include "chemicalreaction.h"
@@ -58,16 +64,22 @@ void ReactionHandler::create_chemical_reaction (std::vector<Chemical*>& componen
 						double forward_rate_constant,
 						double backward_rate_constant)
 {
+  // create reaction
   ChemicalReaction* reaction = new ChemicalReaction (components, stoichiometry,
 						     forward_rate_constant, 
 						     backward_rate_constant);
+
+  // update references
   _references.push_back (reaction);
   _last_reference = reaction;
 }
 
-void ReactionHandler::create_base_loading (BaseLoader& base_loader, BoundChemical& occupied_form)
+void ReactionHandler::create_base_loading (BaseLoader& base_loader)
 {
-  BaseLoading* reaction = new BaseLoading (base_loader, occupied_form);
+  // create reaction
+  BaseLoading* reaction = new BaseLoading (base_loader);
+
+  // update references
   _references.push_back (reaction);
   _last_reference = reaction;
 }
@@ -75,21 +87,30 @@ void ReactionHandler::create_base_loading (BaseLoader& base_loader, BoundChemica
 
 void ReactionHandler::create_binding (Chemical& unit_to_bind, BoundChemical& binding_result, int binding_site_family)
 {
+  // create reaction
   Binding* reaction = new Binding (unit_to_bind, binding_result, binding_site_family);
+
+  // update references
   _references.push_back (reaction);
   _last_reference = reaction;
 }
 
 void ReactionHandler::create_complexation (Chemical& component_a, Chemical& component_b, Chemical& complex, double k_on, double k_off)
 {
+  // create reaction
   Complexation* reaction = new Complexation (component_a, component_b, complex, k_on, k_off);
+
+  // update references
   _references.push_back (reaction);
   _last_reference = reaction;
 }
 
 void ReactionHandler::create_elongation (ProcessiveChemical& processive_chemical, BoundChemical& chemical_after_step, int step_size, double rate)
 {
+  // create reaction
   Elongation* reaction = new Elongation (processive_chemical, chemical_after_step, step_size, rate);
+
+  // update references
   _references.push_back (reaction);
   _last_reference = reaction;
 }
@@ -97,7 +118,10 @@ void ReactionHandler::create_elongation (ProcessiveChemical& processive_chemical
 void ReactionHandler::create_release ( BoundChemical& unit_to_release, std::vector<Chemical*>& components,
 				       std::vector<int>& stoichiometry,	double rate)
 {
+  // create reaction
   ChemicalReaction* reaction = new Release (unit_to_release, components, stoichiometry, rate);
+
+  // update references
   _references.push_back (reaction);
   _last_reference = reaction;
 }

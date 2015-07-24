@@ -20,7 +20,6 @@
 //
 #include <list>  // std::list
 #include <map>  // std::map
-#include <utility> // std::pair
 
 // ==================
 //  Project Includes
@@ -28,12 +27,8 @@
 //
 #include "forwarddeclarations.h"
 #include "chemical.h"
-#include "bindingsite.h"
+#include "boundunit.h"
 
-/**
- * @brief A pair associating a BindingSite of a BoundChemical and its current position.
- */
-typedef std::pair< const BindingSite *, int > BoundUnit;
 
 /**
  * @brief A list of BoundUnit.
@@ -104,8 +99,9 @@ public:
    * This function MUST be called every time a unit is added.
    * @param binding_site The binding site to which it bound.
    * @param position Current position.
+   * @param reading_frame Reading frame position.
    */
-  virtual void add_unit (const BindingSite&, int position);
+  virtual void add_unit (const BindingSite&, int position, int reading_frame);
 
   /**
    * @brief Remove focused unit.
@@ -153,10 +149,16 @@ public:
   int focused_unit_length (void) const;
 
   /**
-   * @brief Returns the location of focused unit.
-   * @return Bindable that bears the bound chemical.
+   * @brief Returns the reading frame of focused unit.
+   * @return Position where unit can potentially read its sequence.
    */
-  Bindable& focused_unit_location (void) const;
+  int focused_unit_reading_frame (void) const;
+
+  /**
+   * @brief Returns the location of focused unit.
+   * @return ChemicalSequence that bears the bound chemical.
+   */
+  ChemicalSequence& focused_unit_location (void) const;
 
   /**
    * @brief Returns the total unbinding rate for a subset of chemicals.
@@ -238,22 +240,27 @@ public:
 //
 inline const BindingSite& BoundChemical::focused_unit_binding_site (void) const
 {
-  return *(_focused_unit->first);
+  return _focused_unit->binding_site();
 }
 
 inline int BoundChemical::focused_unit_length (void) const
 {
-  return (_focused_unit->first)->length();
+  return (_focused_unit->binding_site()).length();
 }
 
-inline Bindable& BoundChemical::focused_unit_location (void) const
+inline ChemicalSequence& BoundChemical::focused_unit_location (void) const
 {
-  return (_focused_unit->first)->location();
+  return (_focused_unit->binding_site()).location();
 }
 
 inline int BoundChemical::focused_unit_position (void) const
 {
-  return _focused_unit->second;
+  return _focused_unit->current_position();
+}
+
+inline int BoundChemical::focused_unit_reading_frame (void) const
+{
+  return _focused_unit->reading_frame();
 }
 
 

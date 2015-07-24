@@ -82,25 +82,16 @@ public:
    */
   virtual void perform_backward (void);
 
+    /**
+   * @brief Update reaction rates.
+   */
+  virtual void update_rates ( void );
+
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  /**
-   * @brief Returns the forward reaction rate.
-   * @return The forward reaction rate.
-   */
-  virtual double forward_rate ( void ) const;
-
-
-  /**
-   * @brief Returns the backward reaction rate.
-   * @return The backward reaction rate.
-   */
-  virtual double backward_rate ( void ) const;
-
-
   /**
    * @return Print class content.
    * @param output Stream where output should be written.
@@ -151,7 +142,7 @@ protected:
   int _number_components;
 
   /** @brief Components of the reaction. */
-  std::vector<Chemical*> _components;
+  std::vector<Chemical*> _component_vector;
   
   /** @brief Stoichiometry of the reaction. */
   std::vector<int> _stoichiometry;

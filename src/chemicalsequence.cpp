@@ -33,7 +33,7 @@ ChemicalSequence::ChemicalSequence (const std::string& sequence)
 {
   _length = _sequence.size();
   
-  // intialize occupancy map with zero values
+  // initialize occupancy map with zero values
   _occupancy_map.resize( _length, 0 );
 }
 
@@ -63,6 +63,7 @@ void ChemicalSequence::bind_unit ( const BoundChemical& chemical_to_bind )
   
   // update occupancy status
   for ( int i = position; i <= last_position; i++ ) { _occupancy_map [ i-1 ] +=1; }
+  for (int i = 0; i < _focus_area_start.size(); i++) { update_focus_area_occupancy (i); }
 }
 
 void ChemicalSequence::unbind_unit ( const BoundChemical& chemical_to_unbind )
@@ -80,6 +81,7 @@ void ChemicalSequence::unbind_unit ( const BoundChemical& chemical_to_unbind )
 
   // update occupancy status
   for ( int i = position; i <= last_position; i++ ) { _occupancy_map [ i-1 ] -=1; }
+  for (int i = 0; i < _focus_area_start.size(); i++) { update_focus_area_occupancy (i); }
 }
 
 void ChemicalSequence::replace_bound_unit ( const BoundChemical& old_chemical, const BoundChemical& new_chemical )
@@ -94,6 +96,7 @@ void ChemicalSequence::replace_bound_unit ( const BoundChemical& old_chemical, c
   // update occupancy status
   for ( int i = old_position; i <= old_last_position; i++ ) { _occupancy_map [ i-1 ] -=1; }
   for ( int i = new_position; i <= new_last_position; i++ ) { _occupancy_map [ i-1 ] +=1; }
+  for (int i = 0; i < _focus_area_start.size(); i++) { update_focus_area_occupancy (i); }
 
   // add the reference and position to the chemicals map
   remove_reference_from_map( old_chemical, old_position, old_length );
@@ -111,6 +114,7 @@ void ChemicalSequence::move_bound_unit ( ProcessiveChemical& chemical_to_move, i
   // update occupancy status
   for ( int i = old_position; i <= old_last_position; i++ ) { _occupancy_map [ i-1 ] -=1; }
   for ( int i = new_position; i <= new_last_position; i++ ) { _occupancy_map [ i-1 ] +=1; }
+  for (int i = 0; i < _focus_area_start.size(); i++) { update_focus_area_occupancy (i); }
   
   // add the reference and position to the chemicals map
   remove_reference_from_map( chemical_to_move, old_position, length );
@@ -136,6 +140,23 @@ void ChemicalSequence::remove ( int quantity )
 {
   Chemical::remove ( quantity );
   std::cout << "Function " << __func__ << " remains to be defined in " << __FILE__ << __LINE__ << std::endl;
+}
+
+int ChemicalSequence::create_focus_area (int position, int length)
+{
+  REQUIRE (position > 0); /** @pre Position must be positive. */
+  REQUIRE (length > 0); /** @pre Length must be positive. */
+  /** @pre Position and length must be consistent with sequence length. */
+  REQUIRE (position + length - 1 <= _length);
+
+  int identifier = _focus_area_start.size();
+  _focus_area_start.resize (identifier+1, position);
+  _focus_area_end.resize (identifier+1, position+length);
+  _focus_area_max_occupancy.resize (identifier+1, 0);
+  
+  update_focus_area_occupancy (identifier);
+
+  return identifier;
 }
 
 
@@ -173,6 +194,57 @@ int ChemicalSequence::number_available_sites ( int position, int length ) const
   ENSURE( result <= _number );
   return result;
 }
+
+void ChemicalSequence::add_termination_site ( const Site& termination_site )
+{
+  // as a first approximation, we consider that reaching any base of the termination 
+  // site sends a termination signal
+  int first_position = termination_site.position();
+  int last_position = first_position + termination_site.length();
+  for ( int i = first_position; i < last_position; i++ )
+    {
+      _termination_sites[ i ].push_back ( termination_site.family() );
+    }
+}
+
+bool ChemicalSequence::is_termination_site ( int position,
+					     const std::list<int>& termination_site_families ) const
+{
+  REQUIRE( position > 0 ); /** @pre Position must be positive. */
+  REQUIRE( position <= _length ); /** @pre Position must be smaller or equal to sequence length. */
+
+  // if there is no site to check or no termination site at the position to enquire
+  const std::map< int, std::list<int> >::const_iterator local_sites = _termination_sites.find( position );
+  if ( ( termination_site_families.size() == 0 ) || ( local_sites == _termination_sites.end() ) )
+    {
+      return false;
+    }
+  
+  // we loop through the list of termination sites to inspect
+  // we place ourselves at the beginnig of the list
+  std::list<int>::const_iterator termination_site_family = termination_site_families.begin();
+  // we get start and end iterator to the list of sites at the current position on the sequence
+  std::list<int>::const_iterator local_sites_begin_iterator = local_sites->second.begin();
+  std::list<int>::const_iterator local_sites_end_iterator = local_sites->second.end();
+  // we check whether one of the local sites corresponds to one of the sites to inspect
+  while ( termination_site_family != termination_site_families.end() )
+    {
+      std::list<int>::const_iterator local_site = local_sites_begin_iterator;
+      while ( local_site != local_sites_end_iterator )
+	{
+	  if ( *termination_site_family == *local_site )
+	    {
+	      return true;
+	    }
+	  local_site++;
+	}
+      termination_site_family++;
+    }
+
+  // if we arrive here, all the tests were non conclusive
+  return false;
+}
+
   
 
 // ==========================
@@ -198,9 +270,9 @@ int ChemicalSequence::number_available_sites ( int position, int length ) const
  */
 bool ChemicalSequence::check_invariant (void) const
 {
-  /** The invariants of parent classes must be verified. */
-  bool result = Chemical::check_invariant(); 
-  result = result && Bindable::check_invariant();
+  bool result = 
+    Chemical::check_invariant()   /** The invariant of parent class must be verified. */
+    && (_length > 0); /** Length must be positive (>0). */
   return result;
 }
 
@@ -247,4 +319,21 @@ void ChemicalSequence::remove_reference_from_map ( const BoundChemical& chemical
 	    }
 	}
     }
+}
+
+void ChemicalSequence::update_focus_area_occupancy (int area_id)
+{
+  /** @pre Identifier must be within vector range. */
+  REQUIRE (area_id >= 0);
+  REQUIRE (area_id < _focus_area_max_occupancy.size());
+
+  // check for the highest occupancy status
+  int max_occupied = 0;
+  int last_position = _focus_area_end [area_id];
+  for ( int i = _focus_area_start [area_id]; i < last_position; i++ )
+    {
+      if ( _occupancy_map [ i-1 ] > max_occupied ) { max_occupied = _occupancy_map [ i-1 ]; }
+    }
+  
+  _focus_area_max_occupancy [area_id] = max_occupied;
 }

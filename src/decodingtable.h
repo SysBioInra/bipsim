@@ -77,8 +77,9 @@ class DecodingTable
    * If template is already defined, the corresponding base is overwritten.
    * @param template String template to decode.
    * @param corresponding_base Chemical that matches the template.
+   * @param occupied_polymerase Occupied polymerase when it has loaded the base.
    */
-  void add_template (const std::string& template_, Chemical& corresponding_base, double loading_rate);
+  void add_template (const std::string& template_, Chemical& corresponding_base, BoundChemical& occupied_polymerase, double loading_rate);
 
 
   // ============================
@@ -105,6 +106,13 @@ class DecodingTable
    * @return Reference to chemical corresponding to template.
    */
   Chemical& decode (int template_index) const;
+
+  /**
+   * @brief Get occupied polymerase state corresponding to template.
+   * @param template_index Template index.
+   * @return Reference to occupied polymerase corresponding to template.
+   */
+  BoundChemical& occupied_polymerase (int template_index) const;
 
   /**
    * @brief Get loading rate corresponding to template.
@@ -183,6 +191,9 @@ private:
   /** @brief Vector of loadable chemicals. */
   std::vector< Chemical* > _bases;
 
+  /** @brief Vector of occupied polymerases. */
+  std::vector< BoundChemical* > _occupied_polymerases;
+
   /** @brief Template to index map. */
   std::map< std::string, int > _template_index;
 
@@ -219,6 +230,13 @@ inline Chemical& DecodingTable::decode (int template_index) const
   REQUIRE( template_index >= 0 ); /** @pre Template index must be nonnegative. */
   REQUIRE( template_index < _bases.size() ); /** @pre Template index must be smaller than number of templates. */
   return *(_bases [template_index]);
+}
+
+inline BoundChemical& DecodingTable::occupied_polymerase (int template_index) const
+{
+  REQUIRE( template_index >= 0 ); /** @pre Template index must be nonnegative. */
+  REQUIRE( template_index < _bases.size() ); /** @pre Template index must be smaller than number of templates. */
+  return *(_occupied_polymerases [template_index]);
 }
 
 inline double DecodingTable::loading_rate (int template_index) const

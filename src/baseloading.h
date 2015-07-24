@@ -50,10 +50,8 @@ public:
    * @param base_loader
    *  Element that recognizes and loads a chemical corresponding to the template
    *  it is reading.
-   * @param occupied_loader
-   *  Same element in its charged form (thus losing the capacity to load).
    */
-  BaseLoading (BaseLoader& base_loader, BoundChemical& occupied_loader);
+  BaseLoading (BaseLoader& base_loader);
     
 
   // Not needed for this class (use of default copy constructor) !
@@ -88,23 +86,16 @@ public:
    */
   virtual void print (std::ostream& output) const;
 
+  /**
+   * @brief Update reaction rates.
+   */
+  virtual void update_rates ( void );
+
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  /**
-   * @brief Returns the forward reaction rate.
-   * @return The forward reaction rate.
-   */
-  double forward_rate (void) const;
-
-
-  /**
-   * @brief Returns the backward reaction rate.
-   * @return The backward reaction rate.
-   */
-  double backward_rate (void) const;
 
 
   // ==========================
@@ -139,11 +130,7 @@ private:
   // ============
   //
   /** @brief Chemical loading a base corresponding to current template. */
-  BaseLoader& _base_loader;
-  
-  /** @brief BaseLoader in its occupied form. */
-  BoundChemical& _occupied_loader;
-  
+  BaseLoader& _base_loader;  
   
   // =================
   //  Private Methods

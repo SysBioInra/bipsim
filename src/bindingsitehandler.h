@@ -26,6 +26,7 @@
 #include "forwarddeclarations.h"
 #include "identifiedlist.h"
 #include "sitehandler.h"
+#include "bindingsite.h"
 
 /**
  * @brief The BindingSiteHandler class manages binding sites.
@@ -76,9 +77,11 @@ public:
    *  on-rate of the binding site.
    * @param k_off
    *  off-rate of the binding site.
+   * @param reading_frame Position of the reading frame (if applicable).
    */
-  virtual void create_site ( std::string family_name, Bindable& location, int position,
-			     int length, double k_on, double k_off );
+  virtual void create_site ( std::string family_name, ChemicalSequence& location, int position,
+			     int length, double k_on, double k_off,
+			     int reading_frame = NO_READING_FRAME );
 
   // ============================
   //  Public Methods - Accessors
@@ -127,7 +130,7 @@ public:
   //  Public Constants
   // ==================
   //
-  // static const int NO_SPECIFIC_SITE_ID = -1;
+  static const int NO_READING_FRAME = BindingSite::NO_READING_FRAME;
 
 private:
 

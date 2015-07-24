@@ -32,10 +32,13 @@ BindingSiteHandler *Binding::_binding_site_handler = 0;
 // ==========================
 //
 Binding::Binding ( Chemical& unit_to_bind, BoundChemical& binding_result, int binding_site_family)
-  : _unit_to_bind ( unit_to_bind )
+  : Reaction()
+  , _unit_to_bind ( unit_to_bind )
   , _binding_result ( binding_result )
   , _binding_site_family ( binding_site_family )
 {
+  _components.push_back (&unit_to_bind);
+  _components.push_back (&binding_result);
 }
  
 // Not needed for this class (use of default copy constructor) !
@@ -51,8 +54,8 @@ Binding::~Binding( void )
 //
 void Binding::perform_forward( void )
 {
-  REQUIRE( Binding::_binding_site_handler != 0 ); /** @pre Binding site handler has been initialized. */
-  REQUIRE( _unit_to_bind.number() > 0 ); /** @pre There is at least one element to bind. */
+  REQUIRE (Binding::_binding_site_handler != 0); /** @pre Binding site handler has been initialized. */
+  REQUIRE (_unit_to_bind.number() > 0); /** @pre There is at least one element to bind. */
 
   // Number of free  elements is updated.
   _unit_to_bind.remove (1);
@@ -78,6 +81,30 @@ void Binding::perform_backward( void )
   _binding_result.remove_focused_unit();
 }
 
+void Binding::update_rates ( void )
+{
+  /**
+   * Binding rate is generally defined by r = k_on x [A] x [B], where [A] is the concentration
+   * of units_to_bind and [B] the concentration of binding sites. However, k_on varies from a
+   * site to another so the total binding rate becomes
+   *   r_total = [A] sum ( k_on_i x [B_i] ) = [A] vector(k_on_i).vector([B_i])
+   * The concentration of units to bind is easy to get, the binding site handler can compute
+   * the rest of the formula for us as it holds information about binding rates and binding site
+   * concentrations.
+   */
+  _forward_rate = _unit_to_bind.number() *
+      Binding::_binding_site_handler->get_total_binding_rate_contribution (_binding_site_family);
+
+  /**
+   * Unbinding rate is generally defined by r = k_off x [A], where [A] is the concentration
+   * of binding_result. However here k_off varies from a binding site to another so it becomes
+   * r_total = sum ( r_i ) = sum ( k_off_i x [A_i] )
+   * Which is also the dot product between the vector of concentrations of binding_result bound
+   * to every single binding sites and the vector of corresponding unbinding rates.
+   */
+  _backward_rate = _binding_result.get_total_unbinding_rate_contribution (_binding_site_family);
+}
+
 
 void Binding::print (std::ostream& output) const
 {
@@ -89,32 +116,6 @@ void Binding::print (std::ostream& output) const
 //  Public Methods - Accessors
 // ============================
 //
-double Binding::forward_rate( void ) const
-{
-  /**
-   * Binding rate is generally defined by r = k_on x [A] x [B], where [A] is the concentration
-   * of units_to_bind and [B] the concentration of binding sites. However, k_on varies from a
-   * site to another so the total binding rate becomes
-   *   r_total = [A] sum ( k_on_i x [B_i] ) = [A] vector(k_on_i).vector([B_i])
-   * The concentration of units to bind is easy to get, the binding site handler can compute
-   * the rest of the formula for us as it holds information about binding rates and binding site
-   * concentrations.
-   */
-  return _unit_to_bind.number() *
-      Binding::_binding_site_handler->get_total_binding_rate_contribution (_binding_site_family);
-}
-
-double Binding::backward_rate( void ) const
-{
-  /**
-   * Unbinding rate is generally defined by r = k_off x [A], where [A] is the concentration
-   * of binding_result. However here k_off varies from a binding site to another so it becomes
-   * r_total = sum ( r_i ) = sum ( k_off_i x [A_i] )
-   * Which is also the dot product between the vector of concentrations of binding_result bound
-   * to every single binding sites and the vector of corresponding unbinding rates.
-   */
-  return _binding_result.get_total_unbinding_rate_contribution (_binding_site_family);
-}
 
 
 // ==========================

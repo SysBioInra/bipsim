@@ -44,21 +44,23 @@ int main ( )
 
   // open new parser and load file
   Parser parser (chemical_handler, reaction_handler, binding_site_handler, termination_site_handler, table_handler);
-  parser.parse_units( "test_input.txt" );
-  parser.parse_reactions( "test_input.txt" );
+  parser.parse_units( "../data/test_input.txt" );
+  parser.parse_reactions( "../data/test_input.txt" );
 
-  std::cout << chemical_handler;
-  std::cout << reaction_handler;
-  std::cout << table_handler;
+  // std::cout << chemical_handler;
+  // std::cout << reaction_handler;
+  // std::cout << table_handler;
   std::cin.get();
   
   // solve system
   Solver solver;
   solver.add_reaction_list (reaction_handler.reference_list());
+  solver.update_dependencies();
   
-  while (solver.time() < 10000)
+  int number_reactions = 0;
+  while (solver.time() < 1000)
     {
-      solver.go_to_next_reaction();
+      solver.go_to_next_reaction(); number_reactions++;
       //#define DETAILED_DISPLAY
 #ifdef DETAILED_DISPLAY
       std::cout << "Next reaction (t=" << solver.time() << ")" << std::endl;
@@ -69,4 +71,5 @@ int main ( )
   const Chemical& protein = chemical_handler.reference( std::string("protein") );
   std::cout << chemical_handler;
   std::cout << "Proteins: " << protein << std::endl;
+  std::cout << number_reactions << " reactions occurred." << std::endl;
 }

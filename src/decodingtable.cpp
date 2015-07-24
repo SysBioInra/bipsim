@@ -41,7 +41,7 @@ DecodingTable::~DecodingTable (void)
 // ===========================
 //
 
-void DecodingTable::add_template (const std::string& template_, Chemical& corresponding_base, double loading_rate)
+void DecodingTable::add_template (const std::string& template_, Chemical& corresponding_base, BoundChemical& occupied_polymerase, double loading_rate)
 {
   REQUIRE( template_.size() == _template_length ); /** @pre template_ size must be consistent with _template_length. */
   REQUIRE( _template_index.count(template_) == 0 ); /** @pre Template must not exist already. */
@@ -51,6 +51,7 @@ void DecodingTable::add_template (const std::string& template_, Chemical& corres
   // because the vector indices start at 0, we substract 1
   _template_index [template_] = _template_index.size()-1;
   _bases.push_back (&corresponding_base);
+  _occupied_polymerases.push_back (&occupied_polymerase);
   _loading_rates.push_back (loading_rate);
 }
 
@@ -70,6 +71,8 @@ void DecodingTable::print ( std::ostream& output ) const
       output << "\tMotif " << motif 
 	     << " loads chemical "
 	     << _bases [index]
+	     << " and yields occupied polymerase "
+	     << _occupied_polymerases [index]
 	     << "." << std::endl;
     }
 }

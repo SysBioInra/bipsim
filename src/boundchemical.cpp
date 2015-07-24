@@ -46,7 +46,7 @@ void BoundChemical::release (void)
 
 void BoundChemical::add_unit_at_site ( const BindingSite& binding_site )
 {
-  add_unit (binding_site, binding_site.position());
+  add_unit (binding_site, binding_site.position(), binding_site.reading_frame());
 }
 
 void BoundChemical::add_unit_in_place_of ( const BoundChemical& precursor )
@@ -55,8 +55,9 @@ void BoundChemical::add_unit_in_place_of ( const BoundChemical& precursor )
   // of the precursor species
   const BindingSite& binding_site = precursor.focused_unit_binding_site();
   int position = precursor.focused_unit_position();
+  int reading_frame = precursor.focused_unit_reading_frame();
 
-  add_unit (binding_site, position);  
+  add_unit (binding_site, position, reading_frame);  
 }
 
 
@@ -72,15 +73,15 @@ void BoundChemical::focus_random_unit ( void )
   int current_index = 0;
   // first loop through the families until the family of the drawn index is found
   UnitFamilyMap::iterator family = _family_map.begin();
-  BoundUnitList& family_units = family->second;
-  while ( current_index + family_units.size() <= index_drawn )
+  BoundUnitList* family_units = &family->second;
+  while ( current_index + family_units->size() <= index_drawn )
     {
-      current_index += family_units.size();
+      current_index += family_units->size();
       family++;
-      family_units = family->second;
+      family_units = &family->second;
     }
   // then loop through units for the exact index
-  BoundUnitList::iterator unit = family_units.begin();
+  BoundUnitList::iterator unit = family_units->begin();
   for (int index = current_index; index < index_drawn; index++)
     { 
       unit++; 
@@ -118,7 +119,7 @@ void BoundChemical::focus_random_unit ( int family_id )
 
 void BoundChemical::remove_focused_unit ( void )
 {
-  int family_id = (_focused_unit->first)->family();
+  int family_id = (_focused_unit->binding_site()).family();
   UnitFamilyMap::iterator family = _family_map.find ( family_id );
   BoundUnitList& family_units = family->second;
 
@@ -182,7 +183,7 @@ double BoundChemical::get_total_unbinding_rate_contribution ( int binding_site_f
   for ( BoundUnitList::const_iterator unit = family_units.begin();
 	unit != family_units.end() ; unit++ )
     {
-      r_total += unit->first->k_off();
+      r_total += unit->binding_site().k_off();
     }
   return r_total;
 }
@@ -197,9 +198,9 @@ void BoundChemical::print ( std::ostream& output ) const
 	      unit != family_units.end(); unit++ )
 	  {
 	    output << "Bound chemical initially bound at position "
-		   << unit->first->position()
+		   << unit->binding_site().position()
 		   << " and now at position "
-		   << unit->second
+		   << unit->current_position()
 		   << "." << std::endl;
 	  }
     }
@@ -239,10 +240,10 @@ bool BoundChemical::check_invariant (void) const
 //  Private Methods
 // =================
 //
-void BoundChemical::add_unit (const BindingSite& binding_site, int position)
+void BoundChemical::add_unit (const BindingSite& binding_site, int position, int reading_frame)
 {
   add (1);
-  _family_map[ binding_site.family() ].push_front (BoundUnit (&binding_site, position));
+  _family_map[ binding_site.family() ].push_front (BoundUnit (binding_site, position, reading_frame));
   _focused_unit = _family_map[ binding_site.family() ].begin();
 }
 

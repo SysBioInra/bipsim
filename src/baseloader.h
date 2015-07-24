@@ -74,8 +74,9 @@ public:
    * This function MUST be called every time a unit is added.
    * @param binding_site The binding site to which it bound.
    * @param position Current position.
+   * @param reading_frame Reading frame position.
    */
-  virtual void add_unit (const BindingSite& binding_site, int position);
+  virtual void add_unit (const BindingSite& binding_site, int position, int reading_frame);
 
   /**
    * @brief Remove focused unit.
@@ -99,10 +100,15 @@ public:
 
   /**
    * @brief Base that the focused chemical tries to load.
-   * @return Base that the focused chemical tries to load (0 if there is no
-   *   chemical that matches the template it reads).
+   * @return Base that the focused chemical tries to load.
    */
   Chemical& focused_base_to_load (void) const;
+
+  /**
+   * @brief Occupied state of the focused loader.
+   * @return Occupied state of the focused loader.
+   */
+  BoundChemical& focused_occupied_state (void) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -183,8 +189,14 @@ inline double BaseLoader::loading_rate (void)
 
 inline Chemical& BaseLoader::focused_base_to_load (void) const
 {
+  REQUIRE( _focused_template_index != UNKNOWN_TEMPLATE ); /** @pre Template must be recognized by the base loader. */
   return _decoding_table.decode (_focused_template_index);
 }
 
+inline BoundChemical& BaseLoader::focused_occupied_state (void) const
+{
+  REQUIRE( _focused_template_index != UNKNOWN_TEMPLATE ); /** @pre Template must be recognized by the base loader. */
+  return _decoding_table.occupied_polymerase (_focused_template_index);
+}
 
 #endif // BASELOADER_H

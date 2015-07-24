@@ -72,12 +72,17 @@ public:
   /**
    * @brief Update chemical quantities according to the forward reaction.
    */
-  void perform_forward( void );
+  virtual void perform_forward( void );
 
   /**
    * @brief Update chemical quantities according to the backward reaction.
    */
-  void perform_backward( void );
+  virtual void perform_backward( void );
+
+  /**
+   * @brief Update reaction rates.
+   */
+  virtual void update_rates ( void );
   
 
   // ============================
@@ -85,24 +90,11 @@ public:
   // ============================
   //
   /**
-   * @brief Returns the forward reaction rate.
-   * @return The forward reaction rate.
-   */
-  double forward_rate( void ) const;
-
-
-  /**
-   * @brief Returns the backward reaction rate.
-   * @return The backward reaction rate.
-   */
-  double backward_rate( void ) const;
-
-
-  /**
    * @return Print class content.
    * @param output Stream where output should be written.
    */
   virtual void print (std::ostream& output) const;
+
 
   // ==========================
   //  Public Methods - Setters

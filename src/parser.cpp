@@ -22,7 +22,7 @@
 // ==================
 //
 #include "parser.h"
-#include "bindable.h"
+#include "chemicalsequence.h"
 #include "chemical.h"
 #include "boundchemical.h"
 #include "decodingtable.h"
@@ -291,14 +291,14 @@ void Parser::parse_binding_site ( std::istringstream& line_stream )
     }
 
   // check whether the location is known
-  Bindable* bindable = 0;
+  ChemicalSequence* sequence = 0;
   if ( _chemical_handler.exists (location) )
     {
-      bindable = dynamic_cast<Bindable*> (&_chemical_handler.reference (location));
-      if (bindable == 0)
+      sequence = dynamic_cast<ChemicalSequence*> (&_chemical_handler.reference (location));
+      if (sequence == 0)
 	{
 	  std::cerr << "ERROR (line " << _line << "): chemical " << location
-		    << " is not bindable and cannot be used to define" 
+		    << " is not a chemical sequence and cannot be used to define" 
 		    << " a binding site." << std::endl;
 	  return;	  
 	}
@@ -321,7 +321,16 @@ void Parser::parse_binding_site ( std::istringstream& line_stream )
       return; // stop parsing in any case
     }
 
-  _binding_site_handler.create_site (family_name, *bindable, position, length, k_on, k_off);
+  // read reading frame (if applicable)
+  int reading_frame = 0;
+  if (not (line_stream >> reading_frame)) // no reading frame
+    {
+      _binding_site_handler.create_site (family_name, *sequence, position, length, k_on, k_off);
+    }
+  else
+    {
+      _binding_site_handler.create_site (family_name, *sequence, position, length, k_on, k_off, reading_frame);
+    }
 }
 
 
@@ -340,14 +349,14 @@ void Parser::parse_termination_site ( std::istringstream& line_stream )
     }
 
   // check whether the location is known
-  Bindable* bindable = 0;
+  ChemicalSequence* sequence = 0;
   if ( _chemical_handler.exists (location) )
     {
-      bindable = dynamic_cast<Bindable*> (&_chemical_handler.reference (location));
-      if (bindable == 0)
+      sequence = dynamic_cast<ChemicalSequence*> (&_chemical_handler.reference (location));
+      if (sequence == 0)
 	{
 	  std::cerr << "ERROR (line " << _line << "): chemical " << location
-		    << " is not bindable and cannot be used to define" 
+		    << " is not a chemical sequence and cannot be used to define" 
 		    << " a termination site." << std::endl;
 	  return;	  
 	}
@@ -370,7 +379,7 @@ void Parser::parse_termination_site ( std::istringstream& line_stream )
       return; // stop parsing in any case
     }
 
-  _termination_site_handler.create_site (family_name, *bindable, position, length);
+  _termination_site_handler.create_site (family_name, *sequence, position, length);
 }
 
 
@@ -381,9 +390,11 @@ void Parser::parse_decoding_table ( std::istringstream& line_stream )
   std::string name;
   std::string template_;
   std::string base;
+  std::string polymerase;
   double rate;
   std::list < std::string > template_list;
   std::list < Chemical* > base_list;
+  std::list < BoundChemical* > polymerase_list;
   std::list < double > rate_list;
 
   if (not (line_stream >> name))
@@ -392,7 +403,8 @@ void Parser::parse_decoding_table ( std::istringstream& line_stream )
       return;
     }
 
-  while (line_stream >> template_ >> base >> rate)
+  BoundChemical* polymerase_ptr = 0;
+  while (line_stream >> template_ >> base >> polymerase >> rate)
     {
       // we check whether the base is already known
       if (_chemical_handler.exists (base))
@@ -400,6 +412,20 @@ void Parser::parse_decoding_table ( std::istringstream& line_stream )
 	  template_list.push_back (template_);
 	  base_list.push_back (&_chemical_handler.reference (base));
 	  rate_list.push_back (rate);
+
+	  polymerase_ptr =
+	    dynamic_cast< BoundChemical* > (&_chemical_handler.reference (polymerase));
+	  if (polymerase_ptr == 0)
+	    {
+	      std::cerr << "ERROR (line " << _line << "): chemical " << polymerase
+			<< " is not a bound chemical and cannot be used to define" 
+			<< " an occupied polymerase." << std::endl;
+	      return;	  
+	    }
+	  else
+	    {
+	      polymerase_list.push_back (polymerase_ptr);
+	    }
 	}
       else // if not, we need to reread the file (maybe the location is defined later)
 	{
@@ -413,7 +439,6 @@ void Parser::parse_decoding_table ( std::istringstream& line_stream )
 	  else
 	    {
 	      // we add the line to the list of lines to read again
-	      std::cout << "????????" << std::endl;
 	      _lines_to_reread.push_back (_line);
 	    }
 	  return; // stop parsing in any case
@@ -424,7 +449,7 @@ void Parser::parse_decoding_table ( std::istringstream& line_stream )
     {
       if (not _table_handler.exists (name))
 	{
-	  _table_handler.create_decoding_table (name, template_list, base_list, rate_list);
+	  _table_handler.create_decoding_table (name, template_list, base_list, polymerase_list, rate_list);
 	}
     }
   else
@@ -704,8 +729,7 @@ void Parser::parse_base_loading ( std::istringstream& line_stream )
 {
   // read base data
   std::string base_loader;
-  std::string occupied_form;
-  if (not (line_stream >> base_loader >> occupied_form))
+  if (not (line_stream >> base_loader))
     {
       std::cerr << "ERROR (line " << _line << "): corrupt data, ignoring line." << std::endl;
       return;
@@ -731,27 +755,8 @@ void Parser::parse_base_loading ( std::istringstream& line_stream )
       return;
     }
     
-  BoundChemical* occupied_form_ptr = 0;
-  if (_chemical_handler.exists (occupied_form))
-    {
-      occupied_form_ptr =
-	dynamic_cast< BoundChemical* > (&_chemical_handler.reference(occupied_form));
-      if (occupied_form_ptr == 0)
-	{
-	  std::cerr << "ERROR (line " << _line << "): chemical " << occupied_form
-		    << " is not a bound chemical and cannot be used to define" 
-		    << " a base loading reaction." << std::endl;
-	  return;	  
-	}
-    }
-  else
-    {
-      std::cerr << "ERROR (line " << _line << "): unknown chemical " << occupied_form << std::endl;
-      return;
-    }
-
   // create reaction
-  _reaction_handler.create_base_loading (*base_loader_ptr, *occupied_form_ptr);
+  _reaction_handler.create_base_loading (*base_loader_ptr);
 }
 
 

@@ -23,12 +23,12 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "bindable.h"
+#include "chemicalsequence.h"
 #include "macros.h"
 #include "site.h"
 
 /**
- * @brief Class that represents binding sites on bindable elements.
+ * @brief Class that represents binding sites on chemical sequences.
  *
  * The BindingSite class contains two types of information. Each instance
  * belongs to a family of binding sites (e.g. Ribosome Binding Site) but also
@@ -50,10 +50,12 @@ public:
    * @param length Length of the binding site.
    * @param k_on On rate of binding on the site.
    * @param k_off Off rate of unbinding on the site.
+   * @param reading_frame Position of the reading frame (if applicable).
    * @sa BindingSiteHandler
    */
-  BindingSite ( int family_id, Bindable& location, int position,
-		int length, double k_on, double k_off );
+  BindingSite ( int family_id, ChemicalSequence& location, int position,
+		int length, double k_on, double k_off,
+		int reading_frame = NO_READING_FRAME );
 
   // Not needed for this class (use of default copy constructor) ! 
   // /*
@@ -97,6 +99,19 @@ public:
    * @return off-rate constant of the binding site.
    */
   double k_off ( void ) const;
+
+  /**
+   * @brief Reading frame accessor.
+   * @return Reading frame on the binding site, BindingSite::NO_READING_FRAME if there is none.
+   */
+  int reading_frame ( void ) const;
+
+  /**
+   * @brief Number of available sites in the cell.
+   * @return Number of available sites in the cell.
+   */
+  virtual int number_available_sites ( void ) const;
+
   
   // ==========================
   //  Public Methods - Setters
@@ -125,6 +140,11 @@ public:
    */
   virtual bool check_invariant (void) const;
   
+  // ==================
+  //  Public Constants
+  // ==================
+  //
+  static const int NO_READING_FRAME = -1;
 
  private:
 
@@ -137,7 +157,12 @@ public:
   
   /** @brief off-rate constant of the motif. */
   double _k_off;
-  
+
+  /** @brief Reading frame position (NO_READING_FRAME if there is none). */
+  int _reading_frame;
+
+  /** @brief Identifier of the focus area that monitors occupancy on the site's location. */
+  int _focus_area_id;
 
   // =================
   //  Private Methods
@@ -160,5 +185,15 @@ inline double BindingSite::k_off ( void ) const
   return _k_off;
 }
 
+inline int BindingSite::reading_frame ( void ) const
+{
+  return _reading_frame;
+}
+
+inline int BindingSite::number_available_sites ( void ) const
+{
+  /** Compared to the parent class, we use focus areas to compute the value more efficiently. */
+  return _location.focus_area_availability (_focus_area_id);
+}
 
 #endif // BINDINGSITE_H

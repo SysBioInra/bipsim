@@ -21,7 +21,7 @@
 //
 #include "bindingsitehandler.h"
 #include "bindingsite.h"
-#include "bindable.h"
+#include "chemicalsequence.h"
 #include "randomhandler.h"
 #include "macros.h"
 
@@ -40,8 +40,9 @@ BindingSiteHandler::~BindingSiteHandler (void)
 //  Public Methods - Commands
 // ===========================
 //
-void BindingSiteHandler::create_site ( std::string family_name, Bindable& location, int position,
-				       int length, double k_on, double k_off )
+void BindingSiteHandler::create_site (std::string family_name, ChemicalSequence& location, int position,
+				      int length, double k_on, double k_off,
+				      int reading_frame /*= NO_READING_FRAME*/)
 {
   REQUIRE( position > 0 ); /** @pre Position must be positive. */
   REQUIRE( length > 0 ); /** @pre Length must be positive. */
@@ -57,7 +58,7 @@ void BindingSiteHandler::create_site ( std::string family_name, Bindable& locati
   int family_id = _family_ids.id ( family_name );
 
   // create binding site
-  BindingSite* binding_site = new BindingSite ( family_id, location, position, length, k_on, k_off );
+  BindingSite* binding_site = new BindingSite ( family_id, location, position, length, k_on, k_off, reading_frame );
   
   // add reference to the corresponding family list
   // if family_id is not in the map, a list is automatically created
@@ -95,7 +96,7 @@ const BindingSite& BindingSiteHandler::get_random_available_site ( int family_id
   site = family_site_list.begin();
   for ( int index = 0; index < index_drawn; index++ ) { site++; }
 
-  return *( dynamic_cast< const BindingSite* > ( *site ) );
+  return *( static_cast< const BindingSite* > ( *site ) );
 }
 
 
@@ -119,7 +120,7 @@ double BindingSiteHandler::get_total_binding_rate_contribution ( int family_id )
   SiteList::const_iterator site = family_site_list.begin();
   for ( int index = 0; site != family_site_list.end(); site++, index++ )
     {
-      const BindingSite& binding_site = *dynamic_cast< const BindingSite* > (*site);
+      const BindingSite& binding_site = *static_cast< const BindingSite* > (*site);
       rate_contribution += binding_site.k_on() * binding_site.number_available_sites();
     }
   return rate_contribution;
