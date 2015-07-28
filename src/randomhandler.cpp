@@ -18,6 +18,8 @@
 #include <boost/random/uniform_01.hpp> // boost::uniform_01
 #include <boost/random/exponential_distribution.hpp> // boost::exponential_distribution
 
+#include <algorithm> // std::sort
+
 // ==================
 //  Project Includes
 // ==================
@@ -88,6 +90,38 @@ int RandomHandler::draw_index ( const std::vector<double>& weights )
   return result;
 }
 
+std::vector<int> RandomHandler::draw_multiple_indices ( const std::vector<double>& weights, int number_indices )
+{
+  // we compute the total weight and strip all zero values out of the vector
+  std::vector<double> cumulated_weights (weights);
+  // this vector will allow us to find the orginal indices later
+  std::vector<int> original_indices (weights.size(), 0);
+  int real_number_items = cumulate_vector_and_strip (cumulated_weights, original_indices);
+  REQUIRE( real_number_items > 0 ); /** @pre There must be positive at least one positive item. */
+  
+  // we draw number_indices values in the weight distribution
+  boost::uniform_real<double> distribution ( 0, cumulated_weights[real_number_items-1] );
+  std::vector<double> drawn_weights (number_indices, 0);
+  for (int i = 0; i < number_indices; ++i)
+    {
+      drawn_weights [i] = distribution (RandomHandler::_generator);
+    }
+
+  // we look for the corresponding indices
+  std::vector<int> drawn_indices = find_multiple_indices (drawn_weights, cumulated_weights);
+
+  // we convert it back to original indices
+  std::vector<int> result (number_indices, 0);
+  for (int i = 0; i < number_indices; ++i)
+    {
+      result [i] = original_indices [drawn_indices [i]];
+      /** @post The weights associated to the drawn indices must be positive. */
+      ENSURE (weights [result [i]] > 0);
+    }
+
+  return result;
+}
+
 int RandomHandler::draw_uniform ( int a, int b )
 {
   REQUIRE( a <= b ); /** @pre a must be smaller or equal to b. */
@@ -102,8 +136,28 @@ double RandomHandler::draw_exponential ( double lambda )
   REQUIRE( lambda > 0 ); /** @pre lambda must be positive. */
 
   // we create the distribution and draw a number
+  // boost implementation
+  // TODO update boost libraries
   boost::uniform_01<double> distribution;
   return ( - log (1 - distribution (RandomHandler::_generator)) / lambda );
+}
+
+
+int RandomHandler::draw_poisson ( double lambda )
+{
+  REQUIRE( lambda > 0 ); /** @pre lambda must be positive. */
+
+  // we create the distribution and draw a number
+  // boost implementation
+  // TODO update boost libraries
+  boost::uniform_01<double> distribution;
+  double exp_mean = exp (-lambda);
+  double product = 1;
+  for(int m = 0; ; ++m)
+    {
+      product *= distribution (RandomHandler::_generator);
+      if (product <= exp_mean) { return m; }
+    }
 }
 
 
@@ -197,6 +251,49 @@ template<typename T> int RandomHandler::find_index ( T drawn_weight, const std::
   return min_index;
 }
 
+template<typename T> std::vector<int> RandomHandler::find_multiple_indices (const std::vector<T>& drawn_weights, const std::vector<T>& cumulated_weights)
+{
+  // the principle is the same as find_index, see above
+  int number_indices = drawn_weights.size();
+  std::vector<int> result (number_indices);
+
+  // first we need to know the order of the weights that have been drawn
+  std::vector<int> weight_order = sorted_indices (drawn_weights);
+  // we get a vector pointing to progressively bigger weights:
+  //  weight_order[0] gives the index of the smallest element
+  //  weight_order[1] gives the index of the second smallest element etc.
+  // in shord weight_order associates an order to the index of the element like this
+  //   weight_order [i] -> index of ith element
+
+  // there is a chance that the smallest element is pretty small, so we do not use
+  // dichotomy here, we simply go from the start and look for the index of the smallest element
+  int current_order = 0;
+  double current_weight_to_find = drawn_weights [weight_order [current_order]];
+  int current_cumulated_weight_index = 0;
+
+  while (current_order < number_indices) // while there is a weight whose index is not found
+    {
+      // the right index is found if
+      //  (1) cumulated_weights[i] >= drawn_weight
+      //  (2) if i>0, cumulated_weights[i-1] < drawn_weight
+      while (cumulated_weights [current_cumulated_weight_index] < current_weight_to_find)
+	{
+	  // condition (1) not met: go to the next cumulated weight index
+	  ++current_cumulated_weight_index;
+	}
+      // right index has been found (condition (2) is automatically met): store result
+      // we need to be careful to store it at the right place: current_order does not
+      // yield the INDEX of the element being compared, but its ORDER. 
+      result [weight_order [current_order]] = current_cumulated_weight_index;
+
+      // go to next element in increasing order
+      ++current_order;
+      current_weight_to_find = drawn_weights [weight_order [current_order]];
+    }
+
+  return result;
+}
+
 template<typename T> int RandomHandler::cumulate_vector_and_strip ( std::vector<T>& vector_to_cumulate, std::vector<int>& original_indices )
 {
   int number_items = vector_to_cumulate.size();
@@ -233,4 +330,20 @@ template<typename T> int RandomHandler::cumulate_vector_and_strip ( std::vector<
   original_indices.resize (real_number_items);
   
   return real_number_items;
+}
+
+
+template<typename T> std::vector<int> RandomHandler::sorted_indices (const std::vector<T>& vector_to_sort)
+{
+  CompareValues<T> compare_vector_to_sort_values (vector_to_sort);
+
+  // generate an unsorted index vector
+  int number_values = vector_to_sort.size();
+  std::vector<int> result (number_values);
+  for (int i = 0; i < number_values; ++i) { result [i] = i; }
+
+  // sort indices based on associated values
+  std::sort (result.begin(), result.end(), compare_vector_to_sort_values);
+
+  return result;
 }

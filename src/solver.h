@@ -116,7 +116,7 @@ class Solver
    * @brief Accessor to the number of reactions that have occurred.
    * @return Number of reactions that have occurred from the beginning of simulation.
    */
-  double number_reactions_performed (void) const;  
+  int number_reactions_performed (void) const;  
   
 
   // ==========================
@@ -177,7 +177,7 @@ private:
   double _t;
 
   /** @brief Number of reactions that have been performed. */
-  double _number_reactions_performed;
+  int _number_reactions_performed;
 
   /** @brief Random handler used for determining next reaction. */
   RandomHandler _random_handler;
@@ -211,7 +211,7 @@ inline double Solver::time (void) const
   return _t;
 }
 
-inline double Solver::number_reactions_performed (void) const 
+inline int Solver::number_reactions_performed (void) const 
 {
   return _number_reactions_performed;
 }

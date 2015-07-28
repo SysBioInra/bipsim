@@ -13,33 +13,46 @@
 #ifndef FORWARDDECLARATIONS_H
 #define FORWARDDECLARATIONS_H
 
-class BaseLoader;
+
+// utility classes
+class IdentifiedList;
+class RandomHandler;
+
+// reaction classes
 class BaseLoading;
 class Binding;
+class ChemicalReaction;
+class Complexation;
+class Elongation;
+class ProcessiveChemical;
+class Reaction;
+class Release;
+
+// chemical entity classes
+class BaseLoader;
 class BindingSite;
-class BindingSiteHandler;
 class BoundChemical;
 class BoundUnit;
 class Chemical;
-class ChemicalHandler;
-class ChemicalReaction;
 class ChemicalSequence;
-class Complexation;
 class DecodingTable;
-class DependencyGraph;
-class Elongation;
-class IdentifiedList;
-class Parser;
-class ProcessiveChemical;
-class RandomHandler;
-class Reaction;
-class ReactionHandler;
-class Release;
 class Site;
-class SiteHandler;
 class SiteLocation;
-class Solver;
+
+// parser and handler classes
+class BindingSiteHandler;
+class ChemicalHandler;
+class Parser;
+class ReactionHandler;
+class SiteHandler;
 class TableHandler;
 class TerminationSiteHandler;
+
+// solver classes
+class ConstantRateGroup;
+class DependencyGraph;
+class ReactionGroup;
+class Solver;
+class UpdatedRateGroup;
 
 #endif // FORWARDDECLARATIONS_H

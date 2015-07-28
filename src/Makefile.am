@@ -7,35 +7,48 @@
 bin_PROGRAMS = test
 
 # list of sources for the 'test' binary
-test_SOURCES =    \
+# main file and utility files
+test_SOURCES = \
 	main.cpp macros.h forwarddeclarations.h \
-	baseloader.cpp baseloader.h \
+	identifiedlist.cpp identifiedlist.h \
+	randomhandler.cpp randomhandler.h
+# reaction sources
+test_SOURCES += \
 	baseloading.cpp baseloading.h \
 	binding.cpp binding.h \
+	chemicalreaction.cpp chemicalreaction.h \
+	complexation.cpp complexation.h \
+	elongation.cpp elongation.h \
+	reaction.cpp reaction.h \
+	release.cpp release.h
+# chemical entity sources
+test_SOURCES += \
+	baseloader.cpp baseloader.h \
 	bindingsite.cpp bindingsite.h \
-	bindingsitehandler.cpp bindingsitehandler.h \
 	boundchemical.cpp boundchemical.h \
 	boundunit.h \
 	chemical.cpp chemical.h \
-	chemicalhandler.cpp chemicalhandler.h \
-	chemicalreaction.cpp chemicalreaction.h \
 	chemicalsequence.cpp chemicalsequence.h \
-	complexation.cpp complexation.h \
 	decodingtable.cpp decodingtable.h \
-	dependencygraph.cpp dependencygraph.h \
-	elongation.cpp elongation.h \
-	identifiedlist.cpp identifiedlist.h \
-	parser.cpp parser.h \
 	processivechemical.cpp processivechemical.h \
-	randomhandler.cpp randomhandler.h \
-	reaction.cpp reaction.h \
-	reactionhandler.cpp reactionhandler.h \
-	release.cpp release.h \
 	site.cpp site.h \
+	sitelocation.cpp sitelocation.h
+# parser and handler sources
+test_SOURCES += \
+	bindingsitehandler.cpp bindingsitehandler.h \
+	chemicalhandler.cpp chemicalhandler.h \
+	parser.cpp parser.h \
+	reactionhandler.cpp reactionhandler.h \
 	sitehandler.cpp sitehandler.h \
-	sitelocation.cpp sitelocation.h \
-	solver.cpp solver.h \
 	tablehandler.cpp tablehandler.h \
 	terminationsitehandler.cpp terminationsitehandler.h
+# solver sources
+test_SOURCES += \
+	constantrategroup.cpp constantrategroup.h \
+	dependencygraph.cpp dependencygraph.h \
+	reactiongroup.cpp reactiongroup.h \
+	solver.cpp solver.h \
+	updatedrategroup.cpp updatedrategroup.h
+
 
 ###############################################################################

@@ -1,0 +1,108 @@
+
+
+/**
+ * @file updatedrategroup.cpp
+ * @brief Implementation of the UpdatedRateGroup class.
+ * 
+ * @authors Marc Dinh, Stephan Fischer
+ */
+
+
+// ==================
+//  General Includes
+// ==================
+//
+#include <iostream>
+
+// ==================
+//  Project Includes
+// ==================
+//
+#include "updatedrategroup.h"
+#include "reaction.h"
+#include "randomhandler.h"
+
+// ==========================
+//  Constructors/Destructors
+// ==========================
+//
+RandomHandler UpdatedRateGroup::_random_handler;
+
+UpdatedRateGroup::UpdatedRateGroup (const std::vector<Reaction*>& reactions, double initial_time)
+  : ReactionGroup (reactions)
+{
+  reschedule_next_reaction (initial_time);
+}
+
+// Not needed for this class (use of default copy constructor) !
+// UpdatedRateGroup::UpdatedRateGroup ( const UpdatedRateGroup& other_update_rate_group );
+
+UpdatedRateGroup::~UpdatedRateGroup (void)
+{
+}
+
+// ===========================
+//  Public Methods - Commands
+// ===========================
+//
+
+void UpdatedRateGroup::perform_next_reaction (void)
+{
+  // perform next scheduled reaction
+  int random_index = _random_handler.draw_index (rates());   // draw reaction index randomly
+  perform_reaction (random_index);
+
+  // schedule next reaction
+  reschedule_next_reaction (_next_reaction_time);
+}
+
+
+void UpdatedRateGroup::reschedule_next_reaction (double current_time)
+{
+  // update rates
+  update_all_rates();
+
+  // compute reaction time
+  _next_reaction_time = current_time + _random_handler.draw_exponential (total_rate());
+}
+
+
+
+// ============================
+//  Public Methods - Accessors
+// ============================
+//
+
+
+// ==========================
+//  Public Methods - Setters
+// ==========================
+//
+
+
+// =======================================
+//  Public Methods - Operator overloading
+// =======================================
+//
+// Not needed for this class (use of default overloading) !
+// UpdatedRateGroup& UpdatedRateGroup::operator= ( const UpdatedRateGroup& other_update_rate_group );
+
+// ==================================
+//  Public Methods - Class invariant
+// ==================================
+//
+/**
+ * Checks all the conditions that must remain true troughout the life cycle of
+ * every object.
+ */
+bool UpdatedRateGroup::check_invariant (void) const
+{
+  bool result = true;
+  return result;
+}
+
+
+// =================
+//  Private Methods
+// =================
+//
