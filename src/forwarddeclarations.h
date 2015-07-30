@@ -53,6 +53,7 @@ class ConstantRateGroup;
 class DependencyGraph;
 class ReactionGroup;
 class Solver;
+class NaiveSolver;
 class UpdatedRateGroup;
 
 #endif // FORWARDDECLARATIONS_H

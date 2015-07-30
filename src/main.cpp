@@ -25,7 +25,7 @@
 #include "tablehandler.h"
 #include "terminationsitehandler.h"
 #include "parser.h"
-#include "solver.h"
+#include "naivesolver.h"
 
 /**
  * @brief Program initiation.
@@ -53,19 +53,14 @@ int main ( )
   std::cin.get();
   
   // solve system
-  Solver solver;
-  solver.add_reaction_list (reaction_handler.reference_list());
-  solver.compute_dependencies();
+  NaiveSolver solver (reaction_handler.reference_list());
   
   while (solver.time() < 1000)
     {
       solver.go_to_next_reaction();
-      //#define DETAILED_DISPLAY
-#ifdef DETAILED_DISPLAY
-      std::cout << "Next reaction (t=" << solver.time() << ")" << std::endl;
-      std::cout << chemical_handler;
-      //      std::cin.get();
-#endif
+      // std::cout << "Next reaction (t=" << solver.time() << ")" << std::endl;
+      // std::cout << chemical_handler;
+      // std::cin.get();
     }
   const Chemical& protein = chemical_handler.reference( std::string("protein") );
   std::cout << chemical_handler;

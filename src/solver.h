@@ -27,13 +27,14 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "randomhandler.h"
+#include "dependencygraph.h"
 
 /**
  * @brief Solver class for integrating reactions.
  *
- * The Solver class stores a list of reactions, computes their rate
- * and performs them in a random order according to their rate.
+ * The Solver class is a pure abstract class storing a list of reactions,
+ * computing their rate and performing them in a random order as specified
+ * by classes inheriting the Solver class.
  */
 class Solver
 {
@@ -45,8 +46,9 @@ class Solver
   //
   /**
    * @brief Default constructor
+   * @param reactions List of reactions to integrate.
    */
-  Solver (void);
+  Solver (const std::list<Reaction*>& reactions);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -63,33 +65,6 @@ class Solver
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Add reaction to reactions to integrate.
-   * @param reaction Reaction to add.
-   */
-  void add_reaction (Reaction& reaction);
-
-  /**
-   * @brief Add reaction to reactions to integrate.
-   * @param reactions List of reactions to add.
-   */
-  void add_reaction_list (const std::list< Reaction* >& reactions);
-
-  /**
-   * @brief Compute dependencies between reactions.
-   *
-   * This function is essential for efficient rate updates. It initializes 
-   * a DependencyGraph that determines the smallest subset of reactions to
-   * update at every time step.
-   * @sa DependencyGraph
-   */
-  void compute_dependencies (void);
-
-  /**
-   * @brief Compute all rates of the _rates vector with current reaction rates.
-   */
-  void update_all_rates (void);
-
   /**
    * @brief Update system according to the reaction system during given time step.
    * @param time_step Time during which the reactions should be integrated.
@@ -148,30 +123,49 @@ class Solver
    */
   virtual bool check_invariant (void) const;
 
+ protected:
+  
+  // ===================
+  //  Protected Methods
+  // ===================
+  //
+  /**
+   * @brief Compute next reaction of the system.
+   * 
+   * The computation is actually done by classes inheriting
+   * from Solver.
+   * @return Time at which the reaction occurred.
+   */
+  virtual double compute_next_reaction (void) = 0;
 
-private:
+  /**
+   * @brief Accessor to the dependency graph between reactions (for use of inheriting classes).
+   * 
+   * @return Dependency graph built during construction of the class
+   *  establishing which reaction should be updated.
+   * @sa DependencyGraph
+   */
+  const DependencyGraph& dependency_graph (void) const;
+
+  /**
+   * @brief Accessor to the reactions (for use of inheriting classes).
+   * 
+   * @return Vector of reactions composing the system to integrate.
+   */
+  const std::vector<Reaction*>& reactions (void) const;
+  
+
+ private:
 
   // ============
   //  Attributes
   // ============
   //
-  /** @brief Total number of reactions to integrate. */
-  int _number_reactions;
-
   /** @brief Vector of reactions to integrate. */
   std::vector< Reaction* > _reactions;
 
-  /** @brief Total reaction rate. */
-  int _total_rate;
-
-  /** @brief Vector of reaction rates. */
-  std::vector< double > _rates;
-
-  /** @brief Index of the last reaction performed. */
-  double _last_reaction_index;
-
   /** @brief Dependency graph between relations. */
-  DependencyGraph* _dependency_graph;
+  DependencyGraph _dependency_graph;
 
   /** @brief Simulation time. */
   double _t;
@@ -179,27 +173,10 @@ private:
   /** @brief Number of reactions that have been performed. */
   int _number_reactions_performed;
 
-  /** @brief Random handler used for determining next reaction. */
-  RandomHandler _random_handler;
-
   // =================
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Update the _rates vector with current reaction rates according to dependency map.
-   */
-  void update_rates (void);
-
-  /**
-   * @brief Update _t to the next reaction time based on current _rates.
-   */
-  void set_next_reaction_time (void);
-
-  /**
-   * @brief Compute next reaction based on current _rates.
-   */
-  void compute_next_reaction (void);
 };
 
 // ======================
@@ -221,5 +198,14 @@ inline void Solver::set_time (double time)
   _t = time;
 }
 
+inline const DependencyGraph& Solver::dependency_graph (void) const
+{
+  return _dependency_graph;
+}
+
+inline const std::vector<Reaction*>& Solver::reactions (void) const
+{
+  return _reactions;
+}
 
 #endif // SOLVER_H

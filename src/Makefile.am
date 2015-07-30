@@ -46,6 +46,7 @@ test_SOURCES += \
 test_SOURCES += \
 	constantrategroup.cpp constantrategroup.h \
 	dependencygraph.cpp dependencygraph.h \
+	naivesolver.cpp naivesolver.h \
 	reactiongroup.cpp reactiongroup.h \
 	solver.cpp solver.h \
 	updatedrategroup.cpp updatedrategroup.h
