@@ -51,9 +51,10 @@ class TerminationSiteHandler;
 // solver classes
 class ConstantRateGroup;
 class DependencyGraph;
-class ReactionGroup;
-class Solver;
 class NaiveSolver;
+class ReactionGroup;
+class ReactionClassification;
+class Solver;
 class UpdatedRateGroup;
 
 #endif // FORWARDDECLARATIONS_H

@@ -48,6 +48,7 @@ test_SOURCES += \
 	dependencygraph.cpp dependencygraph.h \
 	naivesolver.cpp naivesolver.h \
 	reactiongroup.cpp reactiongroup.h \
+	reactionclassification.cpp reactionclassification.h \
 	solver.cpp solver.h \
 	updatedrategroup.cpp updatedrategroup.h
 
