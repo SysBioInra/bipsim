@@ -30,10 +30,10 @@
 #include "sitehandler.h"
 
 /**
- * @brief The BindingSiteHandler class manages binding sites.
+ * @brief Class managing termination sites.
  *
- * It creates, destroys and classifies binding sites in different families. It
- * also enables other classes to access to these binding sites.
+ * It creates, destroys and classifies termination sites in different families. It
+ * also enables other classes to access to these termination sites.
  */
 class TerminationSiteHandler : public SiteHandler
 {
@@ -55,14 +55,13 @@ public:
   /**
    * @brief Create a new site.
    * @param family_name
-   *  Name of the family the site belongs to (e.g. Ribosome Binding
-   *  Site).
+   *  Name of the family the site belongs to (e.g. stem-loop).
    * @param location
-   *  Chemical element that bears the binding site.
+   *  Chemical element that bears the termination site.
    * @param position
-   *  Position of the binding site on the bearing element.
+   *  Position of the termination site on the bearing element.
    * @param length
-   *  Length of the binding site.
+   *  Length of the termination site.
    */
   virtual void create_site ( std::string family_name, ChemicalSequence& location,
 			     int position, int length );

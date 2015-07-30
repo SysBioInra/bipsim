@@ -28,21 +28,12 @@
 #include "forwarddeclarations.h"
 #include "identifiedlist.h"
 
-/**
- * @brief A list of references to Site.
- */
-typedef std::list< const Site* > SiteList;
 
 /**
- * @brief A map associating a family integer identifer with a SiteList.
- */
-typedef std::map< int, SiteList > SiteFamilyMap;
-
-/**
- * @brief The BindingSiteHandler class manages binding sites.
+ * @brief The SiteHandler class manages sites.
  *
- * It creates, destroys and classifies binding sites in different families. It
- * also enables other classes to access to these binding sites.
+ * It creates, destroys and classifies sites in different families. It
+ * also enables other classes to access to these sites.
  */
 class SiteHandler
 {
@@ -77,11 +68,11 @@ public:
    *  Name of the family the site belongs to (e.g. Ribosome Binding
    *  Site).
    * @param location
-   *  Chemical element that bears the binding site.
+   *  Chemical element that bears the site.
    * @param position
-   *  Position of the binding site on the bearing element.
+   *  Position of the site on the bearing element.
    * @param length
-   *  Length of the binding site.
+   *  Length of the site.
    */
   virtual void create_site ( std::string family_name, ChemicalSequence& location,
 			     int position, int length );
@@ -105,7 +96,7 @@ public:
   /**
    * @brief Returns id corresponding to family name.
    * @return Integer identfier of the site family
-   *  (BindingSiteHandler::NOT_FOUND if unknown family).
+   *  (SiteHandler::NOT_FOUND if unknown family).
    * @param  family_name Name of the site family.   
    */
   int retrieve_id ( std::string family_name ) const;
@@ -161,7 +152,14 @@ protected:
   //
   /** @brief The list that contains the family identifiers. */
   IdentifiedList _family_ids;
-  /** @brief The map that contains the references to binding sites. */
+
+  /** @brief A list of references to Site. */
+  typedef std::list< const Site* > SiteList;
+  
+  /** @brief A map associating a family integer identifer with a SiteList. */
+  typedef std::map< int, SiteList > SiteFamilyMap;
+
+  /** @brief The map that contains the references to sites. */
   SiteFamilyMap _families;
 
   // =================

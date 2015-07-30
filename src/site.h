@@ -2,7 +2,7 @@
 
 /**
  * @file site.h
- * @brief Header for the BindingSite class.
+ * @brief Header for the Site class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -26,10 +26,10 @@
 #include "macros.h"
 
 /**
- * @brief Class that represents binding sites on chemical sequences.
+ * @brief Class that represents sites on chemical sequences.
  *
- * The BindingSite class contains two types of information. Each instance
- * belongs to a family of binding sites (e.g. Ribosome Binding Site) but also
+ * The Site class contains two types of information. Each instance
+ * belongs to a family of sites (e.g. Ribosome Binding Site) but also
  * has a specific location along a specific chemical sequence.
  */
 class Site
@@ -45,8 +45,8 @@ public:
    * @param family_id Integer family identifier.
    * @param location Chemical sequence containing the site.
    * @param position Position along the sequence.
-   * @param length Length of the binding site.
-   * @sa BindingSiteHandler
+   * @param length Length of the site.
+   * @sa SiteHandler
    */
   Site ( int family_id, ChemicalSequence& location, int position, int length )
     : _family ( family_id )
@@ -77,7 +77,7 @@ public:
   /**
    * @brief Family accessor.
    * @return Integer family identifier.
-   * @sa BindingSiteList
+   * @sa SiteList
    */
   int family ( void ) const;
  
@@ -88,8 +88,8 @@ public:
   virtual int number_available_sites ( void ) const;
 
   /**
-   * @brief Binding site location.
-   * @return ChemicalSequence that carries the binding site.
+   * @brief Site location.
+   * @return ChemicalSequence that carries the site.
    */
   ChemicalSequence& location ( void ) const;
 
@@ -120,7 +120,7 @@ public:
   // /*
   //  * @brief Assignment operator
   //  */
-  // CLASSNAME& operator= (CLASSNAME& other_binding);
+  // CLASSNAME& operator= (CLASSNAME& other_site);
 
 
   // ==================================
@@ -140,16 +140,16 @@ public:
   //  Attributes
   // ============
   //
-  /** @brief Family to which the binding site belongs */
+  /** @brief Family to which the site belongs */
   int _family;
 
-  /** @brief Chemical on which the binding site is located. */
+  /** @brief Chemical on which the site is located. */
   ChemicalSequence& _location;
 
-  /** @brief Exact position of the binding site along the sequence. */
+  /** @brief Exact position of the site along the sequence. */
   int _position;
   
-  /** @brief Length of the binding motif. */
+  /** @brief Length of the motif. */
   int _length;
 
   // =================
