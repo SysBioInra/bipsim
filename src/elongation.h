@@ -46,7 +46,7 @@ public:
    * @brief Constructor
    * @param  processive_chemical 
    *  Polymerase that does the elongation.
-   * @param  bound_chemical
+   * @param  chemical_after_step
    *  Chemical after elongation.
    * @param  step_size
    *  Number of bases processed at each elongation step.

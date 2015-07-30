@@ -144,6 +144,7 @@ public:
   //  Public Constants
   // ==================
   //
+  /** @brief Constant value used to specify that there is no reading frame associated with the binding site. */
   static const int NO_READING_FRAME = -1;
 
  private:

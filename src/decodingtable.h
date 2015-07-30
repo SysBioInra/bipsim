@@ -75,9 +75,10 @@ class DecodingTable
    * @brief Add pairing to the decoding table.
    *
    * If template is already defined, the corresponding base is overwritten.
-   * @param template String template to decode.
+   * @param template_ String template to decode.
    * @param corresponding_base Chemical that matches the template.
    * @param occupied_polymerase Occupied polymerase when it has loaded the base.
+   * @param loading_rate Rate at which a base is loaded onto its template.
    */
   void add_template (const std::string& template_, Chemical& corresponding_base, BoundChemical& occupied_polymerase, double loading_rate);
 
@@ -116,7 +117,7 @@ class DecodingTable
 
   /**
    * @brief Get loading rate corresponding to template.
-   * @param template_ Template index.
+   * @param template_index Template index.
    * @return Loading rate corresponding to template.
    */
   double loading_rate (int template_index) const;
@@ -154,7 +155,7 @@ class DecodingTable
    * @brief Standard output.
    * @return A reference to the stream containing the output.
    * @param output Stream where output should be written.
-   * @param chemical Reference to the table whose information should be written.
+   * @param decoding_table Reference to the table whose information should be written.
    */
   friend std::ostream& operator<< (std::ostream& output, const DecodingTable& decoding_table);
 

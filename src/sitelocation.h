@@ -27,9 +27,10 @@
 #include "macros.h"
 
 /**
- * @brief BRIEF DESCRIPTION OF CLASS
+ * @brief Class storing site location variables.
  *
- * DETAILED DESCRIPTION OF CLASS
+ * Simply stores and gives access to (position,length). Can be used for
+ * simplicity and clarity by other classes.
  */
 class SiteLocation
 {

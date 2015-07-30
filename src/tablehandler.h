@@ -67,7 +67,7 @@ public:
    * @param template_list List of motifs that can be read on a sequence.
    * @param base_list Chemicals that are loaded corresponding to each template.
    * @param polymerase_list Occupied polymerases corresponding to each template.
-   * @param initial_quantity Number of molecules present at beginning of simulation.
+   * @param rate_list Loading rates of bases onto their template.
    * @sa DecodingTable
    */
   void create_decoding_table (std::string table_name, const std::list<std::string>& template_list,

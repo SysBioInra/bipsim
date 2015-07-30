@@ -113,6 +113,8 @@ public:
    * @brief Add new elongation reaction to list.
    * @param  processive_chemical 
    *  Polymerase that does the elongation.
+   * @param  chemical_after_step
+   *  Chemical after elongation.
    * @param  step_size
    *  Number of bases processed at each elongation step.
    * @param rate Elongation rate (in steps/s).

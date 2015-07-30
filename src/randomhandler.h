@@ -27,9 +27,11 @@
 #include "forwarddeclarations.h"
 
 /**
- * @brief BRIEF DESCRIPTION OF CLASS
+ * @brief Class handling Random Number Generation.
  *
- * DETAILED DESCRIPTION OF CLASS
+ * ReactionHandler initiates a random number engine and provides various services
+ * such as drawing of classical distributions and biased-wheel drawing. It uses
+ * a random number engine from boost.
  */
 class RandomHandler
 {
