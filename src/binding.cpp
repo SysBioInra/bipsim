@@ -92,8 +92,10 @@ void Binding::update_rates ( void )
    * the rest of the formula for us as it holds information about binding rates and binding site
    * concentrations.
    */
+  // we start by updating rate contribution of the family 
+  _binding_site_handler->update_binding_rate_contributions (_binding_site_family);
   _forward_rate = _unit_to_bind.number() *
-      Binding::_binding_site_handler->get_total_binding_rate_contribution (_binding_site_family);
+    _binding_site_handler->get_total_binding_rate_contribution (_binding_site_family);
 
   /**
    * Unbinding rate is generally defined by r = k_off x [A], where [A] is the concentration
@@ -116,6 +118,15 @@ void Binding::print (std::ostream& output) const
 //  Public Methods - Accessors
 // ============================
 //
+bool Binding::is_forward_reaction_possible (void) const
+{
+  return false;
+}
+
+bool Binding::is_backward_reaction_possible (void) const
+{
+  return false;
+}
 
 
 // ==========================

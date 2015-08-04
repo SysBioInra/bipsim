@@ -125,6 +125,15 @@ void Elongation::update_rates( void )
 //  Public Methods - Accessors
 // ============================
 //
+bool Elongation::is_forward_reaction_possible (void) const
+{
+  return false;
+}
+
+bool Elongation::is_backward_reaction_possible (void) const
+{
+  return false;
+}
 
 
 // ==========================

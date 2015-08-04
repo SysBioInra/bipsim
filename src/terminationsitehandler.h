@@ -103,12 +103,30 @@ protected:
   //  Attributes
   // ============
   //
+  /** @brief A list of references to termination sites. */
+  typedef std::list< const Site* > SiteList;
+  
+  /** @brief A map associating a family integer identifer with a SiteList. */
+  typedef std::map< int, SiteList > SiteFamilyMap;
+
+  /** @brief The map that contains the references to sites. */
+  SiteFamilyMap _families;
 
   // =================
   //  Private Methods
   // =================
   //
-  
+  /**
+   * @return Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const ;
+
+  /**
+   * @brief Erase all sites.
+   */
+  void clear_sites ( void );
+
 };
 
 // ======================

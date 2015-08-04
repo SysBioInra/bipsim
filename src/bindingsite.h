@@ -112,6 +112,13 @@ public:
    */
   virtual int number_available_sites ( void ) const;
 
+  /**
+   * @brief Binding rate contributon.
+   * @return Contribution to binding rate coming from this site.
+   */
+  double rate_contribution (void) const;
+  
+
   
   // ==========================
   //  Public Methods - Setters
@@ -194,7 +201,17 @@ inline int BindingSite::reading_frame ( void ) const
 inline int BindingSite::number_available_sites ( void ) const
 {
   /** Compared to the parent class, we use focus areas to compute the value more efficiently. */
+  // INLINE here is stupid as the member is virtual
+  // TODO fix this
   return _location.focus_area_availability (_focus_area_id);
 }
+
+inline double BindingSite::rate_contribution (void) const
+{
+  /** Rate_contribution is k_on * number of sites available. */
+  return _k_on*_location.focus_area_availability (_focus_area_id);
+}
+
+
 
 #endif // BINDINGSITE_H

@@ -1,5 +1,8 @@
 
 function RNA_positions = get_RNA_positions (Gene)
+    
+  % open error file
+  ferr = fopen('error_rna_extraction.dat','w');
 
   RNA_positions = [];
   i = 0;
@@ -16,7 +19,10 @@ function RNA_positions = get_RNA_positions (Gene)
               position = position_cell{1};
               if g{1}.brin_DNA == 1
                   if position(2) < position(1)
-                      warning('corrupt data on gene %d supposedly sense but positions are reversed ?',i); 
+                      warning(['corrupt data on gene %d supposedly ' ...
+                               'sense but positions are reversed ?'],i); 
+                      fprintf (ferr,['corrupt data on gene %d supposedly ' ...
+                                    'sense but positions are reversed ?'],i);
                       tmp = position(1);
                       position(1) = position(2);
                       position(2) = tmp;
@@ -24,6 +30,8 @@ function RNA_positions = get_RNA_positions (Gene)
               else
                   if position(1) < position(2)
                       warning('corrupt data on gene %d supposedly antisense but positions are reversed ?',i); 
+                      fprintf (ferr,['corrupt data on gene %d supposedly ' ...
+                                    'antisense but positions are reversed ?'],i);
                       tmp = position(1);
                       position(1) = position(2);
                       position(2) = tmp;
@@ -37,6 +45,8 @@ function RNA_positions = get_RNA_positions (Gene)
           if g{1}.brin_DNA == 1
               if position(2) < position(1)
                   warning('corrupt data on gene %d supposedly sense but positions are reversed ?',i); 
+                  fprintf (ferr,['corrupt data on gene %d supposedly ' ...
+                                'sense but positions are reversed ?'],i);
                   tmp = position(1);
                   position(1) = position(2);
                   position(2) = tmp;
@@ -44,6 +54,8 @@ function RNA_positions = get_RNA_positions (Gene)
           else
               if position(1) < position(2)
                   warning('corrupt data on gene %d supposedly antisense but positions are reversed ?',i); 
+                  fprintf (ferr,['corrupt data on gene %d supposedly ' ...
+                                'antisense but positions are reversed ?'],i);
                   tmp = position(1);
                   position(1) = position(2);
                   position(2) = tmp;

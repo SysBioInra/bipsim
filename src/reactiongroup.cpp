@@ -25,6 +25,8 @@
 //  Constructors/Destructors
 // ==========================
 //
+const double ReactionGroup::OVERTIME = std::numeric_limits<double>::infinity();
+
 ReactionGroup::ReactionGroup (const std::vector<Reaction*>& reactions)
   : _reactions (reactions)
   , _number_reactions (reactions.size())

@@ -28,8 +28,8 @@
 //  Constructors/Destructors
 // ==========================
 //
-NaiveSolver::NaiveSolver (const std::list<Reaction*>& reactions)
-  : Solver (reactions)
+NaiveSolver::NaiveSolver (double initial_time, const std::list<Reaction*>& reactions)
+  : Solver (initial_time, reactions)
     // there are 2 rates per reaction (forward and backward)
   , _rates (2*reactions.size(),0)
   , _total_rate (0)

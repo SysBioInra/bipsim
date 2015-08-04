@@ -103,6 +103,11 @@ public:
   //  Public Methods - Accessors
   // ============================
   //
+  /** @brief Check whether there are enough reactants to perform reaction. */
+  virtual bool is_forward_reaction_possible (void) const;
+
+  /** @brief Check whether there are enough products to perform backwards reaction. */
+  virtual bool is_backward_reaction_possible (void) const;
 
 
   // ==========================
@@ -163,12 +168,6 @@ protected:
   //  Private Methods
   // =================
   //
-  /** @brief Check whether there are enough reactants to perform reaction. */
-  bool is_forward_reaction_possible (void) const;
-
-  /** @brief Check whether there are enough products to perform backwards reaction. */
-  bool is_backward_reaction_possible (void) const;
-
   /**
    * @brief Looks for bound chemicals in the reaction and updates corresponding indices.
    *

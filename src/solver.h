@@ -46,9 +46,10 @@ class Solver
   //
   /**
    * @brief Default constructor
+   * @param initial_time Initial simulation time.
    * @param reactions List of reactions to integrate.
    */
-  Solver (const std::list<Reaction*>& reactions);
+  Solver (double initial_time, const std::list<Reaction*>& reactions);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -98,11 +99,6 @@ class Solver
   //  Public Methods - Setters
   // ==========================
   //
-  /**
-   * @brief Set simulation time.
-   * @param time Time value.
-   */
-  void set_time (double time);
 
   // =======================================
   //  Public Methods - Operator overloading
@@ -191,11 +187,6 @@ inline double Solver::time (void) const
 inline int Solver::number_reactions_performed (void) const 
 {
   return _number_reactions_performed;
-}
-
-inline void Solver::set_time (double time)
-{
-  _t = time;
 }
 
 inline const DependencyGraph& Solver::dependency_graph (void) const

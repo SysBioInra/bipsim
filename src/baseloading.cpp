@@ -96,6 +96,15 @@ void BaseLoading::update_rates (void)
 //  Public Methods - Accessors
 // ============================
 //
+bool BaseLoading::is_forward_reaction_possible (void) const
+{
+  return false;
+}
+
+bool BaseLoading::is_backward_reaction_possible (void) const
+{
+  return false;
+}
 
 
 // ==========================

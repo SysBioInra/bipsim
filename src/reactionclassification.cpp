@@ -58,10 +58,13 @@ int ReactionClassification::create_new_class (double time_step)
   return _current_size - 1;
 }
 
+
+
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
+
 
 
 // ==========================
@@ -96,3 +99,18 @@ bool ReactionClassification::check_invariant (void) const
 //  Private Methods
 // =================
 //
+const std::vector<Reaction*>& ReactionClassification::get_class (int class_id) const
+{
+  std::list< std::vector<Reaction*> >::const_iterator class_it = _reaction_classification.begin();
+  int class_index = 0;
+  while (class_index < class_id) { ++class_it, ++class_index; }
+  return *class_it;
+}
+
+std::vector<Reaction*>& ReactionClassification::get_class (int class_id)
+{
+  std::list< std::vector<Reaction*> >::iterator class_it = _reaction_classification.begin();
+  int class_index = 0;
+  while (class_index < class_id) { ++class_it, ++class_index; }
+  return *class_it;
+}

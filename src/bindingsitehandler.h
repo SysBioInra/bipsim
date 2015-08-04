@@ -24,12 +24,12 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "identifiedlist.h"
 #include "sitehandler.h"
-#include "bindingsite.h"
+#include "bindingsitefamily.h"
+
 
 /**
- * @brief The BindingSiteHandler class manages binding sites.
+ * @brief Class managing binding sites.
  *
  * It creates, destroys and classifies binding sites in different families. It
  * also enables other classes to access to these binding sites.
@@ -42,17 +42,11 @@ public:
   //  Constructors/Destructors
   // ==========================
   //
-  // Not needed here !
-  // /*
-  //  * @brief Default constructor
-  //  */
-  // BindingSiteHandler ( void );
+  /**
+   * @brief Default constructor
+   */
+  BindingSiteHandler ( void );
    
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // BindingSiteHandler ( BindingSiteHandler& other_binding_site_handler );
-
   /**
    * @brief Destructor
    */
@@ -83,6 +77,25 @@ public:
 			     int length, double k_on, double k_off,
 			     int reading_frame = NO_READING_FRAME );
 
+
+  /**
+   * @brief Update binding rate contributions to reflect current site occupancy.
+   *
+   * This function must be called before updating binding rates, else binding rates
+   * will not reflect current site occupancy...
+   */
+  void update_all_binding_rate_contributions (void);
+
+  /**
+   * @brief Update binding rate contributions to reflect current site occupancy for a specific family.
+   * @param family_id Integer identifier of the binding site family.
+   *
+   * This function must be called before updating binding rates, else binding rates
+   * will not reflect current site occupancy...
+   */
+  void update_binding_rate_contributions (int family_id);
+
+
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -92,14 +105,16 @@ public:
    * @param family_id Integer identifier of the binding site family.
    * @return Random available site belonging to a specific family.
    */
-  const BindingSite& get_random_available_site ( int family_id ) const;
+  const BindingSite& get_random_available_site ( int family_id );
 
   /**
    * @brief Return total contribution to binding rate for a specific family.
    * @param family_id Integer identifier of the binding site family.
    * @return Contribution to binding rate for a specific family.
    */
-  double get_total_binding_rate_contribution ( int family_id ) const;
+  double get_total_binding_rate_contribution ( int family_id );
+
+
 
   // ==========================
   //  Public Methods - Setters
@@ -111,10 +126,6 @@ public:
   //  Public Methods - Operator overloading
   // =======================================
   //
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // BindingSiteHandler& operator= ( BindingSiteHandler& other_binding_site_handler );
 
 
   // ==================================
@@ -139,11 +150,40 @@ private:
   //  Attributes
   // ============
   //
+  /** @brief The map that contains the references to sites. */
+  std::map<int,BindingSiteFamily> _families;
+
+  /** @brief List of all binding sites created (for memory management). */
+  std::list<BindingSite*> _binding_site_list;
 
   // =================
   //  Private Methods
   // =================
   //
+  /**
+   * @return Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const;
+
+  /**
+   * @brief Erase all sites.
+   */
+  void clear_sites (void);
+  
+  // ======================
+  //  Forbidden Operations
+  // ======================
+  //
+  /**
+   * @brief Copy constructor forbidden (declared private)
+   */
+  BindingSiteHandler ( BindingSiteHandler& other_binding_site_handler );
+
+  /**
+   * @brief Assignment operator forbidden (declared private)
+   */
+  BindingSiteHandler& operator= ( BindingSiteHandler& other_binding_site_handler );
   
 };
 
@@ -151,5 +191,25 @@ private:
 //  Inline declarations
 // ======================
 //
+
+inline double BindingSiteHandler::get_total_binding_rate_contribution ( int family_id )
+{
+  REQUIRE (exists (family_id)); /** @pre Family identifier must exist. */
+  return _families [family_id].total_rate_contribution();
+}
+
+inline const BindingSite& BindingSiteHandler::get_random_available_site ( int family_id )
+{
+  REQUIRE (exists (family_id)); /** @pre Family identifier must exist. */
+  return _families [family_id].get_random_available_site();
+}
+
+inline void BindingSiteHandler::update_binding_rate_contributions (int family_id)
+{
+  REQUIRE (exists (family_id)); /** @pre Family identifier must exist. */
+
+  // we simply call the update rate function of the family
+  _families [family_id].update_rate_contributions();
+}
 
 #endif // BINDINGSITEHANDLER_H

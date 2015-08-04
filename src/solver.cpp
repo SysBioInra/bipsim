@@ -27,10 +27,10 @@
 //  Constructors/Destructors
 // ==========================
 //
-Solver::Solver (const std::list<Reaction*>& reactions)
+Solver::Solver (double initial_time, const std::list<Reaction*>& reactions)
   : _reactions (reactions.begin(), reactions.end())
   , _dependency_graph (_reactions)
-  , _t (0)
+  , _t (initial_time)
   , _number_reactions_performed (0)
 {
 }

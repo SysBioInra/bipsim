@@ -104,6 +104,17 @@ public:
   //  Public Methods - Accessors
   // ============================
   //
+  /**
+   * @brief Returns whether there are enough chemicals to perform forward reaction.
+   * @return True if there are enough reactant, false otherwise.
+   */
+  virtual bool is_forward_reaction_possible (void) const;
+
+  /**
+   * @brief Returns whether there are enough chemicals to perform backward reaction.
+   * @return True if there are enough reactant, false otherwise.
+   */
+  virtual bool is_backward_reaction_possible (void) const;
 
 
   // ==========================
@@ -145,11 +156,6 @@ private:
   //  Private Methods
   // =================
   //
-  /** @brief Check whether there are enough reactants to perform reaction. */
-  bool is_forward_reaction_possible (void) const;
-
-  /** @brief Check whether there are enough products to perform backwards reaction. */
-  bool is_backward_reaction_possible (void) const;
 
 };
 

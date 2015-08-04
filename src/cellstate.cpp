@@ -1,8 +1,8 @@
 
 
 /**
- * @file sitehandler.cpp
- * @brief Implementation of the SiteHandler class.
+ * @file cellstate.cpp
+ * @brief Implementation of the CellState class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -12,29 +12,35 @@
 //  General Includes
 // ==================
 //
-#include <iostream> // std::cout
-#include <vector>  // std::vector
+#include <iostream>
 
 // ==================
 //  Project Includes
 // ==================
 //
-#include "sitehandler.h"
-#include "site.h"
-#include "chemicalsequence.h"
-#include "macros.h"
-
-
+#include "binding.h"
+#include "cellstate.h"
+#include "parser.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-SiteHandler::SiteHandler (void)
+CellState::CellState (const char* filename)
 {
+  // link binding reactions with binding site handler
+  Binding::set_binding_site_handler (_binding_site_handler);
+
+  // open new parser and load file
+  Parser parser (_chemical_handler, _reaction_handler, _binding_site_handler, _termination_site_handler, _table_handler);
+  parser.parse_units (filename);
+  parser.parse_reactions (filename);
 }
 
-SiteHandler::~SiteHandler (void)
+// Not needed for this class (use of default copy constructor) !
+// CellState::CellState ( const CellState& other_cell_state );
+
+CellState::~CellState (void)
 {
 }
 
@@ -42,6 +48,7 @@ SiteHandler::~SiteHandler (void)
 //  Public Methods - Commands
 // ===========================
 //
+
 
 // ============================
 //  Public Methods - Accessors
@@ -59,11 +66,8 @@ SiteHandler::~SiteHandler (void)
 //  Public Methods - Operator overloading
 // =======================================
 //
-std::ostream& operator<< (std::ostream& output, const SiteHandler& site_handler)
-{
-  site_handler.print (output);
-  return output;
-}
+// Not needed for this class (use of default overloading) !
+// CellState& CellState::operator= ( const CellState& other_cell_state );
 
 // ==================================
 //  Public Methods - Class invariant
@@ -73,22 +77,14 @@ std::ostream& operator<< (std::ostream& output, const SiteHandler& site_handler)
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool SiteHandler::check_invariant ( void ) const
+bool CellState::check_invariant (void) const
 {
   bool result = true;
   return result;
 }
 
 
-// ===================
-//  Protected Methods
-// ===================
+// =================
+//  Private Methods
+// =================
 //
-int SiteHandler::get_or_create_family_identifier (std::string& family_name)
-{
-  if ( _family_ids.exists ( family_name ) == false )
-    {
-      _family_ids.create_id ( family_name );
-    }
-  return _family_ids.id ( family_name );
-}

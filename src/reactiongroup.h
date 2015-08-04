@@ -18,6 +18,7 @@
 // ==================
 //
 #include <vector> // std::vector
+#include <limits> // std::numeric_limits
 
 // ==================
 //  Project Includes
@@ -87,7 +88,8 @@ class ReactionGroup
    *
    * For efficiency reasons, this function is not virtual, even though
    * its return value must in fact be specfied by classes inheriting from
-   * ReactionGroup.
+   * ReactionGroup. If there is no scheduled reaction because it is beyond
+   * the group's time scope, it should return ReactionGroup::OVERTIME.
    */
   double next_reaction_time (void);
 
@@ -116,6 +118,11 @@ class ReactionGroup
    */
   virtual bool check_invariant (void) const;
 
+  // ==================
+  //  Public Constants
+  // ==================
+  //
+  static const double OVERTIME; 
 
 protected:
 

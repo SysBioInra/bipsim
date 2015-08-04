@@ -17,15 +17,11 @@
 //  Project Includes
 // ==================
 //
-#include "binding.h"
-#include "bindingsitehandler.h"
-#include "chemicalhandler.h"
+#include "cellstate.h"
 #include "chemical.h"
-#include "reactionhandler.h"
-#include "tablehandler.h"
-#include "terminationsitehandler.h"
-#include "parser.h"
 #include "naivesolver.h"
+#include "manualdispatchsolver.h"
+#include "reactionclassification.h"
 
 /**
  * @brief Program initiation.
@@ -33,37 +29,25 @@
  * DETAILED DESCRIPTION OF PROGRAM
  */
 int main ( )
-{
-  // create handlers
-  BindingSiteHandler binding_site_handler;
-  Binding::set_binding_site_handler (binding_site_handler);
-  ChemicalHandler chemical_handler;
-  ReactionHandler reaction_handler;
-  TableHandler table_handler;
-  TerminationSiteHandler termination_site_handler;
+{ 
+  // read cell state from file
+  CellState cell_state ("../data/test_input.txt");
 
-  // open new parser and load file
-  Parser parser (chemical_handler, reaction_handler, binding_site_handler, termination_site_handler, table_handler);
-  parser.parse_units( "../data/test_input.txt" );
-  parser.parse_reactions( "../data/test_input.txt" );
-
-  // std::cout << chemical_handler;
-  // std::cout << reaction_handler;
-  // std::cout << table_handler;
-  std::cin.get();
-  
   // solve system
-  NaiveSolver solver (reaction_handler.reference_list());
+  // ReactionClassification classification;
+  // int class_id = classification.create_new_class (1);
+  // classification.add_reaction_list_to_class (class_id, cell_state.reaction_list());
+  NaiveSolver solver (0, cell_state.reaction_list());
   
-  while (solver.time() < 1000)
+  while (solver.time() < 2000)
     {
       solver.go_to_next_reaction();
       // std::cout << "Next reaction (t=" << solver.time() << ")" << std::endl;
-      // std::cout << chemical_handler;
+      // cell_state.print_chemicals;
       // std::cin.get();
     }
-  const Chemical& protein = chemical_handler.reference( std::string("protein") );
-  std::cout << chemical_handler;
+  const Chemical& protein = cell_state.chemical ("protein");
+  cell_state.print_chemicals();
   std::cout << "Proteins: " << protein << std::endl;
   std::cout << solver.number_reactions_performed() << " reactions occurred." << std::endl;
 }

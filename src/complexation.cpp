@@ -136,6 +136,15 @@ void Complexation::update_rates ( void )
 //  Public Methods - Accessors
 // ============================
 //
+bool Complexation::is_forward_reaction_possible (void) const
+{
+  return false;
+}
+
+bool Complexation::is_backward_reaction_possible (void) const
+{
+  return false;
+}
 
 
 // ==========================

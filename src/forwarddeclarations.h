@@ -40,6 +40,7 @@ class Site;
 class SiteLocation;
 
 // parser and handler classes
+class BindingSiteFamily;
 class BindingSiteHandler;
 class ChemicalHandler;
 class Parser;
@@ -49,10 +50,13 @@ class TableHandler;
 class TerminationSiteHandler;
 
 // solver classes
+class CellState;
 class ConstantRateGroup;
 class DependencyGraph;
 class NaiveSolver;
+class ManualDispatchSolver;
 class ReactionGroup;
+class ReactionGroupEvent;
 class ReactionClassification;
 class Solver;
 class UpdatedRateGroup;

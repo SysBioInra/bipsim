@@ -17,8 +17,6 @@
 //  General Includes
 // ==================
 //
-#include <list>  // std::list
-#include <map>  // std::map
 #include <string>  //std::string
 
 // ==================
@@ -30,10 +28,11 @@
 
 
 /**
- * @brief The SiteHandler class manages sites.
+ * @brief Abstract class for site management.
  *
- * It creates, destroys and classifies sites in different families. It
- * also enables other classes to access to these sites.
+ * SiteHandler is an abstract class that handles the family
+ * classification of sites and the associated identifiers.
+ * Creation of sites is handled by inheriting classes.
  */
 class SiteHandler
 {
@@ -46,41 +45,17 @@ public:
   /**
    * @brief Default constructor
    */
-  SiteHandler ( void ) {}
+  SiteHandler ( void );
    
-  /**
-   * @brief Copy constructor
-   */
-  SiteHandler ( const SiteHandler& other_site_handler );
-
   /**
    * @brief Destructor
    */
-  virtual ~SiteHandler ( void );
+  virtual ~SiteHandler ( void ) = 0;
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Create a new site.
-   * @param family_name
-   *  Name of the family the site belongs to (e.g. Ribosome Binding
-   *  Site).
-   * @param location
-   *  Chemical element that bears the site.
-   * @param position
-   *  Position of the site on the bearing element.
-   * @param length
-   *  Length of the site.
-   */
-  virtual void create_site ( std::string family_name, ChemicalSequence& location,
-			     int position, int length );
-
-  /**
-   * @brief for fun
-   */
-  void print ( void ) const;
 
   // ============================
   //  Public Methods - Accessors
@@ -91,7 +66,7 @@ public:
    * @return True if family is known.
    * @param  family_name Name of the site family.   
    */
-  bool exists ( std::string family_name ) const;
+  bool exists (std::string family_name) const;
 
   /**
    * @brief Returns id corresponding to family name.
@@ -99,7 +74,7 @@ public:
    *  (SiteHandler::NOT_FOUND if unknown family).
    * @param  family_name Name of the site family.   
    */
-  int retrieve_id ( std::string family_name ) const;
+  int retrieve_id (std::string family_name) const;
 
   /**
    * @brief Returns family name corresponding to id.
@@ -107,7 +82,7 @@ public:
    *  (empty if unknown family).
    * @param family_id Integer identfier of the site family
    */
-  std::string retrieve_name ( int family_id ) const;
+  std::string retrieve_name (int family_id) const;
   
 
   // ==========================
@@ -121,9 +96,12 @@ public:
   // =======================================
   //
   /**
-   * @brief Assignment operator
+   * @brief Standard output.
+   * @return A reference to the stream containing the output.
+   * @param output Stream where output should be written.
+   * @param reaction Reference to the handler whose information should be written.
    */
-  SiteHandler& operator= ( SiteHandler& other_site_handler );
+  friend std::ostream& operator<< (std::ostream& output, const SiteHandler& site_handler);
 
 
   // ==================================
@@ -143,9 +121,22 @@ public:
    * @brief Identifier associated with unknown site families.
    */
   static const int NOT_FOUND = IdentifiedList::NOT_FOUND;
+  
+ protected:
 
-protected:
-
+  // ===================
+  //  Protected Methods
+  // ===================
+  //
+  /**
+   * @brief Returns id corresponding to family name or create it if nonexistent.
+   * @return Integer identfier of the site family (created if not already existent).
+   * @param  family_name Name of the site family.   
+   */
+  int get_or_create_family_identifier (std::string& family_name);
+    
+ private:
+  
   // ============
   //  Attributes
   // ============
@@ -153,36 +144,29 @@ protected:
   /** @brief The list that contains the family identifiers. */
   IdentifiedList _family_ids;
 
-  /** @brief A list of references to Site. */
-  typedef std::list< const Site* > SiteList;
-  
-  /** @brief A map associating a family integer identifer with a SiteList. */
-  typedef std::map< int, SiteList > SiteFamilyMap;
-
-  /** @brief The map that contains the references to sites. */
-  SiteFamilyMap _families;
-
   // =================
   //  Private Methods
   // =================
   //
   /**
-   * @brief Copy the SiteFamilyMap of another handler.
-   * @param other_site_handler Template to copy.
+   * @return Print class content.
+   * @param output Stream where output should be written.
    */
-  void copy_family_map ( const SiteHandler& other_site_handler );
+  virtual void print (std::ostream& output) const = 0;
+
+  // ======================
+  //  Forbidden Operations
+  // ======================
+  //
+  /**
+   * @brief Assignment operator forbidden (declared private)
+   */
+  SiteHandler& operator= ( SiteHandler& other_site_handler );  
 
   /**
-   * @brief Create a site by copying an existing site.
-   * @param family_id Family of the site to copy.
-   * @param site Site to copy.
+   * @brief Copy constructor forbidden (declared private)
    */
-  void create_site ( int family_id, const Site& site );
-
-  /**
-   * @brief Erase all sites.
-   */
-  void clear_sites ( void );
+  SiteHandler ( const SiteHandler& other_site_handler );
   
 };
 

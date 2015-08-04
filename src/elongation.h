@@ -95,6 +95,18 @@ public:
    */
   virtual void print (std::ostream& output) const;
 
+  /**
+   * @brief Returns whether there are enough chemicals to perform forward reaction.
+   * @return True if there are enough reactant, false otherwise.
+   */
+  virtual bool is_forward_reaction_possible (void) const;
+
+  /**
+   * @brief Returns whether there are enough chemicals to perform backward reaction.
+   * @return True if there are enough reactant, false otherwise.
+   */
+  virtual bool is_backward_reaction_possible (void) const;
+
 
   // ==========================
   //  Public Methods - Setters

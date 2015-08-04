@@ -31,9 +31,13 @@
 //  Constructors/Destructors
 // ==========================
 //
+BindingSiteHandler::BindingSiteHandler (void)
+{
+}
 
 BindingSiteHandler::~BindingSiteHandler (void)
 {
+  clear_sites();
 }
 
 // ===========================
@@ -51,80 +55,32 @@ void BindingSiteHandler::create_site (std::string family_name, ChemicalSequence&
   REQUIRE( position + length <= location.length() );
 
   // get family identifier
-  if ( _family_ids.exists ( family_name ) == false )
-    {
-      _family_ids.create_id ( family_name );
-    }
-  int family_id = _family_ids.id ( family_name );
+  int family_id = get_or_create_family_identifier (family_name);
 
   // create binding site
-  BindingSite* binding_site = new BindingSite ( family_id, location, position, length, k_on, k_off, reading_frame );
+  BindingSite* binding_site = new BindingSite (family_id, location, position, length, k_on, k_off, reading_frame);
+  _binding_site_list.push_back (binding_site);
   
   // add reference to the corresponding family list
-  // if family_id is not in the map, a list is automatically created
-  _families[ family_id ].push_back ( binding_site );
+  // if family_id is not in the map, a family is automatically created
+  _families[ family_id ].add_binding_site ( binding_site );
 }
 
+void BindingSiteHandler::update_all_binding_rate_contributions (void)
+{
+  // we simply call the update rate function for every family in the map
+  std::map<int,BindingSiteFamily>::iterator family = _families.begin();
+  while (family != _families.end())
+    {
+      (family->second).update_rate_contributions();
+      ++family;
+    }
+}
 
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-
-const BindingSite& BindingSiteHandler::get_random_available_site ( int family_id ) const
-{
-  // get the list of binding sites of the family
-  SiteFamilyMap::const_iterator family = _families.find ( family_id );
-  REQUIRE( family != _families.end() ); /** @pre family_id is already defined */
-  const SiteList& family_site_list = family->second;
-  
-  // get the number of available sites for each binding site and store them in an 
-  // vector
-  int number_binding_sites = family_site_list.size();
-  std::vector<int> number_available_sites ( number_binding_sites, 0 );
-  SiteList::const_iterator site = family_site_list.begin();
-  for ( int index = 0; site != family_site_list.end(); site++, index++ )
-    {
-      number_available_sites [ index ] = (*site)->number_available_sites();
-    }
-  
-  // draw a site according to the number of available sites
-  RandomHandler random_handler;
-  int index_drawn = random_handler.draw_index ( number_available_sites );
-
-  // retrieve the corresponding binding site
-  site = family_site_list.begin();
-  for ( int index = 0; index < index_drawn; index++ ) { site++; }
-
-  return *( static_cast< const BindingSite* > ( *site ) );
-}
-
-
-double BindingSiteHandler::get_total_binding_rate_contribution ( int family_id ) const
-{
-  /**
-   * Binding rate is generally defined by r = k_on x [A] x [B], where [A] is the concentration
-   * of units to bind and [B] the concentration of binding sites. However, k_on varies from a
-   * site to another so the total binding rate becomes
-   *   r_total = [A] sum ( k_on_i x [B_i] ) = [A] vector(k_on_i).vector([B_i])
-   * Here we need to compute the second part of the binding rate.
-   */
-
-  // retrieve binding site family
-  SiteFamilyMap::const_iterator family = _families.find ( family_id );
-  REQUIRE( family != _families.end() ); /** @pre family_id is already defined */
-  const SiteList& family_site_list = family->second;
-  
-  // get the number of available sites and k_on for each binding site
-  double rate_contribution = 0;
-  SiteList::const_iterator site = family_site_list.begin();
-  for ( int index = 0; site != family_site_list.end(); site++, index++ )
-    {
-      const BindingSite& binding_site = *static_cast< const BindingSite* > (*site);
-      rate_contribution += binding_site.k_on() * binding_site.number_available_sites();
-    }
-  return rate_contribution;
-}
 
 // ==========================
 //  Public Methods - Setters
@@ -156,3 +112,16 @@ bool BindingSiteHandler::check_invariant ( void ) const
 //  Private Methods
 // =================
 //
+void BindingSiteHandler::print (std::ostream& output) const
+{
+}
+
+void BindingSiteHandler::clear_sites (void)
+{
+  std::list<BindingSite*>::iterator site = _binding_site_list.begin();
+  while (site != _binding_site_list.end())
+    {
+      delete *site;
+      ++site;
+    }
+}

@@ -45,12 +45,7 @@ void TerminationSiteHandler::create_site ( std::string family_name, ChemicalSequ
    *   (position+length <= location->length() ). */
   REQUIRE( position + length <= location.length() );
 
-  // get family identifier
-  if ( _family_ids.exists ( family_name ) == false )
-    {
-      _family_ids.create_id ( family_name );
-    }
-  int family_id = _family_ids.id ( family_name );
+  int family_id = get_or_create_family_identifier ( family_name );
 
   // create site
   Site* site = new Site ( family_id, location, position, length );
@@ -62,7 +57,6 @@ void TerminationSiteHandler::create_site ( std::string family_name, ChemicalSequ
   // add the termination site on the bindable element
   location.add_termination_site ( *site );
 }
-
 
 // ============================
 //  Public Methods - Accessors
@@ -92,6 +86,11 @@ void TerminationSiteHandler::create_site ( std::string family_name, ChemicalSequ
 bool TerminationSiteHandler::check_invariant ( void ) const
 {
   bool result = SiteHandler::check_invariant();
+  /** There is at least one site reference per family */
+  for ( SiteFamilyMap::const_iterator it = _families.begin(); it != _families.end(); it++ )
+    {
+      result = result && ( (it->second).size() > 0 );
+    }
   return result;
 }
 
@@ -100,3 +99,41 @@ bool TerminationSiteHandler::check_invariant ( void ) const
 //  Private Methods
 // =================
 //
+void TerminationSiteHandler::clear_sites ( void )
+{
+  SiteList* reference_list = 0;
+  // we destroy all the sites
+  for ( SiteFamilyMap::iterator family = _families.begin(); family != _families.end(); family++ )
+    {
+      // destroy all sites of the current family
+      reference_list = &(family->second);
+      for ( SiteList::iterator site = reference_list->begin();
+	    site != reference_list->end(); site++ )
+	{
+	  delete *site;
+	}
+      // clear the list
+      reference_list->clear();
+    }
+}
+
+void TerminationSiteHandler::print (std::ostream& output) const
+{
+  for ( SiteFamilyMap::const_iterator family = _families.begin();
+	family != _families.end(); family++ )
+    {
+      int family_id = family->first;
+      std::string family_name = retrieve_name ( family_id );
+      const SiteList& family_site_list = family->second;
+      for ( SiteList::const_iterator site = family_site_list.begin();
+	    site != family_site_list.end(); site++)
+	{
+	  output << "Termination site from family \"" << family_name
+		 << "\" (id " << family_id
+		 << ") number " << *site
+		 << " which has " << (*site)->number_available_sites()
+		 << " available sites." << std::endl;
+	}
+    }
+}
+

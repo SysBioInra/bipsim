@@ -106,6 +106,18 @@ public:
    */
   const std::list<Chemical*>& components ( void ) const;
 
+  /**
+   * @brief Returns whether there are enough chemicals to perform forward reaction.
+   * @return True if there are enough reactant, false otherwise.
+   */
+  virtual bool is_forward_reaction_possible (void) const = 0;
+
+  /**
+   * @brief Returns whether there are enough chemicals to perform backward reaction.
+   * @return True if there are enough reactant, false otherwise.
+   */
+  virtual bool is_backward_reaction_possible (void) const = 0;
+
 
   // ==========================
   //  Public Methods - Setters

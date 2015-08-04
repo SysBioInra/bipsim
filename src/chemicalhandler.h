@@ -109,7 +109,7 @@ public:
    *  chemicals.
    * @param  chemical_name The name usually given to the chemical.
    */
-  bool exists (std::string chemical_name) const;
+  bool exists (const std::string& chemical_name) const;
 
   /**
    * @brief Return name associated with chemical identifier.
@@ -133,7 +133,7 @@ public:
    * @return Reference to the chemical corresponding to chemical_name.
    * @param chemical_name Name of chemical.
    */
-  Chemical& reference (std::string chemical_name) const;
+  Chemical& reference (const std::string& chemical_name) const;
 
   /**
    * @brief Return identifier associated with chemical name.
@@ -141,7 +141,7 @@ public:
    *  (ChemicalHandler::NOT_FOUND if it is not found).
    * @param  chemical_name The name usually given to the chemical
    */
-  int id (std::string chemical_name) const;
+  int id (const std::string& chemical_name) const;
 
   /**
    * @brief Return last identifier created.
@@ -228,7 +228,7 @@ private:
 //  Inline declarations
 // ======================
 //
-inline bool ChemicalHandler::exists (std::string chemical_name) const
+inline bool ChemicalHandler::exists (const std::string& chemical_name) const
 {
   return _identifiers.exists (chemical_name);
 }
@@ -245,14 +245,14 @@ inline Chemical& ChemicalHandler::reference (int chemical_id) const
   return *(ref->second);
 }
 
-inline Chemical& ChemicalHandler::reference (std::string chemical_name) const
+inline Chemical& ChemicalHandler::reference (const std::string& chemical_name) const
 {
   REQUIRE( exists (chemical_name) ); /** @pre Chemical name is already known. */
   return reference (id (chemical_name));
 }
 
 
-inline int ChemicalHandler::id (std::string chemical_name) const
+inline int ChemicalHandler::id (const std::string& chemical_name) const
 {
   return _identifiers.id (chemical_name);
 }

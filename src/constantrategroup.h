@@ -17,7 +17,7 @@
 //  General Includes
 // ==================
 //
-
+#include <limits> // std::numerical_limits<double>::infinity()
 
 // ==================
 //  Project Includes
@@ -74,12 +74,28 @@ class ConstantRateGroup : public ReactionGroup
    */
   virtual void perform_next_reaction (void);
 
+  /**
+   * @brief Reinitialize reaction timings with different initial_time.
+   *
+   * Reuses the reactions and time step specified at constructions, only
+   * initial and final times change. Reaction rates are updated before timings
+   * are computed.
+   * @param initial_time Time at the beginning of simulation.
+   */
+  void reinitialize (double initial_time);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-
+  
+  /**
+   * @brief Accessor to final time of simulation.
+   * @return Maximal time for which timings have been computed. If all reactions
+   *  have been performed, next reaction time is OVERTIME, indicating that reaction
+   *  timings greater than final_time need to be computed.
+   */
+  double final_time (void) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -122,6 +138,16 @@ private:
   /** @brief Index pointing to the next reaction time and rate index to read. */
   int _next_index;
 
+  /**
+   * @brief Maximal time for which timings have been computed. If all reactions
+   *  have been performed, next reaction time is OVERTIME, indicating that reaction
+   *  timings greater than final_time need to be computed.
+   */
+  double _final_time;
+
+  /* @brief Time step for which the timings have been computed. */
+  double _time_step;
+
   // =================
   //  Private Methods
   // =================
@@ -138,5 +164,11 @@ private:
 //  Inline declarations
 // ======================
 //
+inline double ConstantRateGroup::final_time (void) const
+{
+  return _final_time;
+}
+
+
 
 #endif // CONSTANT_RATE_GROUP_H

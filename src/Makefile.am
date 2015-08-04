@@ -35,6 +35,7 @@ test_SOURCES += \
 	sitelocation.cpp sitelocation.h
 # parser and handler sources
 test_SOURCES += \
+	bindingsitefamily.cpp bindingsitefamily.h \
 	bindingsitehandler.cpp bindingsitehandler.h \
 	chemicalhandler.cpp chemicalhandler.h \
 	parser.cpp parser.h \
@@ -44,10 +45,13 @@ test_SOURCES += \
 	terminationsitehandler.cpp terminationsitehandler.h
 # solver sources
 test_SOURCES += \
+	cellstate.cpp cellstate.h \
 	constantrategroup.cpp constantrategroup.h \
 	dependencygraph.cpp dependencygraph.h \
+	manualdispatchsolver.cpp manualdispatchsolver.h \
 	naivesolver.cpp naivesolver.h \
 	reactiongroup.cpp reactiongroup.h \
+	reactiongroupevent.h \
 	reactionclassification.cpp reactionclassification.h \
 	solver.cpp solver.h \
 	updatedrategroup.cpp updatedrategroup.h

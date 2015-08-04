@@ -109,9 +109,9 @@ class ReactionClassification
   /**
    * @brief Return reactions belonging to a given class.
    * @param class_id Integer identifier of the class.
-   * @return reactions List of reactions belonging to the class.
+   * @return reactions Vector of reactions belonging to the class.
    */
-  const std::list<Reaction*>& reactions (int class_id) const;
+  const std::vector<Reaction*>& reactions (int class_id) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -164,9 +164,9 @@ private:
   int _current_size;
 
   /**
-   * @brief List of reactions (one vector index = one class).
+   * @brief Lest of reaction classes (one vector = one class).
    */
-  std::vector< std::list<Reaction*> > _reaction_classification;
+  std::list < std::vector<Reaction*> > _reaction_classification;
 
   /**
    * @brief Time steps associated with every class.
@@ -177,6 +177,19 @@ private:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Get class from class identifier (const version).
+   * @param class_id Class identifer.
+   * @return Class vector associated with identifier.
+   */
+  const std::vector<Reaction*>& get_class (int class_id) const;
+
+  /**
+   * @brief Get class from class identifier (non const version).
+   * @param class_id Class identifer.
+   * @return Class vector associated with identifier.
+   */
+  std::vector<Reaction*>& get_class (int class_id);
 
   // ======================
   //  Forbidden Operations
@@ -189,12 +202,20 @@ private:
 //  Inline declarations
 // ======================
 //
+inline const std::vector <Reaction*>& ReactionClassification::reactions (int class_id) const
+{
+  /** @pre class_id must be within existing identifier range. */
+  REQUIRE ((class_id >= 0) && (class_id < _current_size));
+
+  return get_class (class_id);
+}
+
 inline void ReactionClassification::add_reaction_to_class (int class_id, Reaction& reaction)
 {
   /** @pre class_id must be within existing identifier range. */
   REQUIRE ((class_id >= 0) && (class_id < _current_size));
 
-  _reaction_classification [class_id].push_back (&reaction);
+  get_class (class_id).push_back (&reaction);
 }
 
 inline void ReactionClassification::add_reaction_list_to_class (int class_id, const std::list<Reaction*>& reactions)
@@ -203,21 +224,13 @@ inline void ReactionClassification::add_reaction_list_to_class (int class_id, co
   REQUIRE ((class_id >= 0) && (class_id < _current_size));
 
   // copy input list at the end of existing list
-  _reaction_classification [class_id].insert (_reaction_classification [class_id].end(), reactions.begin(), reactions.end());
+  std::vector <Reaction*>& class_to_modify = get_class (class_id);
+  class_to_modify.insert (class_to_modify.end(), reactions.begin(), reactions.end());
 }
-
 
 inline int ReactionClassification::number_classes (void) const
 {
   return _current_size;
-}
-
-inline const std::list <Reaction*>& ReactionClassification::reactions (int class_id) const
-{
-  /** @pre class_id must be within existing identifier range. */
-  REQUIRE ((class_id >= 0) && (class_id < _current_size));
-
-  return _reaction_classification [class_id];
 }
 
 inline double ReactionClassification::time_step (int class_id) const

@@ -51,8 +51,10 @@ class NaiveSolver : public Solver
   //
   /**
    * @brief Default constructor
+   * @param initial_time Initial simulation time.
+   * @param reactions List of reactions to integrate.
    */
-  NaiveSolver (const std::list<Reaction*>& reactions);
+  NaiveSolver (double initial_time, const std::list<Reaction*>& reactions);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
