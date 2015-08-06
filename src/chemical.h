@@ -161,5 +161,10 @@ inline void Chemical::remove(int quantity)
   _number -= quantity;
 }
 
+inline std::ostream& operator<< (std::ostream& output, const Chemical& chemical)
+{
+  chemical.print (output);
+  return output;
+}
 
 #endif // CHEMICAL_H

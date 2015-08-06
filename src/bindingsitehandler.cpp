@@ -77,6 +77,18 @@ void BindingSiteHandler::update_all_binding_rate_contributions (void)
     }
 }
 
+void BindingSiteHandler::update_binding_rate_contributions (const ChemicalSequence& modified_sequence)
+{
+  std::list<BindingSite*>& modified_binding_sites = _location_map [&modified_sequence];
+
+  for (std::list<BindingSite*>::iterator site = modified_binding_sites.begin();
+       site != modified_binding_sites.end(); ++site)
+    {
+      _families [(*site)->family()].update_rate_contribution(*site);
+    }
+}
+
+
 // ============================
 //  Public Methods - Accessors
 // ============================

@@ -160,6 +160,7 @@ public:
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   virtual bool check_invariant (void) const;

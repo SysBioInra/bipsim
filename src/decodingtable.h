@@ -129,7 +129,7 @@ class DecodingTable
   int template_length (void) const;
 
   /**
-   * @return Print class content.
+   * @brief Print class content.
    * @param output Stream where output should be written.
    */
   void print ( std::ostream& output ) const;
@@ -165,6 +165,7 @@ class DecodingTable
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   virtual bool check_invariant (void) const;

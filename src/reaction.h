@@ -75,7 +75,7 @@ public:
   virtual void update_rates ( void ) = 0;
 
   /**
-   * @return Print class content.
+   * @brief Print class content.
    * @param output Stream where output should be written.
    */
   virtual void print (std::ostream& output) const = 0;
@@ -118,6 +118,10 @@ public:
    */
   virtual bool is_backward_reaction_possible (void) const = 0;
 
+  /**
+   * @brief Pointer to a potential chemical sequence involved in the last reaction.
+   */
+  const ChemicalSequence* last_chemical_sequence_involved (void) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -148,6 +152,7 @@ public:
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   virtual bool check_invariant( void ) const;
@@ -159,15 +164,19 @@ protected:
   //  Attributes
   // ============
   //
-  /** @return Forward reaction rate value computed at last update. */
+  /** @brief Forward reaction rate value computed at last update. */
   double _forward_rate;
 
-  /** @return Backward reaction rate value computed at last update. */
+  /** @brief Backward reaction rate value computed at last update. */
   double _backward_rate;
 
-  /** @return Backward reaction rate value computed at last update. */
+  /** @brief Backward reaction rate value computed at last update. */
   std::list< Chemical* > _components;
 
+  /**
+   * @brief Pointer to a potential chemical sequence involved in the last reaction.
+   */
+  const ChemicalSequence* _last_chemical_sequence_involved;
 
   // =================
   //  Private Methods
@@ -193,6 +202,11 @@ inline double Reaction::backward_rate ( void ) const
 inline const std::list<Chemical*>& Reaction::components ( void ) const
 {
   return _components;
+}
+
+inline const ChemicalSequence* Reaction::last_chemical_sequence_involved (void) const
+{
+  return _last_chemical_sequence_involved;
 }
 
 

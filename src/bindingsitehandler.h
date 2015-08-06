@@ -87,13 +87,13 @@ public:
   void update_all_binding_rate_contributions (void);
 
   /**
-   * @brief Update binding rate contributions to reflect current site occupancy for a specific family.
-   * @param family_id Integer identifier of the binding site family.
+   * @brief Update binding rate contributions to reflect current site occupancy given that only one sequence was changed.
+   * @param modified_sequence Chemical sequence that was modified since last update.
    *
    * This function must be called before updating binding rates, else binding rates
    * will not reflect current site occupancy...
    */
-  void update_binding_rate_contributions (int family_id);
+  void update_binding_rate_contributions (const ChemicalSequence& modified_sequence);
 
 
   // ============================
@@ -133,6 +133,7 @@ public:
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   virtual bool check_invariant ( void ) const;
@@ -150,8 +151,11 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief The map that contains the references to sites. */
+  /** @brief Map classifying binding sites in families. */
   std::map<int,BindingSiteFamily> _families;
+
+  /** @brief Map classifying binding sites according to the sequence they belong to. */
+  std::map< const ChemicalSequence*, std::list<BindingSite*> > _location_map;
 
   /** @brief List of all binding sites created (for memory management). */
   std::list<BindingSite*> _binding_site_list;
@@ -161,7 +165,7 @@ private:
   // =================
   //
   /**
-   * @return Print class content.
+   * @brief Print class content.
    * @param output Stream where output should be written.
    */
   virtual void print (std::ostream& output) const;
@@ -202,14 +206,6 @@ inline const BindingSite& BindingSiteHandler::get_random_available_site ( int fa
 {
   REQUIRE (exists (family_id)); /** @pre Family identifier must exist. */
   return _families [family_id].get_random_available_site();
-}
-
-inline void BindingSiteHandler::update_binding_rate_contributions (int family_id)
-{
-  REQUIRE (exists (family_id)); /** @pre Family identifier must exist. */
-
-  // we simply call the update rate function of the family
-  _families [family_id].update_rate_contributions();
 }
 
 #endif // BINDINGSITEHANDLER_H

@@ -73,6 +73,11 @@ class BindingSiteFamily
    */
   void update_rate_contributions (void);
 
+  /**
+   * @brief Update contribution of a single binding site to binding rates depending on site occupancy and affinity.
+   */
+  void update_rate_contribution (const BindingSite* binding_site);
+
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -132,16 +137,34 @@ private:
   //  Attributes
   // ============
   //
+  /**
+   * @brief Total contribution to the binding rate.
+   */
   double _total_rate_contribution;
 
+  /**
+   * @brief Map associating binding sites to their index in the vectors.
+   */
+  std::map<const BindingSite*, int> _index;
+
+  /**
+   * @brief Binding sites belonging to the family.
+   */
   std::vector<const BindingSite*> _binding_sites;
 
+  /**
+   * @brief Contribution of each binding site to the binding rate.
+   */
   std::vector<double> _rate_contributions;
 
   // =================
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Compute total rate contribution from the _rate_contributions vector
+   */
+  void compute_total_rate_contribution (void);
 
   // ======================
   //  Forbidden Operations
@@ -158,6 +181,7 @@ inline void BindingSiteFamily::add_binding_site (const BindingSite* binding_site
 {
   _binding_sites.push_back (binding_site);
   _rate_contributions.push_back (0);
+  _index [binding_site] = _binding_sites.size()-1;
 }
 
 inline double BindingSiteFamily::total_rate_contribution (void) const

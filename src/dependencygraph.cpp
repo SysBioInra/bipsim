@@ -22,7 +22,6 @@
 //
 #include "dependencygraph.h"
 #include "reaction.h"
-#include "binding.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -83,22 +82,6 @@ DependencyGraph::DependencyGraph (const std::vector< Reaction* > reactions)
 	      _dependencies[i].insert (*reaction);
 	    }
 	}
-    }
-
-  // STEP 3: we stored the direct dependencies of reactions to one another. Sadly,
-  // there may be indirect relationship, like sequestration of binding sites. So
-  // if a reaction is a binding reaction, we always update its rate
-  for (int i = 0; i < number_reactions; ++i)
-    {
-      Binding* check = dynamic_cast< Binding* > (reactions[i]);
-      if (check != 0) // it is indeed a binding reaction
-	{
-	  // add the reaction index as a depdency to all reactions
-	  for (int j = 0; j < number_reactions; ++j)
-	    {
-	      _dependencies[j].insert (i);
-	    }
-	} 
     }
 
   // NOTE that _dependencies uses sets to store indices so we need not worry about

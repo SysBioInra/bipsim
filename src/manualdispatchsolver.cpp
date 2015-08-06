@@ -27,8 +27,8 @@
 //  Constructors/Destructors
 // ==========================
 //
-ManualDispatchSolver::ManualDispatchSolver (double initial_time, const std::list<Reaction*>& reactions, const ReactionClassification& classification)
-  : Solver (initial_time, reactions)
+ManualDispatchSolver::ManualDispatchSolver (double initial_time, CellState& cell_state, const ReactionClassification& classification)
+  : Solver (initial_time, cell_state)
 {
   int number_groups = classification.number_classes();
 

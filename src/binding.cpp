@@ -65,6 +65,9 @@ void Binding::perform_forward( void )
     Binding::_binding_site_handler->get_random_available_site (_binding_site_family);
   _binding_result.add_unit_at_site (binding_site);
   binding_site.location().bind_unit (_binding_result);
+
+  // update last chemical sequence involved
+  _last_chemical_sequence_involved = &binding_site.location();
 }
 
 void Binding::perform_backward( void )
@@ -75,10 +78,16 @@ void Binding::perform_backward( void )
   // Number of free elements is updated.
   _unit_to_bind.add (1);
 
-  // A unit bound through a site in the family is randomly chosen and removed.
+  // A unit bound through a site in the family is randomly chosen
   _binding_result.focus_random_unit (_binding_site_family);
+
+  // update last chemical sequence involved
+  _last_chemical_sequence_involved = &_binding_result.focused_unit_location();
+
+  // remove unit
   _binding_result.focused_unit_location().unbind_unit (_binding_result);
   _binding_result.remove_focused_unit();
+
 }
 
 void Binding::update_rates ( void )
@@ -92,8 +101,6 @@ void Binding::update_rates ( void )
    * the rest of the formula for us as it holds information about binding rates and binding site
    * concentrations.
    */
-  // we start by updating rate contribution of the family 
-  _binding_site_handler->update_binding_rate_contributions (_binding_site_family);
   _forward_rate = _unit_to_bind.number() *
     _binding_site_handler->get_total_binding_rate_contribution (_binding_site_family);
 

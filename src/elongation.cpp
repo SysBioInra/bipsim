@@ -65,6 +65,9 @@ void Elongation::perform_forward( void )
       // move the processive chemical (order is important here)
       location.move_bound_unit ( _processive_chemical, _step_size ); // first update location
       _processive_chemical.step_forward ( _step_size );
+      
+      // update last chemical sequence involved
+      _last_chemical_sequence_involved = &location;
     }
   else 
     {

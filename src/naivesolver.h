@@ -52,9 +52,9 @@ class NaiveSolver : public Solver
   /**
    * @brief Default constructor
    * @param initial_time Initial simulation time.
-   * @param reactions List of reactions to integrate.
+   * @param cell_state Reference to a cell state describing current state and reactions within the cell.
    */
-  NaiveSolver (double initial_time, const std::list<Reaction*>& reactions);
+  NaiveSolver (double initial_time, CellState& cell_state);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -103,6 +103,7 @@ class NaiveSolver : public Solver
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   virtual bool check_invariant (void) const;

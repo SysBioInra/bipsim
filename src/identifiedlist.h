@@ -110,7 +110,7 @@ public:
   // =======================================
   //
   // Not needed for this class (use of default overloading) !
-  // /**
+  // /*
   //  * @brief Assignment operator
   //  */
   // IdentifiedList& operator= (IdentifiedList& other_identified_list);
@@ -121,6 +121,7 @@ public:
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   virtual bool check_invariant (void) const;

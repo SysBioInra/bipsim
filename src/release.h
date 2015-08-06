@@ -89,7 +89,7 @@ public:
   virtual void perform_backward( void );
 
   /**
-   * @return Print class content.
+   * @brief Print class content.
    * @param output Stream where output should be written.
    */
   virtual void print (std::ostream& output) const;
@@ -127,7 +127,7 @@ public:
   // =======================================
   //
   // Not needed for this class (use of default overloading) !
-  // /**
+  // /*
   //  * @brief Assignment operator
   //  */
   // Release& operator= (Release& other_release);
@@ -138,6 +138,7 @@ public:
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   virtual bool check_invariant (void) const;

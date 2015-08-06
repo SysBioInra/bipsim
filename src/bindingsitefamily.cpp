@@ -20,6 +20,7 @@
 //
 #include "bindingsitefamily.h"
 #include "randomhandler.h"
+#include "macros.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -60,6 +61,21 @@ void BindingSiteFamily::update_rate_contributions (void)
       (*rate) = (*site)->rate_contribution();
       _total_rate_contribution += *rate;
     }
+}
+
+void BindingSiteFamily::update_rate_contribution (const BindingSite* binding_site)
+{
+  double new_contribution = binding_site->rate_contribution();
+  int site_index = _index[binding_site];
+
+  // update total rate contribution by substracting old contribution and adding new one
+  _total_rate_contribution = _total_rate_contribution - _rate_contributions[site_index] + new_contribution;
+
+  // update contribution in the contribution table
+  _rate_contributions[site_index] = new_contribution;
+
+  // check for numerical issues
+  if (_total_rate_contribution < 0) { compute_total_rate_contribution(); }
 }
 
 
@@ -124,3 +140,14 @@ bool BindingSiteFamily::check_invariant (void) const
 //  Private Methods
 // =================
 //
+void BindingSiteFamily::compute_total_rate_contribution (void)
+{
+  // recompute the total rate contribution from the contribution table
+  _total_rate_contribution = 0;
+  // loop through binding sites
+  for (std::vector<double>::iterator rate = _rate_contributions.begin();
+       rate != _rate_contributions.end(); ++rate)
+    {
+      _total_rate_contribution += *rate;
+    }
+}

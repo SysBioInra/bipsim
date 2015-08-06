@@ -27,6 +27,7 @@
 Reaction::Reaction (void)
   : _forward_rate (0)
   , _backward_rate (0)
+  , _last_chemical_sequence_involved (0)
 {
 }
 

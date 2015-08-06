@@ -23,15 +23,16 @@
 #include "reaction.h"
 #include "randomhandler.h"
 #include "dependencygraph.h"
+#include "cellstate.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-NaiveSolver::NaiveSolver (double initial_time, const std::list<Reaction*>& reactions)
-  : Solver (initial_time, reactions)
+NaiveSolver::NaiveSolver (double initial_time, CellState& cell_state)
+  : Solver (initial_time, cell_state)
     // there are 2 rates per reaction (forward and backward)
-  , _rates (2*reactions.size(),0)
+  , _rates (2*cell_state.reaction_list().size(),0)
   , _total_rate (0)
   , _last_reaction_index (-1)
 {
@@ -50,6 +51,10 @@ NaiveSolver::~NaiveSolver (void)
 //
 void NaiveSolver::update_all_rates (void)
 {
+  // fist update system state
+  _cell_state.update_all_binding_rate_contributions();
+
+  // then update rates
   _total_rate = 0;
   int number_reactions = reactions().size();
   for ( int i = 0; i < number_reactions; i++ )
@@ -110,7 +115,15 @@ void NaiveSolver::update_rates (void)
       update_all_rates();
       return;
     }
+  
+  // fist update system state if necessary
+  const ChemicalSequence* modified_sequence = reactions()[_last_reaction_index]->last_chemical_sequence_involved();
+  if (modified_sequence != 0)
+    {
+      _cell_state.update_binding_rate_contributions (*modified_sequence);
+    }
 
+  // then update rates
   // get reaction indices to update from dependency graph
   const std::set<int>& reactions_to_update =
     dependency_graph().reactions_to_update (_last_reaction_index);

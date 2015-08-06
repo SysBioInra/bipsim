@@ -143,7 +143,7 @@ public:
 
 
   /**
-   * @return Print class content.
+   * @brief Print class content.
    * @param output Stream where output should be written.
    */
   void print (std::ostream& output) const;
@@ -224,6 +224,7 @@ public:
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   bool check_invariant (void) const;

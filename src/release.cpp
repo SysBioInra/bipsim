@@ -49,6 +49,10 @@ Release::~Release (void)
 void Release::perform_forward (void)
 {
   _unit_to_release.focus_random_unit();
+
+  // update last chemical sequence involved
+  _last_chemical_sequence_involved = &_unit_to_release.focused_unit_location();
+
   _unit_to_release.focused_unit_location().unbind_unit (_unit_to_release);
   _unit_to_release.release();
 

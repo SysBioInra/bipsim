@@ -114,6 +114,7 @@ class ReactionGroup
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   virtual bool check_invariant (void) const;
@@ -122,6 +123,9 @@ class ReactionGroup
   //  Public Constants
   // ==================
   //
+  /**
+   * @brief Constant used to indicate that the next reaction is outside simulated time step.
+   */
   static const double OVERTIME; 
 
 protected:

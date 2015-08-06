@@ -47,9 +47,9 @@ class Solver
   /**
    * @brief Default constructor
    * @param initial_time Initial simulation time.
-   * @param reactions List of reactions to integrate.
+   * @param cell_state Reference to a cell state describing current state and reactions within the cell.
    */
-  Solver (double initial_time, const std::list<Reaction*>& reactions);
+  Solver (double initial_time, CellState& cell_state);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -115,12 +115,20 @@ class Solver
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   virtual bool check_invariant (void) const;
 
  protected:
   
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief State of the cell. */
+  CellState& _cell_state;
+
   // ===================
   //  Protected Methods
   // ===================

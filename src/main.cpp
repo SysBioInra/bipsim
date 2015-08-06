@@ -37,9 +37,9 @@ int main ( )
   // ReactionClassification classification;
   // int class_id = classification.create_new_class (1);
   // classification.add_reaction_list_to_class (class_id, cell_state.reaction_list());
-  NaiveSolver solver (0, cell_state.reaction_list());
+  NaiveSolver solver (0, cell_state);
   
-  while (solver.time() < 2000)
+  while (solver.time() < 1000)
     {
       solver.go_to_next_reaction();
       // std::cout << "Next reaction (t=" << solver.time() << ")" << std::endl;

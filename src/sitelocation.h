@@ -96,7 +96,7 @@ class SiteLocation
 
   /**
    * @brief Sets length of the site.
-   * @return length Length of site.
+   * @param length Length of site.
    */
   void set_length ( int length );
   
@@ -116,6 +116,7 @@ class SiteLocation
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   virtual bool check_invariant (void) const;

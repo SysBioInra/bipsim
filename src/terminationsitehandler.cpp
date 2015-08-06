@@ -30,6 +30,7 @@
 //
 TerminationSiteHandler::~TerminationSiteHandler (void)
 {
+  clear_sites();
 }
 
 // ===========================

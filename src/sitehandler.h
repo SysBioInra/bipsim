@@ -99,7 +99,7 @@ public:
    * @brief Standard output.
    * @return A reference to the stream containing the output.
    * @param output Stream where output should be written.
-   * @param reaction Reference to the handler whose information should be written.
+   * @param site_handler Reference to the handler whose information should be written.
    */
   friend std::ostream& operator<< (std::ostream& output, const SiteHandler& site_handler);
 
@@ -109,6 +109,7 @@ public:
   // ==================================
   //
   /**
+   * @brief Check class invariant.
    * @return True if class invariant is preserved
    */
   virtual bool check_invariant ( void ) const;
@@ -149,7 +150,7 @@ public:
   // =================
   //
   /**
-   * @return Print class content.
+   * @brief Print class content.
    * @param output Stream where output should be written.
    */
   virtual void print (std::ostream& output) const = 0;

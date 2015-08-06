@@ -65,12 +65,6 @@ void Chemical::print (std::ostream& output) const
 // Not needed for this class (use of default overloading) !
 // Chemical& Chemical::operator= (Chemical& other_Chemical);
 
-std::ostream& operator<< (std::ostream& output, const Chemical& chemical)
-{
-  chemical.print (output);
-  return output;
-}
-
 
 // ==================================
 //  Public Methods - Class invariant
