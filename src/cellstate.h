@@ -70,8 +70,9 @@ class CellState
   //
   /**
    * @brief Print chemicals in their current state to standard output.
+   * @param output Stream where output should be written.
    */
-  void print_chemicals (void) const;
+  void print_chemicals (std::ostream& output) const;
 
   /**
    * @brief Compute binding rate contributions for all binding sites.
@@ -180,9 +181,9 @@ inline const Chemical& CellState::chemical (const std::string& name) const
   return _chemical_handler.reference (name);
 }
 
-inline void CellState::print_chemicals (void) const
+inline void CellState::print_chemicals (std::ostream& output) const
 {
-  std::cout << _chemical_handler;
+  output << _chemical_handler;
 }
 
 inline void CellState::update_all_binding_rate_contributions (void)

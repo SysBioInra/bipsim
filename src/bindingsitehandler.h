@@ -198,13 +198,13 @@ private:
 
 inline double BindingSiteHandler::get_total_binding_rate_contribution ( int family_id )
 {
-  REQUIRE (exists (family_id)); /** @pre Family identifier must exist. */
+  // REQUIRE (exists (family_id)); /** @pre Family identifier must exist. */
   return _families [family_id].total_rate_contribution();
 }
 
 inline const BindingSite& BindingSiteHandler::get_random_available_site ( int family_id )
 {
-  REQUIRE (exists (family_id)); /** @pre Family identifier must exist. */
+  // REQUIRE (exists (family_id)); /** @pre Family identifier must exist. */
   return _families [family_id].get_random_available_site();
 }
 

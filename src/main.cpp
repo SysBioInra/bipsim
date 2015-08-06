@@ -12,6 +12,7 @@
 //
 #include <string> // std::string
 #include <iostream> // std::cout
+#include <fstream> // std::ofstream
 
 // ==================
 //  Project Includes
@@ -46,8 +47,10 @@ int main ( )
       // cell_state.print_chemicals;
       // std::cin.get();
     }
+
+  std::ofstream output ("output.txt");
   const Chemical& protein = cell_state.chemical ("protein");
-  cell_state.print_chemicals();
-  std::cout << "Proteins: " << protein << std::endl;
-  std::cout << solver.number_reactions_performed() << " reactions occurred." << std::endl;
+  cell_state.print_chemicals (output);
+  output << "Proteins: " << protein << std::endl;
+  output << solver.number_reactions_performed() << " reactions occurred." << std::endl;
 }

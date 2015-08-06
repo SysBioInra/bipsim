@@ -169,12 +169,12 @@ double NaiveSolver::compute_next_reaction (void)
   // perform reaction
   if ( (random_index % 2) == 0 )
     {
-      // std::cout << "f" << *_reactions[reaction_index] << " " << _rates[reaction_index*2] << std::endl;
+      // std::cout << "f" << reactions()[_last_reaction_index] << " " << _rates[_last_reaction_index*2] << std::endl;
       reactions()[_last_reaction_index]->perform_forward();
     }
   else
     {
-      // std::cout << *_reactions[reaction_index] << " " << _rates[reaction_index*2+1] << std::endl;
+      // std::cout << reactions()[_last_reaction_index] << " " << _rates[_last_reaction_index*2+1] << std::endl;
       reactions()[_last_reaction_index]->perform_backward();
     }
  

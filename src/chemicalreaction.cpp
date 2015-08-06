@@ -99,7 +99,7 @@ ChemicalReaction::~ChemicalReaction (void)
 void ChemicalReaction::perform_forward (void)
 {
   /** @pre There must be enough components left to perform the reaction. */
-  REQUIRE( is_forward_reaction_possible() == true );
+  REQUIRE( ChemicalReaction::is_forward_reaction_possible() == true );
   
   // update free chemical numbers
   for (int i = 0; i < _bound_reactant_index; i++)
