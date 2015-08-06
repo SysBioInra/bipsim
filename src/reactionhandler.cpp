@@ -119,7 +119,7 @@ void ReactionHandler::create_release ( BoundChemical& unit_to_release, std::vect
 				       std::vector<int>& stoichiometry,	double rate)
 {
   // create reaction
-  ChemicalReaction* reaction = new Release (unit_to_release, components, stoichiometry, rate);
+  Release* reaction = new Release (unit_to_release, components, stoichiometry, rate);
 
   // update references
   _references.push_back (reaction);

@@ -29,7 +29,7 @@
 //
 Release::Release (BoundChemical& unit_to_release, std::vector<Chemical*>& other_components,
 		  std::vector<int>& stoichiometry, double rate)
-  : ChemicalReaction (other_components, stoichiometry, rate, 0)
+  : _side_reaction (other_components, stoichiometry, rate, 0)
   , _unit_to_release (unit_to_release)
 {
   _components.push_back (&_unit_to_release);
@@ -56,7 +56,7 @@ void Release::perform_forward (void)
   _unit_to_release.focused_unit_location().unbind_unit (_unit_to_release);
   _unit_to_release.release();
 
-  ChemicalReaction::perform_forward();
+  _side_reaction.perform_forward();
 }
 
 void Release::perform_backward (void)
@@ -75,8 +75,8 @@ void Release::update_rates (void)
    * Forward rate is simply defined by r = k_1 x product ( [reactant_i] ).
    * It is 0 if there are not enough reactants.
    */
-  ChemicalReaction::update_rates();
-  _forward_rate = _unit_to_release.number()*ChemicalReaction::forward_rate();
+  _side_reaction.update_rates();
+  _forward_rate = _unit_to_release.number()*_side_reaction.forward_rate();
 
   /** Backward reaction is impossible. Nothing to update (it remains always 0) */
 }
@@ -111,7 +111,7 @@ void Release::update_rates (void)
  */
 bool Release::check_invariant (void) const
 {
-  bool result = ChemicalReaction::check_invariant();
+  bool result = _side_reaction.check_invariant();
   return result;
 }
 
@@ -122,7 +122,7 @@ bool Release::check_invariant (void) const
 //
 bool Release::is_forward_reaction_possible (void) const
 {
-  return (ChemicalReaction::is_forward_reaction_possible())
+  return (_side_reaction.is_forward_reaction_possible())
     && (_unit_to_release.number() > 0);
 }
 

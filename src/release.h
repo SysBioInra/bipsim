@@ -36,10 +36,10 @@
  * However, note that other components can take part in this reaction. In particular,
  * the reaction should be specify in what form the main chemical is released (it can be
  * a free form of the chemical, but it could also break down into several subparts).
- * This class inherits class ChemicalReaction.
+ * This class inherits class Reaction.
  * @sa Reaction
  */
-class Release: public ChemicalReaction
+class Release: public Reaction
 {
 public:
 
@@ -151,6 +151,9 @@ private:
   //
   /** @brief Chemical element to release. */
   BoundChemical& _unit_to_release;
+
+  /** @brief Side reaction representing other components that are involved in the release other than the unit to release. */
+  ChemicalReaction _side_reaction;
   
   
   // =================
