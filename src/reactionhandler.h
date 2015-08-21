@@ -92,11 +92,14 @@ public:
    *  A bound chemical element that corresponds to the original chemical in its
    *  bound form.
    * @param  binding_site_family
+   *  The family of binding sites the chemical can bind
+   *  onto.
+   * @param  binding_site_family_id
    *  The family identfier of binding sites the chemical can bind
    *  onto.
    * @sa Binding
    */
-  void create_binding (Chemical& unit_to_bind, BoundChemical& binding_result, int binding_site_family);
+  void create_binding (Chemical& unit_to_bind, BoundChemical& binding_result, BindingSiteFamily& binding_site_family, int binding_site_family_id);
 
   /**
    * @brief Add new complexation reaction to list.

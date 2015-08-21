@@ -63,11 +63,11 @@ void BoundChemical::add_unit_in_place_of ( const BoundChemical& precursor )
 
 void BoundChemical::focus_random_unit ( void )
 {
-  REQUIRE( _number > 0 ); /** @pre There must be at least one unit */
+  REQUIRE( number() > 0 ); /** @pre There must be at least one unit */
 
   // draw a random chemical
   RandomHandler random_handler;
-  int index_drawn = random_handler.draw_uniform ( 0, _number-1 );
+  int index_drawn = random_handler.draw_uniform ( 0, number()-1 );
 
   // find the corresponding unit in the map
   int current_index = 0;

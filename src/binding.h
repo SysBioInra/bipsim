@@ -55,11 +55,15 @@ public:
    *  A bound chemical element that corresponds to the original chemical in its
    *  bound form.
    * @param  binding_site_family
-   *  The family identifer of binding sites the chemical can bind
+   *  The family of binding sites the chemical can bind
+   *  onto.
+   * @param  binding_site_family_id
+   *  The family identfier of binding sites the chemical can bind
    *  onto.
    * @sa BindingSite
    */
-  Binding ( Chemical& unit_to_bind, BoundChemical& binding_result, int binding_site_family);
+  Binding (Chemical& unit_to_bind, BoundChemical& binding_result,
+	   BindingSiteFamily& binding_site_family, int binding_site_family_id);
     
 
   // Not needed for this class (use of default copy constructor) !
@@ -93,12 +97,6 @@ public:
    */
   virtual void perform_backward( void );
 
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  virtual void print (std::ostream& output) const;
-
 
   // ============================
   //  Public Methods - Accessors
@@ -121,13 +119,6 @@ public:
   //  Public Methods - Setters
   // ==========================
   //
-  /**
-   * @brief Sets binding site handler used by binding reactions.
-   * @param  binding_site_handler
-   *  A binding site handler unique to all binding instances, used for 
-   * communication with binding sites.
-   */
-  static void set_binding_site_handler ( BindingSiteHandler& binding_site_handler);
 
   // =======================================
   //  Public Methods - Operator overloading
@@ -166,22 +157,26 @@ private:
   BoundChemical& _binding_result;
   
   /**
-   * @brief The type (not a specific instance) of binding sites the chemical can
-   *  bind onto.
-   * @sa BindingSite
+   * @brief Binding sites the chemical can bind onto.
+   * @sa BindingSiteFamily
    */
-  int _binding_site_family;
+  BindingSiteFamily& _binding_site_family;
 
   /**
-   * @brief Binding site handler used for communication with binding sites.
-   *  Unique to all binding instances.
+   * @brief Identifier of the binding site family the chemical can bind onto.
+   * @sa BindingSiteHandler
    */
-  static BindingSiteHandler *_binding_site_handler;
+  int _binding_site_family_id;
 
   // =================
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const;
 
 };
 
@@ -189,7 +184,5 @@ private:
 //  Inline Declarations
 // =====================
 //
-inline void Binding::set_binding_site_handler ( BindingSiteHandler& binding_site_handler )
-{ _binding_site_handler = &binding_site_handler; }
 
 #endif // BINDING_H

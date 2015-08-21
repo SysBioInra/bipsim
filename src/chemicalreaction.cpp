@@ -43,11 +43,8 @@ ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
   /** @pre Stoichiometry container size must match number of components. */
   REQUIRE( _stoichiometry.size() == _number_components );
 
-  // fill in the component list
-  for (int i = 0; i < _number_components; i++)
-    {
-      _components.push_back (_component_vector[i]);
-    }
+  // fill in the reactant list
+  _reactants.insert (_reactants.end(), _component_vector.begin(), _component_vector.end());
 
   // look for bound chemicals in the reaction
   compute_bound_component_indices();

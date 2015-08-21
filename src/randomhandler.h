@@ -41,11 +41,10 @@ class RandomHandler
   //  Constructors/Destructors
   // ==========================
   //
-  // not needed here
-  // /**
-  //  * @brief Default constructor
-  //  */
-  // RandomHandler (void);
+  /**
+   * @brief Default constructor
+   */
+  RandomHandler (void);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -181,7 +180,7 @@ private:
 //
 inline void RandomHandler::set_seed ( int seed )
 {
-  RandomHandler::_generator.seed( seed );
+  _generator.seed( seed );
 }
 
 #endif // RANDOMHANDLER_H

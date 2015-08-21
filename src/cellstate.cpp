@@ -28,9 +28,6 @@
 //
 CellState::CellState (const char* filename)
 {
-  // link binding reactions with binding site handler
-  Binding::set_binding_site_handler (_binding_site_handler);
-
   // open new parser and load file
   Parser parser (_chemical_handler, _reaction_handler, _binding_site_handler, _termination_site_handler, _table_handler);
   parser.parse_units (filename);

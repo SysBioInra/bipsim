@@ -53,9 +53,9 @@ public:
    * @param reading_frame Position of the reading frame (if applicable).
    * @sa BindingSiteHandler
    */
-  BindingSite ( int family_id, ChemicalSequence& location, int position,
-		int length, double k_on, double k_off,
-		int reading_frame = NO_READING_FRAME );
+  BindingSite (int family_id, ChemicalSequence& location, int position,
+	       int length, double k_on, double k_off,
+	       int reading_frame = NO_READING_FRAME );
 
   // Not needed for this class (use of default copy constructor) ! 
   // /*
@@ -76,13 +76,13 @@ public:
    * @brief Bind a chemical at the binding site.
    * @param unit_to_bind Chemical to bind.
    */
-  void bind_unit ( BoundChemical& unit_to_bind ) const;
+  void bind_unit (BoundChemical& unit_to_bind) const;
 
   /**
    * @brief Unbind a chemical at the binding site.
    * @param unit_to_unbind Chemical to unbind.
    */
-  void unbind_unit ( BoundChemical& unit_to_unbind ) const;
+  void unbind_unit (BoundChemical& unit_to_unbind) const;
 
   // ============================
   //  Public Methods - Accessors
@@ -105,12 +105,6 @@ public:
    * @return Reading frame on the binding site, BindingSite::NO_READING_FRAME if there is none.
    */
   int reading_frame ( void ) const;
-
-  /**
-   * @brief Number of available sites in the cell.
-   * @return Number of available sites in the cell.
-   */
-  virtual int number_available_sites ( void ) const;
 
   /**
    * @brief Binding rate contributon.
@@ -169,9 +163,6 @@ public:
   /** @brief Reading frame position (NO_READING_FRAME if there is none). */
   int _reading_frame;
 
-  /** @brief Identifier of the focus area that monitors occupancy on the site's location. */
-  int _focus_area_id;
-
   // =================
   //  Private Methods
   // =================
@@ -196,20 +187,6 @@ inline double BindingSite::k_off ( void ) const
 inline int BindingSite::reading_frame ( void ) const
 {
   return _reading_frame;
-}
-
-inline int BindingSite::number_available_sites ( void ) const
-{
-  /** Compared to the parent class, we use focus areas to compute the value more efficiently. */
-  // INLINE here is stupid as the member is virtual
-  // TODO fix this
-  return _location.focus_area_availability (_focus_area_id);
-}
-
-inline double BindingSite::rate_contribution (void) const
-{
-  /** Rate_contribution is k_on * number of sites available. */
-  return _k_on*_location.focus_area_availability (_focus_area_id);
 }
 
 

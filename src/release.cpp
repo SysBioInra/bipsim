@@ -32,7 +32,10 @@ Release::Release (BoundChemical& unit_to_release, std::vector<Chemical*>& other_
   : _side_reaction (other_components, stoichiometry, rate, 0)
   , _unit_to_release (unit_to_release)
 {
-  _components.push_back (&_unit_to_release);
+  _reactants.push_back (&_unit_to_release);
+
+  // copy components from side reaction into parent component list
+  _reactants.insert (_reactants.end(), _side_reaction.reactants().begin(), _side_reaction.reactants().end());
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -49,10 +52,6 @@ Release::~Release (void)
 void Release::perform_forward (void)
 {
   _unit_to_release.focus_random_unit();
-
-  // update last chemical sequence involved
-  _last_chemical_sequence_involved = &_unit_to_release.focused_unit_location();
-
   _unit_to_release.focused_unit_location().unbind_unit (_unit_to_release);
   _unit_to_release.release();
 

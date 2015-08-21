@@ -12,6 +12,7 @@ test_SOURCES = \
 	main.cpp macros.h forwarddeclarations.h \
 	identifiedlist.cpp identifiedlist.h \
 	randomhandler.cpp randomhandler.h
+
 # reaction sources
 test_SOURCES += \
 	baseloading.cpp baseloading.h \
@@ -21,10 +22,13 @@ test_SOURCES += \
 	elongation.cpp elongation.h \
 	reaction.cpp reaction.h \
 	release.cpp release.h
+
 # chemical entity sources
 test_SOURCES += \
 	baseloader.cpp baseloader.h \
 	bindingsite.cpp bindingsite.h \
+	bindingsitefamily.cpp bindingsitefamily.h \
+	bindingsiteobserver.cpp bindingsiteobserver.h \
 	boundchemical.cpp boundchemical.h \
 	boundunit.h \
 	chemical.cpp chemical.h \
@@ -32,10 +36,12 @@ test_SOURCES += \
 	decodingtable.cpp decodingtable.h \
 	processivechemical.cpp processivechemical.h \
 	site.cpp site.h \
-	sitelocation.cpp sitelocation.h
+	sitelocation.cpp sitelocation.h \
+	siteobserver.h \
+	siteavailability.cpp siteavailability.h
+
 # parser and handler sources
 test_SOURCES += \
-	bindingsitefamily.cpp bindingsitefamily.h \
 	bindingsitehandler.cpp bindingsitehandler.h \
 	chemicalhandler.cpp chemicalhandler.h \
 	parser.cpp parser.h \
@@ -43,6 +49,7 @@ test_SOURCES += \
 	sitehandler.cpp sitehandler.h \
 	tablehandler.cpp tablehandler.h \
 	terminationsitehandler.cpp terminationsitehandler.h
+
 # solver sources
 test_SOURCES += \
 	cellstate.cpp cellstate.h \
@@ -55,6 +62,12 @@ test_SOURCES += \
 	reactionclassification.cpp reactionclassification.h \
 	solver.cpp solver.h \
 	updatedrategroup.cpp updatedrategroup.h
+
+# rate related classes
+test_SOURCES += \
+	ratemanager.cpp ratemanager.h \
+	naiveratemanager.cpp naiveratemanager.h \
+	dependencyratemanager.cpp dependencyratemanager.h
 
 
 ###############################################################################

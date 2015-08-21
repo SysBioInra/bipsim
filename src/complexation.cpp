@@ -37,9 +37,9 @@ Complexation::Complexation (Chemical& component_a, Chemical& component_b,
   , _bound_component (0)
 {
   // fill in component list
-  _components.push_back (&component_a);
-  _components.push_back (&component_b);
-  _components.push_back (&complex);
+  _reactants.push_back (&component_a);
+  _reactants.push_back (&component_b);
+  _reactants.push_back (&complex);
 
   look_for_bound_components();
 }

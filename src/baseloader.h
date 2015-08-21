@@ -20,6 +20,7 @@
 #include <map> // std::map
 #include <list> // std::list
 #include <vector> // std::vector
+#include <set> // std::set
 
 // ==================
 //  Project Includes
@@ -110,6 +111,18 @@ public:
    */
   BoundChemical& focused_occupied_state (void) const;
 
+  /**
+   * @brief Accessor to list of bases loaded by the base loader.
+   * @return List of bases loaded by the base loader.
+   */
+  const std::set<Chemical*> bases_loaded (void) const;
+
+  /**
+   * @brief Accessor to list of occupied states yielded by the base loader.
+   * @return List of occupied states yielded by the base loader.
+   */
+  const std::set<BoundChemical*> occupied_states (void) const;
+
   // ==========================
   //  Public Methods - Setters
   // ==========================
@@ -198,6 +211,16 @@ inline BoundChemical& BaseLoader::focused_occupied_state (void) const
 {
   REQUIRE( _focused_template_index != UNKNOWN_TEMPLATE ); /** @pre Template must be recognized by the base loader. */
   return _decoding_table.occupied_polymerase (_focused_template_index);
+}
+
+inline const std::set<Chemical*> BaseLoader::bases_loaded (void) const
+{
+  return _decoding_table.bases();
+}
+
+inline const std::set<BoundChemical*> BaseLoader::occupied_states (void) const
+{
+  return _decoding_table.occupied_polymerases();
 }
 
 #endif // BASELOADER_H

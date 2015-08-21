@@ -1,8 +1,8 @@
 
 
 /**
- * @file processivechemical.cpp
- * @brief Implementation of the ProcessiveChemical class.
+ * @file bindingsiteobserver.cpp
+ * @brief Implementation of the ClassName class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -18,47 +18,44 @@
 //  Project Includes
 // ==================
 //
-#include "processivechemical.h"
-#include "randomhandler.h"
-#include "chemicalsequence.h"
-#include "bindingsite.h"
-#include "site.h"
+#include "bindingsiteobserver.h"
+#include "bindingsitefamily.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-ProcessiveChemical::ProcessiveChemical (BoundChemical& stalled_form)
-  :_stalled_form ( stalled_form ) {}
+
+BindingSiteObserver::BindingSiteObserver (const BindingSite& site_to_watch, BindingSiteFamily& family_to_notify, int site_identifier)
+  : _site_id (site_identifier)
+  , _family (family_to_notify)
+{
+  site_to_watch.location().watch_site_availability
+    (site_to_watch.position(), site_to_watch.length(), *this);
+}
 
 // Not needed for this class (use of default copy constructor) !
-// ProcessiveChemical::ProcessiveChemical (ProcessiveChemical& other_processive_chemical);
+// BindingSiteObserver::BindingSiteObserver ( const BindingSiteObserver& other_binding_site_observer );
 
-ProcessiveChemical::~ProcessiveChemical (void)
+BindingSiteObserver::~BindingSiteObserver (void)
 {
 }
+
 
 // ===========================
 //  Public Methods - Commands
 // ===========================
 //
-
-void ProcessiveChemical::step_forward ( int step_size )
+void BindingSiteObserver::update (int number_of_available_sites)
 {
-  // move the focused chemical
-  _focused_unit->move (step_size);
+  _family.update (_site_id, number_of_available_sites);
 }
+
 
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-bool ProcessiveChemical::is_terminating ( void )
-{
-  const ChemicalSequence& focused_unit_location = _focused_unit->binding_site().location();
-  return focused_unit_location.is_termination_site (_focused_unit->current_position(),
-						    _termination_site_families);
-}
 
 
 // ==========================
@@ -72,7 +69,7 @@ bool ProcessiveChemical::is_terminating ( void )
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// ProcessiveChemical& ProcessiveChemical::operator= (ProcessiveChemical& other_processive_chemical);
+// BindingSiteObserver& BindingSiteObserver::operator= ( const BindingSiteObserver& other_binding_site_observer );
 
 // ==================================
 //  Public Methods - Class invariant
@@ -82,7 +79,7 @@ bool ProcessiveChemical::is_terminating ( void )
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool ProcessiveChemical::check_invariant (void) const
+bool BindingSiteObserver::check_invariant (void) const
 {
   bool result = true;
   return result;

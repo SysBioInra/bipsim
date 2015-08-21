@@ -66,27 +66,6 @@ void BindingSiteHandler::create_site (std::string family_name, ChemicalSequence&
   _families[ family_id ].add_binding_site ( binding_site );
 }
 
-void BindingSiteHandler::update_all_binding_rate_contributions (void)
-{
-  // we simply call the update rate function for every family in the map
-  std::map<int,BindingSiteFamily>::iterator family = _families.begin();
-  while (family != _families.end())
-    {
-      (family->second).update_rate_contributions();
-      ++family;
-    }
-}
-
-void BindingSiteHandler::update_binding_rate_contributions (const ChemicalSequence& modified_sequence)
-{
-  std::list<BindingSite*>& modified_binding_sites = _location_map [&modified_sequence];
-
-  for (std::list<BindingSite*>::iterator site = modified_binding_sites.begin();
-       site != modified_binding_sites.end(); ++site)
-    {
-      _families [(*site)->family()].update_rate_contribution(*site);
-    }
-}
 
 
 // ============================

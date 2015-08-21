@@ -74,16 +74,6 @@ class CellState
    */
   void print_chemicals (std::ostream& output) const;
 
-  /**
-   * @brief Compute binding rate contributions for all binding sites.
-   */
-  void update_all_binding_rate_contributions (void);
-
-  /**
-   * @brief Compute binding rate contributions for binding sites on a specific sequence.
-   * @param modified_sequence Sequence bearing binding sites whose contribution to binding should be updated.
-   */
-  void update_binding_rate_contributions (const ChemicalSequence& modified_sequence);
 
   
 
@@ -184,16 +174,6 @@ inline const Chemical& CellState::chemical (const std::string& name) const
 inline void CellState::print_chemicals (std::ostream& output) const
 {
   output << _chemical_handler;
-}
-
-inline void CellState::update_all_binding_rate_contributions (void)
-{
-  _binding_site_handler.update_all_binding_rate_contributions();
-}
-
-inline void CellState::update_binding_rate_contributions (const ChemicalSequence& modified_sequence)
-{
-  _binding_site_handler.update_binding_rate_contributions (modified_sequence);
 }
 
 #endif // CELL_STATE_H

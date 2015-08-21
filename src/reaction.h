@@ -104,7 +104,7 @@ public:
    * @brief Returns chemicals taking part in the reaction.
    * @return List of chemicals taking part in the reaction.
    */
-  const std::list<Chemical*>& components ( void ) const;
+  const std::list<Reactant*>& reactants ( void ) const;
 
   /**
    * @brief Returns whether there are enough chemicals to perform forward reaction.
@@ -118,10 +118,6 @@ public:
    */
   virtual bool is_backward_reaction_possible (void) const = 0;
 
-  /**
-   * @brief Pointer to a potential chemical sequence involved in the last reaction.
-   */
-  const ChemicalSequence* last_chemical_sequence_involved (void) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -170,13 +166,8 @@ protected:
   /** @brief Backward reaction rate value computed at last update. */
   double _backward_rate;
 
-  /** @brief Backward reaction rate value computed at last update. */
-  std::list< Chemical* > _components;
-
-  /**
-   * @brief Pointer to a potential chemical sequence involved in the last reaction.
-   */
-  const ChemicalSequence* _last_chemical_sequence_involved;
+  /** @brief Rectants taking part in the reaction. */
+  std::list< Reactant* > _reactants;
 
   // =================
   //  Private Methods
@@ -199,14 +190,9 @@ inline double Reaction::backward_rate ( void ) const
   return _backward_rate;
 }
 
-inline const std::list<Chemical*>& Reaction::components ( void ) const
+inline const std::list<Reactant*>& Reaction::reactants ( void ) const
 {
-  return _components;
-}
-
-inline const ChemicalSequence* Reaction::last_chemical_sequence_involved (void) const
-{
-  return _last_chemical_sequence_involved;
+  return _reactants;
 }
 
 

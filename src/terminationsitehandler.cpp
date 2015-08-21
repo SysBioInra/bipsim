@@ -131,9 +131,7 @@ void TerminationSiteHandler::print (std::ostream& output) const
 	{
 	  output << "Termination site from family \"" << family_name
 		 << "\" (id " << family_id
-		 << ") number " << *site
-		 << " which has " << (*site)->number_available_sites()
-		 << " available sites." << std::endl;
+		 << ") number " << *site << std::endl;
 	}
     }
 }

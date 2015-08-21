@@ -25,6 +25,7 @@
 //
 #include "forwarddeclarations.h"
 #include "macros.h"
+#include "reactant.h"
 
 /**
  * @brief Global class that contains all chemicals.
@@ -33,7 +34,7 @@
  * directly to the class Chemical, else it belongs to a class inheriting
  * Chemical.
  */
-class Chemical
+class Chemical : public Reactant
 {
 public:
 
@@ -124,7 +125,7 @@ public:
    */
   virtual bool check_invariant (void) const;
 
-protected:
+private:
 
   // ============
   //  Attributes
@@ -151,6 +152,7 @@ inline void Chemical::add (int quantity)
   REQUIRE( quantity >= 0 ); /** @pre Quantity is nonnegative. */
   
   _number += quantity;
+  notify_concentration_change();
 }
 
 inline void Chemical::remove(int quantity)
@@ -159,6 +161,7 @@ inline void Chemical::remove(int quantity)
   REQUIRE( quantity <= _number );
   
   _number -= quantity;
+  notify_concentration_change();
 }
 
 inline std::ostream& operator<< (std::ostream& output, const Chemical& chemical)

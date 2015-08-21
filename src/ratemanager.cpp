@@ -1,8 +1,8 @@
 
 
 /**
- * @file processivechemical.cpp
- * @brief Implementation of the ProcessiveChemical class.
+ * @file ratemanager.cpp
+ * @brief Implementation of the RateManager class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -13,28 +13,30 @@
 // ==================
 //
 #include <iostream>
+#include <numeric> // std::accumulate
 
 // ==================
 //  Project Includes
 // ==================
 //
-#include "processivechemical.h"
-#include "randomhandler.h"
-#include "chemicalsequence.h"
-#include "bindingsite.h"
-#include "site.h"
+#include "ratemanager.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-ProcessiveChemical::ProcessiveChemical (BoundChemical& stalled_form)
-  :_stalled_form ( stalled_form ) {}
+RateManager::RateManager (const std::vector <Reaction*>& reactions)
+  : _reactions (reactions)
+  , _rates (2*reactions.size(), 0)
+  , _total_rate (0)
+{
+  compute_all_rates();
+}
 
 // Not needed for this class (use of default copy constructor) !
-// ProcessiveChemical::ProcessiveChemical (ProcessiveChemical& other_processive_chemical);
+// RateManager::RateManager ( const RateManager& other_rate_manager );
 
-ProcessiveChemical::~ProcessiveChemical (void)
+RateManager::~RateManager (void)
 {
 }
 
@@ -42,23 +44,20 @@ ProcessiveChemical::~ProcessiveChemical (void)
 //  Public Methods - Commands
 // ===========================
 //
-
-void ProcessiveChemical::step_forward ( int step_size )
+void RateManager::manage (const std::vector <Reaction*>& reactions)
 {
-  // move the focused chemical
-  _focused_unit->move (step_size);
+  _reactions = reactions;
+
+  // one forwarde rate + one backward rate for each reaction
+  _rates.resize (2*reactions.size(),0);
+
+  compute_all_rates();
 }
 
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-bool ProcessiveChemical::is_terminating ( void )
-{
-  const ChemicalSequence& focused_unit_location = _focused_unit->binding_site().location();
-  return focused_unit_location.is_termination_site (_focused_unit->current_position(),
-						    _termination_site_families);
-}
 
 
 // ==========================
@@ -72,7 +71,7 @@ bool ProcessiveChemical::is_terminating ( void )
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// ProcessiveChemical& ProcessiveChemical::operator= (ProcessiveChemical& other_processive_chemical);
+// RateManager& RateManager::operator= ( const RateManager& other_rate_manager );
 
 // ==================================
 //  Public Methods - Class invariant
@@ -82,7 +81,7 @@ bool ProcessiveChemical::is_terminating ( void )
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool ProcessiveChemical::check_invariant (void) const
+bool RateManager::check_invariant (void) const
 {
   bool result = true;
   return result;
@@ -93,3 +92,19 @@ bool ProcessiveChemical::check_invariant (void) const
 //  Private Methods
 // =================
 //
+void RateManager::compute_all_rates (void)
+{
+  _total_rate = 0;
+  for (int i = 0; i < _reactions.size(); ++i)
+    {
+      update_reaction (i);
+      _total_rate += _rates [2*i];
+      _total_rate += _rates [2*i+1];
+    }
+}
+
+void RateManager::compute_total_rate (void)
+{
+  // accumulate (start, end, initial value)
+  _total_rate = std::accumulate (_rates.begin(), _rates.end(), 0);
+}

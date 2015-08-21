@@ -73,27 +73,10 @@ public:
    *  off-rate of the binding site.
    * @param reading_frame Position of the reading frame (if applicable).
    */
-  virtual void create_site ( std::string family_name, ChemicalSequence& location, int position,
-			     int length, double k_on, double k_off,
-			     int reading_frame = NO_READING_FRAME );
+  void create_site ( std::string family_name, ChemicalSequence& location, int position,
+		     int length, double k_on, double k_off,
+		     int reading_frame = NO_READING_FRAME );
 
-
-  /**
-   * @brief Update binding rate contributions to reflect current site occupancy.
-   *
-   * This function must be called before updating binding rates, else binding rates
-   * will not reflect current site occupancy...
-   */
-  void update_all_binding_rate_contributions (void);
-
-  /**
-   * @brief Update binding rate contributions to reflect current site occupancy given that only one sequence was changed.
-   * @param modified_sequence Chemical sequence that was modified since last update.
-   *
-   * This function must be called before updating binding rates, else binding rates
-   * will not reflect current site occupancy...
-   */
-  void update_binding_rate_contributions (const ChemicalSequence& modified_sequence);
 
 
   // ============================
@@ -101,20 +84,11 @@ public:
   // ============================
   //
   /**
-   * @brief Return a random available site belonging to a specific family.
-   * @param family_id Integer identifier of the binding site family.
-   * @return Random available site belonging to a specific family.
+   * @brief Accessor to binding site families.
+   * @param identifier Integer identifier to the family.
+   * @return Reference to the binding site family.
    */
-  const BindingSite& get_random_available_site ( int family_id );
-
-  /**
-   * @brief Return total contribution to binding rate for a specific family.
-   * @param family_id Integer identifier of the binding site family.
-   * @return Contribution to binding rate for a specific family.
-   */
-  double get_total_binding_rate_contribution ( int family_id );
-
-
+  BindingSiteFamily& binding_site_family (int identifier);
 
   // ==========================
   //  Public Methods - Setters
@@ -154,9 +128,6 @@ private:
   /** @brief Map classifying binding sites in families. */
   std::map<int,BindingSiteFamily> _families;
 
-  /** @brief Map classifying binding sites according to the sequence they belong to. */
-  std::map< const ChemicalSequence*, std::list<BindingSite*> > _location_map;
-
   /** @brief List of all binding sites created (for memory management). */
   std::list<BindingSite*> _binding_site_list;
 
@@ -195,17 +166,12 @@ private:
 //  Inline declarations
 // ======================
 //
-
-inline double BindingSiteHandler::get_total_binding_rate_contribution ( int family_id )
+inline BindingSiteFamily& BindingSiteHandler::binding_site_family (int identifier)
 {
-  // REQUIRE (exists (family_id)); /** @pre Family identifier must exist. */
-  return _families [family_id].total_rate_contribution();
-}
+  /** @pre Family identfier must exist. */
+  REQUIRE (_families.find(identifier) != _families.end()); 
 
-inline const BindingSite& BindingSiteHandler::get_random_available_site ( int family_id )
-{
-  // REQUIRE (exists (family_id)); /** @pre Family identifier must exist. */
-  return _families [family_id].get_random_available_site();
+  return _families [identifier];
 }
 
 #endif // BINDINGSITEHANDLER_H

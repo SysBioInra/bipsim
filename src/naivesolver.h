@@ -71,12 +71,6 @@ class NaiveSolver : public Solver
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Compute all rates of the _rates vector with current reaction rates.
-   */
-  void update_all_rates (void);
-
-  
 
   // ============================
   //  Public Methods - Accessors
@@ -115,27 +109,16 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief Total reaction rate. */
-  int _total_rate;
-
-  /** @brief Vector of reaction rates. */
-  std::vector< double > _rates;
-
-  /** @brief Index of the last reaction performed. */
-  double _last_reaction_index;
-
   /** @brief Random handler used for determining next reaction. */
   RandomHandler _random_handler;
+
+  /** @brief Rate manager handling rates and rate updates. */
+  RateManager* _rate_manager;
 
   // =================
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Update the _rates vector with current reaction rates according to dependency map.
-   */
-  void update_rates (void);
-
   /**
    * @brief Compute next reaction based on current _rates.
    * @return Time at which the reaction occurred.

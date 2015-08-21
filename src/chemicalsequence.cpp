@@ -21,6 +21,8 @@
 //
 #include "chemicalsequence.h"
 #include "sitelocation.h"
+#include "siteavailability.h"
+#include "siteobserver.h"
 #include "boundchemical.h"
 #include "processivechemical.h"
 
@@ -34,7 +36,7 @@ ChemicalSequence::ChemicalSequence (const std::string& sequence)
   _length = _sequence.size();
   
   // initialize occupancy map with zero values
-  _occupancy_map.resize( _length, 0 );
+  _occupancy_map.resize (_length, 0);
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -63,7 +65,9 @@ void ChemicalSequence::bind_unit ( const BoundChemical& chemical_to_bind )
   
   // update occupancy status
   for ( int i = position; i <= last_position; i++ ) { _occupancy_map [ i-1 ] +=1; }
-  for (int i = 0; i < _focus_area_start.size(); i++) { update_focus_area_occupancy (i); }
+
+  // notify changes
+  notify_site_availability();
 }
 
 void ChemicalSequence::unbind_unit ( const BoundChemical& chemical_to_unbind )
@@ -81,7 +85,9 @@ void ChemicalSequence::unbind_unit ( const BoundChemical& chemical_to_unbind )
 
   // update occupancy status
   for ( int i = position; i <= last_position; i++ ) { _occupancy_map [ i-1 ] -=1; }
-  for (int i = 0; i < _focus_area_start.size(); i++) { update_focus_area_occupancy (i); }
+
+  // notify changes
+  notify_site_availability();
 }
 
 void ChemicalSequence::replace_bound_unit ( const BoundChemical& old_chemical, const BoundChemical& new_chemical )
@@ -96,7 +102,9 @@ void ChemicalSequence::replace_bound_unit ( const BoundChemical& old_chemical, c
   // update occupancy status
   for ( int i = old_position; i <= old_last_position; i++ ) { _occupancy_map [ i-1 ] -=1; }
   for ( int i = new_position; i <= new_last_position; i++ ) { _occupancy_map [ i-1 ] +=1; }
-  for (int i = 0; i < _focus_area_start.size(); i++) { update_focus_area_occupancy (i); }
+
+  // notify changes
+  notify_site_availability();
 
   // add the reference and position to the chemicals map
   remove_reference_from_map( old_chemical, old_position, old_length );
@@ -114,7 +122,9 @@ void ChemicalSequence::move_bound_unit ( ProcessiveChemical& chemical_to_move, i
   // update occupancy status
   for ( int i = old_position; i <= old_last_position; i++ ) { _occupancy_map [ i-1 ] -=1; }
   for ( int i = new_position; i <= new_last_position; i++ ) { _occupancy_map [ i-1 ] +=1; }
-  for (int i = 0; i < _focus_area_start.size(); i++) { update_focus_area_occupancy (i); }
+
+  // notify changes
+  notify_site_availability();
   
   // add the reference and position to the chemicals map
   remove_reference_from_map( chemical_to_move, old_position, length );
@@ -133,37 +143,36 @@ void ChemicalSequence::terminate_nascent (void)
 
 void ChemicalSequence::add ( int quantity )
 {
-  Chemical::add ( quantity );
+  Chemical::add (quantity);
 }
 
 void ChemicalSequence::remove ( int quantity )
 {
-  Chemical::remove ( quantity );
+  Chemical::remove (quantity);
   std::cout << "Function " << __func__ << " remains to be defined in " << __FILE__ << __LINE__ << std::endl;
 }
 
-int ChemicalSequence::create_focus_area (int position, int length)
+void ChemicalSequence::watch_site_availability (int position, int length, SiteObserver& site_observer)
 {
   REQUIRE (position > 0); /** @pre Position must be positive. */
   REQUIRE (length > 0); /** @pre Length must be positive. */
   /** @pre Position and length must be consistent with sequence length. */
   REQUIRE (position + length - 1 <= _length);
 
-  int identifier = _focus_area_start.size();
-  _focus_area_start.resize (identifier+1, position);
-  _focus_area_end.resize (identifier+1, position+length);
-  _focus_area_max_occupancy.resize (identifier+1, 0);
-  
-  update_focus_area_occupancy (identifier);
+  site_observer.update (0);
+			
+  // create site availability notifier
+  _sites_to_watch.push_back (SiteAvailability (position, length, site_observer));
 
-  return identifier;
+  // send first notification about site availability
+  _sites_to_watch.back().notify (number(), _occupancy_map);
 }
 
 
 void ChemicalSequence::print (std::ostream& output) const
 {
   output << "Chemical sequence of length " << _length << " with currently "
-	 << _number << " molecules.";
+	 << number() << " molecules.";
 }
 
 
@@ -172,29 +181,6 @@ void ChemicalSequence::print (std::ostream& output) const
 //  Public Methods - Accessors
 // ============================
 //
-int ChemicalSequence::number_available_sites ( int position, int length ) const
-{
-  REQUIRE( position > 0 ); /** @pre Position must be positive. */
-  REQUIRE( length > 0 ); /** @pre Length must be positive. */
-  /** @pre Position and length must be consistent with sequence length. */
-  REQUIRE( position + length - 1 <= _length );
-  
-  // check for the lowest occupancy status
-  int max_occupied = 0;
-  for ( int i = position; i < position + length; i++ )
-    {
-      if ( _occupancy_map [ i-1 ] > max_occupied ) { max_occupied = _occupancy_map [ i-1 ]; }
-    }
-  
-  int result = 0;
-  if ( max_occupied < _number ) { result = _number - max_occupied; }
-  
-  ENSURE( result >= 0 ); /** @post The number of available sites is nonnegative. */
-  /** @post The number of available sites is smaller than the number of bearing sequences. */
-  ENSURE( result <= _number );
-  return result;
-}
-
 void ChemicalSequence::add_termination_site ( const Site& termination_site )
 {
   // as a first approximation, we consider that reaching any base of the termination 
@@ -321,19 +307,12 @@ void ChemicalSequence::remove_reference_from_map ( const BoundChemical& chemical
     }
 }
 
-void ChemicalSequence::update_focus_area_occupancy (int area_id)
+void ChemicalSequence::notify_site_availability (void)
 {
-  /** @pre Identifier must be within vector range. */
-  REQUIRE (area_id >= 0);
-  REQUIRE (area_id < _focus_area_max_occupancy.size());
-
-  // check for the highest occupancy status
-  int max_occupied = 0;
-  int last_position = _focus_area_end [area_id];
-  for ( int i = _focus_area_start [area_id]; i < last_position; i++ )
+  for (std::list<SiteAvailability>::iterator site_it = _sites_to_watch.begin();
+       site_it != _sites_to_watch.end(); site_it++)
     {
-      if ( _occupancy_map [ i-1 ] > max_occupied ) { max_occupied = _occupancy_map [ i-1 ]; }
+      site_it->notify (number(), _occupancy_map);
     }
   
-  _focus_area_max_occupancy [area_id] = max_occupied;
 }

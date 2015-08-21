@@ -2,7 +2,7 @@
 
 /**
  * @file FILE.cpp
- * @brief Implementation of the CLASSNAME class.
+ * @brief Implementation of the ClassName class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -24,14 +24,14 @@
 //  Constructors/Destructors
 // ==========================
 //
-CLASSNAME::CLASSNAME (void)
+ClassName::ClassName (void)
 {
 }
 
 // Not needed for this class (use of default copy constructor) !
-// CLASSNAME::CLASSNAME ( const CLASSNAME& other_CLASSNAME );
+// ClassName::ClassName ( const ClassName& other_class_name );
 
-CLASSNAME::~CLASSNAME (void)
+ClassName::~ClassName (void)
 {
 }
 
@@ -58,7 +58,7 @@ CLASSNAME::~CLASSNAME (void)
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// CLASSNAME& CLASSNAME::operator= ( const CLASSNAME& other_CLASSNAME );
+// ClassName& ClassName::operator= ( const ClassName& other_class_name );
 
 // ==================================
 //  Public Methods - Class invariant
@@ -68,7 +68,7 @@ CLASSNAME::~CLASSNAME (void)
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool CLASSNAME::check_invariant (void) const
+bool ClassName::check_invariant (void) const
 {
   bool result = true;
   return result;

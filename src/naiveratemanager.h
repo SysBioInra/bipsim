@@ -1,8 +1,8 @@
 
 
 /**
- * @file FILE.h
- * @brief Header for the ClassName class.
+ * @file naiveratemanager.h
+ * @brief Header for the NaiveRateManager class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -10,8 +10,8 @@
 
 // Multiple include protection
 //
-#ifndef CLASS_NAME_H
-#define CLASS_NAME_H
+#ifndef NAIVE_RATE_MANAGER_H
+#define NAIVE_RATE_MANAGER_H
 
 // ==================
 //  General Includes
@@ -24,13 +24,17 @@
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "ratemanager.h"
 
 /**
- * @brief BRIEF DESCRIPTION OF CLASS
+ * @brief Class handling updates of reaction rates in a naive way.
  *
- * DETAILED DESCRIPTION OF CLASS
+ * NaiveRateManager inherits and implements the interface provided by RateManager.
+ * It handles its updating task by a brute force approach: every time it is supposed
+ * to update rates, it recomputes every single rate it knows of.
+ * @sa RateManager
  */
-class ClassName
+class NaiveRateManager : public RateManager
 {
  public:
 
@@ -40,31 +44,38 @@ class ClassName
   //
   /**
    * @brief Default constructor.
+   * @param reactions Vector of reactions whose rates need to be stored and updated.
    */
-  ClassName (void);
+  NaiveRateManager (const std::vector <Reaction*>& reactions);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
   //  * @brief Copy constructor.
   //  */
-  // ClassName ( const ClassName& other_class_name );
+  // NaiveRateManager ( const NaiveRateManager& other_naive_rate_manager );
 
   /**
    * @brief Destructor.
    */
-  virtual ~ClassName (void);
+  virtual ~NaiveRateManager (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
+  /**
+   * @brief Update rates according to current chemical levels.
+   *
+   * This manager uses a brute force approach: when prompted to update, it recomputes
+   * every single rate under its control.
+   */
+  virtual void update_rates (void);
 
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-
 
   // ==========================
   //  Public Methods - Setters
@@ -80,7 +91,7 @@ class ClassName
   // /*
   //  * @brief Assignment operator.
   //  */
-  // ClassName& operator= ( const ClassName& other_class_name );
+  // NaiveRateManager& operator= ( const NaiveRateManager& other_naive_rate_manager );
 
   // ==================================
   //  Public Methods - Class invariant
@@ -99,12 +110,12 @@ private:
   //  Attributes
   // ============
   //
-  
 
-  // =================
-  //  Private Methods
-  // =================
+  // ===================
+  //  Protected Methods
+  // ===================
   //
+  
 
   // ======================
   //  Forbidden Operations
@@ -118,4 +129,4 @@ private:
 // ======================
 //
 
-#endif // CLASS_NAME_H
+#endif // NAIVE_RATE_MANAGER_H

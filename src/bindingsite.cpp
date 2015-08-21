@@ -33,7 +33,6 @@ BindingSite::BindingSite (int family_id, ChemicalSequence& location, int positio
   , _k_off (k_off)
   , _reading_frame (reading_frame)
 {
-  _focus_area_id = _location.create_focus_area (_position, _length);
 }
 
 // Not needed for this class (use of default copy constructor) !

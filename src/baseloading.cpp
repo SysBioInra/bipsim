@@ -31,7 +31,11 @@ BaseLoading::BaseLoading (BaseLoader& base_loader)
   : Reaction()
   , _base_loader (base_loader)
 {
-  _components.push_back (&base_loader);
+  _reactants.push_back (&base_loader);
+  const std::set<Chemical*> bases = base_loader.bases_loaded();
+  _reactants.insert (_reactants.end(), bases.begin(), bases.end());
+  const std::set<BoundChemical*> occupied_states = base_loader.occupied_states();
+  _reactants.insert (_reactants.end(), occupied_states.begin(), occupied_states.end());
 }
  
 // Not needed for this class (use of default copy constructor) !
@@ -78,12 +82,12 @@ void BaseLoading::print (std::ostream& output) const
 void BaseLoading::update_rates (void)
 {
   /**
-   * Loading rate is generally defined by r = sum ( k_on_i x [A] x [B_i], where [A] is the
-   * concentration of BaseLoader and [B_i] the concentration of base i. k_on_i may vary from a
+   * Loading rate is generally defined by r = sum ( k_on_i x [A_i] x [B_i], where [A_i] is the
+   * concentration of BaseLoader on template i and [B_i] the concentration of base i. k_on_i may vary from a
    * base to another. All this information is stored within the 
    *   r_total = [A] sum ( k_on_i x [B_i] ) = [A] vector(k_on_i).vector([B_i])
-   * The concentration of units to bind is easy to get, the binding site handler can compute
-   * the rest of the formula for us as it holds information about binding rates and binding site
+   * The concentration of units to bind is easy to get, the base loader handler can compute
+   * the rest of the formula for us as it holds information about templates and base
    * concentrations.
    */
   _forward_rate = _base_loader.loading_rate ();

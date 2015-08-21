@@ -41,15 +41,6 @@ Site::~Site (void)
 //  Public Methods - Accessors
 // ============================
 //
-int Site::number_available_sites (void) const
-{
-  int result = _location.number_available_sites( _position, _length );
-
-  ENSURE( result >= 0 ); /** @post Returned value >= 0 */
-
-  return result;
-}
-
 
 // ==========================
 //  Public Methods - Setters

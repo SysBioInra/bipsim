@@ -85,10 +85,10 @@ void ReactionHandler::create_base_loading (BaseLoader& base_loader)
 }
 
 
-void ReactionHandler::create_binding (Chemical& unit_to_bind, BoundChemical& binding_result, int binding_site_family)
+void ReactionHandler::create_binding (Chemical& unit_to_bind, BoundChemical& binding_result, BindingSiteFamily& binding_site_family, int binding_site_family_id)
 {
   // create reaction
-  Binding* reaction = new Binding (unit_to_bind, binding_result, binding_site_family);
+  Binding* reaction = new Binding (unit_to_bind, binding_result, binding_site_family, binding_site_family_id);
 
   // update references
   _references.push_back (reaction);

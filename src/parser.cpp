@@ -908,7 +908,9 @@ void Parser::parse_binding ( std::istringstream& line_stream )
 
   // create reaction
   _reaction_handler.create_binding (_chemical_handler.reference(unit_to_bind),
-				    *bound_chemical, binding_site_family);
+				    *bound_chemical,
+				    _binding_site_handler.binding_site_family (binding_site_family),
+				    binding_site_family);
 }
 
 void Parser::parse_release ( std::istringstream& line_stream )

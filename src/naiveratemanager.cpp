@@ -1,8 +1,8 @@
 
 
 /**
- * @file processivechemical.cpp
- * @brief Implementation of the ProcessiveChemical class.
+ * @file naiveratemanager.cpp
+ * @brief Implementation of the NaiveRateManager class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -18,23 +18,21 @@
 //  Project Includes
 // ==================
 //
-#include "processivechemical.h"
-#include "randomhandler.h"
-#include "chemicalsequence.h"
-#include "bindingsite.h"
-#include "site.h"
+#include "naiveratemanager.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-ProcessiveChemical::ProcessiveChemical (BoundChemical& stalled_form)
-  :_stalled_form ( stalled_form ) {}
+NaiveRateManager::NaiveRateManager (const std::vector <Reaction*>& reactions)
+  : RateManager (reactions)
+{
+}
 
 // Not needed for this class (use of default copy constructor) !
-// ProcessiveChemical::ProcessiveChemical (ProcessiveChemical& other_processive_chemical);
+// NaiveRateManager::NaiveRateManager ( const NaiveRateManager& other_naive_rate_manager );
 
-ProcessiveChemical::~ProcessiveChemical (void)
+NaiveRateManager::~NaiveRateManager (void)
 {
 }
 
@@ -42,23 +40,15 @@ ProcessiveChemical::~ProcessiveChemical (void)
 //  Public Methods - Commands
 // ===========================
 //
-
-void ProcessiveChemical::step_forward ( int step_size )
+void NaiveRateManager::update_rates (void)
 {
-  // move the focused chemical
-  _focused_unit->move (step_size);
+  compute_all_rates();
 }
 
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-bool ProcessiveChemical::is_terminating ( void )
-{
-  const ChemicalSequence& focused_unit_location = _focused_unit->binding_site().location();
-  return focused_unit_location.is_termination_site (_focused_unit->current_position(),
-						    _termination_site_families);
-}
 
 
 // ==========================
@@ -72,7 +62,7 @@ bool ProcessiveChemical::is_terminating ( void )
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// ProcessiveChemical& ProcessiveChemical::operator= (ProcessiveChemical& other_processive_chemical);
+// NaiveRateManager& NaiveRateManager::operator= ( const NaiveRateManager& other_naive_rate_manager );
 
 // ==================================
 //  Public Methods - Class invariant
@@ -82,7 +72,7 @@ bool ProcessiveChemical::is_terminating ( void )
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool ProcessiveChemical::check_invariant (void) const
+bool NaiveRateManager::check_invariant (void) const
 {
   bool result = true;
   return result;

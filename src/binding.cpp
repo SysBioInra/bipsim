@@ -25,20 +25,20 @@
 #include "boundchemical.h"
 #include "chemical.h"
 
-BindingSiteHandler *Binding::_binding_site_handler = 0;
-
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-Binding::Binding ( Chemical& unit_to_bind, BoundChemical& binding_result, int binding_site_family)
+Binding::Binding ( Chemical& unit_to_bind, BoundChemical& binding_result, BindingSiteFamily& binding_site_family, int binding_site_family_id)
   : Reaction()
-  , _unit_to_bind ( unit_to_bind )
-  , _binding_result ( binding_result )
-  , _binding_site_family ( binding_site_family )
+  , _unit_to_bind (unit_to_bind)
+  , _binding_result (binding_result)
+  , _binding_site_family (binding_site_family)
+  , _binding_site_family_id (binding_site_family_id)
 {
-  _components.push_back (&unit_to_bind);
-  _components.push_back (&binding_result);
+  _reactants.push_back (&unit_to_bind);
+  _reactants.push_back (&binding_result);
+  _reactants.push_back (&binding_site_family);
 }
  
 // Not needed for this class (use of default copy constructor) !
@@ -54,35 +54,26 @@ Binding::~Binding( void )
 //
 void Binding::perform_forward( void )
 {
-  REQUIRE (Binding::_binding_site_handler != 0); /** @pre Binding site handler has been initialized. */
   REQUIRE (_unit_to_bind.number() > 0); /** @pre There is at least one element to bind. */
 
-  // Number of free  elements is updated.
+  // Number of free elements is updated.
   _unit_to_bind.remove (1);
   
   // A binding site in the family is randomly chosen and occupied by a newly created binding result
-  const BindingSite& binding_site =
-    Binding::_binding_site_handler->get_random_available_site (_binding_site_family);
+  const BindingSite& binding_site = _binding_site_family.get_random_available_site();
   _binding_result.add_unit_at_site (binding_site);
   binding_site.location().bind_unit (_binding_result);
-
-  // update last chemical sequence involved
-  _last_chemical_sequence_involved = &binding_site.location();
 }
 
 void Binding::perform_backward( void )
 {
-  REQUIRE( _binding_site_handler != 0 ); /** @pre Binding site handler has been initialized. */
   REQUIRE( _binding_result.number() > 0 ); /** @pre There is at least one element to unbind. */
 
   // Number of free elements is updated.
   _unit_to_bind.add (1);
 
   // A unit bound through a site in the family is randomly chosen
-  _binding_result.focus_random_unit (_binding_site_family);
-
-  // update last chemical sequence involved
-  _last_chemical_sequence_involved = &_binding_result.focused_unit_location();
+   _binding_result.focus_random_unit (_binding_site_family_id);
 
   // remove unit
   _binding_result.focused_unit_location().unbind_unit (_binding_result);
@@ -101,8 +92,7 @@ void Binding::update_rates ( void )
    * the rest of the formula for us as it holds information about binding rates and binding site
    * concentrations.
    */
-  _forward_rate = _unit_to_bind.number() *
-    _binding_site_handler->get_total_binding_rate_contribution (_binding_site_family);
+  _forward_rate = _unit_to_bind.number() * _binding_site_family.total_binding_rate_contribution();
 
   /**
    * Unbinding rate is generally defined by r = k_off x [A], where [A] is the concentration
@@ -111,7 +101,7 @@ void Binding::update_rates ( void )
    * Which is also the dot product between the vector of concentrations of binding_result bound
    * to every single binding sites and the vector of corresponding unbinding rates.
    */
-  _backward_rate = _binding_result.get_total_unbinding_rate_contribution (_binding_site_family);
+  _backward_rate = _binding_result.get_total_unbinding_rate_contribution (_binding_site_family_id);
 }
 
 

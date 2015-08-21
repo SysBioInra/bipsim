@@ -82,12 +82,6 @@ public:
   int family ( void ) const;
  
   /**
-   * @brief Number of available sites in the cell.
-   * @return Number of available sites in the cell.
-   */
-  virtual int number_available_sites ( void ) const;
-
-  /**
    * @brief Site location.
    * @return ChemicalSequence that carries the site.
    */

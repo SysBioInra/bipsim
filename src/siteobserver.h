@@ -1,8 +1,8 @@
 
 
 /**
- * @file FILE.h
- * @brief Header for the ClassName class.
+ * @file siteobserver.h
+ * @brief Header for the SiteObserver class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -10,8 +10,8 @@
 
 // Multiple include protection
 //
-#ifndef CLASS_NAME_H
-#define CLASS_NAME_H
+#ifndef SITE_OBSERVER_H
+#define SITE_OBSERVER_H
 
 // ==================
 //  General Includes
@@ -24,13 +24,18 @@
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "site.h"
+#include "chemicalsequence.h"
 
 /**
- * @brief BRIEF DESCRIPTION OF CLASS
+ * @brief Watch a specific Site and receive notifications when its availability changed.
  *
- * DETAILED DESCRIPTION OF CLASS
+ * SiteObserver is an abstract class designed to be inherited by classes that need to 
+ * know when a specific site availability has changed. The observer class subscribes to a
+ * the chemical sequence of interest and receives notifications via update() function
+ * calls of the current number of available sites.
  */
-class ClassName
+class SiteObserver
 {
  public:
 
@@ -41,24 +46,22 @@ class ClassName
   /**
    * @brief Default constructor.
    */
-  ClassName (void);
-
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // ClassName ( const ClassName& other_class_name );
+  SiteObserver (void) {}
 
   /**
    * @brief Destructor.
    */
-  virtual ~ClassName (void);
+  virtual ~SiteObserver (void) {}
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-
+  /**
+   * @brief Perform necessary actions when availability of the observed site has changed.
+   * @param number_available_sites Number of sites currently available.
+   */
+  virtual void update (int number_available_sites) = 0;
 
   // ============================
   //  Public Methods - Accessors
@@ -76,11 +79,6 @@ class ClassName
   //  Public Methods - Operator overloading
   // =======================================
   //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // ClassName& operator= ( const ClassName& other_class_name );
 
   // ==================================
   //  Public Methods - Class invariant
@@ -90,8 +88,10 @@ class ClassName
    * @brief Check class invariant.
    * @return True if class invariant is preserved.
    */
-  virtual bool check_invariant (void) const;
-
+  virtual bool check_invariant (void) const
+  {
+    return true;
+  }
 
 private:
 
@@ -110,7 +110,15 @@ private:
   //  Forbidden Operations
   // ======================
   //
+  /**
+   * @brief Copy constructor forbidden.
+   */
+  SiteObserver (const SiteObserver& other_site_observer);
 
+  /**
+   * @brief Assignment operator forbidden.
+   */
+  SiteObserver& operator= ( const SiteObserver& other_site_observer );
 };
 
 // ======================
@@ -118,4 +126,4 @@ private:
 // ======================
 //
 
-#endif // CLASS_NAME_H
+#endif // SITE_OBSERVER_H

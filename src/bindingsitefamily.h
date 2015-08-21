@@ -25,6 +25,7 @@
 //
 #include "forwarddeclarations.h"
 #include "bindingsite.h"
+#include "reactant.h"
 
 /**
  * @brief Class handling a family of binding sites.
@@ -34,7 +35,7 @@
  * the contribution to binding rates of each site depending on their
  * occupation and affinity.
  */
-class BindingSiteFamily
+class BindingSiteFamily : public Reactant
 {
  public:
 
@@ -69,14 +70,11 @@ class BindingSiteFamily
   void add_binding_site (const BindingSite* binding_site);
 
   /**
-   * @brief Update contributions to binding rates depending on site occupancy and affinity.
+   * @brief Update contributions given that a binding site availability has changed.
+   * @param site_index Index of the binding site that has changed.
+   * @param number_available_sites New number of available sites.
    */
-  void update_rate_contributions (void);
-
-  /**
-   * @brief Update contribution of a single binding site to binding rates depending on site occupancy and affinity.
-   */
-  void update_rate_contribution (const BindingSite* binding_site);
+  void update (int site_index, int number_available_sites);
 
   // ============================
   //  Public Methods - Accessors
@@ -86,7 +84,7 @@ class BindingSiteFamily
    * @brief Return total binding rate contribution as computed during the last update.
    * @return Total binding rate contribution reflecting global affinity for ligand and availability.
    */
-  double total_rate_contribution (void) const;
+  double total_binding_rate_contribution (void) const;
 
   /**
    * @brief Return a random available site based on contributions computed during the last update.
@@ -143,11 +141,6 @@ private:
   double _total_rate_contribution;
 
   /**
-   * @brief Map associating binding sites to their index in the vectors.
-   */
-  std::map<const BindingSite*, int> _index;
-
-  /**
    * @brief Binding sites belonging to the family.
    */
   std::vector<const BindingSite*> _binding_sites;
@@ -156,6 +149,12 @@ private:
    * @brief Contribution of each binding site to the binding rate.
    */
   std::vector<double> _rate_contributions;
+  
+  /**
+   * @brief Observers monitoring availability of all the sites.
+   */
+  std::list<BindingSiteObserver*> _binding_site_observers;
+  
 
   // =================
   //  Private Methods
@@ -177,14 +176,8 @@ private:
 //  Inline declarations
 // ======================
 //
-inline void BindingSiteFamily::add_binding_site (const BindingSite* binding_site)
-{
-  _binding_sites.push_back (binding_site);
-  _rate_contributions.push_back (0);
-  _index [binding_site] = _binding_sites.size()-1;
-}
 
-inline double BindingSiteFamily::total_rate_contribution (void) const
+inline double BindingSiteFamily::total_binding_rate_contribution (void) const
 {
   return _total_rate_contribution;
 }

@@ -20,6 +20,7 @@
 #include <map> // std::map
 #include <vector> // std::vector
 #include <string> // std::string
+#include <set> // std::set
 
 // ==================
 //  Project Includes
@@ -128,12 +129,18 @@ class DecodingTable
    */
   int template_length (void) const;
 
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  void print ( std::ostream& output ) const;
 
+  /**
+   * @brief Accessor to all loadable bases.
+   * @return Set of all loadable bases.
+   */
+  const std::set<Chemical*> bases (void) const;
+
+  /**
+   * @brief Accessor to all possible occupied polymerases.
+   * @return Set of all possible occupied polymerases.
+   */
+  const std::set<BoundChemical*> occupied_polymerases (void) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -206,6 +213,11 @@ private:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Print class content.
+   * @param output Stream where output should be written.
+   */
+  void print ( std::ostream& output ) const;
 
 };
 
@@ -257,5 +269,16 @@ inline int DecodingTable::template_length (void) const
 {
   return _template_length;
 }
+
+inline const std::set<Chemical*> DecodingTable::bases (void) const
+{
+  return std::set<Chemical*> (_bases.begin(), _bases.end());
+}
+
+inline const std::set<BoundChemical*> DecodingTable::occupied_polymerases (void) const
+{
+  return std::set<BoundChemical*> (_occupied_polymerases.begin(), _occupied_polymerases.end());
+}
+
 
 #endif // DECODINGTABLE_H

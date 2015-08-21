@@ -127,12 +127,13 @@ public:
   void remove ( int quantity );
 
   /**
-   * @brief Create a focus area where occupancy is efficiently updated.
-   * @return Identifier of the created area.
-   * @param position Position of the area.
-   * @param length Length of the area.
+   * @brief Watch availability of a specific site and notify an observer when it changes.
+   * @param position Position of the site.
+   * @param length Length of the site.
+   * @param site_observer SiteObserver to update with the current number of available sites.
    */
-  int create_focus_area (int position, int length);
+  void watch_site_availability (int position, int length, SiteObserver& site_observer);
+
 
   /**
    * @brief Add termination site on element.
@@ -175,22 +176,6 @@ public:
    * @return Length of sequence.
    */
   int length ( void ) const;
-
-  /**
-   * @brief Returns the number of available sites at a given position.
-   * @return Number of available sites.
-   * @param position Position of the site.
-   * @param length Length of the site.
-   * @sa BindingSite
-   */
-  int number_available_sites ( int position, int length ) const;
-
-  /**
-   * @brief Returns the number of available sites at a given focus area.
-   * @return Number of available sites.
-   * @param area_id Identifier of the focus area.
-   */
-  int focus_area_availability (int area_id) const;  
 
   /**
    * @brief Returns the sequence between two specific positions.
@@ -265,14 +250,8 @@ private:
   /** @brief Map of bound chemicals. */
   ChemicalMap _chemical_map;
 
-  /** @brief Vector containing starting positions of focus areas. */
-  std::vector<int> _focus_area_start;
-
-  /** @brief Vector containnig ending positions of focus areas. */
-  std::vector<int> _focus_area_end;
-
-  /** @brief Vector containing max occupancy of focus areas. */
-  std::vector<int> _focus_area_max_occupancy;
+  /** @brief List of sites whose availability needs to be checked. */
+  std::list<SiteAvailability> _sites_to_watch;
   
 
   // =================
@@ -288,10 +267,9 @@ private:
   void remove_reference_from_map ( const BoundChemical& chemical, int position, int length );
 
   /**
-   * @brief Update occupancy for the given focus area.
-   * @param area_id Identifier of the focus area.
+   * @brief Check site availability and notify observers if changes occurred.
    */
-  void update_focus_area_occupancy (int area_id);
+  void notify_site_availability (void);
 
 };
 
@@ -317,15 +295,6 @@ inline const std::string ChemicalSequence::get_sequence (int first_position, int
   REQUIRE( first_position + length - 1 <= this->length() );
 
   return _sequence.substr (first_position-1, length);
-}
-
-inline int ChemicalSequence::focus_area_availability (int area_id) const
-{
-  /** @pre Identifier must be within vector range. */
-  REQUIRE (area_id >= 0);
-  REQUIRE (area_id < _focus_area_max_occupancy.size());
-
-  return _number - _focus_area_max_occupancy [area_id];
 }
 
 

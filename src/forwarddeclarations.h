@@ -24,23 +24,27 @@ class Binding;
 class ChemicalReaction;
 class Complexation;
 class Elongation;
-class ProcessiveChemical;
 class Reaction;
 class Release;
 
 // chemical entity classes
 class BaseLoader;
+class BindingSiteFamily;
 class BindingSite;
+class BindingSiteObserver;
 class BoundChemical;
 class BoundUnit;
 class Chemical;
 class ChemicalSequence;
 class DecodingTable;
+class ProcessiveChemical;
+class Reactant;
 class Site;
 class SiteLocation;
+class SiteObserver;
+class SiteAvailability;
 
 // parser and handler classes
-class BindingSiteFamily;
 class BindingSiteHandler;
 class ChemicalHandler;
 class Parser;
@@ -60,5 +64,10 @@ class ReactionGroupEvent;
 class ReactionClassification;
 class Solver;
 class UpdatedRateGroup;
+
+// rate related classes
+class RateManager;
+class NaiveRateManager;
+class DependencyRateManager;
 
 #endif // FORWARDDECLARATIONS_H

@@ -19,6 +19,7 @@
 // ==================
 //
 #include "bindingsitefamily.h"
+#include "bindingsiteobserver.h"
 #include "randomhandler.h"
 #include "macros.h"
 
@@ -27,6 +28,7 @@
 // ==========================
 //
 BindingSiteFamily::BindingSiteFamily (void)
+ : _total_rate_contribution (0)
 {
 }
 
@@ -35,47 +37,45 @@ BindingSiteFamily::BindingSiteFamily (void)
 
 BindingSiteFamily::~BindingSiteFamily (void)
 {
+  for (std::list<BindingSiteObserver*>::iterator bso_it = _binding_site_observers.begin();
+       bso_it != _binding_site_observers.end(); bso_it++)
+    {
+      delete *bso_it;
+    }
 }
 
 // ===========================
 //  Public Methods - Commands
 // ===========================
 //
-void BindingSiteFamily::update_rate_contributions (void)
+void BindingSiteFamily::add_binding_site (const BindingSite* binding_site)
 {
-  /**
-   * Binding rate is generally defined by r = k_on x [A] x [B], where [A] is the concentration
-   * of units to bind and [B] the concentration of binding sites. However, k_on varies from a
-   * site to another so the total binding rate becomes
-   *   r_total = [A] sum ( k_on_i x [B_i] ) = [A] vector(k_on_i).vector([B_i])
-   * Here we need to compute the second part of the binding rate.
-   */
+  // store binding site
+  _binding_sites.push_back (binding_site);
 
-  _total_rate_contribution = 0;
-  // loop through binding sites
-  std::vector<double>::iterator rate = _rate_contributions.begin();
-  for (std::vector<const BindingSite*>::iterator site = _binding_sites.begin();
-       site != _binding_sites.end(); ++site, ++rate)
-    {
-      // compute contribution from number of available sites and k_on for each binding site
-      (*rate) = (*site)->rate_contribution();
-      _total_rate_contribution += *rate;
-    }
+  // extend contribution vector
+  _rate_contributions.push_back (0);
+
+  // create binding site observer
+  int site_index = _rate_contributions.size()-1;
+  _binding_site_observers.push_back (new BindingSiteObserver(*binding_site, *this, site_index));
 }
 
-void BindingSiteFamily::update_rate_contribution (const BindingSite* binding_site)
-{
-  double new_contribution = binding_site->rate_contribution();
-  int site_index = _index[binding_site];
+void BindingSiteFamily::update (int site_index, int number_available_sites)
+{  
+  double new_contribution = _binding_sites [site_index]->k_on() * number_available_sites;
 
   // update total rate contribution by substracting old contribution and adding new one
   _total_rate_contribution = _total_rate_contribution - _rate_contributions[site_index] + new_contribution;
-
+      
   // update contribution in the contribution table
-  _rate_contributions[site_index] = new_contribution;
+  _rate_contributions [site_index] = new_contribution;
 
   // check for numerical issues
   if (_total_rate_contribution < 0) { compute_total_rate_contribution(); }
+
+  // notify change to rate managers
+  notify_concentration_change();
 }
 
 
@@ -100,7 +100,7 @@ bool BindingSiteFamily::is_site_available (void) const
   int number_sites = _binding_sites.size();
   for (int i = 0; i < number_sites; ++i)
    {
-     if (_binding_sites[i]->number_available_sites() > 0) return true;
+     if (_rate_contributions[i] > 0) return true;
    }
 
   // if we arrive here, it means that all sites are occupied

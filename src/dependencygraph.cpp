@@ -33,26 +33,26 @@ DependencyGraph::DependencyGraph (const std::vector< Reaction* > reactions)
   // we build the dependencies in three steps
 
   // STEP 1: the reaction vector provides us with a link from reactions to 
-  // components (reaction->components). However, we are also interested in
+  // reactants (reaction->reactants). However, we are also interested in
   // the reverse component->reactions link. We start with building a map that
   // yields this relationship.
 
-  // Map that stores the list of reactions in which a chemical is involved
-  std::map< const Chemical*, std::list<int> > chemical_to_reactions;
+  // Map that stores the list of reactions in which a reactant is involved
+  std::map< const Reactant*, std::list<int> > reactant_to_reactions;
 
   // loop through reaction
   int number_reactions = reactions.size();
   for (int i = 0; i < number_reactions; ++i)
     {
-      // gather components
-      const std::list<Chemical*>& components = reactions[i]->components();
+      // gather reactants
+      const std::list<Reactant*>& reactants = reactions[i]->reactants();
 
-      // loop through components
-      for (std::list<Chemical*>::const_iterator component = components.begin();
-	   component != components.end(); component++)
+      // loop through reactants
+      for (std::list<Reactant*>::const_iterator component = reactants.begin();
+	   component != reactants.end(); component++)
 	{
 	  // store component to reaction relationship
-	  chemical_to_reactions [*component].push_back (i);
+	  reactant_to_reactions [*component].push_back (i);
 	}
     }
 
@@ -65,15 +65,15 @@ DependencyGraph::DependencyGraph (const std::vector< Reaction* > reactions)
   // loop through reactions again
   for (int i = 0; i < number_reactions; ++i)
     {
-      // gather components of reaction i
-      const std::list<Chemical*>& components = reactions[i]->components();
+      // gather reactants of reaction i
+      const std::list<Reactant*>& reactants = reactions[i]->reactants();
 
-      // loop through components
-      for (std::list<Chemical*>::const_iterator component = components.begin();
-	   component != components.end(); component++)
+      // loop through reactants
+      for (std::list<Reactant*>::const_iterator component = reactants.begin();
+	   component != reactants.end(); component++)
 	{
 	  // gather reaction indices the component is involved in
-	  const std::list<int>& reaction_indices = chemical_to_reactions [*component];
+	  const std::list<int>& reaction_indices = reactant_to_reactions [*component];
 
 	  // loop through reaction indices and store them in the dependency vector
 	  for (std::list<int>::const_iterator reaction = reaction_indices.begin();
