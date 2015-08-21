@@ -127,9 +127,6 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief Random handler used for determining next reaction. */
-  static RandomHandler _random_handler;
-
 
   // =================
   //  Private Methods

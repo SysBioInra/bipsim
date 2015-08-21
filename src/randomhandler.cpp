@@ -31,16 +31,13 @@
 //  Constructors/Destructors
 // ==========================
 //
-boost::mt19937 RandomHandler::_generator;
+RandomHandler RandomHandler::_instance;
 
 RandomHandler::RandomHandler (void)
 {
   _generator.seed (0);
 }
 
-
-// Not needed for this class (use of default copy constructor) !
-// RandomHandler::RandomHandler (RandomHandler& other_random_handler);
 
 RandomHandler::~RandomHandler (void)
 {

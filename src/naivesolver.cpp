@@ -102,7 +102,7 @@ double NaiveSolver::compute_next_reaction (void)
     }
   
   // compute next reaction to perform
-  int random_index = _random_handler.draw_index (_rate_manager->rates());
+  int random_index = RandomHandler::instance().draw_index (_rate_manager->rates());
   int reaction_index = random_index / 2;
   
   // perform reaction
@@ -118,5 +118,5 @@ double NaiveSolver::compute_next_reaction (void)
     }
  
   // return updated time
-  return time() + _random_handler.draw_exponential (_rate_manager->total_rate());
+  return time() + RandomHandler::instance().draw_exponential (_rate_manager->total_rate());
 }

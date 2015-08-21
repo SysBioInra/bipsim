@@ -69,15 +69,14 @@ void ConstantRateGroup::reinitialize (double initial_time)
   // reactions times are normally given by successive exponential distributions. But equivalently,
   // number of reactions is also given by a Poisson distribution with rate (total_rate x time_step).
   // asymptotically, using the Poisson distribution is more efficient so here we go:
-  RandomHandler random_handler;
-  int number_reactions = random_handler.draw_poisson (total_rate()*_time_step);
+  int number_reactions = RandomHandler::instance().draw_poisson (total_rate()*_time_step);
   // the reaction timings can now be obtained by drawing number_reactions uniform distributions
   // along the time interval:
   _final_time = initial_time + _time_step;
   _reaction_times.resize (number_reactions+1, 0);
   for (int i = 0; i < number_reactions; ++i)
     {
-      _reaction_times [i] = random_handler.draw_uniform (initial_time, _final_time);
+      _reaction_times [i] = RandomHandler::instance().draw_uniform (initial_time, _final_time);
     }
   // however we need to sort the timings:
   std::sort (_reaction_times.begin(), --_reaction_times.end());
@@ -85,7 +84,7 @@ void ConstantRateGroup::reinitialize (double initial_time)
   _reaction_times[number_reactions] = OVERTIME;
 
   // compute reaction indices
-  _reaction_rate_indices = random_handler.draw_multiple_indices (rates(), number_reactions);
+  _reaction_rate_indices = RandomHandler::instance().draw_multiple_indices (rates(), number_reactions);
 
   // update _next_reaction_time
   _next_reaction_time = _reaction_times [0];

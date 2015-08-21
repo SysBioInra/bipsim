@@ -27,7 +27,6 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "randomhandler.h"
 #include "solver.h"
 
 /**
@@ -109,9 +108,6 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief Random handler used for determining next reaction. */
-  RandomHandler _random_handler;
-
   /** @brief Rate manager handling rates and rate updates. */
   RateManager* _rate_manager;
 

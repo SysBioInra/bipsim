@@ -66,13 +66,13 @@ public:
    * @brief Adds a given quantity of chemical to the existing pool.
    * @param quantity The amount to add
    */
-  virtual void add (int quantity);
+  void add (int quantity);
 
   /**
    * @brief Remove a given quantity of chemical to the existing pool.
    * @param quantity The amount to remove.
    */
-  virtual void remove (int quantity);
+  void remove (int quantity);
 
   /**
    * @brief Print class content.

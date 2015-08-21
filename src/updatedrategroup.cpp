@@ -26,8 +26,6 @@
 //  Constructors/Destructors
 // ==========================
 //
-RandomHandler UpdatedRateGroup::_random_handler;
-
 UpdatedRateGroup::UpdatedRateGroup (const std::vector<Reaction*>& reactions, double initial_time)
   : ReactionGroup (reactions)
 {
@@ -49,7 +47,7 @@ UpdatedRateGroup::~UpdatedRateGroup (void)
 void UpdatedRateGroup::perform_next_reaction (void)
 {
   // perform next scheduled reaction
-  int random_index = _random_handler.draw_index (rates());   // draw reaction index randomly
+  int random_index = RandomHandler::instance().draw_index (rates());   // draw reaction index randomly
   perform_reaction (random_index);
 
   // schedule next reaction
@@ -63,7 +61,7 @@ void UpdatedRateGroup::reschedule_next_reaction (double current_time)
   update_all_rates();
 
   // compute reaction time
-  _next_reaction_time = current_time + _random_handler.draw_exponential (total_rate());
+  _next_reaction_time = current_time + RandomHandler::instance().draw_exponential (total_rate());
 }
 
 

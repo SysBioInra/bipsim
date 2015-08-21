@@ -66,8 +66,7 @@ void BoundChemical::focus_random_unit ( void )
   REQUIRE( number() > 0 ); /** @pre There must be at least one unit */
 
   // draw a random chemical
-  RandomHandler random_handler;
-  int index_drawn = random_handler.draw_uniform ( 0, number()-1 );
+  int index_drawn = RandomHandler::instance().draw_uniform ( 0, number()-1 );
 
   // find the corresponding unit in the map
   int current_index = 0;
@@ -101,8 +100,7 @@ void BoundChemical::focus_random_unit ( int family_id )
   
   // draw a random chemical to unbind
   int number_units = family_units.size();
-  RandomHandler random_handler;
-  int index_drawn = random_handler.draw_uniform (0, number_units-1);
+  int index_drawn = RandomHandler::instance().draw_uniform (0, number_units-1);
 
   // retrieve the corresponding position
   BoundUnitList::iterator unit = family_units.begin();

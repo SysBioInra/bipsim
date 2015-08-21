@@ -83,12 +83,11 @@ void BaseLoader::focus_random_unit_from_loading_rates (void)
   update_loading_rates();
 
   // draw a random chemical to load depending on loading rates
-  RandomHandler random_handler;
-  _focused_template_index = random_handler.draw_index (_loading_rates);
+  _focused_template_index = RandomHandler::instance().draw_index (_loading_rates);
 
   // select a random unit that loads this chemical
   std::list<BoundUnitList::iterator>& unit_list = _unit_map [_focused_template_index];
-  int index_drawn = random_handler.draw_uniform (0, unit_list.size()-1);
+  int index_drawn = RandomHandler::instance().draw_uniform (0, unit_list.size()-1);
   int current_index = 0;
   // loop through units for the exact index
   std::list<BoundUnitList::iterator>::iterator unit = unit_list.begin();

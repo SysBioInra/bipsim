@@ -88,8 +88,7 @@ const BindingSite& BindingSiteFamily::get_random_available_site (void) const
   /**
    * We draw a site according to the rate contributions, which is k_on * site_availability.
    */
-  RandomHandler random_handler;
-  int index_drawn = random_handler.draw_index (_rate_contributions);
+  int index_drawn = RandomHandler::instance().draw_index (_rate_contributions);
 
   return *(_binding_sites [index_drawn]);
 }

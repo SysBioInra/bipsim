@@ -31,7 +31,9 @@
  *
  * ReactionHandler initiates a random number engine and provides various services
  * such as drawing of classical distributions and biased-wheel drawing. It uses
- * a random number engine from boost.
+ * a random number engine from boost. It also uses the singleton pattern: only 
+ * one copy of the handler exists at all times and must be accessed through
+ * the instance() member.
  */
 class RandomHandler
 {
@@ -41,16 +43,6 @@ class RandomHandler
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Default constructor
-   */
-  RandomHandler (void);
-
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // RandomHandler (RandomHandler& other_random_handler);
 
   /**
    * @brief Destructor
@@ -109,7 +101,10 @@ class RandomHandler
   //  Public Methods - Accessors
   // ============================
   //
-
+  /**
+   * @brief Return the only instance of the generator.
+   */  
+  static RandomHandler& instance (void);
 
   // ==========================
   //  Public Methods - Setters
@@ -125,11 +120,6 @@ class RandomHandler
   //  Public Methods - Operator overloading
   // =======================================
   //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // RandomHandler& operator= (RandomHandler& other_random_handler);
 
   // ==================================
   //  Public Methods - Class invariant
@@ -149,7 +139,10 @@ private:
   // ============
   //
   /** @brief Original pseudorandom number uniform sequence (Mersenne twister). */
-  static boost::mt19937 _generator;
+  boost::mt19937 _generator;
+
+  /** @brief Original pseudorandom number uniform sequence (Mersenne twister). */
+  static RandomHandler _instance;
 
   // =================
   //  Private Methods
@@ -172,6 +165,27 @@ private:
     };
 
   template<typename T> std::vector<int> sorted_indices (const std::vector<T>& vector_to_sort);
+
+  // ======================
+  //  Forbidden operations
+  // ======================
+  //
+  /**
+   * @brief Default constructor
+   */
+  RandomHandler (void);
+
+  /**
+   * @brief Copy constructor
+   */
+  RandomHandler (RandomHandler& other_random_handler);
+  
+  /**
+   * @brief Assignment operator
+   */
+  RandomHandler& operator= (RandomHandler& other_random_handler);
+  
+
 };
 
 // ======================
@@ -181,6 +195,11 @@ private:
 inline void RandomHandler::set_seed ( int seed )
 {
   _generator.seed( seed );
+}
+
+inline RandomHandler& RandomHandler::instance (void)
+{
+  return _instance;
 }
 
 #endif // RANDOMHANDLER_H
