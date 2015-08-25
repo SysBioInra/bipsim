@@ -23,6 +23,7 @@
 #include "constantrategroup.h"
 #include "randomhandler.h"
 #include "macros.h" // REQUIRE
+#include "naiveratemanager.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -33,6 +34,7 @@ ConstantRateGroup::ConstantRateGroup (const std::vector<Reaction*>& reactions, d
   , _next_index (0)
   , _final_time (initial_time + time_step)
   , _time_step (time_step)
+  , _rate_manager (reactions)
 {
   reinitialize (initial_time);
 }
@@ -63,13 +65,13 @@ void ConstantRateGroup::perform_next_reaction (void)
 void ConstantRateGroup::reinitialize (double initial_time)
 {
   // first compute the current rates of the reactions
-  update_all_rates();
+  _rate_manager.update_rates();
   
   // compute all reactions timings
   // reactions times are normally given by successive exponential distributions. But equivalently,
   // number of reactions is also given by a Poisson distribution with rate (total_rate x time_step).
   // asymptotically, using the Poisson distribution is more efficient so here we go:
-  int number_reactions = RandomHandler::instance().draw_poisson (total_rate()*_time_step);
+  int number_reactions = RandomHandler::instance().draw_poisson (_rate_manager.total_rate()*_time_step);
   // the reaction timings can now be obtained by drawing number_reactions uniform distributions
   // along the time interval:
   _final_time = initial_time + _time_step;
@@ -84,7 +86,7 @@ void ConstantRateGroup::reinitialize (double initial_time)
   _reaction_times[number_reactions] = OVERTIME;
 
   // compute reaction indices
-  _reaction_rate_indices = RandomHandler::instance().draw_multiple_indices (rates(), number_reactions);
+  _reaction_rate_indices = RandomHandler::instance().draw_multiple_indices (_rate_manager.rates(), number_reactions);
 
   // update _next_reaction_time
   _next_reaction_time = _reaction_times [0];
@@ -130,4 +132,3 @@ bool ConstantRateGroup::check_invariant (void) const
 //  Private Methods
 // =================
 //
-

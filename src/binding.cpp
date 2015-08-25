@@ -54,7 +54,7 @@ Binding::~Binding( void )
 //
 void Binding::perform_forward( void )
 {
-  REQUIRE (_unit_to_bind.number() > 0); /** @pre There is at least one element to bind. */
+  REQUIRE (is_forward_reaction_possible()); /** @pre There is at least one element to bind. */
 
   // Number of free elements is updated.
   _unit_to_bind.remove (1);
@@ -67,7 +67,7 @@ void Binding::perform_forward( void )
 
 void Binding::perform_backward( void )
 {
-  REQUIRE( _binding_result.number() > 0 ); /** @pre There is at least one element to unbind. */
+  REQUIRE (is_backward_reaction_possible()); /** @pre There is at least one element to unbind. */
 
   // Number of free elements is updated.
   _unit_to_bind.add (1);
@@ -117,12 +117,12 @@ void Binding::print (std::ostream& output) const
 //
 bool Binding::is_forward_reaction_possible (void) const
 {
-  return false;
+  return (_unit_to_bind.number() > 0);
 }
 
 bool Binding::is_backward_reaction_possible (void) const
 {
-  return false;
+  return (_binding_result.number() > 0);
 }
 
 

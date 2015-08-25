@@ -51,6 +51,9 @@ Release::~Release (void)
 //
 void Release::perform_forward (void)
 {
+  /** @pre There must be enough reactants to perform reaction. */
+  REQUIRE (is_forward_reaction_possible());
+
   _unit_to_release.focus_random_unit();
   _unit_to_release.focused_unit_location().unbind_unit (_unit_to_release);
   _unit_to_release.release();
@@ -121,8 +124,8 @@ bool Release::check_invariant (void) const
 //
 bool Release::is_forward_reaction_possible (void) const
 {
-  return (_side_reaction.is_forward_reaction_possible())
-    && (_unit_to_release.number() > 0);
+  return ((_side_reaction.is_forward_reaction_possible())
+	  && (_unit_to_release.number() > 0));
 }
 
 bool Release::is_backward_reaction_possible (void) const

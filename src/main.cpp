@@ -54,10 +54,16 @@ int main (int argc, char *argv[])
   CellState cell_state ("../data/test_input.txt");
 
   // solve system
-  // ReactionClassification classification;
-  // int class_id = classification.create_new_class (1);
-  // classification.add_reaction_list_to_class (class_id, cell_state.reaction_list());
+#define CLASSIFICATION
+#ifdef CLASSIFICATION
+  ReactionClassification classification;
+  int class_id = classification.create_new_class (0.001);
+  // int class_id = classification.create_new_class (ReactionClassification::ALWAYS_UPDATED);
+  classification.add_reaction_list_to_class (class_id, cell_state.reaction_list());
+  ManualDispatchSolver solver (0, cell_state, classification);
+#else
   NaiveSolver solver (0, cell_state);
+#endif
 
   std::cout << "Solving from t = 0 to t = " << simulation_time << "..." << std::endl;
   while (solver.time() < simulation_time)

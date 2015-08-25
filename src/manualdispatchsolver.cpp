@@ -37,7 +37,7 @@ ManualDispatchSolver::ManualDispatchSolver (double initial_time, CellState& cell
     {
       if (classification.time_step (i) == ReactionClassification::ALWAYS_UPDATED)
 	{
-	  // if the rates need to be alwas updated, we need to use UpdateRateGroup
+	  // if the rates need to be alwas updated, we need to use UpdatedRateGroup
 	  _updated_rate_group_indices.push_back (i);
 	  _reaction_groups.push_back (new UpdatedRateGroup (classification.reactions (i), time()));
 	}

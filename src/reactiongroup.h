@@ -25,6 +25,8 @@
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "ratemanager.h"
+#include "macros.h" // REQUIRE
 
 /**
  * @brief The ReactionGroup class contains a group of reactions that need to be simulated at the same level.
@@ -70,12 +72,6 @@ class ReactionGroup
    * by classes inheriting from ReactionGroup.
    */
   virtual void perform_next_reaction (void) = 0;
-
-  /**
-   * @brief Update all the reaction rates.
-   * @sa Reaction
-   */
-  void update_all_rates (void);   
    
 
   // ============================
@@ -137,9 +133,9 @@ protected:
   /** @brief Next scheduled reaction time. */
   double _next_reaction_time;
 
-  // =================
+  // ===================
   //  Protected Methods
-  // =================
+  // ===================
   //
   /**
    * @brief Perform reaction according to a rate value index.
@@ -150,20 +146,6 @@ protected:
    */
   void perform_reaction (int rate_index);
 
-  /**
-   * @brief Accessor to the rate vector.
-   * @return Vector containing forward and backward rates of the reactions. More precisely, the
-   *  rates of reaction with index i occupy indices 2i (forward rate) and 2i+1 (backward rate).
-   *  Vector size is thus twice as big as the reaction vector.
-   */
-  const std::vector<double>& rates (void);
-
-  /**
-   * @brief Accessor to total rate.
-   * @return Total reaction rate at the last update timing.
-   */
-  double total_rate (void);
-
 private:
 
   // ============
@@ -172,15 +154,6 @@ private:
   //
   /** @brief Reactions contained in the group. */
   std::vector<Reaction*> _reactions;
-
-  /** @brief Number of reactions contained in the group. */
-  int _number_reactions;
-
-  /** @brief Reaction rates. There are two rates for every reaction: a forward rate and a backward rate. */
-  std::vector<double> _rates;
-
-  /** @brief Total reaction rate. */
-  double _total_rate;
 
   // =================
   //  Private Methods
@@ -191,7 +164,6 @@ private:
   //  Forbidden Operations
   // ======================
   //
-
 };
 
 // ======================
@@ -201,16 +173,6 @@ private:
 inline double ReactionGroup::next_reaction_time (void)
 {
   return _next_reaction_time;
-}
-
-inline const std::vector<double>& ReactionGroup::rates (void)
-{
-  return _rates;
-}
-
-inline double ReactionGroup::total_rate (void)
-{
-  return _total_rate;
 }
 
 #endif // REACTION_GROUP_H

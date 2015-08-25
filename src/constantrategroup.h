@@ -25,6 +25,7 @@
 //
 #include "forwarddeclarations.h"
 #include "reactiongroup.h"
+#include "naiveratemanager.h"
 
 /**
  * @brief ConstantRateGroup enables simulation of a group of reactions during a time step
@@ -130,6 +131,9 @@ private:
   //  Attributes
   // ============
   //
+  /** @brief Manager that stores the rates and updates them. */
+  NaiveRateManager _rate_manager;
+
   /** @brief Time points at which reactions occur as determined during construction. */
   std::vector<double> _reaction_times;
 

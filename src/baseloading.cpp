@@ -51,7 +51,8 @@ BaseLoading::~BaseLoading (void)
 //
 void BaseLoading::perform_forward (void)
 {
-  REQUIRE( forward_rate() > 0 ); /** @pre There are enough chemicals to perform reaction. */
+  /** @pre There must be enough reactants to perform reaction. */
+  REQUIRE (is_forward_reaction_possible());
 
   // Choose one of the base loaders randomly
   _base_loader.focus_random_unit_from_loading_rates();
@@ -102,7 +103,7 @@ void BaseLoading::update_rates (void)
 //
 bool BaseLoading::is_forward_reaction_possible (void) const
 {
-  return false;
+  return (_base_loader.loading_rate() > 0);
 }
 
 bool BaseLoading::is_backward_reaction_possible (void) const

@@ -52,6 +52,9 @@ Elongation::~Elongation( void )
 //
 void Elongation::perform_forward( void )
 {
+  /** @pre There must be enough reactants to perform reaction. */
+  REQUIRE (is_forward_reaction_possible());
+
   bool stall = false;
   
   // choose one unit to move randomly
@@ -127,7 +130,7 @@ void Elongation::update_rates( void )
 //
 bool Elongation::is_forward_reaction_possible (void) const
 {
-  return false;
+  return (_processive_chemical.number() > 0);
 }
 
 bool Elongation::is_backward_reaction_possible (void) const

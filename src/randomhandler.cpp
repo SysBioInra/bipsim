@@ -270,11 +270,13 @@ template<typename T> std::vector<int> RandomHandler::find_multiple_indices (cons
   // there is a chance that the smallest element is pretty small, so we do not use
   // dichotomy here, we simply go from the start and look for the index of the smallest element
   int current_order = 0;
-  double current_weight_to_find = drawn_weights [weight_order [current_order]];
+  double current_weight_to_find = 0;
   int current_cumulated_weight_index = 0;
 
   while (current_order < number_indices) // while there is a weight whose index is not found
     {
+      current_weight_to_find = drawn_weights [weight_order [current_order]];
+
       // the right index is found if
       //  (1) cumulated_weights[i] >= drawn_weight
       //  (2) if i>0, cumulated_weights[i-1] < drawn_weight
@@ -290,7 +292,6 @@ template<typename T> std::vector<int> RandomHandler::find_multiple_indices (cons
 
       // go to next element in increasing order
       ++current_order;
-      current_weight_to_find = drawn_weights [weight_order [current_order]];
     }
 
   return result;

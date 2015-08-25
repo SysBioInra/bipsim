@@ -147,7 +147,7 @@ class RateManager
 
   /**
    * @brief Accessor to reaction vector.
-   * @param Reactions handled by the rate manager.
+   * @return Reactions handled by the rate manager.
    */
   const std::vector <Reaction*>& reactions (void) const;
 

@@ -57,6 +57,9 @@ Complexation::~Complexation (void)
 //
 void Complexation::perform_forward ( void )
 {
+  /** @pre There must be enough reactants to perform reaction. */
+  REQUIRE (is_forward_reaction_possible());
+
   if (_bound_component == 0)
     {
       _component_a.remove (1);
@@ -86,6 +89,9 @@ void Complexation::perform_forward ( void )
 
 void Complexation::perform_backward ( void )
 {
+  /** @pre There must be enough reactants to perform reaction. */
+  REQUIRE (is_backward_reaction_possible());
+
   if (_bound_component == 0)
     {
       _component_a.add (1);
@@ -138,12 +144,12 @@ void Complexation::update_rates ( void )
 //
 bool Complexation::is_forward_reaction_possible (void) const
 {
-  return false;
+  return ((_component_a.number() > 0) && (_component_b.number() > 0));
 }
 
 bool Complexation::is_backward_reaction_possible (void) const
 {
-  return false;
+  return (_complex.number() > 0);
 }
 
 

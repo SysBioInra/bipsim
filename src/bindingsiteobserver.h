@@ -71,7 +71,7 @@ class BindingSiteObserver : public SiteObserver
    * @brief Notify BindingSiteFamily that the number of available site has changed.
    * @param number_available_sites Number of sites currently available.
    */
-  virtual void update (int number_available_bindingsites);
+  virtual void update (int number_available_sites);
 
   // ============================
   //  Public Methods - Accessors

@@ -25,6 +25,7 @@
 //
 #include "forwarddeclarations.h"
 #include "reactiongroup.h"
+#include "dependencyratemanager.h"
 
 /**
  * @brief UpdatedRateGroup enables simulation of a group of reactions for which the reaction
@@ -127,12 +128,15 @@ private:
   //  Attributes
   // ============
   //
+  /** @brief Manager that stores the rates and updates them. */
+  DependencyRateManager _rate_manager;
 
   // =================
   //  Private Methods
   // =================
   //
 
+  
   // ======================
   //  Forbidden Operations
   // ======================
@@ -144,5 +148,6 @@ private:
 //  Inline declarations
 // ======================
 //
+
 
 #endif // UPDATED_RATE_GROUP_H
