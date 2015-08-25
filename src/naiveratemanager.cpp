@@ -43,6 +43,7 @@ NaiveRateManager::~NaiveRateManager (void)
 void NaiveRateManager::update_rates (void)
 {
   compute_all_rates();
+  compute_total_rate();
 }
 
 // ============================

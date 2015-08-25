@@ -94,12 +94,9 @@ bool RateManager::check_invariant (void) const
 //
 void RateManager::compute_all_rates (void)
 {
-  _total_rate = 0;
   for (int i = 0; i < _reactions.size(); ++i)
     {
       update_reaction (i);
-      _total_rate += _rates [2*i];
-      _total_rate += _rates [2*i+1];
     }
 }
 

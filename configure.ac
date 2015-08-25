@@ -31,7 +31,8 @@ AC_C_INLINE
 
 # files to generate via autotools (.am or .in source files)
 AC_CONFIG_FILES([Makefile
-                 src/Makefile])
+                 src/Makefile
+		 tests/Makefile])
 
 # Checks for command-line options
 AC_ARG_ENABLE([pre-check],

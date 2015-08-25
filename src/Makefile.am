@@ -4,17 +4,17 @@
 ###############################################################################
 
 # the program to build (the names of the final binaries)
-bin_PROGRAMS = test
+bin_PROGRAMS = simulator
 
-# list of sources for the 'test' binary
+# list of sources for the 'simulator' binary
 # main file and utility files
-test_SOURCES = \
+simulator_SOURCES = \
 	main.cpp macros.h forwarddeclarations.h \
 	identifiedlist.cpp identifiedlist.h \
 	randomhandler.cpp randomhandler.h
 
 # reaction sources
-test_SOURCES += \
+simulator_SOURCES += \
 	baseloading.cpp baseloading.h \
 	binding.cpp binding.h \
 	chemicalreaction.cpp chemicalreaction.h \
@@ -24,7 +24,7 @@ test_SOURCES += \
 	release.cpp release.h
 
 # chemical entity sources
-test_SOURCES += \
+simulator_SOURCES += \
 	baseloader.cpp baseloader.h \
 	bindingsite.cpp bindingsite.h \
 	bindingsitefamily.cpp bindingsitefamily.h \
@@ -41,7 +41,7 @@ test_SOURCES += \
 	siteavailability.cpp siteavailability.h
 
 # parser and handler sources
-test_SOURCES += \
+simulator_SOURCES += \
 	bindingsitehandler.cpp bindingsitehandler.h \
 	chemicalhandler.cpp chemicalhandler.h \
 	parser.cpp parser.h \
@@ -51,7 +51,7 @@ test_SOURCES += \
 	terminationsitehandler.cpp terminationsitehandler.h
 
 # solver sources
-test_SOURCES += \
+simulator_SOURCES += \
 	cellstate.cpp cellstate.h \
 	constantrategroup.cpp constantrategroup.h \
 	dependencygraph.cpp dependencygraph.h \
@@ -64,7 +64,7 @@ test_SOURCES += \
 	updatedrategroup.cpp updatedrategroup.h
 
 # rate related classes
-test_SOURCES += \
+simulator_SOURCES += \
 	ratemanager.cpp ratemanager.h \
 	naiveratemanager.cpp naiveratemanager.h \
 	dependencyratemanager.cpp dependencyratemanager.h
