@@ -10,6 +10,7 @@ bin_PROGRAMS = simulator
 # main file and utility files
 simulator_SOURCES = \
 	main.cpp macros.h forwarddeclarations.h \
+	biasedwheel.cpp biasedwheel.h \
 	identifiedlist.cpp identifiedlist.h \
 	randomhandler.cpp randomhandler.h
 

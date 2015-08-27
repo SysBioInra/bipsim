@@ -15,6 +15,7 @@
 
 
 // utility classes
+template <typename T> class BiasedWheel;
 class IdentifiedList;
 class RandomHandler;
 

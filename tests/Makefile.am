@@ -3,14 +3,20 @@
 # THE PROGRAMS TO BUILD
 ###############################################################################
 
-TESTS = test
 
 # the program to build (the names of the final binaries)
-bin_PROGRAMS = test
+bin_PROGRAMS = biasedwheel_test randomhandler_test
 
-# list of sources for the 'simulator' binary
-# main file and utility files
-test_SOURCES = main.cpp
+TESTS = $(bin_PROGRAMS)
+
+basic_files = ../src/macros.h ../src/forwarddeclarations.h
+biasedwheel_files = \
+	../src/biasedwheel.cpp ../src/biasedwheel.h $(basic_files)
+randomhandler_files = \
+	../src/randomhandler.cpp ../src/randomhandler.h $(biasedwheel_files)
+
+biasedwheel_test_SOURCES = biasedwheel_test.cpp $(biasedwheel_files)
+randomhandler_test_SOURCES = randomhandler_test.cpp $(randomhandler_files)
 
 
 ###############################################################################

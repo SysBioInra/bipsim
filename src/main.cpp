@@ -54,7 +54,7 @@ int main (int argc, char *argv[])
   CellState cell_state ("../data/test_input.txt");
 
   // solve system
-#define CLASSIFICATION
+  //#define CLASSIFICATION
 #ifdef CLASSIFICATION
   ReactionClassification classification;
   int class_id = classification.create_new_class (0.001);
