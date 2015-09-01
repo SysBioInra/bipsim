@@ -152,7 +152,7 @@ inline void Chemical::add (int quantity)
   REQUIRE( quantity >= 0 ); /** @pre Quantity is nonnegative. */
   
   _number += quantity;
-  notify_concentration_change();
+  notify_change();
 }
 
 inline void Chemical::remove(int quantity)
@@ -161,7 +161,7 @@ inline void Chemical::remove(int quantity)
   REQUIRE( quantity <= _number );
   
   _number -= quantity;
-  notify_concentration_change();
+  notify_change();
 }
 
 inline std::ostream& operator<< (std::ostream& output, const Chemical& chemical)

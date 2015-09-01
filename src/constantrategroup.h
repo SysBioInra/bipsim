@@ -73,7 +73,7 @@ class ConstantRateGroup : public ReactionGroup
   /**
    * @brief Perform next scheduled reaction and schedule following reaction.
    */
-  virtual void perform_next_reaction (void);
+  virtual bool perform_next_reaction (void);
 
   /**
    * @brief Reinitialize reaction timings with different initial_time.

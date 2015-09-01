@@ -50,16 +50,26 @@ ConstantRateGroup::~ConstantRateGroup (void)
 //  Public Methods - Commands
 // ===========================
 //
-void ConstantRateGroup::perform_next_reaction (void)
+bool ConstantRateGroup::perform_next_reaction (void)
 {
+  /** @pre _next_reaction_time must not have reached OVERTIME (extending beyond valid time step). */
   REQUIRE (_next_reaction_time != OVERTIME);
 
-  // perform next scheduled reaction
-  perform_reaction (_reaction_rate_indices [_next_index]);
+  // perform next scheduled reaction if possible
+  bool reaction_performed = false;
+  int next_reaction_index = _reaction_rate_indices [_next_index];
+
+  if (is_reaction_possible (next_reaction_index))
+    {
+      perform_reaction (next_reaction_index);
+      reaction_performed = true;
+    }
 
   // schedule next reaction
   ++_next_index;
   _next_reaction_time = _reaction_times [_next_index];
+
+  return reaction_performed;
 }
 
 void ConstantRateGroup::reinitialize (double initial_time)

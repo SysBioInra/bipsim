@@ -54,10 +54,10 @@ int main (int argc, char *argv[])
   CellState cell_state ("../data/test_input.txt");
 
   // solve system
-  //#define CLASSIFICATION
+  // #define CLASSIFICATION
 #ifdef CLASSIFICATION
   ReactionClassification classification;
-  int class_id = classification.create_new_class (0.001);
+  int class_id = classification.create_new_class (0.0001);
   // int class_id = classification.create_new_class (ReactionClassification::ALWAYS_UPDATED);
   classification.add_reaction_list_to_class (class_id, cell_state.reaction_list());
   ManualDispatchSolver solver (0, cell_state, classification);

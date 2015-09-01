@@ -36,6 +36,9 @@ BiasedWheel<T>::BiasedWheel (const std::vector<T>& weights)
    * Input vector is not stored as such, instead all zero values are stripped
    * and a cumulative form is stored.
    */
+  // for optimization purposes, we reserve enough memory for our vectors
+  _cumulated_weights.reserve (weights.size());
+  _original_indices.reserve (weights.size());
   cumulate_vector_and_strip (weights);
 }
 
@@ -108,8 +111,8 @@ int BiasedWheel<T>::find_index (T drawn_weight)
 	{
 	  min_index = max_index = i;
 	}
-    }
-  
+    }  
+
   return _original_indices [min_index];
 }
   
@@ -206,6 +209,45 @@ bool BiasedWheel<T>::check_invariant (void) const
 //  Private Methods
 // =================
 //
+
+// THIS VERSION MIGHT BE BETTER IF WE DO NOT HAVE TO ALLOCATE MEMORY SYSTEMATICALLY
+// (E.G. IF A BIASED WHEEL IS REUSED FOR A DIFFERENT VECTOR)
+// template<typename T>
+// void BiasedWheel<T>::cumulate_vector_and_strip (const std::vector<T>& vector_to_cumulate)
+// {
+//   int number_items = vector_to_cumulate.size();
+//   int real_number_items = 0;
+
+//   // we start by looking for the first positive value
+//   int original_index = 0;
+//   while ( ( vector_to_cumulate[original_index] <= 0 ) && ( original_index < number_items ) )
+//     { 
+//       original_index++;
+//     }
+
+//   // we set the first value
+//   _cumulated_weights [real_number_items] = vector_to_cumulate [original_index];
+//   _original_indices [real_number_items] = original_index;
+//   real_number_items++;
+//   original_index++;
+
+//   for ( ; original_index < number_items; original_index++ )
+//     { 
+//       if ( vector_to_cumulate[original_index] > 0 ) // skip all zero or negative values
+// 	{
+// 	  _cumulated_weights [real_number_items] = _cumulated_weights [real_number_items-1] + vector_to_cumulate [original_index];
+// 	  _original_indices [real_number_items] = original_index;
+// 	  real_number_items++;
+// 	}
+//     }
+
+//   // resize vectors
+//   _cumulated_weights.resize (real_number_items);
+//   _original_indices.resize (real_number_items);
+  
+//   _total_weight = _cumulated_weights.back();
+// }
+
 template<typename T>
 void BiasedWheel<T>::cumulate_vector_and_strip (const std::vector<T>& vector_to_cumulate)
 {

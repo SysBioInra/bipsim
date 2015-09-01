@@ -52,35 +52,6 @@ Binding::~Binding( void )
 //  Public Methods - Commands
 // ===========================
 //
-void Binding::perform_forward( void )
-{
-  REQUIRE (is_forward_reaction_possible()); /** @pre There is at least one element to bind. */
-
-  // Number of free elements is updated.
-  _unit_to_bind.remove (1);
-  
-  // A binding site in the family is randomly chosen and occupied by a newly created binding result
-  const BindingSite& binding_site = _binding_site_family.get_random_available_site();
-  _binding_result.add_unit_at_site (binding_site);
-  binding_site.location().bind_unit (_binding_result);
-}
-
-void Binding::perform_backward( void )
-{
-  REQUIRE (is_backward_reaction_possible()); /** @pre There is at least one element to unbind. */
-
-  // Number of free elements is updated.
-  _unit_to_bind.add (1);
-
-  // A unit bound through a site in the family is randomly chosen
-   _binding_result.focus_random_unit (_binding_site_family_id);
-
-  // remove unit
-  _binding_result.focused_unit_location().unbind_unit (_binding_result);
-  _binding_result.remove_focused_unit();
-
-}
-
 void Binding::update_rates ( void )
 {
   /**
@@ -154,7 +125,35 @@ bool Binding::check_invariant (void) const
 }
 
 
-// =================
-//  Private Methods
-// =================
+// ===================
+//  Protected Methods
+// ===================
 //
+void Binding::do_forward_reaction (void)
+{
+  REQUIRE (is_forward_reaction_possible()); /** @pre There is at least one element to bind. */
+
+  // Number of free elements is updated.
+  _unit_to_bind.remove (1);
+  
+  // A binding site in the family is randomly chosen and occupied by a newly created binding result
+  const BindingSite& binding_site = _binding_site_family.get_random_available_site();
+  _binding_result.add_unit_at_site (binding_site);
+  binding_site.location().bind_unit (_binding_result);
+}
+
+void Binding::do_backward_reaction (void)
+{
+  REQUIRE (is_backward_reaction_possible()); /** @pre There is at least one element to unbind. */
+
+  // Number of free elements is updated.
+  _unit_to_bind.add (1);
+
+  // A unit bound through a site in the family is randomly chosen
+   _binding_result.focus_random_unit (_binding_site_family_id);
+
+  // remove unit
+  _binding_result.focused_unit_location().unbind_unit (_binding_result);
+  _binding_result.remove_focused_unit();
+
+}

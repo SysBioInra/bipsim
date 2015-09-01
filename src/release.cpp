@@ -49,23 +49,6 @@ Release::~Release (void)
 //  Public Methods - Commands
 // ===========================
 //
-void Release::perform_forward (void)
-{
-  /** @pre There must be enough reactants to perform reaction. */
-  REQUIRE (is_forward_reaction_possible());
-
-  _unit_to_release.focus_random_unit();
-  _unit_to_release.focused_unit_location().unbind_unit (_unit_to_release);
-  _unit_to_release.release();
-
-  _side_reaction.perform_forward();
-}
-
-void Release::perform_backward (void)
-{
-  std::cerr << "ERROR: release reaction should not be performed backwards." << std::endl;
-}
-
 void Release::print (std::ostream& output) const
 {
   output << "Release reaction.";
@@ -87,6 +70,16 @@ void Release::update_rates (void)
 //  Public Methods - Accessors
 // ============================
 //
+bool Release::is_forward_reaction_possible (void) const
+{
+  return ((_side_reaction.is_forward_reaction_possible())
+	  && (_unit_to_release.number() > 0));
+}
+
+bool Release::is_backward_reaction_possible (void) const
+{
+  return false;
+}
 
 
 
@@ -117,18 +110,30 @@ bool Release::check_invariant (void) const
   return result;
 }
 
+// ===================
+//  Protected Methods
+// ===================
+//
+void Release::do_forward_reaction (void)
+{
+  /** @pre There must be enough reactants to perform reaction. */
+  REQUIRE (is_forward_reaction_possible());
+
+  _unit_to_release.focus_random_unit();
+  _unit_to_release.focused_unit_location().unbind_unit (_unit_to_release);
+  _unit_to_release.release();
+
+  _side_reaction.perform_forward();
+}
+
+void Release::do_backward_reaction (void)
+{
+  std::cerr << "ERROR: release reaction should not be performed backwards." << std::endl;
+}
+
+
 
 // =================
 //  Private Methods
 // =================
 //
-bool Release::is_forward_reaction_possible (void) const
-{
-  return ((_side_reaction.is_forward_reaction_possible())
-	  && (_unit_to_release.number() > 0));
-}
-
-bool Release::is_backward_reaction_possible (void) const
-{
-  return false;
-}

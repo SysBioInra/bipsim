@@ -55,70 +55,6 @@ Complexation::~Complexation (void)
 //  Public Methods - Commands
 // ===========================
 //
-void Complexation::perform_forward ( void )
-{
-  /** @pre There must be enough reactants to perform reaction. */
-  REQUIRE (is_forward_reaction_possible());
-
-  if (_bound_component == 0)
-    {
-      _component_a.remove (1);
-      _component_b.remove (1);
-      _complex.add (1);
-    }
-  else
-    {
-      BoundChemical* complex = static_cast<BoundChemical*> (&_complex);
-      BoundChemical* bound_component = 0;
-      if (_bound_component == 1)
-	{
-	  bound_component = static_cast<BoundChemical*> (&_component_a);
-	  _component_b.remove (1);
-	}
-      else 
-	{
-	  bound_component = static_cast<BoundChemical*> (&_component_b);
-	  _component_a.remove (1);
-	}
-      bound_component->focus_random_unit();
-      complex->add_unit_in_place_of (*bound_component);
-      bound_component->focused_unit_location().replace_bound_unit (*bound_component, *complex);      
-      bound_component->remove_focused_unit();
-    }
-}
-
-void Complexation::perform_backward ( void )
-{
-  /** @pre There must be enough reactants to perform reaction. */
-  REQUIRE (is_backward_reaction_possible());
-
-  if (_bound_component == 0)
-    {
-      _component_a.add (1);
-      _component_b.add (1);
-      _complex.remove (1);
-    }
-  else
-    {
-      BoundChemical* complex = static_cast<BoundChemical*> (&_complex);
-      BoundChemical* bound_component = 0;
-      if (_bound_component == 1)
-	{
-	  bound_component = static_cast<BoundChemical*> (&_component_a);
-	  _component_b.add (1);
-	}
-      else 
-	{
-	  bound_component = static_cast<BoundChemical*> (&_component_b);
-	  _component_a.add (1);
-	}
-      complex->focus_random_unit();
-      bound_component->add_unit_in_place_of (*complex);
-      complex->focused_unit_location().replace_bound_unit (*complex, *bound_component);      
-      complex->remove_focused_unit();
-    }
-}
-
 void Complexation::print (std::ostream& output) const
 {
   output << "Complexation reaction.";
@@ -181,11 +117,78 @@ bool Complexation::check_invariant (void) const
 }
 
 
+// ===================
+//  Protected Methods
+// ===================
+//
+void Complexation::do_forward_reaction ( void )
+{
+  /** @pre There must be enough reactants to perform reaction. */
+  REQUIRE (is_forward_reaction_possible());
+
+  if (_bound_component == 0)
+    {
+      _component_a.remove (1);
+      _component_b.remove (1);
+      _complex.add (1);
+    }
+  else
+    {
+      BoundChemical* complex = static_cast<BoundChemical*> (&_complex);
+      BoundChemical* bound_component = 0;
+      if (_bound_component == 1)
+	{
+	  bound_component = static_cast<BoundChemical*> (&_component_a);
+	  _component_b.remove (1);
+	}
+      else 
+	{
+	  bound_component = static_cast<BoundChemical*> (&_component_b);
+	  _component_a.remove (1);
+	}
+      bound_component->focus_random_unit();
+      complex->add_unit_in_place_of (*bound_component);
+      bound_component->focused_unit_location().replace_bound_unit (*bound_component, *complex);      
+      bound_component->remove_focused_unit();
+    }
+}
+
+void Complexation::do_backward_reaction ( void )
+{
+  /** @pre There must be enough reactants to perform reaction. */
+  REQUIRE (is_backward_reaction_possible());
+
+  if (_bound_component == 0)
+    {
+      _component_a.add (1);
+      _component_b.add (1);
+      _complex.remove (1);
+    }
+  else
+    {
+      BoundChemical* complex = static_cast<BoundChemical*> (&_complex);
+      BoundChemical* bound_component = 0;
+      if (_bound_component == 1)
+	{
+	  bound_component = static_cast<BoundChemical*> (&_component_a);
+	  _component_b.add (1);
+	}
+      else 
+	{
+	  bound_component = static_cast<BoundChemical*> (&_component_b);
+	  _component_a.add (1);
+	}
+      complex->focus_random_unit();
+      bound_component->add_unit_in_place_of (*complex);
+      complex->focused_unit_location().replace_bound_unit (*complex, *bound_component);      
+      complex->remove_focused_unit();
+    }
+}
+
 // =================
 //  Private Methods
 // =================
 //
-
 void Complexation::look_for_bound_components (void)
 {
   _bound_component = 0;

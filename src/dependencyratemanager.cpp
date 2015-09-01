@@ -21,6 +21,8 @@
 //
 #include "dependencyratemanager.h"
 #include "reactant.h"
+#include "reaction.h"
+#include "concentrationobserver.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -61,12 +63,11 @@ void DependencyRateManager::update_rates (void)
   compute_total_rate();
 }
 
-void DependencyRateManager::update (Reactant* reactant)
+void DependencyRateManager::update (const std::list<int>& reactions_to_update)
 {
-  // just append reactions to update in update list
-  std::list <int>& reactions_to_add = _reactant_to_reactions [reactant];
-  for (std::list <int>::iterator reaction_it = reactions_to_add.begin();
-       reaction_it != reactions_to_add.end(); ++reaction_it)
+  // just mark reactions to update in update table
+  for (std::list <int>::const_iterator reaction_it = reactions_to_update.begin();
+       reaction_it != reactions_to_update.end(); ++reaction_it)
     {
       _reactions_to_update [*reaction_it] = true;
     }
@@ -123,7 +124,9 @@ bool DependencyRateManager::check_invariant (void) const
 //
 void DependencyRateManager::create_dependencies (void)
 {
-  // loop through reactions and create dependency map
+  // loop through reactions and create a dependency map
+  std::map <Reactant*, std::list<int> > reactant_to_reactions;
+
   for (int i = 0; i < reactions().size(); ++i)
     {
       const std::list <Reactant*>& reactants = reactions() [i]->reactants();
@@ -131,27 +134,25 @@ void DependencyRateManager::create_dependencies (void)
 	   reactant_it != reactants.end(); ++reactant_it)
 	{
 	  // add the Reactant* -> reaction index dependency
-	  _reactant_to_reactions [*reactant_it].push_back (i);
+	  reactant_to_reactions [*reactant_it].push_back (i);
 	}
     }
 
-  // subscribe to reactants
-  for (std::map <Reactant*, std::list<int> >::iterator reactant_it = _reactant_to_reactions.begin();
-       reactant_it != _reactant_to_reactions.end(); ++reactant_it)
+  // subscribe to reactants by creating concentration observers
+  for (std::map <Reactant*, std::list<int> >::iterator reactant_it = reactant_to_reactions.begin();
+       reactant_it != reactant_to_reactions.end(); ++reactant_it)
     {
-      (reactant_it->first)->attach (*this);
+      _concentration_observers.push_back (new ConcentrationObserver (*this, reactant_it->first, reactant_it->second));
     }
 }
 
 void DependencyRateManager::clear_dependencies (void)
 {
-  // first unsubscribe reactant notifications
-  for (std::map <Reactant*, std::list<int> >::iterator reactant_it = _reactant_to_reactions.begin();
-       reactant_it != _reactant_to_reactions.end(); ++reactant_it)
+  // unsubscribe reactant notifications by deleting observers
+  for (std::list<ConcentrationObserver*>::iterator obs_it = _concentration_observers.begin();
+       obs_it != _concentration_observers.end(); ++obs_it)
     {
-      (reactant_it->first)->detach (*this);
+      delete *obs_it;
     }
-
-  // clear map
-  _reactant_to_reactions.clear();
+  _concentration_observers.clear();
 }

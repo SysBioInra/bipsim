@@ -25,6 +25,7 @@
 #include "dependencygraph.h"
 #include "cellstate.h"
 #include "naiveratemanager.h"
+#include "graphratemanager.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -34,7 +35,9 @@ NaiveSolver::NaiveSolver (double initial_time, CellState& cell_state)
   : Solver (initial_time, cell_state)
   , _rate_manager (0)
 {
-  _rate_manager = new DependencyRateManager (reactions());
+  _rate_manager = new GraphRateManager (reactions(), dependency_graph());
+  // _rate_manager = new DependencyRateManager (reactions());
+  // _rate_manager = new NaiveRateManager (reactions());
 }
 
 // Not needed for this class (use of default copy constructor) !

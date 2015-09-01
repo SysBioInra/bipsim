@@ -26,6 +26,7 @@
 //
 #include "forwarddeclarations.h"
 #include "ratemanager.h"
+#include "reaction.h"
 #include "macros.h" // REQUIRE
 
 /**
@@ -67,11 +68,12 @@ class ReactionGroup
   //
   /**
    * @brief Perform next scheduled reaction and schedule following reaction.
+   * @return true if reaction was actually performed, false if there were not enough reactants.
    *
    * This function is pure virtual, schedule is in fact specified
    * by classes inheriting from ReactionGroup.
    */
-  virtual void perform_next_reaction (void) = 0;
+  virtual bool perform_next_reaction (void) = 0;
    
 
   // ============================
@@ -87,7 +89,7 @@ class ReactionGroup
    * ReactionGroup. If there is no scheduled reaction because it is beyond
    * the group's time scope, it should return ReactionGroup::OVERTIME.
    */
-  double next_reaction_time (void);
+  double next_reaction_time (void) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -146,6 +148,16 @@ protected:
    */
   void perform_reaction (int rate_index);
 
+  /**
+   * @brief Check whether there are enough reactants available for reaction with a specific rate index.
+   * @param rate_index The index should typically be specified according to a rate value
+   *  that has been drawn in the _rates vector, NOT the reaction index in the _reactions vector.
+   *  Because forward rate and backward rate are stored separately, the rate index specifies both
+   *  the reaction to perform and the sense of reaction.
+   * @return true if there are enough reactants.
+   */
+  bool is_reaction_possible (int rate_index);
+
 private:
 
   // ============
@@ -170,9 +182,45 @@ private:
 //  Inline declarations
 // ======================
 //
-inline double ReactionGroup::next_reaction_time (void)
+inline double ReactionGroup::next_reaction_time (void) const
 {
   return _next_reaction_time;
+}
+
+inline void ReactionGroup::perform_reaction (int rate_index)
+{
+  // compute next reaction to perform
+  Reaction& reaction = *_reactions [rate_index/2];
+  
+  // perform reaction
+  if ( (rate_index % 2) == 0 )
+    {
+      /** @pre There must be enough reactants to perform reaction. */
+      REQUIRE (reaction.is_forward_reaction_possible());
+      reaction.perform_forward();
+    }
+  else
+    {
+      // see above
+      REQUIRE (reaction.is_backward_reaction_possible());
+      reaction.perform_backward();
+    }
+}
+
+inline bool ReactionGroup::is_reaction_possible (int rate_index)
+{
+  // find reaction to perform
+  Reaction& reaction = *_reactions [rate_index/2];
+  
+  // compute reactant availability
+  if ( (rate_index % 2) == 0 )
+    {
+      return reaction.is_forward_reaction_possible();
+    }
+  else
+    {
+      return reaction.is_backward_reaction_possible();
+    }
 }
 
 #endif // REACTION_GROUP_H

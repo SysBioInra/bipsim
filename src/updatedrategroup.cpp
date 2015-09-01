@@ -46,7 +46,7 @@ UpdatedRateGroup::~UpdatedRateGroup (void)
 // ===========================
 //
 
-void UpdatedRateGroup::perform_next_reaction (void)
+bool UpdatedRateGroup::perform_next_reaction (void)
 {
   // perform next scheduled reaction
   int random_index = RandomHandler::instance().draw_index (_rate_manager.rates());   // draw reaction index randomly
@@ -54,6 +54,8 @@ void UpdatedRateGroup::perform_next_reaction (void)
 
   // schedule next reaction
   reschedule_next_reaction (_next_reaction_time);
+
+  return true;
 }
 
 

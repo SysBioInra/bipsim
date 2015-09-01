@@ -12,7 +12,8 @@ simulator_SOURCES = \
 	main.cpp macros.h forwarddeclarations.h \
 	biasedwheel.cpp biasedwheel.h \
 	identifiedlist.cpp identifiedlist.h \
-	randomhandler.cpp randomhandler.h
+	randomhandler.cpp randomhandler.h \
+	observable.h
 
 # reaction sources
 simulator_SOURCES += \
@@ -68,7 +69,10 @@ simulator_SOURCES += \
 simulator_SOURCES += \
 	ratemanager.cpp ratemanager.h \
 	naiveratemanager.cpp naiveratemanager.h \
-	dependencyratemanager.cpp dependencyratemanager.h
+	dependencyratemanager.cpp dependencyratemanager.h \
+	graphratemanager.cpp graphratemanager.h \
+	concentrationobserver.cpp concentrationobserver.h \
+	reactionobserver.cpp reactionobserver.h
 
 
 ###############################################################################

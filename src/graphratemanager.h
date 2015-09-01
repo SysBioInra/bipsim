@@ -1,8 +1,8 @@
 
 
 /**
- * @file dependencyratemanager.h
- * @brief Header for the DependencyRateManager class.
+ * @file graphratemanager.h
+ * @brief Header for the GraphRateManager class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -10,8 +10,8 @@
 
 // Multiple include protection
 //
-#ifndef DEPENDENCY_RATE_MANAGER_H
-#define DEPENDENCY_RATE_MANAGER_H
+#ifndef GRAPH_RATE_MANAGER_H
+#define GRAPH_RATE_MANAGER_H
 
 // ==================
 //  General Includes
@@ -19,7 +19,8 @@
 //
 #include <vector> // std::vector
 #include <map> // std::map
-#include <list> //std::list
+#include <list> // std::list
+#include <set> // std::set
 
 // ==================
 //  Project Includes
@@ -31,14 +32,14 @@
 /**
  * @brief Class handling updates of reaction rates by using dependencies between reactions and reactants.
  *
- * DependencyRateManager inherits and implements the interface provided by RateManager.
- * It handles its updating task by a dependency approach: it stores a map that links a reactant to all
+ * GraphRateManager inherits and implements the interface provided by RateManager.
+ * It handles its updating task by a graph approach: it stores a map that links a reactant to all
  * reactions that depend on it, enabling to update only those reactions which rate might have been changed.
  * It acts as an observer: it attaches itself to all reactants it knows and receives updates when concentrations
  * change. All rates that may have changed are stored in a set until user asks to update rates.
  * @sa RateManager
  */
-class DependencyRateManager : public RateManager
+class GraphRateManager : public RateManager
 {
  public:
 
@@ -49,19 +50,20 @@ class DependencyRateManager : public RateManager
   /**
    * @brief Default constructor.
    * @param reactions Vector of reactions whose rates need to be stored and updated.
+   * @param dependency_graph Global dependencies between reactions.
    */
-  DependencyRateManager (const std::vector <Reaction*>& reactions);
+  GraphRateManager (const std::vector <Reaction*>& reactions, const DependencyGraph& dependency_graph);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
   //  * @brief Copy constructor.
   //  */
-  // DependencyRateManager ( const DependencyRateManager& other_dependency_rate_manager );
+  // GraphRateManager ( const GraphRateManager& other_graph_rate_manager );
 
   /**
    * @brief Destructor.
    */
-  virtual ~DependencyRateManager (void);
+  virtual ~GraphRateManager (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -70,8 +72,8 @@ class DependencyRateManager : public RateManager
   /**
    * @brief Update rates according to current chemical levels.
    *
-   * This manager uses a dependency approach. Using an observer architecture, it receives
-   * updates about concentration changes and stores reactions whose rates may have changed.
+   * This manager uses a graph approach. Using an observer architecture, it receives
+   * updates about reaction occuring and stores reactions whose rates may have changed.
    * When prompted to update, it recomputes these rates.
    */
   virtual void update_rates (void);
@@ -79,13 +81,14 @@ class DependencyRateManager : public RateManager
   /**
    * @brief [Re]set the vector of reactions handled by the class.
    * @param reactions Vector of reactions whose rates need to be stored and updated.   
+   * @param dependency_graph Global dependencies between reactions.
    */
-  virtual void manage (const std::vector <Reaction*>& reactions);
+  virtual void manage (const std::vector <Reaction*>& reactions, const DependencyGraph& dependency_graph);
 
   /**
    * @brief Notify a change in concentration levels and update list of rates to recompute.
    * @param reactions_to_update Indices of the reactions that need to be updated. This function
-   *  is intended to be called by a ConcentrationObserver.
+   *  is intended to be called by a ReactionObserver.
    */
   void update (const std::list<int>& reactions_to_update);
 
@@ -108,7 +111,7 @@ class DependencyRateManager : public RateManager
   // /*
   //  * @brief Assignment operator.
   //  */
-  // DependencyRateManager& operator= ( const DependencyRateManager& other_dependency_rate_manager );
+  // GraphRateManager& operator= ( const GraphRateManager& other_graph_rate_manager );
 
   // ==================================
   //  Public Methods - Class invariant
@@ -133,23 +136,35 @@ private:
   std::vector <bool> _reactions_to_update;
 
   /**
-   * @brief List of observers used to monitor concentration changes.
+   * @brief List of observers used to monitor reaction occurring.
    */
-  std::list <ConcentrationObserver*> _concentration_observers;
+  std::list <ReactionObserver*> _reaction_observers;
 
   // =================
   //  Private Methods
   // =================
   //
   /**
-   * @brief Create dependency map from the list of reactions and subscribe for notfication by reactants.
+   * @brief Create reaction observers to receive notifications about reaction occuring.
+   * @param dependency_graph Global dependencies between reactions.
    */
-  void create_dependencies (void);
+  void create_observers (const DependencyGraph& dependency_graph);
 
   /**
-   * @brief Clear dependency map and unsubscribe reactant notifications.
+   * @brief Clear all reaction observers.
    */
-  void clear_dependencies (void);
+  void clear_observers (void);
+
+  /**
+   * @brief Convert list of reaction pointers to list of integers.
+   * @return List of integers corresponding to reactions found in the map. If reactions
+   *  are not found in the map, they are ignored, so that the list returned can be 
+   *  shorter than the initial list of reaction pointers.
+   * @param reaction_to_index Map enabling to convert reaction pointers to integers.
+   * @param reactions Set of reactions to convert to integers.
+   */
+  std::list<int> convert_to_indices (const std::map <Reaction*, int>& reaction_to_index, const std::set <Reaction*>& reactions);
+  
 
   // ======================
   //  Forbidden Operations
@@ -163,4 +178,4 @@ private:
 // ======================
 //
 
-#endif // DEPENDENCY_RATE_MANAGER_H
+#endif // GRAPH_RATE_MANAGER_H

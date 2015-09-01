@@ -13,6 +13,7 @@
 #include <vector> // std::vector
 #include <iostream> // std::cerr
 #include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
+#include <cmath> // fabs
 
 #include "../src/biasedwheel.h"
 
@@ -73,6 +74,8 @@ int main (int argc, char *argv[])
     BiasedWheel<int> bw (test);
     if (bw.cumulated_weights() != expected_result)
       FAILURE ("Accumulation of the weight vector incorrect.");    
+    if (bw.total_weight() != 10)
+      FAILURE ("Accumulation of the weight vector incorrect.");    
   }
 
   // constructor should accumulate and strip values of the vector
@@ -89,6 +92,24 @@ int main (int argc, char *argv[])
     BiasedWheel<int> bw (test);
     if (bw.cumulated_weights() != expected_result)
       FAILURE ("Accumulation+stripping of the weight vector incorrect.");    
+    if (bw.total_weight() != 5)
+      FAILURE ("Accumulation of the weight vector incorrect.");    
+  }
+
+  // constructor should accumulate and strip values of the vector
+  // test vector [ 0 1 0 1 0 1 0 1 0 1 ]
+  // expected result [ 1 2 3 4 5 ]
+  {
+    std::vector<double> test (10, 0);
+    std::vector<double> expected_result (5, 0);
+    for (int i = 0; i < 5; ++i)
+      {
+	test [2*i+1] = 1;
+	expected_result[i] = i+1;
+      }
+    BiasedWheel<double> bw (test);
+    if (fabs (bw.total_weight() - 5.0) > 1e-15 )
+      FAILURE ("Accumulation of the weight vector incorrect.");    
   }
 
   // find index should be able to find the only positive weight index as long as weight parameter is valid

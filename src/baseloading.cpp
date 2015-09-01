@@ -49,32 +49,6 @@ BaseLoading::~BaseLoading (void)
 //  Public Methods - Commands
 // ===========================
 //
-void BaseLoading::perform_forward (void)
-{
-  /** @pre There must be enough reactants to perform reaction. */
-  REQUIRE (is_forward_reaction_possible());
-
-  // Choose one of the base loaders randomly
-  _base_loader.focus_random_unit_from_loading_rates();
-  
-  // Load the element corresponding to its target template
-  _base_loader.focused_base_to_load().remove (1);
-  // currently the base just disappears into thin air. It will show up eventually
-  // when the elongated chemical is released so let us say it does virtually exist :)
-  
-  // Update the base loader status to occupied
-  BoundChemical& occupied_loader = _base_loader.focused_occupied_state ();
-  occupied_loader.add_unit_in_place_of (_base_loader);
-  _base_loader.focused_unit_location().replace_bound_unit (_base_loader, occupied_loader);      
-  _base_loader.remove_focused_unit();
-}
-
-void BaseLoading::perform_backward( void )
-{
-  std::cerr << "ERROR: There is no backward reaction to base loading defined currently." << std::endl;
-}
-
-
 void BaseLoading::print (std::ostream& output) const
 {
   output << "BaseLoading reaction.";
@@ -137,6 +111,36 @@ bool BaseLoading::check_invariant (void) const
 {
   bool result = Reaction::check_invariant();
   return result;
+}
+
+
+// ===================
+//  Protected Methods
+// ===================
+//
+void BaseLoading::do_forward_reaction (void)
+{
+  /** @pre There must be enough reactants to perform reaction. */
+  REQUIRE (is_forward_reaction_possible());
+
+  // Choose one of the base loaders randomly
+  _base_loader.focus_random_unit_from_loading_rates();
+  
+  // Load the element corresponding to its target template
+  _base_loader.focused_base_to_load().remove (1);
+  // currently the base just disappears into thin air. It will show up eventually
+  // when the elongated chemical is released so let us say it does virtually exist :)
+  
+  // Update the base loader status to occupied
+  BoundChemical& occupied_loader = _base_loader.focused_occupied_state ();
+  occupied_loader.add_unit_in_place_of (_base_loader);
+  _base_loader.focused_unit_location().replace_bound_unit (_base_loader, occupied_loader);      
+  _base_loader.remove_focused_unit();
+}
+
+void BaseLoading::do_backward_reaction (void)
+{
+  std::cerr << "ERROR: There is no backward reaction to base loading defined currently." << std::endl;
 }
 
 

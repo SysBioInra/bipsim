@@ -17,8 +17,9 @@
 //  General Includes
 // ==================
 //
-#include <vector> // std::vector
+#include <map> // std::map
 #include <set> // std::set
+#include <list> // std::list
 
 // ==================
 //  Project Includes
@@ -49,7 +50,7 @@ class DependencyGraph
    * Dependencies are built from the reaction vector once and for all during object
    * construction.
    */
-  DependencyGraph (const std::vector<Reaction*> reactions);
+  DependencyGraph (const std::list<Reaction*>& reactions);
 
   /**
    * @brief Destructor
@@ -66,11 +67,17 @@ class DependencyGraph
   // ============================
   //
   /**
-   * @brief Get reaction indices to update given last reaction that occurred.
-   * @param last_reaction Index of the last reaction that occured.
-   * @return Set of indices of the reactions that need to be updated.
+   * @brief Get reactions to update given last reaction that occurred.
+   * @param reaction_occurring Pointer to the last reaction that occured.
+   * @return Set of pointers of the reactions that need to be updated.
    */
-  const std::set<int>& reactions_to_update (int last_reaction) const;
+  const std::set<Reaction*>& reactions_to_update (Reaction* reaction_occurring) const;
+
+  /** 
+   * @brief Accessor to the reactions used to create the dependency graph.
+   * @return List of reactions used to create the dependency graph.
+   */
+  const std::list<Reaction*>& reactions (void) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -100,8 +107,11 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief Vector that stores dependency between reactions. */
-  std::vector< std::set<int> > _dependencies;
+  /** @brief Vector that stores dependencies between reactions. */
+  std::map< Reaction*, std::set<Reaction*> > _dependencies;
+
+  /** @brief Reactions used to create the dependency graph. */
+  std::list <Reaction*> _reactions;  
 
 
   // =================
@@ -131,13 +141,16 @@ private:
 // ======================
 //
 
-inline const std::set<int>& DependencyGraph::reactions_to_update (int last_reaction_index) const
+inline const std::set<Reaction*>& DependencyGraph::reactions_to_update (Reaction* reaction_occurring) const
 {
-  /** @pre last_reaction_index must be nonnegative. */
-  REQUIRE (last_reaction_index >= 0); 
-  /** @pre last_reaction_index must be smaller than _dependencies size. */
-  REQUIRE (last_reaction_index < _dependencies.size()); 
-  return _dependencies[last_reaction_index];
+  /** @pre Reaction must be known. */
+  REQUIRE (_dependencies.find (reaction_occurring) != _dependencies.end()); 
+  return _dependencies.find(reaction_occurring)->second;
+}
+
+inline const std::list<Reaction*>& DependencyGraph::reactions (void) const
+{
+  return _reactions;
 }
 
 #endif // DEPENDENCY_GRAPH_H

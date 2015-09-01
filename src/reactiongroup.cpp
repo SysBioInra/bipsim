@@ -79,32 +79,11 @@ bool ReactionGroup::check_invariant (void) const
 }
 
 
-// =================
+// ===================
 //  Protected Methods
-// =================
+// ===================
 //
 
-void ReactionGroup::perform_reaction (int rate_index)
-{
-  // compute next reaction to perform
-  Reaction& reaction = *_reactions [rate_index/2];
-  
-  // perform reaction
-  if ( (rate_index % 2) == 0 )
-    {
-      if (reaction.is_forward_reaction_possible())
-	{
-	  reaction.perform_forward();
-	}
-    }
-  else
-    {
-      if (reaction.is_backward_reaction_possible())
-	{
-	  reaction.perform_backward();
-	}
-    }
-}
 
 // =================
 //  Private Methods

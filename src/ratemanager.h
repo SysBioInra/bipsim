@@ -24,7 +24,6 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "reaction.h"
 
 /**
  * @brief Abstract class for handling updates of reaction rates.
@@ -185,10 +184,24 @@ class RateManager
 
 };
 
+// ==================
+//  Inline Includes
+// ==================
+//
+#include "reaction.h"
+
 // ======================
 //  Inline declarations
 // ======================
 //
+inline void RateManager::update_reaction (int reaction_index)
+{
+  Reaction* reaction_to_update = _reactions [reaction_index];
+  reaction_to_update->update_rates();
+  _rates [2*reaction_index] = reaction_to_update->forward_rate();
+  _rates [2*reaction_index+1] = reaction_to_update->backward_rate();
+}
+
 inline const std::vector <double>& RateManager::rates (void) const
 {
   return _rates;
@@ -204,12 +217,5 @@ inline double RateManager::total_rate (void) const
   return _total_rate;
 }
 
-inline void RateManager::update_reaction (int reaction_index)
-{
-  Reaction* reaction_to_update = _reactions [reaction_index];
-  reaction_to_update->update_rates();
-  _rates [2*reaction_index] = reaction_to_update->forward_rate();
-  _rates [2*reaction_index+1] = reaction_to_update->backward_rate();
-}
 
 #endif // RATE_MANAGER_H

@@ -13,8 +13,6 @@
 // ==================
 //
 #include <iostream>
-#include <map> // std::map
-#include <list> // std::list
 
 // ==================
 //  Project Includes
@@ -27,10 +25,10 @@
 //  Constructors/Destructors
 // ==========================
 //
-DependencyGraph::DependencyGraph (const std::vector< Reaction* > reactions)
-  : _dependencies (reactions.size())
+DependencyGraph::DependencyGraph (const std::list <Reaction*>& reactions)
+  : _reactions (reactions)
 {
-  // we build the dependencies in three steps
+  // we build the dependencies in two steps
 
   // STEP 1: the reaction vector provides us with a link from reactions to 
   // reactants (reaction->reactants). However, we are also interested in
@@ -38,58 +36,53 @@ DependencyGraph::DependencyGraph (const std::vector< Reaction* > reactions)
   // yields this relationship.
 
   // Map that stores the list of reactions in which a reactant is involved
-  std::map< const Reactant*, std::list<int> > reactant_to_reactions;
+  std::map< const Reactant*, std::list<Reaction*> > reactant_to_reactions;
 
   // loop through reaction
-  int number_reactions = reactions.size();
-  for (int i = 0; i < number_reactions; ++i)
+  for (std::list <Reaction*>::iterator reaction_it = _reactions.begin();
+       reaction_it != _reactions.end(); ++reaction_it)
     {
       // gather reactants
-      const std::list<Reactant*>& reactants = reactions[i]->reactants();
+      const std::list<Reactant*>& reactants = (*reaction_it)->reactants();
 
       // loop through reactants
       for (std::list<Reactant*>::const_iterator component = reactants.begin();
 	   component != reactants.end(); component++)
 	{
 	  // store component to reaction relationship
-	  reactant_to_reactions [*component].push_back (i);
+	  reactant_to_reactions [*component].push_back (*reaction_it);
 	}
     }
 
   // STEP 2: now we have the two following relationships
-  // - reaction[_index] -> list<component>
-  // - component -> list<reaction_index>
+  // - reaction -> list<component>
+  // - component -> list<reactions>
   // so we can easily define our dependency vector giving
-  //   reaction_index -> list<reaction_index>
+  //   reaction -> list<reactions>
 
   // loop through reactions again
-  for (int i = 0; i < number_reactions; ++i)
+  for (std::list <Reaction*>::iterator reaction_it = _reactions.begin();
+       reaction_it != _reactions.end(); ++reaction_it)
     {
-      // gather reactants of reaction i
-      const std::list<Reactant*>& reactants = reactions[i]->reactants();
+      // gather reactants of reaction
+      const std::list<Reactant*>& reactants = (*reaction_it)->reactants();
 
       // loop through reactants
       for (std::list<Reactant*>::const_iterator component = reactants.begin();
 	   component != reactants.end(); component++)
 	{
-	  // gather reaction indices the component is involved in
-	  const std::list<int>& reaction_indices = reactant_to_reactions [*component];
+	  // gather reactions the component is involved in
+	  const std::list <Reaction*>& impacted_reactions = reactant_to_reactions [*component];
 
-	  // loop through reaction indices and store them in the dependency vector
-	  for (std::list<int>::const_iterator reaction = reaction_indices.begin();
-	       reaction != reaction_indices.end(); ++reaction)
-	    {
-	      _dependencies[i].insert (*reaction);
-	    }
+	  // insert them in dependencies map
+	  _dependencies [*reaction_it].insert (impacted_reactions.begin(), impacted_reactions.end());
 	}
     }
 
-  // NOTE that _dependencies uses sets to store indices so we need not worry about
+  // NOTE that _dependencies uses sets to store reactions so we need not worry about
   // duplicates...
 }
 
-// Not needed for this class (use of default copy constructor) !
-// DependencyGraph::DependencyGraph ( const DependencyGraph& other_dependency_graph );
 
 DependencyGraph::~DependencyGraph (void)
 {
@@ -117,8 +110,6 @@ DependencyGraph::~DependencyGraph (void)
 //  Public Methods - Operator overloading
 // =======================================
 //
-// Not needed for this class (use of default overloading) !
-// DependencyGraph& DependencyGraph::operator= ( const DependencyGraph& other_dependency_graph );
 
 // ==================================
 //  Public Methods - Class invariant

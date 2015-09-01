@@ -93,66 +93,6 @@ ChemicalReaction::~ChemicalReaction (void)
 //  Public Methods - Commands
 // ===========================
 //
-void ChemicalReaction::perform_forward (void)
-{
-  /** @pre There must be enough components left to perform the reaction. */
-  REQUIRE (is_forward_reaction_possible() == true);
-  
-  // update free chemical numbers
-  for (int i = 0; i < _bound_reactant_index; i++)
-    {
-      int variation = _stoichiometry[i];
-      if ( variation > 0 )
-	{
-	  _component_vector[i]->add (variation);
-	}
-      else
-	{
-	  _component_vector[i]->remove (-variation);
-	}
-    }
-
-  // update bound chemical number (if applicable)
-  if (_bound_reactant_index < _number_components)
-    {
-      BoundChemical* product = static_cast<BoundChemical*> (_component_vector[_bound_product_index]);
-      BoundChemical* reactant = static_cast<BoundChemical*> (_component_vector[_bound_reactant_index]);
-      reactant->focus_random_unit();
-      product->add_unit_in_place_of (*reactant);
-      reactant->focused_unit_location().replace_bound_unit (*reactant, *product);      
-      reactant->remove_focused_unit();
-    }
-}
-
-void ChemicalReaction::perform_backward (void)
-{
-  /** @pre There must be enough components left to perform the reaction. */
-  REQUIRE( is_backward_reaction_possible() == true );
-  
-  for (int i = 0; i < _number_components; i++)
-    {
-      int variation = _stoichiometry[i];
-      if ( variation > 0 )
-	{
-	  _component_vector[i]->remove (variation);
-	}
-      else
-	{
-	  _component_vector[i]->add (-variation);
-	}
-    }
-
-  // update bound chemical number (if applicable)
-  if (_bound_reactant_index < _number_components)
-    {
-      BoundChemical* product = static_cast<BoundChemical*> (_component_vector[_bound_product_index]);
-      BoundChemical* reactant = static_cast<BoundChemical*> (_component_vector[_bound_reactant_index]);
-      product->focus_random_unit ();
-      reactant->add_unit_in_place_of (*reactant);
-      product->focused_unit_location().replace_bound_unit (*product, *reactant);      
-      product->remove_focused_unit();
-    }
-}
 
 void ChemicalReaction::print (std::ostream& output) const
 {
@@ -207,6 +147,23 @@ void ChemicalReaction::update_rates (void)
 //  Public Methods - Accessors
 // ============================
 //
+bool ChemicalReaction::is_forward_reaction_possible (void) const
+{
+  for (int i = 0; i < _number_components; i++)
+    {
+      if (_component_vector[i]->number() < -_stoichiometry[i]) return false;
+    }
+  return true;
+}
+
+bool ChemicalReaction::is_backward_reaction_possible (void) const
+{
+  for (int i = 0; i < _number_components; i++)
+    {
+      if (_component_vector[i]->number() < _stoichiometry[i]) return false;
+    }
+  return true;
+}
 
 
 
@@ -238,28 +195,76 @@ bool ChemicalReaction::check_invariant (void) const
 }
 
 
+// ===================
+//  Protected Methods
+// ===================
+//
+void ChemicalReaction::do_forward_reaction (void)
+{
+  /** @pre There must be enough components left to perform the reaction. */
+  REQUIRE (is_forward_reaction_possible() == true);
+  
+  // update free chemical numbers
+  for (int i = 0; i < _bound_reactant_index; i++)
+    {
+      int variation = _stoichiometry[i];
+      if ( variation > 0 )
+	{
+	  _component_vector[i]->add (variation);
+	}
+      else
+	{
+	  _component_vector[i]->remove (-variation);
+	}
+    }
+
+  // update bound chemical number (if applicable)
+  if (_bound_reactant_index < _number_components)
+    {
+      BoundChemical* product = static_cast<BoundChemical*> (_component_vector[_bound_product_index]);
+      BoundChemical* reactant = static_cast<BoundChemical*> (_component_vector[_bound_reactant_index]);
+      reactant->focus_random_unit();
+      product->add_unit_in_place_of (*reactant);
+      reactant->focused_unit_location().replace_bound_unit (*reactant, *product);      
+      reactant->remove_focused_unit();
+    }
+}
+
+void ChemicalReaction::do_backward_reaction (void)
+{
+  /** @pre There must be enough components left to perform the reaction. */
+  REQUIRE( is_backward_reaction_possible() == true );
+  
+  for (int i = 0; i < _number_components; i++)
+    {
+      int variation = _stoichiometry[i];
+      if ( variation > 0 )
+	{
+	  _component_vector[i]->remove (variation);
+	}
+      else
+	{
+	  _component_vector[i]->add (-variation);
+	}
+    }
+
+  // update bound chemical number (if applicable)
+  if (_bound_reactant_index < _number_components)
+    {
+      BoundChemical* product = static_cast<BoundChemical*> (_component_vector[_bound_product_index]);
+      BoundChemical* reactant = static_cast<BoundChemical*> (_component_vector[_bound_reactant_index]);
+      product->focus_random_unit ();
+      reactant->add_unit_in_place_of (*reactant);
+      product->focused_unit_location().replace_bound_unit (*product, *reactant);      
+      product->remove_focused_unit();
+    }
+}
+
+
 // =================
 //  Private Methods
 // =================
 //
-bool ChemicalReaction::is_forward_reaction_possible (void) const
-{
-  for (int i = 0; i < _number_components; i++)
-    {
-      if (_component_vector[i]->number() < -_stoichiometry[i]) return false;
-    }
-  return true;
-}
-
-bool ChemicalReaction::is_backward_reaction_possible (void) const
-{
-  for (int i = 0; i < _number_components; i++)
-    {
-      if (_component_vector[i]->number() < _stoichiometry[i]) return false;
-    }
-  return true;
-}
-
 void ChemicalReaction::compute_bound_component_indices ( void )
 {
   _bound_product_index = _number_components;

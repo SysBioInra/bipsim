@@ -75,7 +75,7 @@ void BindingSiteFamily::update (int site_index, int number_available_sites)
   if (_total_rate_contribution < 0) { compute_total_rate_contribution(); }
 
   // notify change to rate managers
-  notify_concentration_change();
+  notify_change();
 }
 
 

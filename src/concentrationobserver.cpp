@@ -1,8 +1,8 @@
 
 
 /**
- * @file ratemanager.cpp
- * @brief Implementation of the RateManager class.
+ * @file concentrationobserver.cpp
+ * @brief Implementation of the ConcentrationObserver class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -13,46 +13,38 @@
 // ==================
 //
 #include <iostream>
-#include <numeric> // std::accumulate
 
 // ==================
 //  Project Includes
 // ==================
 //
-#include "ratemanager.h"
+#include "concentrationobserver.h"
+#include "reactant.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-RateManager::RateManager (const std::vector <Reaction*>& reactions)
-  : _reactions (reactions)
-  , _rates (2*reactions.size(), 0)
-  , _total_rate (0)
+ConcentrationObserver::ConcentrationObserver (DependencyRateManager& parent, Reactant* reactant_to_observe, const std::list<int>& message)
+  : _parent (parent)
+  , _reactant (reactant_to_observe)
+  , _message (message)
 {
-  compute_all_rates();
+  _reactant->attach (*this);
 }
 
 // Not needed for this class (use of default copy constructor) !
-// RateManager::RateManager ( const RateManager& other_rate_manager );
+// ConcentrationObserver::ConcentrationObserver ( const ConcentrationObserver& other_concentration_observer );
 
-RateManager::~RateManager (void)
+ConcentrationObserver::~ConcentrationObserver (void)
 {
+  _reactant->detach (*this);
 }
 
 // ===========================
 //  Public Methods - Commands
 // ===========================
 //
-void RateManager::manage (const std::vector <Reaction*>& reactions)
-{
-  _reactions = reactions;
-
-  // one forwarde rate + one backward rate for each reaction
-  _rates.resize (2*reactions.size(),0);
-
-  compute_all_rates();
-}
 
 
 // ============================
@@ -72,7 +64,7 @@ void RateManager::manage (const std::vector <Reaction*>& reactions)
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// RateManager& RateManager::operator= ( const RateManager& other_rate_manager );
+// ConcentrationObserver& ConcentrationObserver::operator= ( const ConcentrationObserver& other_concentration_observer );
 
 // ==================================
 //  Public Methods - Class invariant
@@ -82,7 +74,7 @@ void RateManager::manage (const std::vector <Reaction*>& reactions)
  * Checks all the conditions that must remain true troughout the life cycle of
  * every object.
  */
-bool RateManager::check_invariant (void) const
+bool ConcentrationObserver::check_invariant (void) const
 {
   bool result = true;
   return result;
@@ -93,16 +85,3 @@ bool RateManager::check_invariant (void) const
 //  Private Methods
 // =================
 //
-void RateManager::compute_all_rates (void)
-{
-  for (int i = 0; i < _reactions.size(); ++i)
-    {
-      update_reaction (i);
-    }
-}
-
-void RateManager::compute_total_rate (void)
-{
-  // accumulate (start, end, initial value)
-  _total_rate = std::accumulate (_rates.begin(), _rates.end(), 0);
-}

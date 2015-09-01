@@ -18,12 +18,15 @@
 // ==================
 //
 #include <list> // std::list
+#include <set> // std::set
 
 // ==================
 //  Project Includes
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "observable.h"
+#include "reactionobserver.h"
 
 /**
  * @brief Abstract class that represent all possible reactions. 
@@ -31,7 +34,7 @@
  * All reactions that happen in the cell inherit this class. It can be used to
  * access reaction rates and perform reactions.
  */
-class Reaction
+class Reaction : public Observable<ReactionObserver>
 {
 public:
 
@@ -62,17 +65,17 @@ public:
   /**
    * @brief Update chemical quantities according to the forward reaction.
    */
-  virtual void perform_forward ( void ) = 0;
+  void perform_forward (void);
 
   /**
    * @brief Update chemical quantities according to the backward reaction.
    */
-  virtual void perform_backward ( void ) = 0;
+  void perform_backward (void);
 
   /**
    * @brief Update reaction rates.
    */
-  virtual void update_rates ( void ) = 0;
+  virtual void update_rates (void) = 0;
 
   /**
    * @brief Print class content.
@@ -169,11 +172,19 @@ protected:
   /** @brief Rectants taking part in the reaction. */
   std::list< Reactant* > _reactants;
 
-  // =================
-  //  Private Methods
-  // =================
+  // ===================
+  //  Protected Methods
+  // ===================
   //
+  /**
+   * @brief Update chemical quantities according to the forward reaction.
+   */
+  virtual void do_forward_reaction (void) = 0;
 
+  /**
+   * @brief Update chemical quantities according to the backward reaction.
+   */
+  virtual void do_backward_reaction (void) = 0;
 };
 
 // ======================
@@ -193,6 +204,18 @@ inline double Reaction::backward_rate ( void ) const
 inline const std::list<Reactant*>& Reaction::reactants ( void ) const
 {
   return _reactants;
+}
+
+inline void Reaction::perform_forward (void)
+{
+  do_forward_reaction();
+  notify_change();
+}
+
+inline void Reaction::perform_backward (void)
+{
+  do_backward_reaction();  
+  notify_change();
 }
 
 

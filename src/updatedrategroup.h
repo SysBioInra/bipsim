@@ -71,8 +71,9 @@ class UpdatedRateGroup : public ReactionGroup
   //
   /**
    * @brief Perform next scheduled reaction and schedule following reaction.
+   * @return true if reaction was actually performed, false if there were not enough reactants.
    */
-  virtual void perform_next_reaction (void);
+  virtual bool perform_next_reaction (void);
 
   /**
    * @brief Recompute rates and reschedule next reaction.

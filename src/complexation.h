@@ -66,16 +66,6 @@ public:
   // =========================== 
   //
   /**
-   * @brief Update chemical quantities according to the forward reaction.
-   */
-  virtual void perform_forward ( void );
-
-  /**
-   * @brief Update chemical quantities according to the backward reaction.
-   */
-  virtual void perform_backward ( void );
-
-  /**
    * @brief Print class content.
    * @param output Stream where output should be written.
    */
@@ -131,8 +121,23 @@ public:
    */
   bool check_invariant (void) const;
 
+ protected:
+  // ===================
+  //  Protected Methods
+  // ===================
+  //
+  /**
+   * @brief Update chemical quantities according to the forward reaction.
+   */
+  virtual void do_forward_reaction (void);
+  
+  /**
+   * @brief Update chemical quantities according to the backward reaction.
+   */
+  virtual void do_backward_reaction (void);
+  
 
-private:
+ private:
 
   // ============
   //  Attributes
