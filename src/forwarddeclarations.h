@@ -18,6 +18,7 @@
 template <typename T> class BiasedWheel;
 class IdentifiedList;
 class RandomHandler;
+class ChemicalLogger;
 
 // reaction classes
 class BaseLoading;
@@ -49,6 +50,7 @@ class BindingSiteHandler;
 class ChemicalHandler;
 class Parser;
 class ReactionHandler;
+class Simulation;
 class SiteHandler;
 class TableHandler;
 class TerminationSiteHandler;

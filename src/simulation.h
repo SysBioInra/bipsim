@@ -1,8 +1,8 @@
 
 
 /**
- * @file observable.h
- * @brief Header for the Observable class.
+ * @file simulation.h
+ * @brief Header for the Simulation class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -10,14 +10,14 @@
 
 // Multiple include protection
 //
-#ifndef OBSERVABLE_H
-#define OBSERVABLE_H
+#ifndef SIMULATION_H
+#define SIMULATION_H
 
 // ==================
 //  General Includes
 // ==================
 //
-#include <set> // std::set
+
 
 // ==================
 //  Project Includes
@@ -26,15 +26,12 @@
 #include "forwarddeclarations.h"
 
 /**
- * @brief Generic class that accept observers and sends them notifications.
+ * @brief Class that creates and handles the whole simulation.
  *
- * Observable<T> accepts observers of type T and sends them notifications
- * via their update() function. Children can use the notify_change() function
- * to trigger the notification system.
+ * Simulation is the main object in the simulator. It reads configuration parameters
+ * and then creates every object needed.
  */
-
-template <class T>
-class Observable
+class Simulation
 {
  public:
 
@@ -44,41 +41,30 @@ class Observable
   //
   /**
    * @brief Default constructor.
+   * @param filename File containing reactions to read.
    */
-  Observable (void) {}
+  Simulation (const char* filename);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
   //  * @brief Copy constructor.
   //  */
-  // Observable ( const Observable& other_observable );
+  // Simulation ( const Simulation& other_simulation );
 
   /**
    * @brief Destructor.
    */
-  virtual ~Observable (void) {}
+  ~Simulation (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
   /**
-   * @brief Attach a DependencyRateManager for notification when concentration changes.
-   * @param observer Observer to add to observer list.
+   * @brief Run simulator for given amount of time.
+   * @param time_interval Time for which simulation must be run.
    */
-  void attach (T& observer)
-  {
-    _observers.insert (&observer);
-  }
-
-  /**
-   * @brief Detach a previously added RateManager from observer list.
-   * @param observer Observer to remove from observer list.
-   */
-  void detach (T& observer)
-  {
-    _observers.erase (&observer);
-  }
+  void run (double time_interval);
 
   // ============================
   //  Public Methods - Accessors
@@ -100,7 +86,7 @@ class Observable
   // /*
   //  * @brief Assignment operator.
   //  */
-  // Observable& operator= ( const Observable& other_observable );
+  // Simulation& operator= ( const Simulation& other_simulation );
 
   // ==================================
   //  Public Methods - Class invariant
@@ -110,36 +96,26 @@ class Observable
    * @brief Check class invariant.
    * @return True if class invariant is preserved.
    */
-  virtual bool check_invariant (void) const {return true;}
-
- protected:
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-  /**
-   * @brief Notify all observers that concentration has changed.
-   */
-  void notify_change (void)
-  {
-    for (typename std::set <T*>::iterator obs_it = _observers.begin();
-	 obs_it != _observers.end(); obs_it++)
-      {
-	(*obs_it)->update();
-      }
-  }
+  bool check_invariant (void) const;
 
 
- private:
+private:
 
   // ============
   //  Attributes
   // ============
   //
-  /**
-   * @brief List of observers to notify when concentration changes.
-   */
-  std::set <T*> _observers;
+  /** @brief Simulation time. */
+  double _t;
+
+  /** @brief Global cell state. */
+  CellState* _cell_state;
+
+  /** @brief Solver used to integrate system. */
+  Solver* _solver;
+
+  /** @brief Logger used to write to file. */
+  ChemicalLogger* _logger;
 
   // =================
   //  Private Methods
@@ -158,4 +134,4 @@ class Observable
 // ======================
 //
 
-#endif // OBSERVABLE_H
+#endif // SIMULATION_H

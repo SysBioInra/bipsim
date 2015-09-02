@@ -1,8 +1,8 @@
 
 
 /**
- * @file reactionobserver.h
- * @brief Header for the ReactionObserver class.
+ * @file chemicallogger.h
+ * @brief Header for the ChemicalLogger class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -10,14 +10,16 @@
 
 // Multiple include protection
 //
-#ifndef REACTION_OBSERVER_H
-#define REACTION_OBSERVER_H
+#ifndef CHEMICAL_LOGGER_H
+#define CHEMICAL_LOGGER_H
 
 // ==================
 //  General Includes
 // ==================
 //
+#include <fstream> // std::ofstream
 #include <list> // std::list
+#include <string> // std::string
 
 // ==================
 //  Project Includes
@@ -26,14 +28,14 @@
 #include "forwarddeclarations.h"
 
 /**
- * @brief Class observing reactions and noticing parents when a reaction occurs.
+ * @brief Class that logs chemical concentrations into a file.
  *
- * ReactionObserver uses an observer pattern to receive notifications from reactions
- * when they are performed and sends an update() command to its RateManager parent, passing along
- * a user-defined message, i.e. identifiers of the reactions to update in the rate manager.
- * @sa Reaction
+ * ChemicalLogger opens an output file and writes all concentration levels
+ * to that file when asked to. Names and chemicals to write are read from 
+ * a chemical handler at construction, the list does not change afterwards.
+ * User can choose whether an existing file should be overwritten or not.
  */
-class ReactionObserver
+class ChemicalLogger
 {
  public:
 
@@ -43,34 +45,34 @@ class ReactionObserver
   //
   /**
    * @brief Default constructor.
-   * @param parent Reference to the rate manager to warn when a change occurs.
-   * @param reaction_to_observe Reference to the reaction to observe.
-   * @param message Identifiers used by the rate manager to determine what it needs to do.
+   * @param filename File where output should be written.
+   * @param chemicals Chemicals whose concentrations must be logged.
+   * @param names Name of the chemicals (used for writing header).
+   * @param overwrite True if existing file should be overwritten (true by default).
+   *
    */
-  ReactionObserver (GraphRateManager& parent, Reaction* reaction_to_observe, const std::list<int>& message);
+  ChemicalLogger (const char* filename, const std::list <const Chemical*>& chemicals, const std::list <std::string>& names, bool overwrite = true);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
   //  * @brief Copy constructor.
   //  */
-  // ReactionObserver ( const ReactionObserver& other_reaction_observer );
+  // ChemicalLogger ( const ChemicalLogger& other_chemical_logger );
 
   /**
    * @brief Destructor.
    */
-  ~ReactionObserver (void);    
+  ~ChemicalLogger (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
   /**
-   * @brief Called to warn about reaction changed.
-   *
-   * The call is simply redirected to the parent along with a reference of the reaction that changed.
+   * @brief Log current concentration levels.
+   * @param simulation_time Current simulation time.
    */
-  void update (void);  
-
+  void log (double simulation_time);
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -91,7 +93,7 @@ class ReactionObserver
   // /*
   //  * @brief Assignment operator.
   //  */
-  // ReactionObserver& operator= (const ReactionObserver& other_reaction_observer);
+  // ChemicalLogger& operator= ( const ChemicalLogger& other_chemical_logger );
 
   // ==================================
   //  Public Methods - Class invariant
@@ -103,25 +105,32 @@ class ReactionObserver
    */
   bool check_invariant (void) const;
 
+
 private:
 
   // ============
   //  Attributes
   // ============
   //
-  /** @brief Parent to warn when reaction changes. */
-  GraphRateManager& _parent;
+  /** @brief File where output is written. */
+  std::ofstream _output;
 
-  /** @brief Reaction to observe. */
-  Reaction* _reaction;
-  
-  /** @brief Message to pass along with reaction change notifications. */
-  std::list<int> _message;
-
+  /** @brief Chemicals to log. */
+  std::list <const Chemical*> _chemicals;
+      
   // =================
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Write a header to outupt file.
+   * @param names Names to write in the header.
+   *
+   * Header starts with simulation time then lists all chemicals in
+   * tab separated fields.
+   */
+  void write_header (const std::list <std::string>& names);
+
 
   // ======================
   //  Forbidden Operations
@@ -130,14 +139,9 @@ private:
 
 };
 
-// =================
-//  Inline Includes
-// =================
-//
-
 // ======================
 //  Inline declarations
 // ======================
 //
 
-#endif // REACTION_OBSERVER_H
+#endif // CHEMICAL_LOGGER_H

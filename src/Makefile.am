@@ -13,7 +13,8 @@ simulator_SOURCES = \
 	biasedwheel.cpp biasedwheel.h \
 	identifiedlist.cpp identifiedlist.h \
 	randomhandler.cpp randomhandler.h \
-	observable.h
+	observable.h \
+	chemicallogger.cpp chemicallogger.h
 
 # reaction sources
 simulator_SOURCES += \
@@ -48,6 +49,7 @@ simulator_SOURCES += \
 	chemicalhandler.cpp chemicalhandler.h \
 	parser.cpp parser.h \
 	reactionhandler.cpp reactionhandler.h \
+	simulation.cpp simulation.h \
 	sitehandler.cpp sitehandler.h \
 	tablehandler.cpp tablehandler.h \
 	terminationsitehandler.cpp terminationsitehandler.h

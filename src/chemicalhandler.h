@@ -155,6 +155,11 @@ public:
    */
   Chemical& last_reference_created (void) const;
 
+  /**
+   * @brief Accessor to existing identifiers.
+   * @return Identifiers that have been created so far.
+   */
+  std::list<int> existing_identifiers (void) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -206,7 +211,7 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief List of identifiers attributes to chemicals. */
+  /** @brief List of identifiers attributed to chemicals. */
   IdentifiedList _identifiers;
 
   /** @brief Map of chemical references. */
@@ -266,6 +271,17 @@ inline int ChemicalHandler::last_id_created (void) const
 inline Chemical& ChemicalHandler::last_reference_created (void) const
 {
   return *_last_reference;
+}
+
+inline std::list <int> ChemicalHandler::existing_identifiers (void) const
+{
+  std::list <int> result;
+  for (std::map <int, Chemical*>::const_iterator map_it = _references.begin();
+       map_it != _references.end(); ++map_it)
+    {
+      result.push_back (map_it->first);
+    }
+  return result;
 }
 
 

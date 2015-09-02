@@ -94,7 +94,12 @@ class CellState
    */
   const Chemical& chemical (const std::string& name) const;
 
-
+  /**
+   * @brief Return chemical handler.
+   * @return Chemical handler.
+   */
+  const ChemicalHandler& chemical_handler (void) const;
+  
 
   // ==========================
   //  Public Methods - Setters
@@ -174,6 +179,11 @@ inline const Chemical& CellState::chemical (const std::string& name) const
 inline void CellState::print_chemicals (std::ostream& output) const
 {
   output << _chemical_handler;
+}
+
+inline const ChemicalHandler& CellState::chemical_handler (void) const
+{
+  return _chemical_handler;
 }
 
 #endif // CELL_STATE_H

@@ -5,6 +5,7 @@
  * @authors Marc Dinh, Stephan Fischer
  */
 
+// #define CLASSIFICATION
 
 // ==================
 //  General Includes
@@ -19,16 +20,12 @@
 //  Project Includes
 // ==================
 //
-#include "cellstate.h"
-#include "chemical.h"
-#include "naivesolver.h"
-#include "manualdispatchsolver.h"
-#include "reactionclassification.h"
+#include "simulation.h"
 
 /**
  * @brief Program initiation.
  *
- * DETAILED DESCRIPTION OF PROGRAM
+ * Initialize simulatior and run.
  */
 int main (int argc, char *argv[])
 { 
@@ -49,35 +46,6 @@ int main (int argc, char *argv[])
       	}
     }
 
-
-  // read cell state from file
-  CellState cell_state ("../data/test_input.txt");
-
-  // solve system
-  // #define CLASSIFICATION
-#ifdef CLASSIFICATION
-  ReactionClassification classification;
-  int class_id = classification.create_new_class (0.0001);
-  // int class_id = classification.create_new_class (ReactionClassification::ALWAYS_UPDATED);
-  classification.add_reaction_list_to_class (class_id, cell_state.reaction_list());
-  ManualDispatchSolver solver (0, cell_state, classification);
-#else
-  NaiveSolver solver (0, cell_state);
-#endif
-
-  std::cout << "Solving from t = 0 to t = " << simulation_time << "..." << std::endl;
-  while (solver.time() < simulation_time)
-    {
-      solver.go_to_next_reaction();
-      // std::cout << "Next reaction (t=" << solver.time() << ")" << std::endl;
-      // cell_state.print_chemicals;
-      // std::cin.get();
-    }
-
-  std::ofstream output ("output.txt");
-  //std::ostream& output = std::cout;
-  const Chemical& protein = cell_state.chemical ("protein");
-  cell_state.print_chemicals (output);
-  output << "Proteins: " << protein << std::endl;
-  output << solver.number_reactions_performed() << " reactions occurred." << std::endl;
+  Simulation sim ("../data/test_input.txt");
+  sim.run (simulation_time);
 }
