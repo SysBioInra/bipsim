@@ -5,8 +5,6 @@
  * @authors Marc Dinh, Stephan Fischer
  */
 
-// #define CLASSIFICATION
-
 // ==================
 //  General Includes
 // ==================

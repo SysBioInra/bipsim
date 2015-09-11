@@ -18,15 +18,12 @@
 // ==================
 //
 #include <vector> // std::vector
-#include <limits> // std::numeric_limits
 
 // ==================
 //  Project Includes
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "ratemanager.h"
-#include "reaction.h"
 #include "macros.h" // REQUIRE
 
 /**
@@ -182,6 +179,9 @@ private:
 //  Inline declarations
 // ======================
 //
+#include "ratemanager.h"
+#include "reaction.h"
+
 inline double ReactionGroup::next_reaction_time (void) const
 {
   return _next_reaction_time;

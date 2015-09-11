@@ -11,12 +11,22 @@ AM_INIT_AUTOMAKE
 # check if the source folder is correct
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
 
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
 
 # Checks for libraries.
+# Boost
+AC_ARG_ENABLE([boost],
+	[ --enable-boost	enable use of boost libraries],
+	[boost=${enableval}], [boost=yes])
+AM_CONDITIONAL([HAVE_BOOST], [test "x${boost}" = xyes])
+AM_COND_IF([HAVE_BOOST],
+	   [AX_BOOST_BASE([1.41],[],[AC_MSG_ERROR([Boost was not found in your system, consider configuring without boost functionalities.])])])
+
+AM_COND_IF([HAVE_BOOST],[AX_BOOST_SERIALIZATION])
 
 # Checks for header files.
 AC_HEADER_STDC

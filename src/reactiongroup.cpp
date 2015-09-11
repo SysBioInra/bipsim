@@ -13,6 +13,7 @@
 // ==================
 //
 #include <iostream>
+#include <limits> // std::numeric_limits
 
 // ==================
 //  Project Includes

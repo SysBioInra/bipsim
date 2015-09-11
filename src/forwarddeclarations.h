@@ -19,6 +19,9 @@ template <typename T> class BiasedWheel;
 class IdentifiedList;
 class RandomHandler;
 class ChemicalLogger;
+#ifdef HAVE_BOOST_SERIALIZATION
+namespace boost { namespace serialization { class access; }}
+#endif // HAVE_BOOST_SERIALIZATION
 
 // reaction classes
 class BaseLoading;
@@ -48,12 +51,20 @@ class SiteAvailability;
 // parser and handler classes
 class BindingSiteHandler;
 class ChemicalHandler;
+class EventHandler;
+class EventParser;
 class Parser;
 class ReactionHandler;
 class Simulation;
 class SiteHandler;
 class TableHandler;
 class TerminationSiteHandler;
+
+// event classes
+class AddEvent;
+class Event;
+class RemoveEvent;
+class SetEvent;
 
 // solver classes
 class CellState;

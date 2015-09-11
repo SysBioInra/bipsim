@@ -25,6 +25,9 @@
 #include "manualdispatchsolver.h"
 #include "reactionclassification.h"
 #include "chemicallogger.h"
+#include "eventhandler.h"
+
+// #define CLASSIFICATION
 
 // ==========================
 //  Constructors/Destructors
@@ -34,15 +37,15 @@ Simulation::Simulation (const char* filename)
  : _t (0)
 {
   // read cell state from file
-  _cell_state = new CellState ("../data/test_input.txt");
+  _cell_state = new CellState ("../input/translation.in");
 
   // create solver
 #ifdef CLASSIFICATION
   ReactionClassification classification;
-  int class_id = classification.create_new_class (0.0001);
+  int class_id = classification.create_new_class (0.001);
   // int class_id = classification.create_new_class (ReactionClassification::ALWAYS_UPDATED);
   classification.add_reaction_list_to_class (class_id, _cell_state->reaction_list());
-  _solver = new ManualDispatchSolver (_t, _cell_state, classification);
+  _solver = new ManualDispatchSolver (_t, *_cell_state, classification);
 #else
   _solver = new NaiveSolver (_t, *_cell_state);
 #endif
@@ -56,7 +59,10 @@ Simulation::Simulation (const char* filename)
       chemical_refs.push_back (&(_cell_state->chemical_handler().reference (*id_it)));
       chemical_names.push_back (_cell_state->chemical_handler().name (*id_it));
     }
-  _logger = new ChemicalLogger ("concentrations.txt", chemical_refs, chemical_names);
+  _logger = new ChemicalLogger ("../output/translation.txt", chemical_refs, chemical_names);
+
+  // read events
+  _event_handler = new EventHandler ("../input/events.in", _cell_state->chemical_handler());
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -75,15 +81,38 @@ Simulation::~Simulation (void)
 //
 void Simulation::run (double time_interval)
 {
-  double final_time = _t + time_interval;
+  double final_time = _solver->time() + time_interval;
   std::cout << "Solving from t = " << _t << " to t = " << final_time << "..." << std::endl;
-  while (_solver->time() < final_time)
+
+  double next_event_time = _event_handler->next_event_time();
+  while (next_event_time < _solver->time())
     {
+      _event_handler->ignore_event();
+      next_event_time = _event_handler->next_event_time();
+    }
+
+  // run until next event
+  while (final_time > next_event_time)
+    {
+      while (_solver->time() < next_event_time)
+	{
+	  if ((_solver->number_reactions_performed() % 10000) == 0) { _logger->log (_solver->time()); }
+	  _solver->go_to_next_reaction(); 
+	}
+      // perform event(s)
+      while (next_event_time <= _solver->time())
+	{
+	  _event_handler->perform_event();
+	  next_event_time = _event_handler->next_event_time();	  
+	}
+    }
+  // no event left: run until final time
+  while (_solver->time() < final_time)
+    {      
       if ((_solver->number_reactions_performed() % 10000) == 0) { _logger->log (_solver->time()); }
-      
       _solver->go_to_next_reaction();
     }
-  
+
   std::cout << _solver->number_reactions_performed() << " reactions occurred." << std::endl;
 }
 

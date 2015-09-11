@@ -18,6 +18,9 @@
 // ==================
 //
 #include <set> // std::set
+#ifdef HAVE_BOOST_SERIALIZATION
+#include <boost/serialization/set.hpp>
+#endif // HAVE_BOOST_SERIALIZATION
 
 // ==================
 //  Project Includes
@@ -151,6 +154,18 @@ class Observable
   // ======================
   //
 
+#ifdef HAVE_BOOST_SERIALIZATION
+  // ===============
+  //  Serialization
+  // ===============
+  friend class boost::serialization::access;
+
+  template<class Archive>
+    void serialize (Archive& ar, const unsigned int version)
+  {
+    ar & _observers;
+  }
+#endif // HAVE_BOOST_SERIALIZATION
 };
 
 // ======================

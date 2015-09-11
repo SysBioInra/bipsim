@@ -201,7 +201,8 @@ private:
    *  (e.g. sorted_indices(v)[0] yields the index of smallest value in v).
    */
   std::vector<int> sorted_indices (const std::vector<T>& vector_to_sort);
-    // ======================
+  
+  // ======================
   //  Forbidden Operations
   // ======================
   //

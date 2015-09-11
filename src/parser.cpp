@@ -12,10 +12,10 @@
 //  General Includes
 // ==================
 //
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
+#include <iostream> // std::cout
+#include <fstream> // std::ifstream
+#include <sstream> // std::istringstream
+#include <string> // std::string
 
 // ==================
 //  Project Includes

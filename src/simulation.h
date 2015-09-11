@@ -117,6 +117,9 @@ private:
   /** @brief Logger used to write to file. */
   ChemicalLogger* _logger;
 
+  /** @brief Handler reading and performing user-defined events. */
+  EventHandler* _event_handler;
+
   // =================
   //  Private Methods
   // =================

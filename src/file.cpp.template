@@ -12,7 +12,7 @@
 //  General Includes
 // ==================
 //
-#include <iostream>
+#include <iostream> // std::cout
 
 // ==================
 //  Project Includes
@@ -29,7 +29,7 @@ ClassName::ClassName (void)
 }
 
 // Not needed for this class (use of default copy constructor) !
-// ClassName::ClassName ( const ClassName& other_class_name );
+// ClassName::ClassName (const ClassName& other_class_name);
 
 ClassName::~ClassName (void)
 {
@@ -58,21 +58,7 @@ ClassName::~ClassName (void)
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// ClassName& ClassName::operator= ( const ClassName& other_class_name );
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool ClassName::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
+// ClassName& ClassName::operator= (const ClassName& other_class_name);
 
 
 // =================

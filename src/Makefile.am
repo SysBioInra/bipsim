@@ -6,6 +6,9 @@
 # the program to build (the names of the final binaries)
 bin_PROGRAMS = simulator
 
+AM_CPPFLAGS = $(BOOST_CPPFLAGS)
+AM_LDFLAGS = $(BOOST_LDFLAGS)
+ 
 # list of sources for the 'simulator' binary
 # main file and utility files
 simulator_SOURCES = \
@@ -47,12 +50,21 @@ simulator_SOURCES += \
 simulator_SOURCES += \
 	bindingsitehandler.cpp bindingsitehandler.h \
 	chemicalhandler.cpp chemicalhandler.h \
+	eventhandler.cpp eventhandler.h \
+	eventparser.cpp eventparser.h \
 	parser.cpp parser.h \
 	reactionhandler.cpp reactionhandler.h \
 	simulation.cpp simulation.h \
 	sitehandler.cpp sitehandler.h \
 	tablehandler.cpp tablehandler.h \
 	terminationsitehandler.cpp terminationsitehandler.h
+
+# event sources
+simulator_SOURCES += \
+	addevent.cpp addevent.h \
+	event.cpp event.h \
+	removeevent.cpp removeevent.h \
+	setevent.cpp setevent.h
 
 # solver sources
 simulator_SOURCES += \

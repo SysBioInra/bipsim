@@ -247,13 +247,13 @@ inline std::string ChemicalHandler::name (int chemical_id) const
 inline Chemical& ChemicalHandler::reference (int chemical_id) const
 {
   std::map< int, Chemical* >::const_iterator ref = _references.find ( chemical_id );
-  REQUIRE( ref != _references.end() ); /** @pre chemical_id is already defined */
+  REQUIRE (ref != _references.end()); /** @pre chemical_id is already defined */
   return *(ref->second);
 }
 
 inline Chemical& ChemicalHandler::reference (const std::string& chemical_name) const
 {
-  REQUIRE( exists (chemical_name) ); /** @pre Chemical name is already known. */
+  REQUIRE (exists (chemical_name)); /** @pre Chemical name is already known. */
   return reference (id (chemical_name));
 }
 

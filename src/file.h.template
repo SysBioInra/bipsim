@@ -19,9 +19,9 @@
 //
 
 
-// ==================
-//  Project Includes
-// ==================
+// ======================
+//  Forward declarations
+// ======================
 //
 #include "forwarddeclarations.h"
 
@@ -47,12 +47,12 @@ class ClassName
   // /*
   //  * @brief Copy constructor.
   //  */
-  // ClassName ( const ClassName& other_class_name );
+  // ClassName (const ClassName& other_class_name);
 
   /**
    * @brief Destructor.
    */
-  virtual ~ClassName (void);
+  ~ClassName (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -80,17 +80,18 @@ class ClassName
   // /*
   //  * @brief Assignment operator.
   //  */
-  // ClassName& operator= ( const ClassName& other_class_name );
+  // ClassName& operator= (const ClassName& other_class_name);
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
+protected:
+  // ======================
+  //  Protected Attributes
+  // ======================
   //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved.
-   */
-  virtual bool check_invariant (void) const;
+
+  // ===================
+  //  Protected Methods
+  // ===================
+  //
 
 
 private:
