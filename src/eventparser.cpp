@@ -80,21 +80,21 @@ Event* EventParser::create_next_event (void)
 	      else
 		{
 		  std::cerr << "Warning: unrecognized event tag on line " << _line << "\n"
-			    << line << "n"
+			    << line << "\n"
 			    << "in event file, event ignored\n";	      		  
 		}
 	    }
 	  else
 	    {
 	      std::cerr << "Warning: unrecognized chemical on line " << _line << "\n"
-			<< line << "n"
+			<< line << "\n"
 			<< "in event file, event ignored\n";	      
 	    }
 	}
       else // parsing failed
 	{
 	  std::cerr << "Warning: unrecognized event on line " << _line << "\n"
-		    << line << "n"
+		    << line << "\n"
 		    << "in event file, line ignored\n";
 	}
     }

@@ -84,6 +84,14 @@ class RandomHandler
   int draw_uniform ( int a, int b );
 
   /**
+   * @brief Draw a value uniformly from a real interval [a,b].
+   * @return Random value in interval [a,b].
+   * @param a First value of the interval.
+   * @param b Last value of the interval.
+   */ 
+  double draw_uniform (double a, double b);
+
+  /**
    * @brief Draw a real value from an exponential distribution with paramter lambda.
    * @return Random non-negative double.
    * @param lambda Parameter of the exponential distribution.

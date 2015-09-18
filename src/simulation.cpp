@@ -27,7 +27,7 @@
 #include "chemicallogger.h"
 #include "eventhandler.h"
 
-// #define CLASSIFICATION
+#define CLASSIFICATION
 
 // ==========================
 //  Constructors/Destructors
@@ -73,6 +73,7 @@ Simulation::~Simulation (void)
   delete _logger;
   delete _solver;
   delete _cell_state;
+  delete _event_handler;
 }
 
 // ===========================
@@ -81,6 +82,8 @@ Simulation::~Simulation (void)
 //
 void Simulation::run (double time_interval)
 {
+  int log_step = 10000;
+
   double final_time = _solver->time() + time_interval;
   std::cout << "Solving from t = " << _t << " to t = " << final_time << "..." << std::endl;
 
@@ -96,7 +99,7 @@ void Simulation::run (double time_interval)
     {
       while (_solver->time() < next_event_time)
 	{
-	  if ((_solver->number_reactions_performed() % 10000) == 0) { _logger->log (_solver->time()); }
+	  if ((_solver->number_reactions_performed() % log_step) == 0) { _logger->log (_solver->time()); }
 	  _solver->go_to_next_reaction(); 
 	}
       // perform event(s)
@@ -109,7 +112,7 @@ void Simulation::run (double time_interval)
   // no event left: run until final time
   while (_solver->time() < final_time)
     {      
-      if ((_solver->number_reactions_performed() % 10000) == 0) { _logger->log (_solver->time()); }
+      if ((_solver->number_reactions_performed() % log_step) == 0) { _logger->log (_solver->time()); }
       _solver->go_to_next_reaction();
     }
 

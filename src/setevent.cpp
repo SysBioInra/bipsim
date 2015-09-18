@@ -29,7 +29,7 @@ SetEvent::SetEvent (double time, Chemical& target, int quantity)
   : Event (time, target)
   , _quantity (quantity)
 {
-  REQUIRE (quantity > 0); /** @pre Quantity must be strictly positive. */
+  REQUIRE (quantity >= 0); /** @pre Quantity must be positive. */
 }
 
 // Not needed for this class (use of default copy constructor) !

@@ -313,6 +313,7 @@ bool BiasedWheel<T>::check_drawn_weight_validity (const std::vector<T>& v)
     {
       if ((*weight_it <= 0) || (*weight_it > _total_weight))
 	{
+	  std::cerr << "drawn weight = " << *weight_it << ", total weight = " << _total_weight << std::endl;
 	  return false;
 	}
     }

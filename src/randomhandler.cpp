@@ -49,39 +49,39 @@ RandomHandler::~RandomHandler (void)
 //
 int RandomHandler::draw_index ( const std::vector<int>& weights )
 {
-  REQUIRE( weights.size() > 0 ); /** @pre There must be at least one item. */
+  REQUIRE (weights.size() > 0); /** @pre There must be at least one item. */
 
   // we create a biased wheel
   BiasedWheel<int> biased_wheel (weights);
 
-  REQUIRE( biased_wheel.total_weight() > 0 ); /** @pre Total weight must be strictly positive. */
+  REQUIRE (biased_wheel.total_weight() > 0); /** @pre Total weight must be strictly positive. */
   
   // we draw a number in the weight distribution
   boost::uniform_int<int> distribution (1, biased_wheel.total_weight());
-  int drawn_weight = distribution( RandomHandler::_generator );
+  int drawn_weight = distribution (RandomHandler::_generator);
   
   // we look for the corresponding index
   int result = biased_wheel.find_index (drawn_weight);
 
   /** @post The weight associated to the drawn index must be positive. */
-  ENSURE( weights[result] > 0 );
-  ENSURE( result < weights.size() );
-  ENSURE( result >= 0 );
+  ENSURE (weights[result] > 0);
+  ENSURE (result < weights.size());
+  ENSURE (result >= 0);
   return result;
 }
 
 int RandomHandler::draw_index ( const std::vector<double>& weights )
 {
-  REQUIRE( weights.size() > 0 ); /** @pre There must be at least one item. */
+  REQUIRE (weights.size() > 0); /** @pre There must be at least one item. */
 
   // we create a biased wheel
   BiasedWheel<double> biased_wheel (weights);
 
-  REQUIRE( biased_wheel.total_weight() > 0 ); /** @pre Total weight must be strictly positive. */
+  REQUIRE (biased_wheel.total_weight() > 0); /** @pre Total weight must be strictly positive. */
   
   // we draw a number in the weight distribution
-  boost::uniform_real<double> distribution (0, biased_wheel.total_weight());
-  double drawn_weight = distribution( RandomHandler::_generator );
+  boost::uniform_real<double> distribution (biased_wheel.total_weight()*1e-16, biased_wheel.total_weight());
+  double drawn_weight = distribution (RandomHandler::_generator);
 
   // we look for the corresponding index
   int result = biased_wheel.find_index (drawn_weight);
@@ -103,7 +103,7 @@ std::vector<int> RandomHandler::draw_multiple_indices ( const std::vector<double
   REQUIRE( biased_wheel.total_weight() > 0 ); /** @pre Total weight must be strictly positive. */
   
   // we draw number_indices values in the weight distribution
-  boost::uniform_real<double> distribution (0, biased_wheel.total_weight());
+  boost::uniform_real<double> distribution (biased_wheel.total_weight()*1e-16, biased_wheel.total_weight());
   std::vector<double> drawn_weights (number_indices, 0);
   for (int i = 0; i < number_indices; ++i)
     {
@@ -116,12 +116,21 @@ std::vector<int> RandomHandler::draw_multiple_indices ( const std::vector<double
   return result;
 }
 
-int RandomHandler::draw_uniform ( int a, int b )
+int RandomHandler::draw_uniform (int a, int b)
 {
   REQUIRE (a <= b); /** @pre a must be smaller or equal to b. */
 
   // we create the distribution and draw a number
   boost::uniform_int<int> distribution ( a, b );
+  return distribution( RandomHandler::_generator );
+}
+
+double RandomHandler::draw_uniform (double a, double b)
+{
+  REQUIRE (a <= b); /** @pre a must be smaller or equal to b. */
+
+  // we create the distribution and draw a number
+  boost::uniform_real<double> distribution ( a, b );
   return distribution( RandomHandler::_generator );
 }
 
@@ -145,12 +154,12 @@ int RandomHandler::draw_poisson ( double lambda )
   // boost implementation
   // TODO update boost libraries
   boost::uniform_01<double> distribution;
-  double exp_mean = exp (-lambda);
-  double product = 1;
+  double m_mean = -lambda;
+  double log_product = 0;
   for(int m = 0; ; ++m)
     {
-      product *= distribution (RandomHandler::_generator);
-      if (product <= exp_mean) { return m; }
+      log_product += log (distribution (RandomHandler::_generator));
+      if (log_product <= m_mean) { return m; }
     }
 }
 
