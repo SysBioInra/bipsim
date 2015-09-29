@@ -19,7 +19,6 @@
 // ==================
 //
 #include "chemicallogger.h"
-#include "chemicalhandler.h"
 #include "chemical.h"
 
 // ==========================

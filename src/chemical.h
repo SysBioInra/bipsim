@@ -26,6 +26,7 @@
 #include "forwarddeclarations.h"
 #include "macros.h"
 #include "reactant.h"
+#include "simulatorinput.h"
 
 /**
  * @brief Global class that contains all chemicals.
@@ -34,7 +35,7 @@
  * directly to the class Chemical, else it belongs to a class inheriting
  * Chemical.
  */
-class Chemical : public Reactant
+class Chemical : public Reactant, public SimulatorInput
 {
 public:
 

@@ -48,7 +48,7 @@ BindingSiteFamily::~BindingSiteFamily (void)
 //  Public Methods - Commands
 // ===========================
 //
-void BindingSiteFamily::add_binding_site (const BindingSite* binding_site)
+void BindingSiteFamily::add (const BindingSite* binding_site)
 {
   // store binding site
   _binding_sites.push_back (binding_site);

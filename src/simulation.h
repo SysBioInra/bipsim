@@ -24,6 +24,8 @@
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "cellstate.h"
+#include "eventhandler.h"
 
 /**
  * @brief Class that creates and handles the whole simulation.
@@ -109,7 +111,7 @@ private:
   double _t;
 
   /** @brief Global cell state. */
-  CellState* _cell_state;
+  CellState _cell_state;
 
   /** @brief Solver used to integrate system. */
   Solver* _solver;
@@ -118,7 +120,7 @@ private:
   ChemicalLogger* _logger;
 
   /** @brief Handler reading and performing user-defined events. */
-  EventHandler* _event_handler;
+  EventHandler _event_handler;
 
   // =================
   //  Private Methods

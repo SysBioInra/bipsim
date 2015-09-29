@@ -27,22 +27,17 @@
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "simulatorinput.h"
 #include "macros.h" // REQUIRE
-
-
-// ==========
-//  Typedefs
-// ==========
-//
 
 
 /**
  * @brief Table that stores base-template pairings.
  *
  * Templates are user-defined strings and bases are any chemical that can be
- * used for synthesis.
+ * used for synthesis. It inherits class SimulatorInput.
  */
-class DecodingTable
+class DecodingTable : public SimulatorInput
 {
  public:
 

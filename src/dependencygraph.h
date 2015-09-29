@@ -19,7 +19,7 @@
 //
 #include <map> // std::map
 #include <set> // std::set
-#include <list> // std::list
+#include <vector> // std::vector
 
 // ==================
 //  Project Includes
@@ -50,7 +50,7 @@ class DependencyGraph
    * Dependencies are built from the reaction vector once and for all during object
    * construction.
    */
-  DependencyGraph (const std::list<Reaction*>& reactions);
+  DependencyGraph (const std::vector<Reaction*>& reactions);
 
   /**
    * @brief Destructor
@@ -75,9 +75,9 @@ class DependencyGraph
 
   /** 
    * @brief Accessor to the reactions used to create the dependency graph.
-   * @return List of reactions used to create the dependency graph.
+   * @return Vector of reactions used to create the dependency graph.
    */
-  const std::list<Reaction*>& reactions (void) const;
+  const std::vector<Reaction*>& reactions (void) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -111,7 +111,7 @@ private:
   std::map< Reaction*, std::set<Reaction*> > _dependencies;
 
   /** @brief Reactions used to create the dependency graph. */
-  std::list <Reaction*> _reactions;  
+  std::vector <Reaction*> _reactions;  
 
 
   // =================
@@ -148,7 +148,7 @@ inline const std::set<Reaction*>& DependencyGraph::reactions_to_update (Reaction
   return _dependencies.find(reaction_occurring)->second;
 }
 
-inline const std::list<Reaction*>& DependencyGraph::reactions (void) const
+inline const std::vector<Reaction*>& DependencyGraph::reactions (void) const
 {
   return _reactions;
 }

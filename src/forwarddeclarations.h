@@ -16,7 +16,7 @@
 
 // utility classes
 template <typename T> class BiasedWheel;
-class IdentifiedList;
+template <class T> class Observable;
 class RandomHandler;
 class ChemicalLogger;
 #ifdef HAVE_BOOST_SERIALIZATION
@@ -44,21 +44,22 @@ class ChemicalSequence;
 class DecodingTable;
 class ProcessiveChemical;
 class Site;
+class SiteFamily;
 class SiteLocation;
 class SiteObserver;
 class SiteAvailability;
 
-// parser and handler classes
-class BindingSiteHandler;
-class ChemicalHandler;
+// parser, handler and factory classes
 class EventHandler;
-class EventParser;
+class EventFactory;
+class Factory;
+template <class T> class Handler;
+class InputData;
 class Parser;
-class ReactionHandler;
+class ReactionFactory;
 class Simulation;
-class SiteHandler;
-class TableHandler;
-class TerminationSiteHandler;
+class SimulatorInput;
+class UnitFactory;
 
 // event classes
 class AddEvent;
@@ -86,8 +87,7 @@ class GraphRateManager;
 class ConcentrationObserver;
 class ReactionObserver;
 
-// template classes
-template <class T> class Observable;
+// template typedefs
 /**
  * @brief Class representing any entity that can be involved in a reaction.
  *
@@ -97,6 +97,5 @@ template <class T> class Observable;
  * with a DependencyRateManager automatically whenever a change in concentration occurs.
  */
 typedef Observable<ConcentrationObserver> Reactant;
-
 
 #endif // FORWARDDECLARATIONS_H

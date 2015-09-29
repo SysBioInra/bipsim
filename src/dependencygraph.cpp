@@ -25,7 +25,7 @@
 //  Constructors/Destructors
 // ==========================
 //
-DependencyGraph::DependencyGraph (const std::list <Reaction*>& reactions)
+DependencyGraph::DependencyGraph (const std::vector <Reaction*>& reactions)
   : _reactions (reactions)
 {
   // we build the dependencies in two steps
@@ -35,11 +35,11 @@ DependencyGraph::DependencyGraph (const std::list <Reaction*>& reactions)
   // the reverse component->reactions link. We start with building a map that
   // yields this relationship.
 
-  // Map that stores the list of reactions in which a reactant is involved
+  // Map that stores the vector of reactions in which a reactant is involved
   std::map< const Reactant*, std::list<Reaction*> > reactant_to_reactions;
 
   // loop through reaction
-  for (std::list <Reaction*>::iterator reaction_it = _reactions.begin();
+  for (std::vector <Reaction*>::iterator reaction_it = _reactions.begin();
        reaction_it != _reactions.end(); ++reaction_it)
     {
       // gather reactants
@@ -61,7 +61,7 @@ DependencyGraph::DependencyGraph (const std::list <Reaction*>& reactions)
   //   reaction -> list<reactions>
 
   // loop through reactions again
-  for (std::list <Reaction*>::iterator reaction_it = _reactions.begin();
+  for (std::vector <Reaction*>::iterator reaction_it = _reactions.begin();
        reaction_it != _reactions.end(); ++reaction_it)
     {
       // gather reactants of reaction

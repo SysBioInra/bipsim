@@ -35,7 +35,7 @@
  * the contribution to binding rates of each site depending on their
  * occupation and affinity.
  */
-class BindingSiteFamily : public Reactant
+class BindingSiteFamily : public Reactant, public SimulatorInput
 {
  public:
 
@@ -67,7 +67,7 @@ class BindingSiteFamily : public Reactant
    * @brief Add a binding site to the family.
    * @param binding_site Pointer to the site to add.
    */
-  void add_binding_site (const BindingSite* binding_site);
+  void add (const BindingSite* binding_site);
 
   /**
    * @brief Update contributions given that a binding site availability has changed.

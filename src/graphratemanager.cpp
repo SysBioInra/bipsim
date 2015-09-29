@@ -129,8 +129,8 @@ void GraphRateManager::create_observers (const DependencyGraph& dependency_graph
   for (int i = 0; i < reactions().size(); ++i) { reaction_to_index [reactions() [i]] = i; }
 
   // loop through all reactions (not only those managed by the rate manager)
-  const std::list<Reaction*> all_reactions = dependency_graph.reactions();
-  for (std::list <Reaction*>::const_iterator reaction_it = all_reactions.begin();
+  const std::vector<Reaction*>& all_reactions = dependency_graph.reactions();
+  for (std::vector <Reaction*>::const_iterator reaction_it = all_reactions.begin();
        reaction_it != all_reactions.end(); ++reaction_it)
     {
       // see what reactions are impacted by current reaction under focus

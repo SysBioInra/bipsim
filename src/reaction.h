@@ -27,6 +27,7 @@
 #include "forwarddeclarations.h"
 #include "observable.h"
 #include "reactionobserver.h"
+#include "simulatorinput.h"
 
 /**
  * @brief Abstract class that represent all possible reactions. 
@@ -34,7 +35,7 @@
  * All reactions that happen in the cell inherit this class. It can be used to
  * access reaction rates and perform reactions.
  */
-class Reaction : public Observable<ReactionObserver>
+class Reaction : public Observable<ReactionObserver>, public SimulatorInput
 {
 public:
 

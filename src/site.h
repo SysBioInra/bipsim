@@ -23,6 +23,7 @@
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "simulatorinput.h"
 #include "macros.h"
 
 /**
@@ -32,7 +33,7 @@
  * belongs to a family of sites (e.g. Ribosome Binding Site) but also
  * has a specific location along a specific chemical sequence.
  */
-class Site
+class Site : public SimulatorInput
 {
 public:
 

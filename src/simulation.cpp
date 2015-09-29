@@ -26,8 +26,10 @@
 #include "reactionclassification.h"
 #include "chemicallogger.h"
 #include "eventhandler.h"
+#include "inputdata.h"
+#include "parser.h"
 
-#define CLASSIFICATION
+// #define CLASSIFICATION
 
 // ==========================
 //  Constructors/Destructors
@@ -36,33 +38,37 @@
 Simulation::Simulation (const char* filename)
  : _t (0)
 {
-  // read cell state from file
-  _cell_state = new CellState ("../input/translation.in");
+  // read input files and create units, reactions and events
+  std::list<std::string> input_files;
+  input_files.push_back ("../input/translation.in");
+  input_files.push_back ("../input/events.in");
+  InputData input_data (input_files);
+  Parser parser (_cell_state, _event_handler);
+  parser.parse (input_data);
+  input_data.write_warnings (std::cerr);
 
   // create solver
 #ifdef CLASSIFICATION
   ReactionClassification classification;
   int class_id = classification.create_new_class (0.001);
   // int class_id = classification.create_new_class (ReactionClassification::ALWAYS_UPDATED);
-  classification.add_reaction_list_to_class (class_id, _cell_state->reaction_list());
-  _solver = new ManualDispatchSolver (_t, *_cell_state, classification);
+  classification.add_reactions_to_class (class_id, _cell_state.reactions());
+  _solver = new ManualDispatchSolver (_t, _cell_state, classification);
 #else
-  _solver = new NaiveSolver (_t, *_cell_state);
+  _solver = new NaiveSolver (_t, _cell_state);
 #endif
 
   // create logger
-  std::list <int> chemical_ids = _cell_state->chemical_handler().existing_identifiers();
-  std::list <const Chemical*> chemical_refs;
   std::list <std::string> chemical_names;
-  for (std::list<int>::iterator id_it = chemical_ids.begin(); id_it != chemical_ids.end(); ++id_it)
+  chemical_names.push_back ("protein");
+  chemical_names.push_back ("GTP");
+  std::list <const Chemical*> chemical_refs;
+  for (std::list <std::string>::iterator name_it = chemical_names.begin(); name_it != chemical_names.end(); ++name_it)
     {
-      chemical_refs.push_back (&(_cell_state->chemical_handler().reference (*id_it)));
-      chemical_names.push_back (_cell_state->chemical_handler().name (*id_it));
+      chemical_refs.push_back (_cell_state.find <Chemical> (*name_it));
     }
   _logger = new ChemicalLogger ("../output/translation.txt", chemical_refs, chemical_names);
 
-  // read events
-  _event_handler = new EventHandler ("../input/events.in", _cell_state->chemical_handler());
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -72,8 +78,6 @@ Simulation::~Simulation (void)
 {
   delete _logger;
   delete _solver;
-  delete _cell_state;
-  delete _event_handler;
 }
 
 // ===========================
@@ -87,11 +91,11 @@ void Simulation::run (double time_interval)
   double final_time = _solver->time() + time_interval;
   std::cout << "Solving from t = " << _t << " to t = " << final_time << "..." << std::endl;
 
-  double next_event_time = _event_handler->next_event_time();
+  double next_event_time = _event_handler.next_event_time();
   while (next_event_time < _solver->time())
     {
-      _event_handler->ignore_event();
-      next_event_time = _event_handler->next_event_time();
+      _event_handler.ignore_event();
+      next_event_time = _event_handler.next_event_time();
     }
 
   // run until next event
@@ -105,8 +109,8 @@ void Simulation::run (double time_interval)
       // perform event(s)
       while (next_event_time <= _solver->time())
 	{
-	  _event_handler->perform_event();
-	  next_event_time = _event_handler->next_event_time();	  
+	  _event_handler.perform_event();
+	  next_event_time = _event_handler.next_event_time();	  
 	}
     }
   // no event left: run until final time

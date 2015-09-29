@@ -85,7 +85,7 @@ class ReactionClassification
    * @param class_id Integer identifier of the class.
    * @param reactions List of reactions to add to the class.
    */
-  void add_reaction_list_to_class (int class_id, const std::list<Reaction*>& reactions);
+  void add_reactions_to_class (int class_id, const std::vector<Reaction*>& reactions);
 
   // ============================
   //  Public Methods - Accessors
@@ -218,7 +218,7 @@ inline void ReactionClassification::add_reaction_to_class (int class_id, Reactio
   get_class (class_id).push_back (&reaction);
 }
 
-inline void ReactionClassification::add_reaction_list_to_class (int class_id, const std::list<Reaction*>& reactions)
+inline void ReactionClassification::add_reactions_to_class (int class_id, const std::vector<Reaction*>& reactions)
 {
   /** @pre class_id must be within existing identifier range. */
   REQUIRE ((class_id >= 0) && (class_id < _current_size));

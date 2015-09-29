@@ -26,9 +26,9 @@
 #include "forwarddeclarations.h"
 
 /**
- * @brief Class reading and handling simulation events.
+ * @brief Class storing and handling simulation events.
  *
- * EventHandler reads and performs user-defined events such as
+ * EventHandler stores user-defined events such as
  * adding/removing a chemical at a given time.
  */
 class EventHandler
@@ -44,13 +44,13 @@ class EventHandler
    * @param event_file File containing events to perform.
    * @param chemical_handler Handler providing references to the chemicals to modify.
    */
-  EventHandler (const std::string& event_file, const ChemicalHandler& chemical_handler);
+  EventHandler (void);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
   //  * @brief Copy constructor.
   //  */
-  // EventHandler ( const EventHandler& other_event_handler );
+  // EventHandler (const EventHandler& other_event_handler);
 
   /**
    * @brief Destructor.
@@ -70,6 +70,13 @@ class EventHandler
    * @brief Ignore next scheduled event.
    */
   void ignore_event (void);
+
+  /**
+   * @brief Store new event.
+   * @param event Object created on the heap that should be managed and destroyed
+   *  by EventHandler;
+   */
+  void store (Event* event);
 
   // ============================
   //  Public Methods - Accessors
@@ -98,15 +105,6 @@ class EventHandler
   //  */
   // EventHandler& operator= ( const EventHandler& other_event_handler );
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved.
-   */
-  bool check_invariant (void) const;
 
   // ==================
   //  Public Constants
@@ -174,6 +172,11 @@ inline double EventHandler::next_event_time (void)
     { return NO_EVENT_LEFT; }
   else 
     { return (*_current_event)->time(); }
+}
+
+inline void EventHandler::store (Event* event)
+{
+  insert_event (event);
 }
 
 #endif // EVENT_HANDLER_H

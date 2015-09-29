@@ -11,11 +11,11 @@ data = load_concentrations (paste (data_dir, "translation.txt", sep = ""));
 #ref = load_concentrations (paste (data_dir, "ref.txt", sep = ""));
 
 min_time = 0;
-max_time = 10;
-toplot = c('EFPd', 'EFP', 'GDP'); output_name = "EF";
+max_time = 100;
+#toplot = c('EFPd', 'EFP', 'GDP'); output_name = "EF";
 #toplot = c('EFPd')
 #toplot = c('70S');
-#toplot = c('protein');
+toplot = c('protein');
 #toplot = c('EFPa'); output_name = "EF";
 #toplot = c(toplot,'IF2a', 'IF2p', 'IF2d'); output_name = "IF";
 #toplot = c('GTP','GDP','ppGpp'); output_name = "guanosine";

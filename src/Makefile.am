@@ -14,7 +14,6 @@ AM_LDFLAGS = $(BOOST_LDFLAGS)
 simulator_SOURCES = \
 	main.cpp macros.h forwarddeclarations.h \
 	biasedwheel.cpp biasedwheel.h \
-	identifiedlist.cpp identifiedlist.h \
 	randomhandler.cpp randomhandler.h \
 	observable.h \
 	chemicallogger.cpp chemicallogger.h
@@ -42,22 +41,23 @@ simulator_SOURCES += \
 	decodingtable.cpp decodingtable.h \
 	processivechemical.cpp processivechemical.h \
 	site.cpp site.h \
+	sitefamily.h \
 	sitelocation.cpp sitelocation.h \
 	siteobserver.h \
 	siteavailability.cpp siteavailability.h
 
-# parser and handler sources
+# parser, handler and factory sources
 simulator_SOURCES += \
-	bindingsitehandler.cpp bindingsitehandler.h \
-	chemicalhandler.cpp chemicalhandler.h \
 	eventhandler.cpp eventhandler.h \
-	eventparser.cpp eventparser.h \
+	eventfactory.cpp eventfactory.h \
+	factory.h \
+	handler.h \
+	inputdata.cpp inputdata.h \
 	parser.cpp parser.h \
-	reactionhandler.cpp reactionhandler.h \
+	reactionfactory.cpp reactionfactory.h \
 	simulation.cpp simulation.h \
-	sitehandler.cpp sitehandler.h \
-	tablehandler.cpp tablehandler.h \
-	terminationsitehandler.cpp terminationsitehandler.h
+	simulatorinput.h \
+	unitfactory.cpp unitfactory.h
 
 # event sources
 simulator_SOURCES += \

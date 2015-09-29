@@ -67,16 +67,6 @@ public:
   // ===========================
   //
   /**
-   * @brief If the sequence is a template, elongate nascent product
-   */
-  void elongate_nascent (void);
-
-  /**
-   * @brief If the sequence is a template, terminate nascent product
-   */
-  void terminate_nascent (void);
-
-  /**
    * @brief Binds a chemical element to a binding site of the sequence.
    * @param chemical_to_bind
    *  The chemical element to bind.
@@ -203,17 +193,6 @@ public:
   //  * @brief Assignment operator
   //  */
   // ChemicalSequence& operator= (ChemicalSequence& other_chemical_sequence);
-  
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  bool check_invariant (void) const;
-
 
 private:
 

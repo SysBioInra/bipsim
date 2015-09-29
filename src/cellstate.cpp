@@ -26,12 +26,8 @@
 //  Constructors/Destructors
 // ==========================
 //
-CellState::CellState (const char* filename)
+CellState::CellState (void)
 {
-  // open new parser and load file
-  Parser parser (_chemical_handler, _reaction_handler, _binding_site_handler, _termination_site_handler, _table_handler);
-  parser.parse_units (filename);
-  parser.parse_reactions (filename);
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -45,12 +41,48 @@ CellState::~CellState (void)
 //  Public Methods - Commands
 // ===========================
 //
-
+void CellState::store (SimulatorInput* element, const std::string& name /*= ""*/)
+{
+  // try to store element
+  if (not (_site_handler.store (element, name)
+	   || _binding_site_family_handler.store (element, name)
+	   || _site_family_handler.store (element, name)
+	   || _chemical_handler.store (element, name)
+	   || _reaction_handler.store (element, name)
+	   || _table_handler.store (element, name)))
+    {
+      // TODO throw error
+      std::cerr << "Element could not be stored \n";
+      delete element;
+    }
+}
 
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
+int CellState::find_id (const std::string& name) const
+{
+  int result = _site_handler.find_id (name);
+  if (result != NOT_FOUND) { return result; }
+
+  result = _binding_site_family_handler.find_id (name);
+  if (result != NOT_FOUND) { return result; }
+
+  result = _site_family_handler.find_id (name);
+  if (result != NOT_FOUND) { return result; }
+
+  result = _chemical_handler.find_id (name);
+  if (result != NOT_FOUND) { return result; }
+
+  result = _reaction_handler.find_id (name);
+  if (result != NOT_FOUND) { return result; }
+
+  result = _table_handler.find_id (name);
+  if (result != NOT_FOUND) { return result; }
+
+  return NOT_FOUND;
+}  
 
 
 // ==========================
@@ -65,20 +97,6 @@ CellState::~CellState (void)
 //
 // Not needed for this class (use of default overloading) !
 // CellState& CellState::operator= ( const CellState& other_cell_state );
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool CellState::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================

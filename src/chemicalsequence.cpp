@@ -131,25 +131,20 @@ void ChemicalSequence::move_bound_unit ( ProcessiveChemical& chemical_to_move, i
   _chemical_map[ &chemical_to_move ].push_back ( SiteLocation( new_position, length ) );
 }
 
-void ChemicalSequence::elongate_nascent (void)
-{
-  std::cout << "Function " << __func__ << " remains to be defined in " << __FILE__ << __LINE__ << std::endl;
-}
-
-void ChemicalSequence::terminate_nascent (void)
-{
-  std::cout << "Function " << __func__ << " remains to be defined in " << __FILE__ << __LINE__ << std::endl;
-}
-
 void ChemicalSequence::add ( int quantity )
 {
   Chemical::add (quantity);
+
+  // notify changes
+  notify_site_availability();
 }
 
 void ChemicalSequence::remove ( int quantity )
 {
   Chemical::remove (quantity);
-  std::cout << "Function " << __func__ << " remains to be defined in " << __FILE__ << __LINE__ << std::endl;
+  
+  // notify changes
+  notify_site_availability();
 }
 
 void ChemicalSequence::watch_site_availability (int position, int length, SiteObserver& site_observer)
@@ -245,23 +240,6 @@ bool ChemicalSequence::is_termination_site ( int position,
 //
 // Not needed for this class (use of default overloading) !
 // ChemicalSequence& ChemicalSequence::operator= (ChemicalSequence& other_chemical_sequence);
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool ChemicalSequence::check_invariant (void) const
-{
-  bool result = 
-    Chemical::check_invariant()   /** The invariant of parent class must be verified. */
-    && (_length > 0); /** Length must be positive (>0). */
-  return result;
-}
-
 
 // =================
 //  Private Methods

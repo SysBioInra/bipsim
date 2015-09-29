@@ -26,18 +26,14 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "bindingsitehandler.h"
-#include "chemicalhandler.h"
-#include "reactionhandler.h"
-#include "tablehandler.h"
-#include "terminationsitehandler.h"
+#include "handler.h"
 
 /**
- * @brief Class gathering cell components.
+ * @brief Class gathering cell components and reactions.
  *
- * CellState loads from a file all components contained
- * within a cell. Its content can be updated by Solver
- * instances to perform simulations.
+ * CellState is used to store and access all cell parts. It acts as
+ * a mediator between users and more specified handlers, yielding
+ * a simplified API.
  */
 class CellState
 {
@@ -49,9 +45,8 @@ class CellState
   //
   /**
    * @brief Default constructor.
-   * @param filename File name to read cell components from.
    */
-  CellState (const char* filename);
+  CellState ();
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -69,12 +64,11 @@ class CellState
   // ===========================
   //
   /**
-   * @brief Print chemicals in their current state to standard output.
-   * @param output Stream where output should be written.
+   * @brief Access pointer to element by name.
+   * @param name Name of element.
+   * @return Pointer to element or 0 if name not found.
    */
-  void print_chemicals (std::ostream& output) const;
-
-
+  void store (SimulatorInput* element, const std::string& name = "");
   
 
   // ============================
@@ -82,24 +76,27 @@ class CellState
   // ============================
   //
   /**
+   * @brief Access pointer to element by name.
+   * @tparam T Class of element to find.
+   * @param name Name of element.
+   * @return Pointer to element or 0 if name not found.
+   */
+  template <class T>
+    T* find (const std::string& name) const;
+
+  /**
+   * @brief Acess identifier attributed to element by name.
+   * @param name Name of element.
+   * @return Element identifier or CellState::NOT_FOUND if name not found.
+   */
+  int find_id (const std::string& name) const;
+  
+  /**
    * @brief Return the list of reactions.
    * @return List of reactions.
    */
-  const std::list< Reaction*>& reaction_list (void) const;
+  const std::vector <Reaction*>& reactions (void) const;
 
-  /**
-   * @brief Return chemical.
-   * @param name Name of the chemical.
-   * @return Reference to chemical.
-   */
-  const Chemical& chemical (const std::string& name) const;
-
-  /**
-   * @brief Return chemical handler.
-   * @return Chemical handler.
-   */
-  const ChemicalHandler& chemical_handler (void) const;
-  
 
   // ==========================
   //  Public Methods - Setters
@@ -117,16 +114,11 @@ class CellState
   //  */
   // CellState& operator= ( const CellState& other_cell_state );
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
+  // ==================
+  //  Public Constants
+  // ==================
   //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
-
+  static const int NOT_FOUND = Handler <Chemical>::NOT_FOUND;
 
 private:
 
@@ -134,20 +126,23 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief Handler containing binding site information. */
-  BindingSiteHandler _binding_site_handler;
+  /** @brief Handler containing site information. */
+  Handler <Site> _site_handler;
+
+  /** @brief Handler containing binding site family information. */
+  Handler <BindingSiteFamily> _binding_site_family_handler;
+
+  /** @brief Handler containing other site family information. */
+  Handler <SiteFamily> _site_family_handler;
 
   /** @brief Handler containing chemical information. */
-  ChemicalHandler _chemical_handler;
+  Handler <Chemical> _chemical_handler;
 
   /** @brief Handler containing reaction information. */
-  ReactionHandler _reaction_handler;
+  Handler <Reaction> _reaction_handler;
 
   /** @brief Handler containing information about various tables. */
-  TableHandler _table_handler;
-
-  /** @brief Handler containing termination site information. */
-  TerminationSiteHandler _termination_site_handler;
+  Handler <DecodingTable> _table_handler;
   
 
   // =================
@@ -166,24 +161,58 @@ private:
 //  Inline declarations
 // ======================
 //
-inline const std::list< Reaction*>& CellState::reaction_list (void) const
+#include <typeinfo>
+
+#include "site.h"
+#include "bindingsite.h"
+#include "bindingsitefamily.h"
+#include "sitefamily.h"
+
+#include "chemical.h"
+#include "boundchemical.h"
+#include "processivechemical.h"
+#include "baseloader.h"
+#include "chemicalsequence.h"
+
+#include "decodingtable.h"
+
+#include "reaction.h"
+#include "chemicalreaction.h"
+#include "complexation.h"
+#include "binding.h"
+#include "baseloading.h"
+#include "release.h"
+#include "elongation.h"
+
+
+inline const std::vector <Reaction*>& CellState::reactions (void) const
 {
-  return _reaction_handler.reference_list();
+  return _reaction_handler.references();
 }
 
-inline const Chemical& CellState::chemical (const std::string& name) const
-{
-  return _chemical_handler.reference (name);
-}
 
-inline void CellState::print_chemicals (std::ostream& output) const
+template <class T>
+inline T* CellState::find (const std::string& name) const
 {
-  output << _chemical_handler;
-}
+  Site* s = _site_handler.find (name);
+  if (s != 0) { return dynamic_cast <T*> (s); }
 
-inline const ChemicalHandler& CellState::chemical_handler (void) const
-{
-  return _chemical_handler;
+  BindingSiteFamily* bsf = _binding_site_family_handler.find (name);
+  if (bsf != 0) { return dynamic_cast <T*> (bsf); }
+
+  SiteFamily* sf = _site_family_handler.find (name);
+  if (sf != 0) { return dynamic_cast <T*> (sf); }
+
+  Chemical* c = _chemical_handler.find (name);
+  if (c != 0) { return dynamic_cast <T*> (c); }
+
+  Reaction* r = _reaction_handler.find (name);
+  if (r != 0) { return dynamic_cast <T*> (r); }
+  
+  DecodingTable* t = _table_handler.find (name);
+  if (t != 0) { return dynamic_cast <T*> (t); }
+
+  return 0;
 }
 
 #endif // CELL_STATE_H

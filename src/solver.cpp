@@ -29,9 +29,9 @@
 // ==========================
 //
 Solver::Solver (double initial_time, CellState& cell_state)
-  : _reactions (cell_state.reaction_list().begin(), cell_state.reaction_list().end())
+  : _reactions (cell_state.reactions())
   , _cell_state (cell_state)
-  , _dependency_graph (cell_state.reaction_list())
+  , _dependency_graph (cell_state.reactions())
   , _t (initial_time)
   , _number_reactions_performed (0)
 {

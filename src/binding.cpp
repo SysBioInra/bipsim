@@ -21,7 +21,7 @@
 #include "macros.h" // REQUIRE()
 #include "binding.h"
 #include "bindingsite.h"
-#include "bindingsitehandler.h"
+#include "bindingsitefamily.h"
 #include "boundchemical.h"
 #include "chemical.h"
 

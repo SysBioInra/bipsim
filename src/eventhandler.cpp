@@ -20,8 +20,6 @@
 // ==================
 //
 #include "eventhandler.h"
-#include "eventparser.h"
-#include "chemicalhandler.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -29,17 +27,9 @@
 //
 const double EventHandler::NO_EVENT_LEFT = std::numeric_limits<double>::infinity();
 
-EventHandler::EventHandler (const std::string& event_file, const ChemicalHandler& chemical_handler)
+EventHandler::EventHandler (void)
 {
-  EventParser parser (event_file, chemical_handler);
-  Event* new_event = parser.create_next_event();
-  while (new_event != 0)
-    {
-      insert_event (new_event);
-      new_event = parser.create_next_event();
-    }
-  
-  _current_event = _events.begin();
+  _current_event = _events.end();
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -79,19 +69,6 @@ EventHandler::~EventHandler (void)
 // Not needed for this class (use of default overloading) !
 // EventHandler& EventHandler::operator= ( const EventHandler& other_event_handler );
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool EventHandler::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================
