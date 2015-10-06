@@ -177,6 +177,7 @@ inline double EventHandler::next_event_time (void)
 inline void EventHandler::store (Event* event)
 {
   insert_event (event);
+  _current_event = _events.begin();
 }
 
 #endif // EVENT_HANDLER_H

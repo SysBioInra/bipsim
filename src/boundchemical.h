@@ -31,17 +31,6 @@
 
 
 /**
- * @brief A list of BoundUnit.
- */
-typedef std::list< BoundUnit > BoundUnitList;
-
-/**
- * @brief A map that classifies all BoundChemical depending on the family of BindingSite they
- * bound to.
- */
-typedef std::map< int, BoundUnitList > UnitFamilyMap;
-
-/**
  * @brief The BoundChemical class describes chemicals in a bound form.
  *
  * Bound chemicals may be linked with specific reactions (i.e. different from
@@ -78,11 +67,6 @@ public:
   // ===========================
   //
   /**
-   * @brief Release chemical and the product it may have synthesized.
-   */  
-  void release (void);
-
-  /**
    * @brief Add a new unit specific binding site.
    * @param binding_site The binding site to which it bound.
    */
@@ -94,30 +78,20 @@ public:
   void add_unit_in_place_of (const BoundChemical& precursor);
   
   /**
-   * @brief Add a new unit in place of an existing new chemical.
-   *
-   * This function MUST be called every time a unit is added.
-   * @param binding_site The binding site to which it bound.
-   * @param position Current position.
-   * @param reading_frame Reading frame position.
-   */
-  virtual void add_unit (const BindingSite&, int position, int reading_frame);
-
-  /**
    * @brief Remove focused unit.
    */
-  void remove_focused_unit (void);
+  virtual void remove_focused_unit (void);
 
   /**
    * @brief Focus a unit randomly.
    */
-  void focus_random_unit (void);
+  virtual void focus_random_unit (void);
 
   /**
    * @brief Focus a unit that bound to a specific binding site family.
    * @param binding_site_family The binding site family to inspect.
    */
-  void focus_random_unit (int binding_site_family);
+  virtual void focus_random_unit (int binding_site_family);
 
   // ============================
   //  Public Methods - Accessors
@@ -192,18 +166,11 @@ public:
   //  */
   // CLASSNAME& operator= (CLASSNAME& other_CLASSNAME);
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
-
-
  protected:
+  /**
+   * @brief A list of BoundUnit.
+   */
+  typedef std::list< BoundUnit > BoundUnitList;
 
   // ============
   //  Attributes
@@ -213,9 +180,18 @@ public:
   BoundUnitList::iterator _focused_unit;
 
   // =================
-  //  Private Methods
+  //  Protected Methods
   // =================
   //
+  /**
+   * @brief Add a new unit.
+   *
+   * This function MUST be called every time a unit is added.
+   * @param binding_site The binding site to which it bound.
+   * @param position Current position.
+   * @param reading_frame Reading frame position.
+   */
+  virtual void add_unit (const BindingSite&, int position, int reading_frame);
   
 
  private:
@@ -223,7 +199,13 @@ public:
   // ============
   //  Attributes
   // ============
-  //
+  //  
+  /**
+   * @brief A map that classifies all BoundChemical depending on the family of BindingSite they
+   * bound to.
+   */
+  typedef std::map< int, BoundUnitList > UnitFamilyMap;
+
   /** @brief Binding sites to which chemicals bound and current position (sorted by family). */
   UnitFamilyMap _family_map;
 

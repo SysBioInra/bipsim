@@ -1,0 +1,9 @@
+# entités chimiques 
+unit Chemical Tcn
+unit BoundChemical 70STcn 
+
+# réactions 
+reaction Complexation 70S Tcn 70STcn 10 1
+
+# injection de la tétracycline
+event 500 ADD Tcn 2000

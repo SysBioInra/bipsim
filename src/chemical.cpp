@@ -66,20 +66,6 @@ void Chemical::print (std::ostream& output) const
 // Chemical& Chemical::operator= (Chemical& other_Chemical);
 
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool Chemical::check_invariant (void) const
-{
-  bool result = (_number >= 0);  /** _number >= 0 */
-  return result;
-}
-
 // =================
 //  Private Methods
 // =================

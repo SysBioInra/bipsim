@@ -35,13 +35,15 @@
 //  Constructors/Destructors
 // ==========================
 //
-Simulation::Simulation (const char* filename)
+Simulation::Simulation (void)
  : _t (0)
 {
   // read input files and create units, reactions and events
   std::list<std::string> input_files;
+  input_files.push_back ("../input/rnas.in");
   input_files.push_back ("../input/translation.in");
-  input_files.push_back ("../input/events.in");
+  input_files.push_back ("../input/tetracyclin.in");
+  // input_files.push_back ("../input/tetracycline.in");
   InputData input_data (input_files);
   Parser parser (_cell_state, _event_handler);
   parser.parse (input_data);
@@ -62,6 +64,8 @@ Simulation::Simulation (const char* filename)
   std::list <std::string> chemical_names;
   chemical_names.push_back ("protein");
   chemical_names.push_back ("GTP");
+  chemical_names.push_back ("Tcn");
+  chemical_names.push_back ("70STcn");
   std::list <const Chemical*> chemical_refs;
   for (std::list <std::string>::iterator name_it = chemical_names.begin(); name_it != chemical_names.end(); ++name_it)
     {

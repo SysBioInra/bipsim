@@ -41,13 +41,17 @@ class BoundChemical;
 class BoundUnit;
 class Chemical;
 class ChemicalSequence;
-class DecodingTable;
 class ProcessiveChemical;
 class Site;
 class SiteFamily;
 class SiteLocation;
 class SiteObserver;
 class SiteAvailability;
+
+// tables
+class DecodingTable;
+class ProductTable;
+class TransformationTable;
 
 // parser, handler and factory classes
 class EventHandler;

@@ -22,15 +22,17 @@
 #include "release.h"
 #include "chemical.h"
 #include "boundchemical.h"
+#include "producttable.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
 Release::Release (BoundChemical& unit_to_release, std::vector<Chemical*>& other_components,
-		  std::vector<int>& stoichiometry, double rate)
+		  std::vector<int>& stoichiometry, double rate, ProductTable* product_table /*= 0*/)
   : _side_reaction (other_components, stoichiometry, rate, 0)
   , _unit_to_release (unit_to_release)
+  , _product_table (product_table)
 {
   _reactants.push_back (&_unit_to_release);
 
@@ -121,7 +123,16 @@ void Release::do_forward_reaction (void)
 
   _unit_to_release.focus_random_unit();
   _unit_to_release.focused_unit_location().unbind_unit (_unit_to_release);
-  _unit_to_release.release();
+  if (_product_table != 0)
+    {
+      ChemicalSequence* product =
+	_product_table->product (_unit_to_release.focused_unit_binding_site().position(),
+				 _unit_to_release.focused_unit_position());
+      if (product !=0) product->add(1);
+      else std::cerr << "Unknown product\n";
+    }
+
+  _unit_to_release.remove_focused_unit();
 
   _side_reaction.perform_forward();
 }

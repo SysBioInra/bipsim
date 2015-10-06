@@ -38,11 +38,6 @@ BoundChemical::~BoundChemical (void)
 //  Public Methods - Commands
 // ===========================
 //
-void BoundChemical::release (void)
-{
-  remove_focused_unit();
-}
-
 
 void BoundChemical::add_unit_at_site ( const BindingSite& binding_site )
 {
@@ -61,7 +56,7 @@ void BoundChemical::add_unit_in_place_of ( const BoundChemical& precursor )
 }
 
 
-void BoundChemical::focus_random_unit ( void )
+void BoundChemical::focus_random_unit (void)
 {
   REQUIRE( number() > 0 ); /** @pre There must be at least one unit */
 
@@ -217,21 +212,6 @@ void BoundChemical::print ( std::ostream& output ) const
 //
 // Not needed for this class (use of default overloading) !
 // BoundChemical& BoundChemical::operator= (BoundChemical& other_bound_chemical);
-
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool BoundChemical::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================

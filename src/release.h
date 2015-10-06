@@ -56,10 +56,12 @@ public:
    *  Vector of stoichiometry of the other chemicals, positive for products, negative for
    *  reactants.
    * @param rate Reaction rate constant.
+   * @param product_table If bound chemical releases a product, table listing molecules
+   *  it may produce depending on its binding and release sites.
    * @sa ChemicalReaction
    */
   Release (BoundChemical& unit_to_release, std::vector<Chemical*>& other_components,
-		    std::vector<int>& stoichiometry, double rate);
+	   std::vector<int>& stoichiometry, double rate, ProductTable* product_table = 0);
     
 
   // Not needed for this class (use of default copy constructor) !
@@ -162,6 +164,8 @@ private:
   /** @brief Side reaction representing other components that are involved in the release other than the unit to release. */
   ChemicalReaction _side_reaction;
   
+  /** @brief Table of molecules that the released chemical may have produced. */
+  ProductTable* _product_table;
   
   // =================
   //  Private Methods

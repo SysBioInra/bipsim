@@ -44,6 +44,6 @@ int main (int argc, char *argv[])
       	}
     }
 
-  Simulation sim ("../data/test_input.txt");
-  sim.run (simulation_time);
+  Simulation simulation;
+  simulation.run (simulation_time);
 }

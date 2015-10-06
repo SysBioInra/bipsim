@@ -175,7 +175,7 @@ public:
    * @param last_position
    *  Position of the last base of the sequence to return (included).
    */
-  const std::string get_sequence (int first_position, int last_position) const;
+  const std::string sequence (int first_position, int last_position) const;
 
 
   // ==========================
@@ -264,7 +264,7 @@ inline bool ChemicalSequence::is_out_of_bounds ( int position, int length ) cons
 }
 
 
-inline const std::string ChemicalSequence::get_sequence (int first_position, int length) const
+inline const std::string ChemicalSequence::sequence (int first_position, int length) const
 {
   /** @pre First position must be positive. */
   REQUIRE( first_position > 0 );

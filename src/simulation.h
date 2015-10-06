@@ -43,9 +43,8 @@ class Simulation
   //
   /**
    * @brief Default constructor.
-   * @param filename File containing reactions to read.
    */
-  Simulation (const char* filename);
+  Simulation (void);
 
   // Not needed for this class (use of default copy constructor) !
   // /*

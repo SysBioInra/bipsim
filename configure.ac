@@ -6,7 +6,7 @@ AC_PREREQ([2.63])
 AC_INIT([myBacteria], [1.0] )
 
 # automake initialization
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 
 # check if the source folder is correct
 AC_CONFIG_SRCDIR([src/main.cpp])
@@ -16,6 +16,7 @@ AC_CONFIG_MACRO_DIR([m4])
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
+AC_PROG_RANLIB
 
 # Checks for libraries.
 # Boost

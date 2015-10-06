@@ -77,6 +77,20 @@ void BaseLoader::remove_focused_unit (void)
   BoundChemical::remove_focused_unit();
 }
 
+void BaseLoader::focus_random_unit (void)
+{
+  // focus random unit by using the parent function
+  BoundChemical::focus_random_unit();
+  update_focused_template();
+}
+
+void BaseLoader::focus_random_unit (int binding_site_family)
+{
+  // focus random unit by using the parent function
+  BoundChemical::focus_random_unit (binding_site_family);
+  update_focused_template();
+}
+
 void BaseLoader::focus_random_unit_from_loading_rates (void)
 {
   // update loading rates
@@ -119,20 +133,6 @@ void BaseLoader::focus_random_unit_from_loading_rates (void)
 // Not needed for this class (use of default overloading) !
 // BaseLoader& BaseLoader::operator= ( const BaseLoader& other_base_loader );
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool BaseLoader::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
-
 
 // =================
 //  Private Methods
@@ -144,10 +144,9 @@ void BaseLoader::add_unit (const BindingSite& binding_site, int position, int re
   BoundChemical::add_unit (binding_site, position, reading_frame);
 
   // retrieve template read by added unit
-  ChemicalSequence* target_sequence = dynamic_cast<ChemicalSequence*> (&(binding_site.location()));
-  REQUIRE( target_sequence != 0); /** @pre Unit must be bound to a ChemicalSequence. */
+  ChemicalSequence& target_sequence = binding_site.location();
   std::string focused_template =
-    target_sequence->get_sequence (reading_frame, _decoding_table.template_length());
+    target_sequence.sequence (reading_frame, _decoding_table.template_length());
 
   // decode the template
   _focused_template_index = _decoding_table.template_index (focused_template);
@@ -164,6 +163,18 @@ void BaseLoader::add_unit (const BindingSite& binding_site, int position, int re
       _focused_template_index = BaseLoader::UNKNOWN_TEMPLATE;
       std::cerr << "UNKNOWN TEMPLATE " << focused_template;
     }
+}
+
+void BaseLoader::update_focused_template (void)
+{
+  // retrieve template read by focused unit
+  ChemicalSequence& target_sequence = _focused_unit->binding_site().location();
+  std::string focused_template =
+    target_sequence.sequence (_focused_unit->reading_frame(),
+			      _decoding_table.template_length());
+  
+  // decode the template
+  _focused_template_index = _decoding_table.template_index (focused_template);  
 }
 
 void BaseLoader::update_loading_rates (void)

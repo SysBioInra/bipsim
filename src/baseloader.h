@@ -85,6 +85,17 @@ public:
   virtual void remove_focused_unit (void);
 
   /**
+   * @brief Focus a unit randomly.
+   */
+  virtual void focus_random_unit (void);
+
+  /**
+   * @brief Focus a unit that bound to a specific binding site family.
+   * @param binding_site_family The binding site family to inspect.
+   */
+  virtual void focus_random_unit (int binding_site_family);
+
+  /**
    * @brief Focus random unit based on their loading_rates.
    */
   void focus_random_unit_from_loading_rates (void);
@@ -139,17 +150,6 @@ public:
   //  */
   // BaseLoader& operator= (BaseLoader& other_base_loader);
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
-
-
 private:
 
   // ============
@@ -177,6 +177,11 @@ private:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Update _focused_template_index according to current _focused_unit.
+   */
+  void update_focused_template (void);
+
   /**
    * @brief Updates loading rates associated with each template and total loading rate.
    */

@@ -65,14 +65,16 @@ bool UnitFactory::handle (const std::string& line)
   // try to create unit
   // (c++ is "clever", whenever a function returns true, remaining functions are
   // not evaluated because true || anything = true)
-  bool creation_succeeded = (create_binding_site (line)
-			     || create_chemical (line)
-			     || create_termination_site (line)
-			     || create_bound_chemical (line)
-			     || create_chemical_sequence (line)
-			     || create_processive_chemical (line)
-			     || create_base_loader (line)
-			     || create_decoding_table (line));
+  std::string remaining;
+  std::getline (line_stream, remaining);
+  bool creation_succeeded = (create_binding_site (remaining)
+			     || create_chemical (remaining)
+			     || create_termination_site (remaining)
+			     || create_bound_chemical (remaining)
+			     || create_chemical_sequence (remaining)
+			     || create_processive_chemical (remaining)
+			     || create_base_loader (remaining)
+			     || create_decoding_table (remaining));
 
   // if (creation_succeeded == false)  { TODO throw error !!! }
   return creation_succeeded;
@@ -105,8 +107,6 @@ bool UnitFactory::handle (const std::string& line)
 bool UnitFactory::create_binding_site (const std::string& line)
 {
   std::istringstream line_stream (line);  
-  // first word of line must be "unit"
-  if (check_tag (line_stream, "unit") == false) { return false; }
   if (check_tag (line_stream, "BindingSite") == false) { return false; }
 
   // read base data
@@ -149,8 +149,6 @@ bool UnitFactory::create_binding_site (const std::string& line)
 bool UnitFactory::create_termination_site (const std::string& line)
 {
   std::istringstream line_stream (line);  
-  // first word of line must be "unit"
-  if (check_tag (line_stream, "unit") == false) { return false; }
   if (check_tag (line_stream, "TerminationSite") == false) { return false; }
 
   // read base data
@@ -186,8 +184,6 @@ bool UnitFactory::create_termination_site (const std::string& line)
 bool UnitFactory::create_decoding_table (const std::string& line)
 {
   std::istringstream line_stream (line);  
-  // first word of line must be "unit"
-  if (check_tag (line_stream, "unit") == false) { return false; }
   if (check_tag (line_stream, "DecodingTable") == false) { return false; }
 
   // read base data
@@ -247,8 +243,6 @@ bool UnitFactory::create_decoding_table (const std::string& line)
 bool UnitFactory::create_chemical ( const std::string& line )
 {
   std::istringstream line_stream (line);  
-  // first word of line must be "unit"
-  if (check_tag (line_stream, "unit") == false) { return false; }
   if (check_tag (line_stream, "Chemical") == false) { return false; }
 
   // read base data
@@ -273,8 +267,6 @@ bool UnitFactory::create_chemical ( const std::string& line )
 bool UnitFactory::create_chemical_sequence ( const std::string& line )
 {
   std::istringstream line_stream (line);  
-  // first word of line must be "unit"
-  if (check_tag (line_stream, "unit") == false) { return false; }
   if (check_tag (line_stream, "ChemicalSequence") == false) { return false; }
 
   // read base data
@@ -299,8 +291,6 @@ bool UnitFactory::create_chemical_sequence ( const std::string& line )
 bool UnitFactory::create_bound_chemical ( const std::string& line )
 {
   std::istringstream line_stream (line);  
-  // first word of line must be "unit"
-  if (check_tag (line_stream, "unit") == false) { return false; }
   if (check_tag (line_stream, "BoundChemical") == false) { return false; }
 
   // read base data
@@ -323,8 +313,6 @@ bool UnitFactory::create_bound_chemical ( const std::string& line )
 bool UnitFactory::create_base_loader ( const std::string& line )
 {
   std::istringstream line_stream (line);  
-  // first word of line must be "unit"
-  if (check_tag (line_stream, "unit") == false) { return false; }
   if (check_tag (line_stream, "BaseLoader") == false) { return false; }
 
   // read base data
@@ -347,8 +335,6 @@ bool UnitFactory::create_base_loader ( const std::string& line )
 bool UnitFactory::create_processive_chemical ( const std::string& line )
 {
   std::istringstream line_stream (line);  
-  // first word of line must be "unit"
-  if (check_tag (line_stream, "unit") == false) { return false; }
   if (check_tag (line_stream, "ProcessiveChemical") == false) { return false; }
 
   // read base data

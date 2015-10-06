@@ -3,23 +3,30 @@
 # THE PROGRAMS TO BUILD
 ###############################################################################
 
+AM_CPPFLAGS = $(BOOST_CPPFLAGS)
+AM_LDFLAGS = $(BOOST_LDFLAGS)
+
+# convenience library containing all the source files (used by unit tests)
+noinst_LIBRARIES = libsrc.a
+
 # the program to build (the names of the final binaries)
 bin_PROGRAMS = simulator
 
-AM_CPPFLAGS = $(BOOST_CPPFLAGS)
-AM_LDFLAGS = $(BOOST_LDFLAGS)
- 
 # list of sources for the 'simulator' binary
+simulator_SOURCES = main.cpp
+simulator_LDADD = libsrc.a
+
+# list of sources for 'libsrc.la' convenience library
 # main file and utility files
-simulator_SOURCES = \
-	main.cpp macros.h forwarddeclarations.h \
+libsrc_a_SOURCES = \
+	macros.h forwarddeclarations.h \
 	biasedwheel.cpp biasedwheel.h \
 	randomhandler.cpp randomhandler.h \
 	observable.h \
 	chemicallogger.cpp chemicallogger.h
 
 # reaction sources
-simulator_SOURCES += \
+libsrc_a_SOURCES += \
 	baseloading.cpp baseloading.h \
 	binding.cpp binding.h \
 	chemicalreaction.cpp chemicalreaction.h \
@@ -29,7 +36,7 @@ simulator_SOURCES += \
 	release.cpp release.h
 
 # chemical entity sources
-simulator_SOURCES += \
+libsrc_a_SOURCES += \
 	baseloader.cpp baseloader.h \
 	bindingsite.cpp bindingsite.h \
 	bindingsitefamily.cpp bindingsitefamily.h \
@@ -38,7 +45,6 @@ simulator_SOURCES += \
 	boundunit.h \
 	chemical.cpp chemical.h \
 	chemicalsequence.cpp chemicalsequence.h \
-	decodingtable.cpp decodingtable.h \
 	processivechemical.cpp processivechemical.h \
 	site.cpp site.h \
 	sitefamily.h \
@@ -46,8 +52,14 @@ simulator_SOURCES += \
 	siteobserver.h \
 	siteavailability.cpp siteavailability.h
 
+# table sources
+libsrc_a_SOURCES += \
+	decodingtable.cpp decodingtable.h \
+	producttable.h \
+	transformationtable.cpp transformationtable.h
+
 # parser, handler and factory sources
-simulator_SOURCES += \
+libsrc_a_SOURCES += \
 	eventhandler.cpp eventhandler.h \
 	eventfactory.cpp eventfactory.h \
 	factory.h \
@@ -60,14 +72,14 @@ simulator_SOURCES += \
 	unitfactory.cpp unitfactory.h
 
 # event sources
-simulator_SOURCES += \
+libsrc_a_SOURCES += \
 	addevent.cpp addevent.h \
 	event.cpp event.h \
 	removeevent.cpp removeevent.h \
 	setevent.cpp setevent.h
 
 # solver sources
-simulator_SOURCES += \
+libsrc_a_SOURCES += \
 	cellstate.cpp cellstate.h \
 	constantrategroup.cpp constantrategroup.h \
 	dependencygraph.cpp dependencygraph.h \
@@ -80,7 +92,7 @@ simulator_SOURCES += \
 	updatedrategroup.cpp updatedrategroup.h
 
 # rate related classes
-simulator_SOURCES += \
+libsrc_a_SOURCES += \
 	ratemanager.cpp ratemanager.h \
 	naiveratemanager.cpp naiveratemanager.h \
 	dependencyratemanager.cpp dependencyratemanager.h \
