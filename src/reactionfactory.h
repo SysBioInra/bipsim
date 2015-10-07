@@ -44,7 +44,7 @@ class ReactionFactory : public Factory
    * @brief Constructor.
    * @param cell_state CellState object used to store new objects.
    */
-  ReactionFactory (CellState& _cell_state);
+  ReactionFactory (CellState& cell_state);
 
   // Not needed for this class (use of default copy constructor) !
   // /*

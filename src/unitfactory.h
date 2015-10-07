@@ -44,7 +44,7 @@ class UnitFactory : public Factory
    * @brief Constructor.
    * @param cell_state CellState object used to store new objects.
    */
-  UnitFactory (CellState& _cell_state);
+  UnitFactory (CellState& cell_state);
 
   // Not needed for this class (use of default copy constructor) !
   // /*

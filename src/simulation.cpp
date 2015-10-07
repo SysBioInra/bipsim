@@ -12,6 +12,7 @@
 //  General Includes
 // ==================
 //
+#include <string> // std::string
 #include <iostream>
 
 // ==================
@@ -35,16 +36,11 @@
 //  Constructors/Destructors
 // ==========================
 //
-Simulation::Simulation (void)
- : _t (0)
+Simulation::Simulation (const std::string& filename)
+  : _params (filename)
 {
   // read input files and create units, reactions and events
-  std::list<std::string> input_files;
-  input_files.push_back ("../input/rnas.in");
-  input_files.push_back ("../input/translation.in");
-  input_files.push_back ("../input/tetracyclin.in");
-  // input_files.push_back ("../input/tetracycline.in");
-  InputData input_data (input_files);
+  InputData input_data (_params.input_files());
   Parser parser (_cell_state, _event_handler);
   parser.parse (input_data);
   input_data.write_warnings (std::cerr);
@@ -55,23 +51,30 @@ Simulation::Simulation (void)
   int class_id = classification.create_new_class (0.001);
   // int class_id = classification.create_new_class (ReactionClassification::ALWAYS_UPDATED);
   classification.add_reactions_to_class (class_id, _cell_state.reactions());
-  _solver = new ManualDispatchSolver (_t, _cell_state, classification);
+  _solver = new ManualDispatchSolver (_params.initial_time(),
+				      _cell_state, classification);
 #else
-  _solver = new NaiveSolver (_t, _cell_state);
+  _solver = new NaiveSolver (_params.initial_time(), _cell_state);
 #endif
 
   // create logger
-  std::list <std::string> chemical_names;
-  chemical_names.push_back ("protein");
-  chemical_names.push_back ("GTP");
-  chemical_names.push_back ("Tcn");
-  chemical_names.push_back ("70STcn");
+  std::list <std::string> chemical_names = _params.output_entities();
   std::list <const Chemical*> chemical_refs;
-  for (std::list <std::string>::iterator name_it = chemical_names.begin(); name_it != chemical_names.end(); ++name_it)
+  std::list <std::string>::iterator name_it = chemical_names.begin();
+  while (name_it != chemical_names.end())
     {
-      chemical_refs.push_back (_cell_state.find <Chemical> (*name_it));
+      const Chemical* next_chemical = _cell_state.find <Chemical> (*name_it);
+      if (next_chemical != 0)
+	{ chemical_refs.push_back (next_chemical); ++name_it; }
+      else
+	{
+	  std::cerr << "WARNING: unknown chemical " << *name_it
+		    << " will not be logged!\n";
+	  name_it = chemical_names.erase (name_it);
+	}
     }
-  _logger = new ChemicalLogger ("../output/translation.txt", chemical_refs, chemical_names);
+  _logger = new ChemicalLogger ("../output/translation.txt",
+				chemical_refs, chemical_names);
 
 }
 
@@ -88,12 +91,10 @@ Simulation::~Simulation (void)
 //  Public Methods - Commands
 // ===========================
 //
-void Simulation::run (double time_interval)
+void Simulation::run (void)
 {
-  int log_step = 10000;
-
-  double final_time = _solver->time() + time_interval;
-  std::cout << "Solving from t = " << _t << " to t = " << final_time << "..." << std::endl;
+  std::cout << "Solving from t = " << _params.initial_time()
+	    << " to t = "<< _params.final_time() << "..." << std::endl;
 
   double next_event_time = _event_handler.next_event_time();
   while (next_event_time < _solver->time())
@@ -103,11 +104,12 @@ void Simulation::run (double time_interval)
     }
 
   // run until next event
-  while (final_time > next_event_time)
+  while (_params.final_time() > next_event_time)
     {
       while (_solver->time() < next_event_time)
 	{
-	  if ((_solver->number_reactions_performed() % log_step) == 0) { _logger->log (_solver->time()); }
+	  if ((_solver->number_reactions_performed() % _params.output_step()) == 0)
+	    { _logger->log (_solver->time()); }
 	  _solver->go_to_next_reaction(); 
 	}
       // perform event(s)
@@ -118,13 +120,15 @@ void Simulation::run (double time_interval)
 	}
     }
   // no event left: run until final time
-  while (_solver->time() < final_time)
+  while (_solver->time() < _params.final_time())
     {      
-      if ((_solver->number_reactions_performed() % log_step) == 0) { _logger->log (_solver->time()); }
+      if ((_solver->number_reactions_performed() % _params.output_step()) == 0)
+	{ _logger->log (_solver->time()); }
       _solver->go_to_next_reaction();
     }
 
-  std::cout << _solver->number_reactions_performed() << " reactions occurred." << std::endl;
+  std::cout << _solver->number_reactions_performed() << " reactions occurred."
+	    << std::endl;
 }
 
 // ============================
@@ -146,19 +150,6 @@ void Simulation::run (double time_interval)
 // Not needed for this class (use of default overloading) !
 // Simulation& Simulation::operator= ( const Simulation& other_simulation );
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool Simulation::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================

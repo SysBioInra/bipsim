@@ -40,9 +40,7 @@ class EventHandler
   // ==========================
   //
   /**
-   * @brief Constructor.
-   * @param event_file File containing events to perform.
-   * @param chemical_handler Handler providing references to the chemicals to modify.
+   * @brief Default constructor.
    */
   EventHandler (void);
 

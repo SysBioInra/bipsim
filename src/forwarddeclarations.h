@@ -62,6 +62,7 @@ class InputData;
 class Parser;
 class ReactionFactory;
 class Simulation;
+class SimulationParams;
 class SimulatorInput;
 class UnitFactory;
 

@@ -64,9 +64,9 @@ class CellState
   // ===========================
   //
   /**
-   * @brief Access pointer to element by name.
-   * @param name Name of element.
-   * @return Pointer to element or 0 if name not found.
+   * @brief Store element created on the heap.
+   * @param element Pointer to the element to store.
+   * @param name Name of element (optional).
    */
   void store (SimulatorInput* element, const std::string& name = "");
   
@@ -118,6 +118,7 @@ class CellState
   //  Public Constants
   // ==================
   //
+  /** @brief Value returned if an element's id  was not found. */
   static const int NOT_FOUND = Handler <Chemical>::NOT_FOUND;
 
 private:

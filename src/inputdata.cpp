@@ -25,7 +25,7 @@
 //  Constructors/Destructors
 // ==========================
 //
-InputData::InputData (const std::list <std::string>& input_data_names)
+InputData::InputData (const std::list <std::string>& input_file_names)
   : _file (0)
   , _line_number (0)
   , _file_line_number (0)
@@ -33,7 +33,7 @@ InputData::InputData (const std::list <std::string>& input_data_names)
   , _eof (false)
 {
   // open files
-  for (std::list <std::string>::const_iterator file_it = input_data_names.begin();
+  for (std::list <std::string>::const_iterator file_it = input_file_names.begin();
        file_it != input_data_names.end(); file_it++)
     {
       _files.push_back (new std::ifstream (file_it->c_str()));

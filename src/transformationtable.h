@@ -73,8 +73,9 @@ class TransformationTable
 
   /**
    * @brief Transform sequence motif by motif using existing rules.
-   * @return String containing transfromed sequence or empty string if transformation
-   * failed (at least one input motifs was unknown).
+   * @param sequence Sequence to transform.
+   * @return String containing transfromed sequence or empty string if
+   * transformation failed (at least one input motifs was unknown).
    */
   std::string transform (const std::string& sequence) const;
 

@@ -1,0 +1,49 @@
+################################################################################
+# INITIAL TIME 
+# Time at the beginning of simulation. Format is  
+#   INITIAL_TIME <real value>
+################################################################################
+
+INITIAL_TIME 0
+
+################################################################################
+# FINAL TIME 
+# Time at which simulation should stop. Format is  
+#   FINAL_TIME <real value>
+################################################################################
+
+FINAL_TIME 100
+
+################################################################################
+# INPUT FILES 
+# Write path to input files relative to binary. Any # number of files can be
+# specified. Format is 
+#   INPUT_FILES path/to/file1 path/to/file2 etc.
+################################################################################
+
+INPUT_FILES ../input/translation.in ../input/rnas.in ../input/tetracyclin.in
+
+################################################################################
+# OUTPUT FILE
+# Write path to output file relative to binary. Format is 
+#   OUTPUT_FILE path/to/output/file
+################################################################################
+
+OUTPUT_FILE ../output/translation.txt
+
+################################################################################
+# OUTPUT STEP
+# Frequency at which concentrations should be logged, in number of reactions.
+# Format is
+#   OUTPUT_STEP <integer value>
+################################################################################
+
+OUTPUT_STEP 10000
+
+################################################################################
+# OUTPUT ENTITIES
+# Entities which should be logged in the output file. Format is
+#   OUTPUT_ENTITIES name1 name2 etc.
+################################################################################
+
+OUTPUT_ENTITIES protein Tcn 70STcn

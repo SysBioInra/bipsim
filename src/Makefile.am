@@ -68,6 +68,7 @@ libsrc_a_SOURCES += \
 	parser.cpp parser.h \
 	reactionfactory.cpp reactionfactory.h \
 	simulation.cpp simulation.h \
+	simulationparams.cpp simulationparams.h \
 	simulatorinput.h \
 	unitfactory.cpp unitfactory.h
 

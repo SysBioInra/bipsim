@@ -44,7 +44,7 @@ class EventFactory : public Factory
   //
   /**
    * @brief Constructor.
-   * @param cell_sate Object to read/write information about units and reactions.
+   * @param cell_state Object to read/write information about units and reactions.
    * @param event_handler Handler used to store event information.
    */
   EventFactory (CellState& cell_state, EventHandler& event_handler);

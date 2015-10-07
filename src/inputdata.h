@@ -46,9 +46,9 @@ class InputData
   //
   /**
    * @brief Constructor from file names.
-   * @pram input_data_names List of the files to open.
+   * @param input_file_names List of the files to open.
    */
-  InputData (const std::list <std::string>& input_data_names);
+  InputData (const std::list <std::string>& input_file_names);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -82,7 +82,7 @@ class InputData
 
   /**
    * @brief Write warnings about untreated lines.
-   * @output Stream to write warnings to.
+   * @param output Stream to write warnings to.
    */
   void write_warnings (std::ostream& output);
 

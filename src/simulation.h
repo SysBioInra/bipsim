@@ -18,7 +18,6 @@
 // ==================
 //
 
-
 // ==================
 //  Project Includes
 // ==================
@@ -26,12 +25,13 @@
 #include "forwarddeclarations.h"
 #include "cellstate.h"
 #include "eventhandler.h"
+#include "simulationparams.h"
 
 /**
  * @brief Class that creates and handles the whole simulation.
  *
- * Simulation is the main object in the simulator. It reads configuration parameters
- * and then creates every object needed.
+ * Simulation is the main object in the simulator. It reads configuration
+ * parameters and then creates every object needed.
  */
 class Simulation
 {
@@ -42,9 +42,10 @@ class Simulation
   // ==========================
   //
   /**
-   * @brief Default constructor.
+   * @brief Constructor from parameter file.
+   * @param filename Path to parameter file.
    */
-  Simulation (void);
+  Simulation (const std::string& filename);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -63,9 +64,8 @@ class Simulation
   //
   /**
    * @brief Run simulator for given amount of time.
-   * @param time_interval Time for which simulation must be run.
    */
-  void run (double time_interval);
+  void run (void);
 
   // ============================
   //  Public Methods - Accessors
@@ -89,16 +89,6 @@ class Simulation
   //  */
   // Simulation& operator= ( const Simulation& other_simulation );
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved.
-   */
-  bool check_invariant (void) const;
-
 
 private:
 
@@ -106,8 +96,8 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief Simulation time. */
-  double _t;
+  /** @brief Simulation parameters. */
+  SimulationParams _params;
 
   /** @brief Global cell state. */
   CellState _cell_state;
