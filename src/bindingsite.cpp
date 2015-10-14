@@ -20,6 +20,7 @@
 //
 #include "bindingsite.h"
 #include "chemicalsequence.h"
+#include "macros.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -33,6 +34,8 @@ BindingSite::BindingSite (int family_id, ChemicalSequence& location, int positio
   , _k_off (k_off)
   , _reading_frame (reading_frame)
 {
+  /** @pre Reading frame must be within site. */
+  REQUIRE (reading_frame < position + length);
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -63,23 +66,6 @@ BindingSite::~BindingSite (void)
 //
 // Not needed for this class (use of default overloading) !
 // BindingSite& BindingSite::operator= (BindingSite& other_binding_site);
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool BindingSite::check_invariant (void) const
-{
-  bool result = Site::check_invariant()
-    && ( _k_on > 0 ) /** on-rate must be positive. */
-    && ( _k_off > 0 ); /** off-rate must be positive. */
-  return result;
-}
-
 
 // =================
 //  Private Methods

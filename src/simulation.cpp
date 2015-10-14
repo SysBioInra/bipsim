@@ -73,7 +73,7 @@ Simulation::Simulation (const std::string& filename)
 	  name_it = chemical_names.erase (name_it);
 	}
     }
-  _logger = new ChemicalLogger ("../output/translation.txt",
+  _logger = new ChemicalLogger (_params.output_file(),
 				chemical_refs, chemical_names);
 
 }

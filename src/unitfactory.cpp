@@ -31,6 +31,8 @@
 #include "chemicalsequence.h"
 
 #include "decodingtable.h"
+#include "producttable.h"
+#include "transformationtable.h"
 
 #include "cellstate.h"
 
@@ -74,7 +76,9 @@ bool UnitFactory::handle (const std::string& line)
 			     || create_chemical_sequence (remaining)
 			     || create_processive_chemical (remaining)
 			     || create_base_loader (remaining)
-			     || create_decoding_table (remaining));
+			     || create_decoding_table (remaining)
+			     || create_product_table (remaining)
+			     || create_transformation_table (remaining));
 
   // if (creation_succeeded == false)  { TODO throw error !!! }
   return creation_succeeded;
@@ -240,6 +244,71 @@ bool UnitFactory::create_decoding_table (const std::string& line)
   return true;
 }
 
+bool UnitFactory::create_product_table (const std::string& line)
+{
+  std::istringstream line_stream (line);  
+  if (check_tag (line_stream, "ProductTable") == false) { return false; }
+
+  // read base data
+  std::string name, table_name;
+  if (not (line_stream >> name >> table_name)) 
+    {
+      // TODO throw error
+      return false;
+    }
+
+  TransformationTable* table =
+    _cell_state.find <TransformationTable> (table_name);
+  if (table == 0) return false; // TODO throw error ?
+
+  _cell_state.store (new ProductTable (*table), name);
+  return true;
+}
+
+bool UnitFactory::create_transformation_table (const std::string& line)
+{
+  std::istringstream line_stream (line);
+  if (check_tag (line_stream, "TransformationTable") == false) { return false; }
+
+  // read base data
+  std::string name, input_motif, output_motif;
+  if (not (line_stream >> name)) 
+    {
+      // TODO throw error
+      return false;
+    }
+
+  TransformationTable* table = 0;
+  if (line_stream >> input_motif >> output_motif)
+    {
+      // create table
+      table = new TransformationTable (input_motif.size()); 
+      table->add_rule (input_motif, output_motif);
+    }
+  else
+    {
+      // TODO throw error
+      return false;
+    }
+  
+  while (line_stream >> input_motif >> output_motif)
+    {
+      if (input_motif.size() == table->input_motif_length())
+	{ table->add_rule (input_motif, output_motif); }
+      else
+	{
+	  // TODO throw error
+	  delete table;
+	  return false;
+	}
+    }
+
+  // store table
+  _cell_state.store (table, name);
+  return true;
+}
+
+
 bool UnitFactory::create_chemical ( const std::string& line )
 {
   std::istringstream line_stream (line);  
@@ -270,19 +339,47 @@ bool UnitFactory::create_chemical_sequence ( const std::string& line )
   if (check_tag (line_stream, "ChemicalSequence") == false) { return false; }
 
   // read base data
-  std::string name, sequence;
-  if ( not (line_stream >> name >> sequence) )
+  std::string name, keyword;
+  if ( not (line_stream >> name >> keyword) )
     {
       // TODO throw error
       return false;
     }
 
+  // check if chemical is defined by sequence or product_of
+  std::string sequence;
+  ChemicalSequence* chemical = 0;
+  if (keyword == "sequence")
+    {
+      if (not(line_stream >> sequence)) { return false; } // TODO throw error
+      chemical = new ChemicalSequence (sequence);
+    }
+  else if (keyword == "product_of")
+    {
+      // gather parent to product relation and deduce sequence
+      std::string parent_name, table_name; 
+      int pos1, pos2;
+      if (not(line_stream >> parent_name >> pos1 >> pos2 >> table_name))
+	{ return false; } // TODO throw error
+
+      ChemicalSequence* parent = 
+	_cell_state.find <ChemicalSequence> (parent_name);
+      if (parent == 0) { return false; } // temporarily
+
+      ProductTable* table =
+	_cell_state.find <ProductTable> (table_name);
+      if (table == 0) { return false; }
+
+      sequence = table->generate_child_sequence (*parent, pos1, pos2);
+      chemical = new ChemicalSequence (sequence);
+      table->add (*parent, pos1, pos2, *chemical);
+    }
+  else { return false; } // TODO throw error
+
   int initial_quantity;
   if (not (line_stream >> initial_quantity)) { initial_quantity = 0; }
-
-  // create and store
-  ChemicalSequence* chemical = new ChemicalSequence (sequence);
   chemical->add (initial_quantity);
+
   _cell_state.store (chemical, name);
   return true;
 }

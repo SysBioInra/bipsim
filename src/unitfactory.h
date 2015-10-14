@@ -137,6 +137,20 @@ private:
   bool create_decoding_table (const std::string& line);
 
   /**
+   * @brief Create product table from stream and store it in cell state.
+   * @param line Line to read creation information from.
+   * @return True if entity was successfully created.
+   */
+  bool create_product_table (const std::string& line);
+
+  /**
+   * @brief Create transformation table from stream and store it in cell state.
+   * @param line Line to read creation information from.
+   * @return True if entity was successfully created.
+   */
+  bool create_transformation_table (const std::string& line);
+
+  /**
    * @brief Create chemical from stream and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.

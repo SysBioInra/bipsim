@@ -34,7 +34,7 @@ InputData::InputData (const std::list <std::string>& input_file_names)
 {
   // open files
   for (std::list <std::string>::const_iterator file_it = input_file_names.begin();
-       file_it != input_data_names.end(); file_it++)
+       file_it != input_file_names.end(); file_it++)
     {
       _files.push_back (new std::ifstream (file_it->c_str()));
       if (_files.back()->fail())

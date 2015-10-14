@@ -12,7 +12,7 @@ INITIAL_TIME 0
 #   FINAL_TIME <real value>
 ################################################################################
 
-FINAL_TIME 100
+FINAL_TIME 1500
 
 ################################################################################
 # INPUT FILES 
@@ -21,7 +21,7 @@ FINAL_TIME 100
 #   INPUT_FILES path/to/file1 path/to/file2 etc.
 ################################################################################
 
-INPUT_FILES ../input/translation.in ../input/rnas.in ../input/tetracyclin.in
+INPUT_FILES ../input/dna.in ../input/rna_info.in ../input/rnas.in ../input/translation.in ../input/tetracyclin.in
 
 ################################################################################
 # OUTPUT FILE
@@ -29,7 +29,7 @@ INPUT_FILES ../input/translation.in ../input/rnas.in ../input/tetracyclin.in
 #   OUTPUT_FILE path/to/output/file
 ################################################################################
 
-OUTPUT_FILE ../output/translation.txt
+OUTPUT_FILE ../output/tetracyclin/translation.txt
 
 ################################################################################
 # OUTPUT STEP
@@ -46,4 +46,4 @@ OUTPUT_STEP 10000
 #   OUTPUT_ENTITIES name1 name2 etc.
 ################################################################################
 
-OUTPUT_ENTITIES protein Tcn 70STcn
+OUTPUT_ENTITIES protein

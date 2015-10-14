@@ -26,6 +26,7 @@
 //
 #include "forwarddeclarations.h"
 #include "macros.h"
+#include "simulatorinput.h"
 
 /**
  * @brief Class storing string motif transformations.
@@ -35,7 +36,7 @@
  * transform a sequence of input motifs into a sequence of the corresponding
  * output motifs.
  */
-class TransformationTable
+class TransformationTable : public SimulatorInput
 {
  public:
 
@@ -83,7 +84,11 @@ class TransformationTable
   //  Public Methods - Accessors
   // ============================
   //
-
+  /**
+   * @brief Accessor to input motif length.
+   * @return Input motif length as defined at construction.
+   */
+  int input_motif_length (void);
 
   // ==========================
   //  Public Methods - Setters
@@ -141,12 +146,18 @@ private:
 //  Inline declarations
 // ======================
 //
-inline void TransformationTable::add_rule (const std::string& input, const std::string& output)
+inline void TransformationTable::add_rule (const std::string& input,
+					   const std::string& output)
 {
   /** @pre Input motif length must match length specified at construction. */
   REQUIRE (input.length() == _motif_length);
   
   _rules [input] = output;
+}
+
+inline int TransformationTable::input_motif_length (void)
+{
+  return _motif_length;
 }
 
 

@@ -130,16 +130,6 @@ public:
   //  */
   // CLASSNAME& operator= (CLASSNAME& other_binding);
 
-
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Checks the class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
   
   // ==================
   //  Public Constants

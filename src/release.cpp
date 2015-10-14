@@ -126,7 +126,8 @@ void Release::do_forward_reaction (void)
   if (_product_table != 0)
     {
       ChemicalSequence* product =
-	_product_table->product (_unit_to_release.focused_unit_binding_site().position(),
+	_product_table->product (_unit_to_release.focused_unit_binding_site().location(),
+				 _unit_to_release.focused_unit_binding_site().position(),
 				 _unit_to_release.focused_unit_position());
       if (product !=0) product->add(1);
       else std::cerr << "Unknown product\n";

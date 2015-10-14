@@ -25,7 +25,7 @@
 //  Constructors/Destructors
 // ==========================
 //
-ChemicalLogger::ChemicalLogger (const char* filename, const std::list <const Chemical*>& chemicals, const std::list <std::string>& names,  bool overwrite /*= true*/)
+ChemicalLogger::ChemicalLogger (const std::string& filename, const std::list <const Chemical*>& chemicals, const std::list <std::string>& names,  bool overwrite /*= true*/)
  : _chemicals (chemicals)
 {
   /** @pre List of names must be as long as list of references. */
@@ -33,9 +33,9 @@ ChemicalLogger::ChemicalLogger (const char* filename, const std::list <const Che
   
   // open file
   if (overwrite)
-    _output.open (filename);
+    _output.open (filename.c_str());
   else
-    _output.open (filename, std::ofstream::app);
+    _output.open (filename.c_str(), std::ofstream::app);
   
   // write header (if necessary)
   if (overwrite) { write_header (names); }

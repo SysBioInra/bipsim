@@ -6,7 +6,7 @@
 
 # the programs to build (the names of the final binaries)
 check_PROGRAMS = biasedwheel_test inputdata_test randomhandler_test \
-	transformationtable_test producttable_test
+	transformationtable_test producttable_test cellstate_test
 
 # declare programs to be part of `make check`
 TESTS = $(check_PROGRAMS)
@@ -26,5 +26,8 @@ randomhandler_test_LDADD = ../src/libsrc.a
 
 transformationtable_test_SOURCES = transformationtable_test.cpp
 transformationtable_test_LDADD = ../src/libsrc.a
+
+cellstate_test_SOURCES = cellstate_test.cpp
+cellstate_test_LDADD = ../src/libsrc.a
 
 ###############################################################################

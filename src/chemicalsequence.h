@@ -48,8 +48,9 @@ public:
   /**
    * @brief Default constructor
    * @param sequence Sequence of the chemical
+   * @param starting_position Starting position (allows absolute positionning).
    */
-  ChemicalSequence (const std::string& sequence);
+  ChemicalSequence (const std::string& sequence, int starting_position = 1);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -71,7 +72,7 @@ public:
    * @param chemical_to_bind
    *  The chemical element to bind.
    */
-  void bind_unit ( const BoundChemical& chemical_to_bind );
+  void bind_unit (const BoundChemical& chemical_to_bind);
 
 
   /**
@@ -80,7 +81,7 @@ public:
    * @param  chemical_to_unbind
    *  The element to unbind.
    */
-  void unbind_unit ( const BoundChemical& chemical_to_unbind );
+  void unbind_unit (const BoundChemical& chemical_to_unbind);
 
 
   /**
@@ -90,7 +91,8 @@ public:
    * @param new_chemical
    *  The new nature of the bound unit.
    */
-  void replace_bound_unit ( const BoundChemical& old_chemical, const BoundChemical& new_chemical );
+  void replace_bound_unit (const BoundChemical& old_chemical,
+			   const BoundChemical& new_chemical);
 
 
   /**
@@ -100,29 +102,30 @@ public:
    * @param number_steps
    *  The number of steps by which it moves.
    */
-  void move_bound_unit ( ProcessiveChemical& chemical_to_move, int number_steps );
+  void move_bound_unit (ProcessiveChemical& chemical_to_move, int number_steps);
 
 
   /**
    * @brief Adds a given quantity of chemical to the existing pool.
    * @param quantity Amount to add
    */
-  void add ( int quantity );
+  void add (int quantity);
 
 
   /**
    * @brief Remove a given quantity of chemical to the existing pool.
    * @param quantity Amount to remove.
    */
-  void remove ( int quantity );
+  void remove (int quantity);
 
   /**
    * @brief Watch availability of a specific site and notify an observer when it changes.
-   * @param position Position of the site.
+   * @param position Absolute position of the site.
    * @param length Length of the site.
    * @param site_observer SiteObserver to update with the current number of available sites.
    */
-  void watch_site_availability (int position, int length, SiteObserver& site_observer);
+  void watch_site_availability (int position, int length,
+				SiteObserver& site_observer);
 
 
   /**
@@ -130,7 +133,7 @@ public:
    * @param termination_site
    *  Termination site located on sequence.
    */
-  void add_termination_site ( const Site& termination_site );
+  void add_termination_site (const Site& termination_site);
 
 
   /**
@@ -145,35 +148,39 @@ public:
   // ============================
   //
   /**
-   * @brief Returns whether the given site can be logically found on the sequence.
-   * @return True if position + length exceeds sequence length or position is negative.
-   * @param position Position of the site.
+   * @brief Returns whether the given site can be logically found on the
+   *  sequence.
+   * @param position Absolute position of the site.
    * @param length Length of the site.
+   * @return True if position + length exceeds sequence length or position is
+   *  negative.
    */
-  bool is_out_of_bounds ( int position, int length ) const;
+  bool is_out_of_bounds (int position, int length) const;
     
   /**
-   * @brief Returns whether a specific termination site can be found at a given position.
-   * @return True if a requested termination site is present at requested position.
-   * @param position Position to look at.
+   * @brief Returns whether a specific termination site can be found at a given 
+   *  position.
+   * @param position Absolute position to look at.
    * @param termination_site_families 
    *  List of termination sites to look for.
+   * @return True if a requested termination site is present at requested
+   *  position.
    */
-  bool is_termination_site ( int position, const std::list<int>& termination_site_families ) const;
+  bool is_termination_site (int position, const std::list<int>& termination_site_families) const;
 
   /**
    * @brief Returns length of sequence.
    * @return Length of sequence.
    */
-  int length ( void ) const;
+  int length (void) const;
 
   /**
    * @brief Returns the sequence between two specific positions.
    * @return String sequence between two positions.
    * @param first_position
-   *  Position of the first base of the sequence to return (included).
+   *  Absolute position of the first base of the sequence to return (included).
    * @param last_position
-   *  Position of the last base of the sequence to return (included).
+   *  Absolute position of the last base of the sequence to return (included).
    */
   const std::string sequence (int first_position, int last_position) const;
 
@@ -200,6 +207,9 @@ private:
   //  Attributes
   // ============
   //
+  /** @brief Starting position of the sequence (allows absolute positionning). */
+  int _starting_position;
+
   /** @brief Length of the sequence. */
   int _length;
 
@@ -238,12 +248,21 @@ private:
   // =================
   //
   /**
+   * @brief Transform absolute positions to relative [0,length) positions.
+   * @param absolute_position Absolute position to transform.
+   * @return Relative position along the sequence, 0 being the starting
+   *  position.
+   */
+  int relative (int absolute_position) const;
+
+  /**
    * @brief Remove a specific reference from the bound chemical map.
    * @param chemical The type of chemical to remove.
-   * @param position Its position along the sequence.
+   * @param position Absolute position along the sequence.
    * @param length Its length.
    */
-  void remove_reference_from_map ( const BoundChemical& chemical, int position, int length );
+  void remove_reference_from_map (const BoundChemical& chemical,
+				  int position, int length);
 
   /**
    * @brief Check site availability and notify observers if changes occurred.
@@ -258,23 +277,28 @@ private:
 //
 inline int ChemicalSequence::length ( void ) const { return _length; }
 
-inline bool ChemicalSequence::is_out_of_bounds ( int position, int length ) const
+inline bool ChemicalSequence::is_out_of_bounds (int position, int length ) const
 {
-  return ( ( position + length > _length ) || ( position < 0 ) );
+  return ((relative (position) + length > _length)
+	  || (relative (position) < 0));
 }
 
 
-inline const std::string ChemicalSequence::sequence (int first_position, int length) const
+inline const std::string ChemicalSequence::sequence (int first_position,
+						     int length) const
 {
-  /** @pre First position must be positive. */
-  REQUIRE( first_position > 0 );
+  /** @pre Relative first position must be positive. */
+  REQUIRE (relative (first_position) >= 0);
   /** @pre Length must be positive. */
-  REQUIRE( length > 0 );
+  REQUIRE (length > 0);
   /** @pre Requested sequence must not exceed sequence length. */
-  REQUIRE( first_position + length - 1 <= this->length() );
+  REQUIRE (relative(first_position) + length - 1 < this->length());
 
-  return _sequence.substr (first_position-1, length);
+  return _sequence.substr (relative (first_position), length);
 }
+
+inline int ChemicalSequence::relative (int absolute_position) const
+{ return absolute_position - _starting_position; }
 
 
 

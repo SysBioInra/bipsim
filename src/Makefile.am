@@ -55,7 +55,7 @@ libsrc_a_SOURCES += \
 # table sources
 libsrc_a_SOURCES += \
 	decodingtable.cpp decodingtable.h \
-	producttable.h \
+	producttable.cpp producttable.h \
 	transformationtable.cpp transformationtable.h
 
 # parser, handler and factory sources

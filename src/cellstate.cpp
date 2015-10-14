@@ -49,7 +49,9 @@ void CellState::store (SimulatorInput* element, const std::string& name /*= ""*/
 	   || _site_family_handler.store (element, name)
 	   || _chemical_handler.store (element, name)
 	   || _reaction_handler.store (element, name)
-	   || _table_handler.store (element, name)))
+	   || _decoding_table_handler.store (element, name)
+	   || _product_table_handler.store (element, name)
+	   || _transformation_table_handler.store (element, name)))
     {
       // TODO throw error
       std::cerr << "Element could not be stored \n";
@@ -78,7 +80,13 @@ int CellState::find_id (const std::string& name) const
   result = _reaction_handler.find_id (name);
   if (result != NOT_FOUND) { return result; }
 
-  result = _table_handler.find_id (name);
+  result = _decoding_table_handler.find_id (name);
+  if (result != NOT_FOUND) { return result; }
+
+  result = _product_table_handler.find_id (name);
+  if (result != NOT_FOUND) { return result; }
+
+  result = _transformation_table_handler.find_id (name);
   if (result != NOT_FOUND) { return result; }
 
   return NOT_FOUND;

@@ -20,11 +20,22 @@
 //
 #include "site.h"
 #include "chemicalsequence.h"
+#include "macros.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
+Site::Site (int family_id, ChemicalSequence& location, int position, int length)
+  : _family (family_id)
+  , _location (location)
+  , _position (position)
+  , _length (length)
+{
+  /** @pre Site must be within location.*/
+  REQUIRE (location.is_out_of_bounds (position, length) == false);
+}
+
 // Not needed for this class (use of default copy constructor) !
 // Site::Site (Site& other_site);
 
@@ -53,21 +64,6 @@ Site::~Site (void)
 //
 // Not needed for this class (use of default overloading) !
 // Site& Site::operator= (Site& other_site);
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool Site::check_invariant (void) const
-{
-  bool result = _length > 0 /** Length must be positive. */
-    && ( _position > 0 ); /** Position must positive. */
-  return result;
-}
 
 
 // =================

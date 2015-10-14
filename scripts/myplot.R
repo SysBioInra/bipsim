@@ -5,22 +5,19 @@ source ("plot_concentrations.R");
 source ("save_concentrations.R");
 source ("add_concentrations.R");
 
-data_dir = "../output/tetracyclin"
+data_dir = "../output/tetracyclin/"
+data_name = "translation.txt"
 
-data = load_concentrations (paste (data_dir, "translation.txt", sep = ""));
+data = load_concentrations (paste (data_dir, data_name, sep = ""));
 #ref = load_concentrations (paste (data_dir, "ref.txt", sep = ""));
 
 min_time = 0;
-max_time = 1000;
-#toplot = c('EFPd', 'EFP', 'GDP'); output_name = "EF";
-#toplot = c('EFPd')
-#toplot = c('70S');
-toplot = c('protein', 'Tcn', '70STcn'); output_name = "proteins";
-#toplot = c('EFPa'); output_name = "EF";
-#toplot = c(toplot,'IF2a', 'IF2p', 'IF2d'); output_name = "IF";
-#toplot = c('GTP','GDP','ppGpp'); output_name = "guanosine";
-#par(mfrow=c(1,2))
-#plot_concentrations (ref [c(1:100),], toplot);
+max_time = 1500;
+toplot = c('protein');
+output_name = "proteins";
+
+                                        #par(mfrow=c(1,2))
+                                        #plot_concentrations (ref [c(1:100),], toplot);
 
 filtered_data = data [(data['time']>=min_time) & (data['time']<=max_time),];
 plot_concentrations (filtered_data, toplot);

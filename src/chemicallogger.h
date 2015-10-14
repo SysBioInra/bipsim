@@ -51,7 +51,7 @@ class ChemicalLogger
    * @param overwrite True if existing file should be overwritten (true by default).
    *
    */
-  ChemicalLogger (const char* filename, const std::list <const Chemical*>& chemicals, const std::list <std::string>& names, bool overwrite = true);
+  ChemicalLogger (const std::string& filename, const std::list <const Chemical*>& chemicals, const std::list <std::string>& names, bool overwrite = true);
 
   // Not needed for this class (use of default copy constructor) !
   // /*

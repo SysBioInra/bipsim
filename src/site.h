@@ -49,11 +49,7 @@ public:
    * @param length Length of the site.
    * @sa SiteHandler
    */
-  Site ( int family_id, ChemicalSequence& location, int position, int length )
-    : _family ( family_id )
-    , _location ( location )
-    , _position ( position )
-    , _length ( length ) {}
+  Site (int family_id, ChemicalSequence& location, int position, int length);
 
   // Not needed for this class (use of default copy constructor) ! 
   // /*
@@ -116,17 +112,6 @@ public:
   //  * @brief Assignment operator
   //  */
   // CLASSNAME& operator= (CLASSNAME& other_site);
-
-
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Checks the class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
   
 
  protected:

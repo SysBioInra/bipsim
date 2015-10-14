@@ -1,0 +1,5 @@
+unit TransformationTable dna2rna A U C G G C T A
+
+unit ProductTable rnas dna2rna 
+
+unit TerminationSite stop_codon rna_1 1 1
