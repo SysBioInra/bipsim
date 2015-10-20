@@ -48,7 +48,7 @@ std::string TransformationTable::transform (const std::string& sequence) const
 
   std::istringstream seq_stream (sequence);
   std::string result;
-  char* next_motif = new char [_motif_length+1];
+  char next_motif [_motif_length+1];
   std::map <std::string, std::string>::const_iterator rule;
   while (seq_stream.get (next_motif, _motif_length+1))
     {

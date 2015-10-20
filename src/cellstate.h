@@ -143,6 +143,9 @@ private:
   Handler <Reaction> _reaction_handler;
 
   /** @brief Handler containing information about decoding tables. */
+  Handler <CompositionTable> _composition_table_handler;
+
+  /** @brief Handler containing information about decoding tables. */
   Handler <DecodingTable> _decoding_table_handler;
 
   /** @brief Handler containing information about decoding tables. */
@@ -180,6 +183,7 @@ private:
 #include "baseloader.h"
 #include "chemicalsequence.h"
 
+#include "compositiontable.h"
 #include "decodingtable.h"
 #include "producttable.h"
 #include "transformationtable.h"
@@ -217,6 +221,9 @@ inline T* CellState::find (const std::string& name) const
   Reaction* r = _reaction_handler.find (name);
   if (r != 0) { return dynamic_cast <T*> (r); }
   
+  CompositionTable* ct = _composition_table_handler.find (name);
+  if (ct != 0) { return dynamic_cast <T*> (ct); }
+
   DecodingTable* dt = _decoding_table_handler.find (name);
   if (dt != 0) { return dynamic_cast <T*> (dt); }
 

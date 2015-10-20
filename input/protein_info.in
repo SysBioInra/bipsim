@@ -1,3 +1,46 @@
+
+unit Chemical aa_A 
+unit Chemical aa_C 
+unit Chemical aa_D 
+unit Chemical aa_E 
+unit Chemical aa_F 
+unit Chemical aa_G 
+unit Chemical aa_H 
+unit Chemical aa_I 
+unit Chemical aa_K 
+unit Chemical aa_L 
+unit Chemical aa_M 
+unit Chemical aa_N 
+unit Chemical aa_P 
+unit Chemical aa_Q 
+unit Chemical aa_R 
+unit Chemical aa_S 
+unit Chemical aa_T 
+unit Chemical aa_V 
+unit Chemical aa_W 
+unit Chemical aa_Y 
+
+unit CompositionTable protein_composition A aa_A 
+unit CompositionTable protein_composition C aa_C 
+unit CompositionTable protein_composition D aa_D 
+unit CompositionTable protein_composition E aa_E 
+unit CompositionTable protein_composition F aa_F 
+unit CompositionTable protein_composition G aa_G 
+unit CompositionTable protein_composition H aa_H 
+unit CompositionTable protein_composition I aa_I 
+unit CompositionTable protein_composition K aa_K 
+unit CompositionTable protein_composition L aa_L 
+unit CompositionTable protein_composition M aa_M 
+unit CompositionTable protein_composition N aa_N 
+unit CompositionTable protein_composition P aa_P 
+unit CompositionTable protein_composition Q aa_Q 
+unit CompositionTable protein_composition R aa_R 
+unit CompositionTable protein_composition S aa_S 
+unit CompositionTable protein_composition T aa_T 
+unit CompositionTable protein_composition V aa_V 
+unit CompositionTable protein_composition W aa_W 
+unit CompositionTable protein_composition Y aa_Y 
+
 unit TransformationTable rna2protein UUU F UUC F UUA L UUG L CUU L CUC L CUA L CUG L AUU I AUC I AUA I AUG M GUU V GUC V GUA V GUG V UCU S UCC S UCA S UCG S CCU P CCC P CCA P CCG P ACU T ACC T ACA T ACG T GCU A GCC A GCA A GCG A UAU Y UAC Y CAU H CAC H CAA Q CAG Q AAU N AAC N AAA K AAG K GAU D GAC D GAA E GAG E UGU C UGC C UGG W CGU R CGC R CGA R CGG R AGU S AGC S AGA R AGG R GGU G GGC G GGA G GGG G 
 
 unit ProductTable proteins rna2protein 

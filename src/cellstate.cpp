@@ -49,6 +49,7 @@ void CellState::store (SimulatorInput* element, const std::string& name /*= ""*/
 	   || _site_family_handler.store (element, name)
 	   || _chemical_handler.store (element, name)
 	   || _reaction_handler.store (element, name)
+	   || _composition_table_handler.store (element, name)
 	   || _decoding_table_handler.store (element, name)
 	   || _product_table_handler.store (element, name)
 	   || _transformation_table_handler.store (element, name)))
@@ -78,6 +79,9 @@ int CellState::find_id (const std::string& name) const
   if (result != NOT_FOUND) { return result; }
 
   result = _reaction_handler.find_id (name);
+  if (result != NOT_FOUND) { return result; }
+
+  result = _composition_table_handler.find_id (name);
   if (result != NOT_FOUND) { return result; }
 
   result = _decoding_table_handler.find_id (name);

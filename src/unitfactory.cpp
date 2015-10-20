@@ -30,6 +30,7 @@
 #include "baseloader.h"
 #include "chemicalsequence.h"
 
+#include "compositiontable.h"
 #include "decodingtable.h"
 #include "producttable.h"
 #include "transformationtable.h"
@@ -76,6 +77,7 @@ bool UnitFactory::handle (const std::string& line)
 			     || create_chemical_sequence (remaining)
 			     || create_processive_chemical (remaining)
 			     || create_base_loader (remaining)
+			     || create_composition_table (remaining)
 			     || create_decoding_table (remaining)
 			     || create_product_table (remaining)
 			     || create_transformation_table (remaining));
@@ -204,6 +206,50 @@ bool UnitFactory::create_termination_site (const std::string& line)
   _cell_state.store (site);
   return true;
 }
+
+bool UnitFactory::create_composition_table (const std::string& line)
+{
+  std::istringstream line_stream (line);  
+  if (check_tag (line_stream, "CompositionTable") == false) { return false; }
+
+  // read base data
+  std::string name;
+  if (not (line_stream >> name)) 
+    {
+      // TODO throw error
+      return false;
+    }
+  
+  CompositionTable* table = _cell_state.find <CompositionTable> (name);
+  if (table == 0) // table does not exist already: create it
+    {
+      table = new CompositionTable;
+      _cell_state.store (table, name);      
+    }
+
+  // read letter and associated chemicals
+  char letter;
+  std::string chemical_name;
+  std::list <Chemical*> chemicals;
+  if (not (line_stream >> letter >> chemical_name))
+    {
+      // TODO throw error
+      return false;
+    }
+  do  
+    {
+      Chemical* chemical = _cell_state.find <Chemical> (chemical_name);
+      // check whether chemical is already defined
+      if (chemical == 0) { return false; } // TODO throw error ?
+      chemicals.push_back (chemical);
+    }
+  while (line_stream >> chemical_name);
+
+  table->add_rule (letter, chemicals);
+
+  return true;
+}
+
 
 bool UnitFactory::create_decoding_table (const std::string& line)
 {

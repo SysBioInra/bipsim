@@ -49,6 +49,7 @@ class SiteObserver;
 class SiteAvailability;
 
 // tables
+class CompositionTable;
 class DecodingTable;
 class ProductTable;
 class TransformationTable;

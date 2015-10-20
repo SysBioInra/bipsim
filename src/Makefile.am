@@ -54,6 +54,7 @@ libsrc_a_SOURCES += \
 
 # table sources
 libsrc_a_SOURCES += \
+	compositiontable.cpp compositiontable.h \
 	decodingtable.cpp decodingtable.h \
 	producttable.cpp producttable.h \
 	transformationtable.cpp transformationtable.h

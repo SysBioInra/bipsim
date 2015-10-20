@@ -130,6 +130,13 @@ private:
   bool create_termination_site (const std::string& line);
 
   /**
+   * @brief Create composition table from stream and store it in cell state.
+   * @param line Line to read creation information from.
+   * @return True if entity was successfully created.
+   */
+  bool create_composition_table (const std::string& line);
+
+  /**
    * @brief Create decoding table from stream and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.

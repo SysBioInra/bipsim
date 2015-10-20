@@ -1,0 +1,10 @@
+
+unit Chemical ADP
+unit Chemical CDP
+unit Chemical GDP 
+unit Chemical TDP
+
+unit CompositionTable dna_composition A ADP
+unit CompositionTable dna_composition C CDP
+unit CompositionTable dna_composition G GDP
+unit CompositionTable dna_composition T TDP
