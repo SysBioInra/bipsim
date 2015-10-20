@@ -171,7 +171,7 @@ void ChemicalSequence::watch_site_availability (int position, int length, SiteOb
   // site_observer.update (0); // how is this useful ???
 			
   // create site availability notifier
-  _sites_to_watch.push_back (SiteAvailability (position, length, site_observer));
+  _sites_to_watch.push_back (SiteAvailability (relative (position), length, site_observer));
 
   // send first notification about site availability
   _sites_to_watch.back().notify (number(), _occupancy_map);

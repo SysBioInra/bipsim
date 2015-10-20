@@ -1,0 +1,115 @@
+#
+# List of formats. Elements provided by user are capitalized, keywords
+# contain lower-case characters. Simulator checks for types at parsing:
+# if a BOUND_CHEMICAL should be provided, then it expects the name of an
+# entity defined by `unit BoundChemical NAME`. Often the names of the 
+# elements to provide refer to entities whose format is described in
+# another section.
+#
+
+
+
+
+#######################################################################
+#                             SITE FORMAT                             #
+#######################################################################
+#
+# Binding sites:
+#     unit BindingSite FAMILY LOCATION START STOP K_ON K_OFF READING_FRAME
+#
+# Termination sites:
+#     unit TerminationSite FAMILY LOCATION START STOP
+#
+#######################################################################
+
+
+#######################################################################
+#                            TABLE FORMAT                             #
+#######################################################################
+#
+# Decoding table (associates templates with bases to load, e.g. codon
+# to tRNA table):
+#     unit DecodingTable NAME [TEMPLATE ELEMENT_TO_LOAD LOADED_POLYMERASE LOADING_RATE]^N
+#
+# Transformation table (transforms a sequence into another, e.g. DNA to
+# RNA transformation):
+#     unit TransformationTable NAME [INPUT_MOTIF OUTPUT_MOTIF]^N
+#
+# Product table (stores product of template sequences)
+#     unit ProductTable NAME TRANSFORMATION_TABLE
+#
+#######################################################################
+
+
+#######################################################################
+#                           CHEMICAL FORMAT                           #
+#######################################################################
+#
+# Plain chemical:
+#     unit Chemical NAME INITIAL_QUANTITY
+#
+# Single chemical sequence:
+#     unit ChemicalSequence NAME sequence SEQUENCE INITIAL_QUANTITY
+# or
+#     unit ChemicalSequence NAME product_of PARENT START_POSITION END_POSITION PRODUCT_TABLE INITIAL_QUANTITY
+#
+# Chemicals bound to a sequence:
+#     unit BoundChemical NAME
+#
+# Chemicals that can move along a sequence:
+#     unit ProcessiveChemical NAME STALLED_FORM TERMINATION_SITE
+#
+# Polymerases (chemical that can read a sequence and load corresponding element):
+#     unit BaseLoader NAME DECODING_TABLE
+#
+#######################################################################
+
+
+#######################################################################
+#                           REACTION FORMAT                           #
+#######################################################################
+#
+# Plain chemical reaction:
+#     reaction ChemicalReaction [CHEMICAL STOICHIOMETRY]^N rates K_1 K_-1
+#
+# Complexation (simple assembly of two molecules):
+#     reaction Complexation CHEMICAL_A CHEMICAL_B COMPLEX K_ON K_OFF
+#
+# Binding (association of a chemical to a specific site of a sequence):
+#     reaction Binding CHEMICAL BOUND_FORM BINDING_SITE
+#
+# Baseloading (template-driven loading of a base by a polymerase)
+#     reaction BaseLoading BASELOADER
+#
+# Translocation along a sequence
+#     reaction Elongation BOUND_CHEMICAL FORM_AFTER_STEP STEP_SIZE RATE
+#
+# Release
+#     reaction Release BOUND_CHEMICAL SIDE_REACTION (produces PRODUCT_TABLE)
+# (last part is optional)
+#
+#######################################################################
+
+
+#######################################################################
+#                              EVENT FORMAT                           #
+#######################################################################
+#
+# An event should have the following format (one event per line):
+# 
+#   TIME EVENT_TAG TARGET QUANTITY
+# 
+# where
+#  - TIME is the time at which the event should occur
+#  - EVENT_TAG is the type of event among
+#     + ADD: add some molecules.
+#     + REMOVE: remove some molecules if possible.
+#     + SET: set the number of molecules.
+#  - TARGET is the target chemical
+#  - QUANTITY is the quantity to add/remove/etc.
+#
+# example:
+#  100 ADD ATP 1000
+# adds 1000 ATP molecules at time t=100.
+#
+#######################################################################

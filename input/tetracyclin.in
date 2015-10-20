@@ -7,3 +7,15 @@ reaction Complexation 70S Tcn 70STcn 10 1
 
 # injection de la tétracycline
 event 500 ADD Tcn 2000
+
+# lavages successifs
+event 1000 SET Tcn 0
+event 1001 SET Tcn 0
+event 1002 SET Tcn 0
+event 1003 SET Tcn 0
+event 1004 SET Tcn 0
+event 1005 SET Tcn 0
+event 1006 SET Tcn 0
+event 1007 SET Tcn 0
+event 1009 SET Tcn 0
+event 1010 SET Tcn 0

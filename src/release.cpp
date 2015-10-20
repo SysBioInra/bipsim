@@ -28,8 +28,10 @@
 //  Constructors/Destructors
 // ==========================
 //
-Release::Release (BoundChemical& unit_to_release, std::vector<Chemical*>& other_components,
-		  std::vector<int>& stoichiometry, double rate, ProductTable* product_table /*= 0*/)
+Release::Release (BoundChemical& unit_to_release,
+		  std::vector<Chemical*>& other_components,
+		  std::vector<int>& stoichiometry, double rate,
+		  ProductTable* product_table /*= 0*/)
   : _side_reaction (other_components, stoichiometry, rate, 0)
   , _unit_to_release (unit_to_release)
   , _product_table (product_table)
@@ -37,7 +39,8 @@ Release::Release (BoundChemical& unit_to_release, std::vector<Chemical*>& other_
   _reactants.push_back (&_unit_to_release);
 
   // copy components from side reaction into parent component list
-  _reactants.insert (_reactants.end(), _side_reaction.reactants().begin(), _side_reaction.reactants().end());
+  _reactants.insert (_reactants.end(), _side_reaction.reactants().begin(),
+		     _side_reaction.reactants().end());
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -127,10 +130,17 @@ void Release::do_forward_reaction (void)
     {
       ChemicalSequence* product =
 	_product_table->product (_unit_to_release.focused_unit_binding_site().location(),
-				 _unit_to_release.focused_unit_binding_site().position(),
-				 _unit_to_release.focused_unit_position());
-      if (product !=0) product->add(1);
-      else std::cerr << "Unknown product\n";
+				 _unit_to_release.focused_unit_binding_site().reading_frame(),
+				 _unit_to_release.focused_unit_reading_frame()-1);
+      if (product !=0) { product->add(1); }
+      else
+	{
+	  std::cerr << "Unknown product ("
+		    << _unit_to_release.focused_unit_binding_site().reading_frame()
+		    << ", "
+		    << _unit_to_release.focused_unit_position()-1
+		    << ")";
+	}
     }
 
   _unit_to_release.remove_focused_unit();

@@ -32,6 +32,9 @@ Site::Site (int family_id, ChemicalSequence& location, int position, int length)
   , _position (position)
   , _length (length)
 {
+  /** @pre Length must be strictly positive.*/
+  REQUIRE (length > 0);
+
   /** @pre Site must be within location.*/
   REQUIRE (location.is_out_of_bounds (position, length) == false);
 }

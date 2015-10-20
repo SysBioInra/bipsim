@@ -1,169 +1,107 @@
 
-function positions = get_RBS_start_and_stop_positions (Gene, RNA, DNA_sequence)
+function positions = get_RBS_start_and_stop_positions (g, rna, dna, ...
+                                                          ferr)
+    % warning messages
+    w_gene_length = ['Gene_length is not a multiple of 3. Here is ' ...
+                     'the guilty gene: %s. Gene will be ignored.'];
+    w_stop_codon = ['This may not be stop codon... Position %d is ' ...
+                    '%s. Here is the guilty gene: %s. Gene will be ' ...
+                    'ignored.']; 
+    w_start_codon = ['This may not be start codon... Position %d ' ...
+                     'is %s, not ATG. Here is the guilty gene: %s.'];
     
-% open error file
-    ferr = fopen('error_rbs_extraction.dat','w');
+    % get start and stop codon
+    if g.brin_DNA == 1
+        start_position = g.position(1);  % retrieve positon and codon on sequence
+        start_codon = upper(dna(start_position: ...
+                                (start_position+2)));
+        stop_position = g.position(2);
+        stop_codon = upper(dna(stop_position-2: ...
+                                        (stop_position)));              
+    else
+        start_position = g.position(2);  % retrieve positon and codon on sequence
+        start_codon = get_complementary_sequence ...
+                (upper (dna (start_position:-1: ...
+                                      (start_position-2))));  
+        stop_position = g.position(1);
+        stop_codon = get_complementary_sequence ...
+            (upper (dna (stop_position+2:-1:(stop_position))));
+    end
+          
+    % check that gene length is a multiple of 3
+    corrupt_data = false;
+    if (mod (abs (g.position(1)-g.position(2))+1,3) ~= 0)
+        corrupt_data = true;
+        msg = sprintf (w_gene_length, g.name); 
+        fprintf (ferr, '%s\n', msg);
+    end
+          
+    % check that the gene ends with a stop codon
+    if ~(strcmp(stop_codon, 'TAG') ...
+        | strcmp(stop_codon, 'TAA') ...
+        | strcmp(stop_codon, 'TGA')) 
+        corrupt_data = true;
+        msg = sprintf (w_stop_codon, stop_position, stop_codon, g.name);
+        fprintf(ferr, [msg, '\n']);
+    end
     
-    positions = [];
-    assert( length(RNA) == length(Gene) );
-    w = 0;
-    c = 0;
-    t = 0;
-    ignored = 0;
-
-  for i = 1:length(Gene) % loop through RNAs and Genes
-      g = Gene{i};
-      r = RNA{i};
-      assert(strcmp(g.name,r.name));
-      
-      if strcmp(g.gene_category, 'CDS') % RBS are only relevant for
-                                        % CDS
-          t = t + 1;
-          
-          % get start codon
-          if g.brin_DNA == 1
-              start_position = g.position(1);  % retrieve positon and codon on sequence
-              codon = upper(DNA_sequence(start_position: ...
-                                         (start_position+2)));
-              stop_position = g.position(2);
-              stop_codon = upper(DNA_sequence(stop_position-2: ...
-                                         (stop_position)));              
-          else
-              start_position = g.position(2);  % retrieve positon and codon on sequence
-              codon = ...
-                  get_complementary_sequence(upper(DNA_sequence(start_position:-1:(start_position-2))));
-              stop_position = g.position(1);
-              stop_codon = get_complementary_sequence (upper ...
-                                                       (DNA_sequence ...
-                                                        (stop_position+2:-1:(stop_position))));
-          end
-          
-          % check that gene length is a multiple of 3
-          corrupt_data = false;
-          if (mod (abs (g.position(1)-g.position(2))+1,3) ~= 0)
-              corrupt_data = true;
-              error_msg = sprintf(['Gene_length is not a multiple ' ...
-                                  'of 3. Here is the guilty gene: ' ...
-                                  '%s (index %d). Gene will be ' ...
-                                  'ignored.'], g.name, i); 
-              warning(error_msg);
-              fprintf(ferr, '%s\n', error_msg);
-          end
-          
-          % check that the gene ends with a stop codon
-          if (stop_codon == 'TAG') | (stop_codon == 'TAA') | (stop_codon == 'TGA') ...
-              % codon is really stop codon ? 
-          else% codon does not seem to be a stop codon...
-              corrupt_data = true;
-              warning(['WTF ? this may not be stop codon... Position ' ...
-                     '%d is %s. Here is the guilty gene: %s (index ' ...
-                     '%d). Gene will be ignored.'], stop_position, ...
-                      stop_codon, g.name, i);
-              fprintf(ferr, ['WTF ? this may not be stop codon... Position ' ...
-                     '%d is %s. Here is the guilty gene: %s (index ' ...
-                     '%d). Gene will be ignored.\n'], stop_position, ...
-                      stop_codon, g.name, i);
-          end
-
-          if (corrupt_data == true)
-              ignored = ignored + 1;
-          else
-              if (codon == 'ATG') | (codon == 'TTG') | (codon == 'GTG') ...
-                         | (codon == 'CTG')
-                  % codon is really start codon ? 
-              else% codon does not seem to be a start codon...
-                  w = w + 1;
-                  warning(['wtf ? this may not be start codon... Position ' ...
-                           '%d is %s, not ATG. Here is the guilty gene: %s (index ' ...
-                           '%d).'], start_position, codon, g.name, i);
-                  fprintf(ferr, ['wtf ? this may not be start codon... Position ' ...
-                                 '%d is %s, not ATG. Here is the guilty gene: %s (index ' ...
-                                 '%d).\n'], start_position, codon, g.name, i);              
-              end
-              
-              % get RBS
-              RBS_struct = r.RBS;  % retrieve putative RBSs
-              
-              if isstruct(RBS_struct) % RBS information available
-                                      % loop through possible RBS
-                  possible_RBS_positions = RBS_struct.show;
-                  max_proba = 0;
-                  for position = possible_RBS_positions
-                      if position{1}.rbs_proba > max_proba
-                          max_proba = position{1}.rbs_proba;
-                          true_RBS = position{1};
-                      end
-                  end
-                  assert(true_RBS.posmin < true_RBS.posmax);
-                  if g.brin_DNA == 1
-                      if (start_position > true_RBS.posmin)
-                          positions = [positions; [true_RBS.posmin, ...
-                                              true_RBS.posmax, ...
-                                              start_position, stop_position]];
-                      else
-                          warning (['Start position %d not > to RBS position ' ...
-                                    '%d for gene %s (index %d). Putting ' ...
-                                    'RBS at 8 bases from start codon.'], ...
-                                   start_position, true_RBS.posmin, g.name, i);
-                          fprintf (ferr, ['Start position %d not > to RBS position ' ...
-                                          '%d for gene %s (index %d). Putting ' ...
-                                          'RBS at 8 bases from start codon.\n'], ...
-                                   start_position, true_RBS.posmin, g.name, i);
-                          positions = [positions; [start_position-21, ...
-                                              start_position-8, ...
-                                              start_position, stop_position]];                      
-                      end
-                  else
-                      if (start_position < true_RBS.posmax)
-                          positions = [positions; [true_RBS.posmax, ...
-                                              true_RBS.posmin, ...
-                                              start_position, ...
-                                              stop_position]]; 
-                      else
-                          warning (['Start position %d not < to RBS position ' ...
-                                    '%d for gene %s (index %d). Putting ' ...
-                                    'RBS at 8 bases from start codon.'], ...
-                                   start_position, true_RBS.posmin, ...
-                                   g.name, i);
-                          fprintf (ferr,['Start position %d not < to RBS position ' ...
-                                         '%d for gene %s (index %d). Putting ' ...
-                                         'RBS at 8 bases from start codon.\n'], ...
-                                   start_position, true_RBS.posmin, ...
-                                   g.name, i);
-                          positions = [positions; [start_position+21, ...
-                                              start_position+8, ...
-                                              start_position, stop_position]];                      
-                      end
-                  end
-              else% no RBS information -> ???
-                  c = c + 1;
-                  % warning(['no RBS information for gene %d, putting RBS ' ...
-                  %'at 8 bases from start codon.'],i);
-                  if g.brin_DNA == 1
-                      positions = [positions; [start_position-21, ...
-                                          start_position-8,start_position, ...
-                                          stop_position]];
-                  else
-                      positions = [positions; [start_position+21, ...
-                                          start_position+8, ...
-                                          start_position, stop_position]];
-                  end
-              end
-          end
-      end
-  end
-      
-  % remove duplicates
-  positions = unique(positions, 'rows');
-  
-  % warning output
-  error_msg = sprintf (['it seems that %d out of %d start codons were not ' ...
-                      'NTG...\n %d genes were ignored because they ' ...
-                      'had no CDS.\n %d genes having a CDS were ' ...
-                      'ignored because they had no stop codon or ' ...
-                      'were not a multiple of 3 in length.\n %d RBS ' ...
-                      'were created'],  w, t, i-t, ignored, c);
-  warning(error_msg);
-  fprintf(ferr, '%s\n', error_msg);
+    % check start codon
+    if ~((start_codon == 'ATG') | (start_codon == 'TTG') ...
+         | (start_codon == 'GTG') | (start_codon == 'CTG'))
+        msg = sprintf (w_start_codon, start_position, start_codon, g.name);
+        fprintf(ferr, [msg, '\n']);      
+    end
+    
+    % send back empty bracket if gene is to be ignored
+    if (corrupt_data == true)
+        positions = [];
+        return
+    end
+    
+    % get RBS
+    RBS_struct = rna.RBS;  % retrieve putative RBSs
+        
+    if isstruct(RBS_struct) % RBS information available
+                            % loop through possible RBS
+        possible_RBSs = [RBS_struct.show{:}];
+        [~,i_max] = max ([possible_RBSs.rbs_proba]);
+        RBS_position = [possible_RBSs(i_max).posmin, ...
+                        possible_RBSs(i_max).posmax];
+        assert(RBS_position(1) < RBS_position(2));
+        if g.brin_DNA == 1
+            if (start_position > RBS_position(1))
+                positions = [RBS_position, start_position, stop_position];
+            else
+                fprintf (ferr, ['Start position %d not > to RBS position ' ...
+                                '%d for gene %s. Putting ' ...
+                                'RBS at 8 bases from start codon.\n'], ...
+                         start_position, RBS_position(1), g.name); 
+                positions = [start_position-21, start_position-8, ...
+                             start_position, stop_position];
+            end
+        else % brin_DNA == -1
+            if (start_position < RBS_position(2))
+                positions = [RBS_position(2), RBS_position(1), ...
+                             start_position, stop_position]; 
+            else
+                fprintf (ferr,['Start position %d not < to RBS position ' ...
+                               '%d for gene %s. Putting ' ...
+                               'RBS at 8 bases from start codon.\n'], ...
+                         start_position, RBS_position(2), g.name);
+                positions = [start_position+21, start_position+8, ...
+                             start_position, stop_position];
+            end
+        end
+    else% no RBS information -> ???
+        fprintf (ferr,['no RBS information for gene %s, putting RBS ' ...
+                       'at 8 bases from start codon.\n'], g.name);
+        if g.brin_DNA == 1
+            positions = [start_position-21, start_position-8, ...
+                         start_position, stop_position];
+        else
+            positions = [start_position+21, start_position+8, ...
+                         start_position, stop_position];
+        end
+    end    
 end
   

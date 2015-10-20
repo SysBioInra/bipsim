@@ -303,7 +303,18 @@ bool ReactionFactory::create_release ( const std::string& line )
       return false;
     }
   
+  // get associated products (if applicable)
+  ProductTable* table = 0;
+  if (check_tag (line_stream, "produces"))
+    {
+      std::string table_name;
+      if (not (line_stream >> table_name)) { return false; } // throw error
+      table = _cell_state.find <ProductTable> (table_name);
+      if (table == 0) { return false; } // throw error
+    }
+
   // create and store
-  _cell_state.store (new Release (*unit_to_release, chemicals, stoichiometries, rate));
+  _cell_state.store (new Release (*unit_to_release, chemicals,
+				  stoichiometries, rate, table));
   return true;
 }

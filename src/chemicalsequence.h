@@ -175,6 +175,12 @@ public:
   int length (void) const;
 
   /**
+   * @brief Returns the whole sequence.
+   * @return String representing chemical sequence.
+   */
+  const std::string& sequence (void) const;
+
+  /**
    * @brief Returns the sequence between two specific positions.
    * @return String sequence between two positions.
    * @param first_position
@@ -283,6 +289,11 @@ inline bool ChemicalSequence::is_out_of_bounds (int position, int length ) const
 	  || (relative (position) < 0));
 }
 
+
+inline const std::string& ChemicalSequence::sequence (void) const
+{
+  return _sequence;
+}
 
 inline const std::string ChemicalSequence::sequence (int first_position,
 						     int length) const

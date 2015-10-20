@@ -115,9 +115,10 @@ bool UnitFactory::create_binding_site (const std::string& line)
 
   // read base data
   std::string family_name, location;
-  int position, length;
+  int start, end;
   double k_on, k_off;
-  if ( not (line_stream >> family_name >> location >> position >> length >> k_on >> k_off) )
+  if ( not (line_stream >> family_name >> location >> start >> end
+	    >> k_on >> k_off) )
     {  
       // TODO throw error
       return false;
@@ -127,8 +128,25 @@ bool UnitFactory::create_binding_site (const std::string& line)
   ChemicalSequence* sequence = _cell_state.find <ChemicalSequence> (location);
   if (sequence == 0) { return false; } // TODO throw error ?
 
+  // check position consistency
+  if (end < start)
+    {
+      std::cerr << "Site of family " << family_name 
+		<< " at position [" << start << "," << end << "]:"
+		<< "starting position is smaller than end..." << std::endl;
+      return false;
+    }
+  if (sequence->is_out_of_bounds (start, end-start+1))
+    {
+      std::cerr << "Site of family " << family_name 
+		<< " at position [" << start << "," << end << "]"
+		<< " is not within bound of " << location << std::endl;
+      return false;
+    }
+
   // get family ref/id (create family if necessary)
-  BindingSiteFamily* family = _cell_state.find <BindingSiteFamily> (family_name);
+  BindingSiteFamily* family =
+    _cell_state.find <BindingSiteFamily> (family_name);
   if (family == 0)
     {
       family = new BindingSiteFamily;
@@ -140,9 +158,11 @@ bool UnitFactory::create_binding_site (const std::string& line)
   int reading_frame = 0;
   BindingSite* binding_site;
   if (not (line_stream >> reading_frame)) // no reading frame
-    { binding_site = new BindingSite (family_id, *sequence, position, length, k_on, k_off); }
+    { binding_site = new BindingSite (family_id, *sequence, start, end-start+1,
+				      k_on, k_off); }
   else
-    { binding_site = new BindingSite (family_id, *sequence, position, length, k_on, k_off, reading_frame); }
+    { binding_site = new BindingSite (family_id, *sequence, start, end-start+1,
+				      k_on, k_off, reading_frame); }
 
   // add created unit to family and cell state
   family->add (binding_site);
@@ -157,8 +177,8 @@ bool UnitFactory::create_termination_site (const std::string& line)
 
   // read base data
   std::string family_name, location;
-  int position, length;
-  if ( not (line_stream >> family_name >> location >> position >> length) )
+  int start, end;
+  if (not (line_stream >> family_name >> location >> start >> end))
     {
       // TODO throw error
       return false;
@@ -178,7 +198,7 @@ bool UnitFactory::create_termination_site (const std::string& line)
   int family_id = _cell_state.find_id (family_name);
 
   // create and store entity
-  Site* site = new Site (family_id, *sequence, position, length);
+  Site* site = new Site (family_id, *sequence, start, end-start+1);
   family->add (site);
   sequence->add_termination_site (*site);
   _cell_state.store (site);
@@ -356,7 +376,7 @@ bool UnitFactory::create_chemical_sequence ( const std::string& line )
     }
   else if (keyword == "product_of")
     {
-      // gather parent to product relation and deduce sequence
+      // gather parent
       std::string parent_name, table_name; 
       int pos1, pos2;
       if (not(line_stream >> parent_name >> pos1 >> pos2 >> table_name))
@@ -370,8 +390,37 @@ bool UnitFactory::create_chemical_sequence ( const std::string& line )
 	_cell_state.find <ProductTable> (table_name);
       if (table == 0) { return false; }
 
+      // check position consistency
+        if (parent->is_out_of_bounds (pos1, pos2-pos1+1))
+	  {
+	    std::cerr << "Product " << name 
+		      << " at position [" << pos1 << "," << pos2 << "]"
+		      << " is not within bound of " << parent_name << std::endl;
+	    return false;
+	  }
+
+      // check whether sequence is already listed
+      chemical = _cell_state.find <ChemicalSequence> (name);
+      if (chemical != 0)
+	{
+	  // if it is we simply need to signal that it is also
+	  // the product of another parent
+	  sequence = table->generate_child_sequence (*parent, pos1, pos2);
+	  if (sequence != chemical->sequence())
+	    {
+	      std::cerr << "product " << name << " defined multiple times,"
+			<< " and inferred sequence\n" << sequence
+			<< "\ndoes not match previous definition\n"
+			<< chemical->sequence() << std::endl;
+	      return false;
+	    }
+	  table->add (*parent, pos1, pos2, *chemical);
+	  return true;
+	}
+      
       sequence = table->generate_child_sequence (*parent, pos1, pos2);
-      chemical = new ChemicalSequence (sequence);
+      if (sequence == "") { return false; } // TODO throw error
+      chemical = new ChemicalSequence (sequence, pos1);
       table->add (*parent, pos1, pos2, *chemical);
     }
   else { return false; } // TODO throw error

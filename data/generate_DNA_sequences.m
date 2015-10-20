@@ -1,5 +1,7 @@
 
-load Full_DNA_seq_bsub.mat
+if ~exist (tab_seq)
+    load Full_DNA_seq_bsub.mat;
+end
 
 fid = fopen('dna.dat','w');
 

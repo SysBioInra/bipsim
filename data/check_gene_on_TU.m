@@ -14,7 +14,7 @@ function [position, mismatch] = check_gene_on_TU (gene_position, TU_position)
     if ((b-c)*(b-d) > 0) % check whether d is not in [c,d]
         mismatch = true;
         % adjust value
-        if (c<d), d = b; else, c = a; end;
+        if (c<d), d = b; else, c = b; end;
     end
     position(1) = c; position(2) = d;
 end

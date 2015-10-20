@@ -136,6 +136,7 @@ void Elongation::do_forward_reaction (void)
     }
   else 
     {
+      std::cout << "out of bounds\n";
       stall = true;
     }
 
