@@ -165,10 +165,6 @@ unit BoundChemical t70S_Y_cp
 ###################
 unit Chemical H2O 1000
 unit Chemical H+ 
-unit Chemical GTP 1000
-unit Chemical ATP 1000
-unit Chemical AMP 
-unit Chemical GDP 
 unit Chemical ppGpp 
 unit Chemical PPi
 unit Chemical Pi

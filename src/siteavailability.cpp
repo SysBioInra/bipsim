@@ -31,6 +31,8 @@ SiteAvailability::SiteAvailability (int first_position, int length, SiteObserver
   , _observer (site_observer)
   , _last_value_notified (-1)
 {
+  /** @pre First position must be positive. */
+  REQUIRE (_first >= 0);
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -53,11 +55,13 @@ void SiteAvailability::notify (int current_number_sequences, const std::vector<i
   int max_occupied = 0;
   for ( int i = _first; i < _last; i++ )
     {
-      if ( current_occupancy [ i-1 ] > max_occupied ) { max_occupied = current_occupancy [ i-1 ]; }
+      if ( current_occupancy [i] > max_occupied )
+	{ max_occupied = current_occupancy [i]; }
     }
 
   // notify changes
   int number_sites_available = current_number_sequences - max_occupied;
+  if (number_sites_available < 0) number_sites_available = 0;
   if (number_sites_available != _last_value_notified)
     {
       _observer.update (number_sites_available);

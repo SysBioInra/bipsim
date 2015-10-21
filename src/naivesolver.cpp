@@ -99,7 +99,10 @@ double NaiveSolver::compute_next_reaction (void)
   
   if (_rate_manager->total_rate() <= 0)
     {
-      std::cerr << "Warning: no reactions left to perform" << std::endl;
+      std::cerr << "Warning: no reactions left to perform "
+		<< "(total reaction rate = "
+		<< _rate_manager->total_rate() << ")."
+		<< std::endl;
       // do not update time
       return time();
     }

@@ -27,6 +27,12 @@
 #                            TABLE FORMAT                             #
 #######################################################################
 #
+# Composition table (associates sequence letters with chemicals composing
+# them, which will be released during degradation):
+#     unit CompositionTable NAME LETTER_1 [CHEMICAL]^N
+#     ...
+#     unit CompositionTable NAME LETTER_n [CHEMICAL]^N
+#
 # Decoding table (associates templates with bases to load, e.g. codon
 # to tRNA table):
 #     unit DecodingTable NAME [TEMPLATE ELEMENT_TO_LOAD LOADED_POLYMERASE LOADING_RATE]^N
@@ -87,6 +93,9 @@
 # Release
 #     reaction Release BOUND_CHEMICAL SIDE_REACTION (produces PRODUCT_TABLE)
 # (last part is optional)
+#
+# Degradation
+#     reaction Degradation CHEMICAL_SEQUENCE COMPOSITION_TABLE RATE
 #
 #######################################################################
 

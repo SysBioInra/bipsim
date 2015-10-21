@@ -1,10 +1,10 @@
 
 unit Chemical UDP
 
-unit CompositionTable rna_composition A ADP
-unit CompositionTable rna_composition C CDP
-unit CompositionTable rna_composition G GDP
-unit CompositionTable rna_composition U UDP
+unit CompositionTable rna_composition A ADP Pi
+unit CompositionTable rna_composition C CDP Pi
+unit CompositionTable rna_composition G GDP Pi
+unit CompositionTable rna_composition U UDP Pi
 
 unit TransformationTable dna2rna A U C G G C T A
 

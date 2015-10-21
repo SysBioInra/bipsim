@@ -1,7 +1,13 @@
 
-unit Chemical ADP
-unit Chemical CDP
+unit Chemical GTP 1000
 unit Chemical GDP 
+
+unit Chemical ATP 1000
+unit Chemical ADP
+unit Chemical AMP 
+
+unit Chemical CDP
+
 unit Chemical TDP
 
 unit CompositionTable dna_composition A ADP

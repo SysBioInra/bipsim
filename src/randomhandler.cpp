@@ -95,12 +95,12 @@ int RandomHandler::draw_index ( const std::vector<double>& weights )
 
 std::vector<int> RandomHandler::draw_multiple_indices ( const std::vector<double>& weights, int number_indices )
 {
-  REQUIRE( weights.size() > 0 ); /** @pre There must be at least one item. */
+  REQUIRE (weights.size() > 0); /** @pre There must be at least one item. */
 
   // we create a biased wheel
   BiasedWheel<double> biased_wheel (weights);
 
-  REQUIRE( biased_wheel.total_weight() > 0 ); /** @pre Total weight must be strictly positive. */
+  REQUIRE (biased_wheel.total_weight() > 0); /** @pre Total weight must be strictly positive. */
   
   // we draw number_indices values in the weight distribution
   boost::uniform_real<double> distribution (biased_wheel.total_weight()*1e-16, biased_wheel.total_weight());

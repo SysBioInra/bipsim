@@ -157,6 +157,12 @@ private:
    */
   bool create_release (const std::string& line);
 
+  /**
+   * @brief Create release from stream and store it in cell state.
+   * @param line Line to read creation information from.
+   * @return True if entity was successfully created.
+   */
+  bool create_degradation (const std::string& line);
 
   // ======================
   //  Forbidden Operations

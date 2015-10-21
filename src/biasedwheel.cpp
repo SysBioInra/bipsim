@@ -14,6 +14,7 @@
 //
 #include <iostream>
 #include <algorithm> // std::sort
+#include <numeric> //std::partial_sum
 
 // ==================
 //  Project Includes
@@ -28,18 +29,16 @@
 //
 template <typename T>
 BiasedWheel<T>::BiasedWheel (const std::vector<T>& weights)
+  : _cumulated_weights (weights.size())
 {
   /** @pre All weights must be greater or equal to 0. */
   REQUIRE (check_weight_positivity (weights));
 
   /**
-   * Input vector is not stored as such, instead all zero values are stripped
-   * and a cumulative form is stored.
+   * Input vector is not stored as such, instead cumulative form is stored.
    */
-  // for optimization purposes, we reserve enough memory for our vectors
-  _cumulated_weights.reserve (weights.size());
-  _original_indices.reserve (weights.size());
-  cumulate_vector_and_strip (weights);
+  std::partial_sum (weights.begin(), weights.end(), _cumulated_weights.begin());
+  _total_weight = _cumulated_weights.back();
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -89,23 +88,21 @@ int BiasedWheel<T>::find_index (T drawn_weight)
   // this time it definitely IS possible).
 
   /** We use dichotomy to find the correct index */
-  if (_cumulated_weights[0] >= drawn_weight) { return _original_indices[0]; }
+  if (_cumulated_weights[0] >= drawn_weight) { return 0; }
   int min_index = 1;
   int max_index = _cumulated_weights.size()-1;
-  int i = (max_index+min_index)/2;
   while ( min_index != max_index )
     {
+      int i = (max_index+min_index)/2;
       if ( _cumulated_weights[i] < drawn_weight ) // is condition (1) satisfied ?
 	{
 	  // if no, the index is bigger than i
 	  min_index = i+1;
-	  i = (max_index + min_index+1)/2;
 	}
       else if ( _cumulated_weights[i-1] >= drawn_weight ) // if yes, is condition (2) satisfied ?
 	{
 	  // if no, the index is smaller than i
 	  max_index = i-1;
-	  i = (max_index + min_index+1)/2;
 	}
       else // if yes, we have found the right index !
 	{
@@ -113,7 +110,9 @@ int BiasedWheel<T>::find_index (T drawn_weight)
 	}
     }  
 
-  return _original_indices [min_index];
+  /** @post Weight associated to index must be strictly positive */
+  ENSURE (_cumulated_weights[i_min] > _cumulated_weights[i_min-1])
+  return min_index;
 }
   
 template <typename T>
@@ -160,7 +159,7 @@ std::vector<int> BiasedWheel<T>::find_multiple_indices (const std::vector<T>& dr
       // right index has been found (condition (2) is automatically met): store result
       // we need to be careful to store it at the right place: current_order does not
       // yield the INDEX of the element being compared, but its ORDER. 
-      result [weight_order [current_order]] = _original_indices [current_cumulated_weight_index];
+      result [weight_order [current_order]] = current_cumulated_weight_index;
 
       // go to next element in increasing order
       ++current_order;
@@ -189,94 +188,10 @@ std::vector<int> BiasedWheel<T>::find_multiple_indices (const std::vector<T>& dr
 // Not needed for this class (use of default overloading) !
 // BiasedWheel& BiasedWheel::operator= ( const BiasedWheel& other_biased_wheel );
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-template <typename T>
-bool BiasedWheel<T>::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
-
-
 // =================
 //  Private Methods
 // =================
 //
-
-// THIS VERSION MIGHT BE BETTER IF WE DO NOT HAVE TO ALLOCATE MEMORY SYSTEMATICALLY
-// (E.G. IF A BIASED WHEEL IS REUSED FOR A DIFFERENT VECTOR)
-// template<typename T>
-// void BiasedWheel<T>::cumulate_vector_and_strip (const std::vector<T>& vector_to_cumulate)
-// {
-//   int number_items = vector_to_cumulate.size();
-//   int real_number_items = 0;
-
-//   // we start by looking for the first positive value
-//   int original_index = 0;
-//   while ( ( vector_to_cumulate[original_index] <= 0 ) && ( original_index < number_items ) )
-//     { 
-//       original_index++;
-//     }
-
-//   // we set the first value
-//   _cumulated_weights [real_number_items] = vector_to_cumulate [original_index];
-//   _original_indices [real_number_items] = original_index;
-//   real_number_items++;
-//   original_index++;
-
-//   for ( ; original_index < number_items; original_index++ )
-//     { 
-//       if ( vector_to_cumulate[original_index] > 0 ) // skip all zero or negative values
-// 	{
-// 	  _cumulated_weights [real_number_items] = _cumulated_weights [real_number_items-1] + vector_to_cumulate [original_index];
-// 	  _original_indices [real_number_items] = original_index;
-// 	  real_number_items++;
-// 	}
-//     }
-
-//   // resize vectors
-//   _cumulated_weights.resize (real_number_items);
-//   _original_indices.resize (real_number_items);
-  
-//   _total_weight = _cumulated_weights.back();
-// }
-
-template<typename T>
-void BiasedWheel<T>::cumulate_vector_and_strip (const std::vector<T>& vector_to_cumulate)
-{
-  int number_items = vector_to_cumulate.size();
-
-  // we start by looking for the first positive value
-  int original_index = 0;
-  while ( ( vector_to_cumulate[original_index] <= 0 ) && ( original_index < number_items ) )
-    { 
-      original_index++;
-    }
-
-  // we set the first value
-  _cumulated_weights.push_back (vector_to_cumulate[original_index]);
-  _original_indices.push_back (original_index);
-  original_index++;
-
-  for ( ; original_index < number_items; original_index++ )
-    { 
-      if ( vector_to_cumulate[original_index] > 0 ) // skip all zero or negative values
-	{
-	  _cumulated_weights.push_back (_cumulated_weights.back() + vector_to_cumulate[original_index]);
-	  _original_indices.push_back (original_index);
-	}
-    }
-
-  _total_weight = _cumulated_weights.back();
-}
-
 
 template<typename T>
 std::vector<int> BiasedWheel<T>::sorted_indices (const std::vector<T>& vector_to_sort)

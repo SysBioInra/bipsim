@@ -41,7 +41,11 @@ ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
 {
 
   /** @pre Stoichiometry container size must match number of components. */
-  REQUIRE( _stoichiometry.size() == _number_components );
+  REQUIRE (_stoichiometry.size() == _number_components);
+  /** @pre k_1 must be positive. */
+  REQUIRE (_k_1 >= 0);
+  /** @pre k_-1 must be positive. */
+  REQUIRE (_k_m1 >= 0);
 
   // fill in the reactant list
   _reactants.insert (_reactants.end(), _component_vector.begin(), _component_vector.end());
@@ -140,6 +144,11 @@ void ChemicalReaction::update_rates (void)
     {
       _backward_rate = 0;
     }
+
+  /** @post Forward rate must be positive. */
+  ENSURE (_forward_rate >=0);
+  /** @post Backward rate must be positive. */
+  ENSURE (_backward_rate >=0);
 }
 
 

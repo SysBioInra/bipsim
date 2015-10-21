@@ -12,7 +12,7 @@ INITIAL_TIME 0
 #   FINAL_TIME <real value>
 ################################################################################
 
-FINAL_TIME 100
+FINAL_TIME 2000
 
 ################################################################################
 # INPUT FILES 
@@ -21,7 +21,7 @@ FINAL_TIME 100
 #   INPUT_FILES path/to/file1 path/to/file2 etc.
 ################################################################################
 
-INPUT_FILES ../input/dna_info.in ../input/dna.in ../input/rna_info.in ../input/rnas.in ../input/protein_info.in ../input/proteins.in ../input/translation.in ../input/tetracyclin.in
+INPUT_FILES ../input/dna_info.in ../input/dna.in ../input/rna_info.in ../input/test_rnas.in ../input/protein_info.in ../input/test_proteins.in ../input/translation.in
 
 ################################################################################
 # OUTPUT FILE
@@ -29,7 +29,7 @@ INPUT_FILES ../input/dna_info.in ../input/dna.in ../input/rna_info.in ../input/r
 #   OUTPUT_FILE path/to/output/file
 ################################################################################
 
-OUTPUT_FILE ../output/tetracyclin/translation.txt
+OUTPUT_FILE ../output/test/translation.txt
 
 ################################################################################
 # OUTPUT STEP
@@ -46,4 +46,4 @@ OUTPUT_STEP 10000
 #   OUTPUT_ENTITIES name1 name2 etc.
 ################################################################################
 
-OUTPUT_ENTITIES protein DnaA_BSU00010
+OUTPUT_ENTITIES protein DnaA_BSU00010 U1 ADP GDP GTP UDP CDP

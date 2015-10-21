@@ -48,6 +48,8 @@ BindingSiteObserver::~BindingSiteObserver (void)
 //
 void BindingSiteObserver::update (int number_of_available_sites)
 {
+  /** @pre Number of available sites must be positive); */
+  REQUIRE (number_of_available_sites >= 0);
   _family.update (_site_id, number_of_available_sites);
 }
 

@@ -135,20 +135,9 @@ private:
   // ============
   //
   /**
-   * @brief Vector representating the wheel in a cumulative form, all 0 in the original having been
-   *  skipped.
-   *
-   * By skipping 0s, the values of the vector are strictly increasing which facilitates some algorithms.
+   * @brief Vector representating the wheel in a cumulative form.
    */
   std::vector<T> _cumulated_weights;
-
-  /**
-   * @brief Mapping of indices in cumulative form to indices in original form.
-   *
-   * Because we skip 0 values, cumulative form is smaller in general and does not preserve indices, so we
-   * need a mapping that enables us to return original inidices to the user.
-   */
-  std::vector<int> _original_indices;
 
   /**
    * @brief Sum of weights contained in the biased wheel.
@@ -159,12 +148,6 @@ private:
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Create wheel by taking out all 0 values of a vector and create a cumulative form of remaining values.
-   * @param vector_to_cumulate Vector used to create wheel.
-   */
-  void cumulate_vector_and_strip (const std::vector<T>& vector_to_cumulate);
-
   /**
    * @brief Check wether all value of a vector are positive.
    * @param v Weight vector to check.

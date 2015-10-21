@@ -36,6 +36,11 @@ Complexation::Complexation (Chemical& component_a, Chemical& component_b,
   , _k_off (k_off)
   , _bound_component (0)
 {
+  /** @pre k_on must be positive. */
+  REQUIRE (k_on >= 0);
+  /** @pre k_off must be positive. */
+  REQUIRE (k_off >= 0);
+
   // fill in component list
   _reactants.push_back (&component_a);
   _reactants.push_back (&component_b);
@@ -71,6 +76,11 @@ void Complexation::update_rates ( void )
    * Backward complexation rate is simply defined by r = k_off x [AB].
    */
   _backward_rate = _k_off * _complex.number();
+
+  /** @post Forward rate must be positive. */
+  ENSURE (_forward_rate >=0);
+  /** @post Backward rate must be positive. */
+  ENSURE (_backward_rate >=0);
 }
 
 

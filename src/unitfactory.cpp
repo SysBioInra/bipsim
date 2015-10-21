@@ -220,13 +220,6 @@ bool UnitFactory::create_composition_table (const std::string& line)
       return false;
     }
   
-  CompositionTable* table = _cell_state.find <CompositionTable> (name);
-  if (table == 0) // table does not exist already: create it
-    {
-      table = new CompositionTable;
-      _cell_state.store (table, name);      
-    }
-
   // read letter and associated chemicals
   char letter;
   std::string chemical_name;
@@ -245,6 +238,13 @@ bool UnitFactory::create_composition_table (const std::string& line)
     }
   while (line_stream >> chemical_name);
 
+  CompositionTable* table = _cell_state.find <CompositionTable> (name);
+  if (table == 0) // table does not exist already: create it
+    {
+      table = new CompositionTable;
+      _cell_state.store (table, name);      
+    }
+  
   table->add_rule (letter, chemicals);
 
   return true;

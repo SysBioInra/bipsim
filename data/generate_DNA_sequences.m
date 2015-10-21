@@ -1,5 +1,5 @@
 
-if ~exist (tab_seq)
+if ~exist ('tab_seq')
     load Full_DNA_seq_bsub.mat;
 end
 

@@ -69,6 +69,10 @@ void Release::update_rates (void)
   _forward_rate = _unit_to_release.number()*_side_reaction.forward_rate();
 
   /** Backward reaction is impossible. Nothing to update (it remains always 0) */
+  /** @post Forward rate must be positive. */
+  ENSURE (_forward_rate >=0);
+  /** @post Backward rate must be positive. */
+  ENSURE (_backward_rate >=0);
 }
 
 // ============================

@@ -54,7 +54,8 @@ public:
    * @param backward_rate_constant Backward rate constant.
    */
   ChemicalReaction (std::vector<Chemical*>& components,
-		    std::vector<int>& stoichiometry, double forward_rate_constant,
+		    std::vector<int>& stoichiometry,
+		    double forward_rate_constant,
 		    double backward_rate_constant);
   
   // Not needed for this class (use of default copy constructor) !

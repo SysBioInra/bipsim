@@ -1,0 +1,12 @@
+unit ChemicalSequence DnaA_BSU00010 product_of U1 410 1747 proteins
+unit BindingSite RBS U1 388 412 10 1 410
+unit ChemicalSequence DnaN_BSU00020 product_of U1 1939 3072 proteins
+unit BindingSite RBS U1 1924 1941 10 1 1939
+unit ChemicalSequence YaaA_BSU00030 product_of U1 3206 3418 proteins
+unit BindingSite RBS U1 3190 3208 10 1 3206
+unit ChemicalSequence RecF_BSU00040 product_of U1 3437 4546 proteins
+unit BindingSite RBS U1 3416 3439 10 1 3437
+unit ChemicalSequence GyrB_BSU00060 product_of U1 4867 6780 proteins
+unit BindingSite RBS U1 4844 4869 10 1 4867
+unit ChemicalSequence GyrA_BSU00070 product_of U1 6994 9456 proteins
+unit BindingSite RBS U1 6978 6996 10 1 6994

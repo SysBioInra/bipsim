@@ -73,6 +73,11 @@ void Binding::update_rates ( void )
    * to every single binding sites and the vector of corresponding unbinding rates.
    */
   _backward_rate = _binding_result.get_total_unbinding_rate_contribution (_binding_site_family_id);
+
+  /** @post Forward rate must be positive. */
+  ENSURE (_forward_rate >=0);
+  /** @post Backward rate must be positive. */
+  ENSURE (_backward_rate >=0);
 }
 
 

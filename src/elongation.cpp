@@ -29,11 +29,14 @@
 //
 Elongation::Elongation ( ProcessiveChemical& processive_chemical, BoundChemical& chemical_after_step, int step_size, double rate )
   : Reaction()
-  , _processive_chemical ( processive_chemical )
+  , _processive_chemical (processive_chemical)
   , _chemical_after_step (chemical_after_step)
-  , _step_size ( step_size )
-  , _rate ( rate )
+  , _step_size (step_size)
+  , _rate (rate)
 {
+  /** @pre Rate must be positive. */
+  REQUIRE (rate >= 0);
+
   _reactants.push_back (&processive_chemical);
   _reactants.push_back (&chemical_after_step);
   _reactants.push_back (&_processive_chemical.stalled_form());
@@ -65,6 +68,10 @@ void Elongation::update_rates( void )
   /**
    * There is no backward reaction to elongation. Result always stays 0.
    */
+  /** @post Forward rate must be positive. */
+  ENSURE (_forward_rate >=0);
+  /** @post Backward rate must be positive. */
+  ENSURE (_backward_rate >=0);
 }
 
 

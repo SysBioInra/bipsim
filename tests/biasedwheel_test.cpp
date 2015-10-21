@@ -43,25 +43,15 @@ int main (int argc, char *argv[])
   std::vector<double> double_zeros (vector_size, 0);
   std::vector<double> double_test;
 
-  // Constructor should remove all zeros from vector
-  // test vectors [ 0 ... i+1 ... 0 ] with i+1 at position i
-  // expected result [ i+1 ]
-  for (int i = 0; i < vector_size; ++i)
-    {
-      int_test = int_zeros; int_test [i] = i+1;
-      BiasedWheel<int> bw (int_test);
-      if (bw.cumulated_weights() != std::vector<int> (1,i+1))
-	  FAILURE ("Stripping of the weight vector incorrect.");
-    }
-
   // test vector [ 1 0 .... 0 1 ]
-  // expected result [ 1 2 ]
+  // expected result [ 1 1 ... 1 2 ]
   {
     int_test = int_zeros; int_test[0] = 1; int_test[vector_size-1] = 1;
-    std::vector<int> expected_result (2,1); expected_result[1] = 2;
+    std::vector<int> expected_result (int_test.size(),1);
+    expected_result[int_test.size()-1] = 2;
     BiasedWheel<int> bw (int_test);
     if (bw.cumulated_weights() != expected_result)
-      FAILURE ("Stripping of the weight vector incorrect.");
+      FAILURE ("Accumulation of the weight vector incorrect.");
   }
 
   // constructor should accumulate values of the vector
@@ -78,16 +68,17 @@ int main (int argc, char *argv[])
       FAILURE ("Accumulation of the weight vector incorrect.");    
   }
 
-  // constructor should accumulate and strip values of the vector
+  // constructor should accumulate values of the vector
   // test vector [ 0 1 0 1 0 1 0 1 0 1 ]
-  // expected result [ 1 2 3 4 5 ]
+  // expected result [ 0 1 1 2 2 3 3 4 4 5 ]
   {
     std::vector<int> test (10, 0);
-    std::vector<int> expected_result (5, 0);
+    std::vector<int> expected_result (10, 0);
     for (int i = 0; i < 5; ++i)
       {
 	test [2*i+1] = 1;
-	expected_result[i] = i+1;
+	expected_result[2*i] = i;
+	expected_result[2*i+1] = i+1;
       }
     BiasedWheel<int> bw (test);
     if (bw.cumulated_weights() != expected_result)
@@ -96,16 +87,16 @@ int main (int argc, char *argv[])
       FAILURE ("Accumulation of the weight vector incorrect.");    
   }
 
-  // constructor should accumulate and strip values of the vector
   // test vector [ 0 1 0 1 0 1 0 1 0 1 ]
-  // expected result [ 1 2 3 4 5 ]
+  // expected result [ 0 1 1 2 2 3 3 4 4 5 ]
   {
     std::vector<double> test (10, 0);
-    std::vector<double> expected_result (5, 0);
+    std::vector<double> expected_result (10, 0);
     for (int i = 0; i < 5; ++i)
       {
 	test [2*i+1] = 1;
-	expected_result[i] = i+1;
+	expected_result[2*i] = i;
+	expected_result[2*i+1] = i+1;
       }
     BiasedWheel<double> bw (test);
     if (fabs (bw.total_weight() - 5.0) > 1e-15 )

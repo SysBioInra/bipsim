@@ -68,6 +68,10 @@ void BaseLoading::update_rates (void)
   _forward_rate = _base_loader.loading_rate ();
 
   /** No backward reaction, backward rate stays at 0. */
+  /** @post Forward rate must be positive. */
+  ENSURE (_forward_rate >=0);
+  /** @post Backward rate must be positive. */
+  ENSURE (_backward_rate >=0);
 }
 
 
