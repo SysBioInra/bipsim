@@ -70,21 +70,7 @@ NaiveSolver::~NaiveSolver (void)
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// NaiveSolver& NaiveSolver::operator= ( const NaiveSolver& other_naive_solver );
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool NaiveSolver::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
+// NaiveSolver& NaiveSolver::operator= (const NaiveSolver& other_naive_solver);
 
 
 // =================
@@ -108,21 +94,10 @@ double NaiveSolver::compute_next_reaction (void)
     }
   
   // compute next reaction to perform
-  int random_index = RandomHandler::instance().draw_index (_rate_manager->rates());
-  int reaction_index = random_index / 2;
-  
-  // perform reaction
-  if ( (random_index % 2) == 0 )
-    {
-      // std::cout << "f" << reactions()[reaction_index] << " " << _rates[_last_reaction_index*2] << std::endl;
-      reactions()[reaction_index]->perform_forward();
-    }
-  else
-    {
-      // std::cout << reactions()[reaction_index] << " " << _rates[_last_reaction_index*2+1] << std::endl;
-      reactions()[reaction_index]->perform_backward();
-    }
+  reactions()[RandomHandler::instance().draw_index (_rate_manager->rates())]->
+    perform();
  
   // return updated time
-  return time() + RandomHandler::instance().draw_exponential (_rate_manager->total_rate());
+  return time() +
+    RandomHandler::instance().draw_exponential (_rate_manager->total_rate());
 }

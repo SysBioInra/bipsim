@@ -89,20 +89,6 @@ void UpdatedRateGroup::reschedule_next_reaction (double current_time)
 // Not needed for this class (use of default overloading) !
 // UpdatedRateGroup& UpdatedRateGroup::operator= ( const UpdatedRateGroup& other_update_rate_group );
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool UpdatedRateGroup::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
-
 
 // =================
 //  Private Methods

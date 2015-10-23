@@ -37,7 +37,7 @@
  * This class inherits class Reaction.
  * @sa Reaction
  */
-class BaseLoading: public Reaction
+class BaseLoading : public Reaction
 {
 public:
 
@@ -70,34 +70,16 @@ public:
   // ===========================
   //
   //
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  virtual void print (std::ostream& output) const;
-
-  /**
-   * @brief Update reaction rates.
-   */
-  virtual void update_rates ( void );
-
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
   /**
-   * @brief Returns whether there are enough chemicals to perform forward reaction.
+   * @brief Returns whether there are enough chemicals to perform reaction.
    * @return True if there are enough reactant, false otherwise.
    */
-  virtual bool is_forward_reaction_possible (void) const;
-
-  /**
-   * @brief Returns whether there are enough chemicals to perform backward reaction.
-   * @return True if there are enough reactant, false otherwise.
-   */
-  virtual bool is_backward_reaction_possible (void) const;
-
+  virtual bool is_reaction_possible (void) const;
 
   // ==========================
   //  Public Methods - Setters
@@ -114,32 +96,12 @@ public:
   //  */
   // BaseLoading& operator= (BaseLoading& other_base_loading);
 
-  
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
-
 
  protected:
   // ===================
   //  Protected Methods
   // ===================
-  //
-  /**
-   * @brief Update chemical quantities according to the forward reaction.
-   */
-  virtual void do_forward_reaction (void);
-  
-  /**
-   * @brief Update chemical quantities according to the backward reaction.
-   */
-  virtual void do_backward_reaction (void);
+  //  
 
 
 private:
@@ -155,7 +117,22 @@ private:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Update chemical quantities according to the reaction.
+   */
+  virtual void do_reaction (void);
 
+  /**
+   * @brief Compute current reaction rates.
+   * @return Current reaction rate.
+   */
+  virtual double compute_rate (void) const;
+
+  /**
+   * @brief Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const;
 };
 
 // =====================

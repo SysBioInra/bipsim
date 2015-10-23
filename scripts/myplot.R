@@ -5,14 +5,14 @@ source ("plot_concentrations.R");
 source ("save_concentrations.R");
 source ("add_concentrations.R");
 
-data_dir = "../output/test/"
+data_dir = "../output/tetracyclin/"
 data_name = "translation.txt"
 
 data = load_concentrations (paste (data_dir, data_name, sep = ""));
 #ref = load_concentrations (paste (data_dir, "ref.txt", sep = ""));
 
 min_time = 0;
-max_time = 2000;
+max_time = 1000;
 #toplot = c('');
 toplot = c('protein','DnaA_BSU00010');
 #toplot = colnames (data);

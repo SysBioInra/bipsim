@@ -17,7 +17,7 @@
 //  General Includes
 // ==================
 //
-
+#include <list> // std::list
 
 // ==================
 //  Project Includes
@@ -80,17 +80,6 @@ class ManualDispatchSolver : public Solver
   //  Public Methods - Operator overloading
   // =======================================
   //
-
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
-
 
 private:
 

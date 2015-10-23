@@ -43,10 +43,10 @@ DependencyGraph::DependencyGraph (const std::vector <Reaction*>& reactions)
        reaction_it != _reactions.end(); ++reaction_it)
     {
       // gather reactants
-      const std::list<Reactant*>& reactants = (*reaction_it)->reactants();
+      const std::vector<Reactant*>& reactants = (*reaction_it)->reactants();
 
       // loop through reactants
-      for (std::list<Reactant*>::const_iterator component = reactants.begin();
+      for (std::vector<Reactant*>::const_iterator component = reactants.begin();
 	   component != reactants.end(); component++)
 	{
 	  // store component to reaction relationship
@@ -65,10 +65,10 @@ DependencyGraph::DependencyGraph (const std::vector <Reaction*>& reactions)
        reaction_it != _reactions.end(); ++reaction_it)
     {
       // gather reactants of reaction
-      const std::list<Reactant*>& reactants = (*reaction_it)->reactants();
+      const std::vector<Reactant*>& reactants = (*reaction_it)->reactants();
 
       // loop through reactants
-      for (std::list<Reactant*>::const_iterator component = reactants.begin();
+      for (std::vector<Reactant*>::const_iterator component = reactants.begin();
 	   component != reactants.end(); component++)
 	{
 	  // gather reactions the component is involved in

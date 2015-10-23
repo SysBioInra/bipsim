@@ -27,19 +27,22 @@
 //  Constructors/Destructors
 // ==========================
 //
-Elongation::Elongation ( ProcessiveChemical& processive_chemical, BoundChemical& chemical_after_step, int step_size, double rate )
-  : Reaction()
-  , _processive_chemical (processive_chemical)
+Elongation::Elongation (ProcessiveChemical& processive_chemical,
+			BoundChemical& chemical_after_step,
+			int step_size, double rate)
+  : _processive_chemical (processive_chemical)
   , _chemical_after_step (chemical_after_step)
   , _step_size (step_size)
   , _rate (rate)
 {
   /** @pre Rate must be positive. */
   REQUIRE (rate >= 0);
+  /** @pre Step size must be strictly positive. */
+  REQUIRE (step_size > 0);
 
   _reactants.push_back (&processive_chemical);
-  _reactants.push_back (&chemical_after_step);
-  _reactants.push_back (&_processive_chemical.stalled_form());
+  _products.push_back (&chemical_after_step);
+  _products.push_back (&_processive_chemical.stalled_form());
 }
  
 // Not needed for this class (use of default copy constructor) !
@@ -53,42 +56,15 @@ Elongation::~Elongation( void )
 //  Public Methods - Commands
 // ===========================
 //
-void Elongation::print (std::ostream& output) const
-{
-  output << "Elongation reaction.";
-}
-
-void Elongation::update_rates( void )
-{
-  /**
-   * Elongation rate is simply r = #(processive_chemical) * elongation_rate / step_size.
-   */
-  _forward_rate = (_rate * _processive_chemical.number()) / _step_size;
-
-  /**
-   * There is no backward reaction to elongation. Result always stays 0.
-   */
-  /** @post Forward rate must be positive. */
-  ENSURE (_forward_rate >=0);
-  /** @post Backward rate must be positive. */
-  ENSURE (_backward_rate >=0);
-}
-
 
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-bool Elongation::is_forward_reaction_possible (void) const
+bool Elongation::is_reaction_possible (void) const
 {
   return (_processive_chemical.number() > 0);
 }
-
-bool Elongation::is_backward_reaction_possible (void) const
-{
-  return false;
-}
-
 
 // ==========================
 //  Public Methods - Setters
@@ -103,29 +79,15 @@ bool Elongation::is_backward_reaction_possible (void) const
 // Not needed for this class (use of default overloading) !
 // Elongation& Elongation::operator= (Elongation& other_elongation);
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool Elongation::check_invariant (void) const
-{
-  bool result = Reaction::check_invariant();
-  return result;
-}
-
 
 // =================
 //  Private Methods
 // =================
 //
-void Elongation::do_forward_reaction (void)
+void Elongation::do_reaction (void)
 {
   /** @pre There must be enough reactants to perform reaction. */
-  REQUIRE (is_forward_reaction_possible());
+  REQUIRE (is_reaction_possible());
 
   bool stall = false;
   
@@ -148,10 +110,7 @@ void Elongation::do_forward_reaction (void)
     }
 
   // check whether the unit has reached a termination site
-  if ( _processive_chemical.is_terminating() == true )
-    { 
-      stall = true;
-    }
+  if ( _processive_chemical.is_terminating() == true ) { stall = true; }
 
   // replace the chemical with its stalled form or its form after step
   if ( stall == true ) // stalled
@@ -173,12 +132,15 @@ void Elongation::do_forward_reaction (void)
     }
 }
 
-void Elongation::do_backward_reaction (void)
+double Elongation::compute_rate (void) const
 {
-  std::cerr << "Elongation reaction cannot be performed backwards..." << std::endl;
+  /**
+   * Elongation rate is simply r = #(processive_chemical) * elongation_rate / step_size.
+   */
+  return (_rate * _processive_chemical.number()) / _step_size;
 }
 
-// =================
-//  Private Methods
-// =================
-//
+void Elongation::print (std::ostream& output) const
+{
+  output << "Elongation reaction.";
+}

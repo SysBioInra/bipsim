@@ -24,11 +24,14 @@ namespace boost { namespace serialization { class access; }}
 #endif // HAVE_BOOST_SERIALIZATION
 
 // reaction classes
+class BackwardReaction;
 class BaseLoading;
+class BidirectionalReaction;
 class Binding;
 class ChemicalReaction;
 class Complexation;
 class Elongation;
+class ForwardReaction;
 class Reaction;
 class Release;
 

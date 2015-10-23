@@ -1,40 +1,44 @@
 
-
 /**
- * @file elongation.h
- * @authors Marc Dinh, Stephan Fischer
- * @brief Header for the Elongation class.
+ * @file backwardreaction.h
+ * @brief Header for the BackwardReaction class.
  * 
+ * @authors Marc Dinh, Stephan Fischer
  */
 
 
 // Multiple include protection
 //
-#ifndef ELONGATION_H
-#define ELONGATION_H
-
+#ifndef BACKWARD_REACTION_H
+#define BACKWARD_REACTION_H
 
 // ==================
 //  General Includes
 // ==================
 //
-
+#include <string>
 
 // ==================
 //  Project Includes
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "bidirectionalreaction.h"
 #include "reaction.h"
 
+// ===================
+//  Class Declaration
+// ===================
+//
 /**
- * @brief Class that represents elongation of a polymerase.
+ * @brief Adpater class representing backward part of a BidirectionalReaction.
  *
- * The polymerase is supposed to process along a sequence and to generate a
- * a product for which the sequence is a template. Elongation corresponds to
- * the movement along the sequence and synthesis of the product.
+ * BackwardReaction is an adapter class used to transform a
+ * BidirectionalReaction into a simple Reaction. It represents the backward part
+ * of the reaction.
+ * @sa Reaction, BidirectionalReaction, ForwardReaction
  */
-class Elongation : public Reaction
+class BackwardReaction : public Reaction
 {
 public:
 
@@ -44,33 +48,33 @@ public:
   //
   /**
    * @brief Constructor
-   * @param  processive_chemical 
-   *  Polymerase that does the elongation.
-   * @param  chemical_after_step
-   *  Chemical after elongation.
-   * @param  step_size
-   *  Number of bases processed at each elongation step.
-   * @param rate Elongation rate (in steps/s).
+   * @param bidirectional_reaction
+   *  BidirectionalReaction whose backward part will be accessed by the adapter.
    */
-  Elongation (ProcessiveChemical& processive_chemical,
-	      BoundChemical& chemical_after_step, int step_size, double rate);
+  BackwardReaction (BidirectionalReaction& bidirectional_reaction)
+    : _reaction (bidirectional_reaction)
+  {
+    _reactants = _reaction.backward_reactants();
+    _products = _reaction.forward_reactants();
+  }
+    
 
   // Not needed for this class (use of default copy constructor) !
   // /*
   //  * @brief Copy constructor
   //  */
-  // Elongation (Elongation& other_elongation);
+  // BackwardReaction (BackwardReaction& other_base_loading);
 
   /**
    * @brief Destructor
    */
-  virtual ~Elongation (void);
-
+  virtual ~BackwardReaction (void) {}
+  
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  
+  //
 
   // ============================
   //  Public Methods - Accessors
@@ -80,14 +84,15 @@ public:
    * @brief Returns whether there are enough chemicals to perform reaction.
    * @return True if there are enough reactant, false otherwise.
    */
-  virtual bool is_reaction_possible (void) const;
-
+  virtual bool is_reaction_possible (void) const
+  {
+    return _reaction.is_backward_reaction_possible();
+  }
 
   // ==========================
   //  Public Methods - Setters
   // ==========================
   //
-
 
   // =======================================
   //  Public Methods - Operator overloading
@@ -97,31 +102,25 @@ public:
   // /*
   //  * @brief Assignment operator
   //  */
-  // Elongation& operator= (Elongation& other_elongation);
+  // BackwardReaction& operator= (BackwardReaction& other_base_loading);
+
 
  protected:
   // ===================
   //  Protected Methods
   // ===================
-  //
+  //  
 
- private:
+
+private:
+
   // ============
   //  Attributes
   // ============
   //
-  /** @brief Polymerase that does the elongation. */
-  ProcessiveChemical& _processive_chemical;
-
-  /** @brief New polymerase from after stepping. */
-  BoundChemical& _chemical_after_step;
-
-  /** @brief Number of bases processed at each elongation step. */
-  int _step_size;
-
-  /** @brief Elongation rate (in s^-1). */
-  double _rate;
-
+  /** @brief Reaction accessed by the adapter. */
+  BidirectionalReaction& _reaction;  
+  
   // =================
   //  Private Methods
   // =================
@@ -129,25 +128,24 @@ public:
   /**
    * @brief Update chemical quantities according to the reaction.
    */
-  virtual void do_reaction (void);
-  
+  virtual void do_reaction (void) { _reaction.perform_backward(); }
+
   /**
    * @brief Compute current reaction rates.
    * @return Current reaction rate.
    */
-  virtual double compute_rate (void) const;
+  virtual double compute_rate (void) const { return _reaction.backward_rate(); }
 
   /**
    * @brief Print class content.
    * @param output Stream where output should be written.
    */
-  virtual void print (std::ostream& output) const;
+  virtual void print (std::ostream& output) const { output << _reaction; }
 };
 
-// ======================
-//  Inline declarations
-// ======================
+// =====================
+//  Inline Declarations
+// =====================
 //
 
-
-#endif // ELONGATION_H
+#endif // BACKWARD_REACTION_H

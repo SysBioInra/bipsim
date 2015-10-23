@@ -32,10 +32,7 @@
  * provides an interface for rate updating that has to be implemented
  * by inheriting classes. Objects are built from vectors of reactions
  * and are responsible for updating rates when prompted by user. Rates
- * are made available in a vector that is twice the size of the reactions
- * an object manages: the rates of reaction i are stored at indices 
- * 2i (forward rate) and 2i+1 (backward rate) of the vectors returned
- * by rate();
+ * are made available in a vector that of same size as reaction vector.
  */
 class RateManager
 {
@@ -73,7 +70,8 @@ class RateManager
 
   /**
    * @brief [Re]set the vector of reactions handled by the class.
-   * @param reactions Vector of reactions whose rates need to be stored and updated.   
+   * @param reactions Vector of reactions whose rates need to be stored and
+   *  updated.   
    */
   virtual void manage (const std::vector <Reaction*>& reactions);
 
@@ -83,9 +81,7 @@ class RateManager
   //
   /**
    * @brief Accessor to the rate vector.
-   * @return Vector containing reaction rates (as of last update). Size of vector is twice the size of
-   * reaction set handled. Rates of reaction of index i are stored at indices 2i
-   * (forward) and 2i+1 (backward) of the rate vector.
+   * @return Vector containing reaction rates (as of last update).
    */
   const std::vector<double>& rates (void) const;
 
@@ -111,16 +107,6 @@ class RateManager
   //  */
   // RateManager& operator= ( const RateManager& other_rate_manager );
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved.
-   */
-  virtual bool check_invariant (void) const;
-
 
  protected:
   
@@ -140,7 +126,8 @@ class RateManager
   void update_reaction (int reaction_index);
 
   /**
-   * @brief Compute total rate by summing all values currently contained in the _rates vector.
+   * @brief Compute total rate by summing all values currently contained in the
+   *  _rates vector.
    */
   void compute_total_rate (void);
 
@@ -162,7 +149,7 @@ class RateManager
   std::vector <Reaction*> _reactions;
 
   /**
-   * @brief Vector of rates as of last update. Rate for reaction i are stored at 2i (forward) and 2i+1 (backward).
+   * @brief Vector of rates as of last update.
    */
   std::vector <double> _rates;
 
@@ -197,9 +184,8 @@ class RateManager
 inline void RateManager::update_reaction (int reaction_index)
 {
   Reaction* reaction_to_update = _reactions [reaction_index];
-  reaction_to_update->update_rates();
-  _rates [2*reaction_index] = reaction_to_update->forward_rate();
-  _rates [2*reaction_index+1] = reaction_to_update->backward_rate();
+  reaction_to_update->update_rate();
+  _rates [reaction_index] = reaction_to_update->rate();
 }
 
 inline const std::vector <double>& RateManager::rates (void) const

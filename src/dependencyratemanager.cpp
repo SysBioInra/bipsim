@@ -129,8 +129,8 @@ void DependencyRateManager::create_dependencies (void)
 
   for (int i = 0; i < reactions().size(); ++i)
     {
-      const std::list <Reactant*>& reactants = reactions() [i]->reactants();
-      for (std::list <Reactant*>::const_iterator reactant_it = reactants.begin();
+      const std::vector <Reactant*>& reactants = reactions() [i]->reactants();
+      for (std::vector <Reactant*>::const_iterator reactant_it = reactants.begin();
 	   reactant_it != reactants.end(); ++reactant_it)
 	{
 	  // add the Reactant* -> reaction index dependency

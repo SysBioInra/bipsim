@@ -27,11 +27,14 @@ libsrc_a_SOURCES = \
 
 # reaction sources
 libsrc_a_SOURCES += \
+	backwardreaction.h \
 	baseloading.cpp baseloading.h \
+	bidirectionalreaction.cpp bidirectionalreaction.h \
 	binding.cpp binding.h \
 	chemicalreaction.cpp chemicalreaction.h \
 	complexation.cpp complexation.h \
 	elongation.cpp elongation.h \
+	forwardreaction.h \
 	reaction.cpp reaction.h \
 	release.cpp release.h
 

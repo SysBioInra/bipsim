@@ -16,14 +16,13 @@
 //  General Includes
 // ==================
 //
-#include <string>
 
 // ==================
 //  Project Includes
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "reaction.h"
+#include "bidirectionalreaction.h"
 
 // ===================
 //  Class Declaration
@@ -39,7 +38,7 @@
  * This class inherits class Reaction.
  * @sa Reaction
  */
-class Binding: public Reaction
+class Binding: public BidirectionalReaction
 {
 public:
 
@@ -83,9 +82,16 @@ public:
   //
   //
   /**
-   * @brief Update reaction rates.
+   * @brief Update chemical quantities according to the forward reaction.
+   * @return Current forward rate.
    */
-  virtual void update_rates (void);
+  virtual void perform_forward (void);
+  
+  /**
+   * @brief Update chemical quantities according to the backward reaction.
+   * @return Current backward rate.
+   */
+  virtual void perform_backward (void);
 
   // ============================
   //  Public Methods - Accessors
@@ -119,31 +125,11 @@ public:
   //  */
   // Binding& operator= (Binding& other_binding);
 
-  
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
-
  protected:
   // ===================
   //  Protected Methods
   // ===================
   //
-  /**
-   * @brief Update chemical quantities according to the forward reaction.
-   */
-  virtual void do_forward_reaction (void);
-  
-  /**
-   * @brief Update chemical quantities according to the backward reaction.
-   */
-  virtual void do_backward_reaction (void);
   
 
  private:
@@ -177,6 +163,18 @@ public:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Compute current forward rate.
+   * @return Current forward rate.
+   */
+  virtual double compute_forward_rate (void) const;
+
+  /**
+   * @brief Compute current backward rate.
+   * @return Current backward rate.
+   */
+  virtual double compute_backward_rate (void) const;
+
   /**
    * @brief Print class content.
    * @param output Stream where output should be written.

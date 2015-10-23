@@ -13,6 +13,7 @@
 // ==================
 //
 #include <iostream>
+#include <limits> // std::numerical_limits<double>::infinity()
 #include <vector> // std::vector
 #include <algorithm> // std::sort
 
@@ -29,7 +30,8 @@
 //  Constructors/Destructors
 // ==========================
 //
-ConstantRateGroup::ConstantRateGroup (const std::vector<Reaction*>& reactions, double initial_time, double time_step)
+ConstantRateGroup::ConstantRateGroup (const std::vector<Reaction*>& reactions,
+				      double initial_time, double time_step)
   : ReactionGroup (reactions)
   , _reaction_times (MAX_NUMBER_REACTIONS)
   , _next_index (0)
@@ -53,12 +55,13 @@ ConstantRateGroup::~ConstantRateGroup (void)
 //
 bool ConstantRateGroup::perform_next_reaction (void)
 {
-  /** @pre _next_reaction_time must not have reached OVERTIME (extending beyond valid time step). */
+  /** @pre _next_reaction_time must not have reached OVERTIME (extending beyond
+   *   valid time step). */
   REQUIRE (_next_reaction_time != OVERTIME);
 
   // perform next scheduled reaction if possible
   bool reaction_performed = false;
-  int next_reaction_index = _reaction_rate_indices [_next_index];
+  int next_reaction_index = _reaction_indices [_next_index];
 
   if (is_reaction_possible (next_reaction_index))
     {
@@ -111,29 +114,37 @@ void ConstantRateGroup::reinitialize (double initial_time)
 //
 void ConstantRateGroup::schedule_next_reactions (double current_time)
 {
-  REQUIRE (current_time < _final_time); /** @pre current_time must be smaller than _final_time. */
+  /** @pre current_time must be smaller than _final_time. */
+  REQUIRE (current_time < _final_time); 
   double total_rate = _rate_manager.total_rate();
    
   int number_reactions = 0;
-  double relative_reaction_time = RandomHandler::instance().draw_exponential (total_rate);
+  double relative_reaction_time = 
+    RandomHandler::instance().draw_exponential (total_rate);
 
-  while ((current_time + relative_reaction_time < _final_time) && (number_reactions < MAX_NUMBER_REACTIONS))
+  while ((current_time + relative_reaction_time < _final_time)
+	 && (number_reactions < MAX_NUMBER_REACTIONS))
     {
-      _reaction_times [number_reactions] = current_time + relative_reaction_time;
+      _reaction_times [number_reactions] = 
+	current_time + relative_reaction_time;
       ++number_reactions;
-      relative_reaction_time += RandomHandler::instance().draw_exponential (total_rate);
+      relative_reaction_time += 
+	RandomHandler::instance().draw_exponential (total_rate);
     }
 
   // we append an OVERTIME after the last reaction if final_time was reached
-  if ((number_reactions < MAX_NUMBER_REACTIONS) && (current_time + relative_reaction_time >= _final_time))
+  if ((number_reactions < MAX_NUMBER_REACTIONS) 
+      && (current_time + relative_reaction_time >= _final_time))
     {
       _reaction_times [number_reactions] = OVERTIME;
     }
 
-  // std::cout << "scheduled " << number_reactions << " reactions at time " << current_time << "(rate is " << total_rate << ")" << std::endl;
+  // std::cout << "scheduled " << number_reactions << " reactions at time "
+  // << current_time << "(rate is " << total_rate << ")" << std::endl;
 
   // compute reaction indices
-  _reaction_rate_indices = RandomHandler::instance().draw_multiple_indices (_rate_manager.rates(), number_reactions);
+  _reaction_indices = RandomHandler::instance().
+    draw_multiple_indices (_rate_manager.rates(), number_reactions);
 
   _next_index = 0;
 }

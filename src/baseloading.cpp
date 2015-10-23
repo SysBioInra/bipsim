@@ -28,14 +28,14 @@
 // ==========================
 //
 BaseLoading::BaseLoading (BaseLoader& base_loader)
-  : Reaction()
-  , _base_loader (base_loader)
+  : _base_loader (base_loader)
 {
   _reactants.push_back (&base_loader);
   const std::set<Chemical*> bases = base_loader.bases_loaded();
   _reactants.insert (_reactants.end(), bases.begin(), bases.end());
-  const std::set<BoundChemical*> occupied_states = base_loader.occupied_states();
-  _reactants.insert (_reactants.end(), occupied_states.begin(), occupied_states.end());
+  const std::set<BoundChemical*> 
+    occupied_states = base_loader.occupied_states();
+  _products.insert (_products.end(), occupied_states.begin(), occupied_states.end());
 }
  
 // Not needed for this class (use of default copy constructor) !
@@ -49,44 +49,15 @@ BaseLoading::~BaseLoading (void)
 //  Public Methods - Commands
 // ===========================
 //
-void BaseLoading::print (std::ostream& output) const
-{
-  output << "BaseLoading reaction.";
-}
-
-void BaseLoading::update_rates (void)
-{
-  /**
-   * Loading rate is generally defined by r = sum ( k_on_i x [A_i] x [B_i], where [A_i] is the
-   * concentration of BaseLoader on template i and [B_i] the concentration of base i. k_on_i may vary from a
-   * base to another. All this information is stored within the 
-   *   r_total = [A] sum ( k_on_i x [B_i] ) = [A] vector(k_on_i).vector([B_i])
-   * The concentration of units to bind is easy to get, the base loader handler can compute
-   * the rest of the formula for us as it holds information about templates and base
-   * concentrations.
-   */
-  _forward_rate = _base_loader.loading_rate ();
-
-  /** No backward reaction, backward rate stays at 0. */
-  /** @post Forward rate must be positive. */
-  ENSURE (_forward_rate >=0);
-  /** @post Backward rate must be positive. */
-  ENSURE (_backward_rate >=0);
-}
 
 
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-bool BaseLoading::is_forward_reaction_possible (void) const
+bool BaseLoading::is_reaction_possible (void) const
 {
   return (_base_loader.loading_rate() > 0);
-}
-
-bool BaseLoading::is_backward_reaction_possible (void) const
-{
-  return false;
 }
 
 
@@ -103,29 +74,15 @@ bool BaseLoading::is_backward_reaction_possible (void) const
 // Not needed for this class (use of default overloading) !
 // BaseLoading& BaseLoading::operator= (BaseLoading& other_base_loading);
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool BaseLoading::check_invariant (void) const
-{
-  bool result = Reaction::check_invariant();
-  return result;
-}
-
 
 // ===================
 //  Protected Methods
 // ===================
 //
-void BaseLoading::do_forward_reaction (void)
+void BaseLoading::do_reaction (void)
 {
   /** @pre There must be enough reactants to perform reaction. */
-  REQUIRE (is_forward_reaction_possible());
+  REQUIRE (is_reaction_possible());
 
   // Choose one of the base loaders randomly
   _base_loader.focus_random_unit_from_loading_rates();
@@ -142,13 +99,22 @@ void BaseLoading::do_forward_reaction (void)
   _base_loader.remove_focused_unit();
 }
 
-void BaseLoading::do_backward_reaction (void)
+double BaseLoading::compute_rate (void) const
 {
-  std::cerr << "ERROR: There is no backward reaction to base loading defined currently." << std::endl;
+  /**
+   * Loading rate is generally defined by r = sum ( k_on_i x [A_i] x [B_i], where [A_i] is the
+   * concentration of BaseLoader on template i and [B_i] the concentration of base i. k_on_i may vary from a
+   * base to another. All this information is stored within the 
+   *   r_total = [A] sum ( k_on_i x [B_i] ) = [A] vector(k_on_i).vector([B_i])
+   * The concentration of units to bind is easy to get, the base loader handler can compute
+   * the rest of the formula for us as it holds information about templates and base
+   * concentrations.
+   */
+  return _base_loader.loading_rate();
 }
 
 
-// =================
-//  Private Methods
-// =================
-//
+void BaseLoading::print (std::ostream& output) const
+{
+  output << "BaseLoading reaction.";
+}

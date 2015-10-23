@@ -26,7 +26,7 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "reaction.h"
+#include "bidirectionalreaction.h"
 
 /**
  * @brief This class represents classical chemical reactions.
@@ -35,7 +35,7 @@
  * stoichiometry. It usually involves covalent modifications and formation
  * of new elements, which distinguishes it from other reactions.
  */
-class ChemicalReaction : public Reaction
+class ChemicalReaction : public BidirectionalReaction
 {
 public:
 
@@ -74,30 +74,24 @@ public:
   // ===========================
   //
   /**
-   * @brief Update reaction rates.
+   * @brief Update chemical quantities according to the forward reaction.
    */
-  virtual void update_rates ( void );
-
-
-  // ============================
-  //  Public Methods - Accessors
-  // ============================
-  //
+  virtual void perform_forward (void);
+  
   /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
+   * @brief Update chemical quantities according to the backward reaction.
    */
-  virtual void print (std::ostream& output) const;
+  virtual void perform_backward (void);
 
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  /** @brief Check whether there are enough reactants to perform reaction. */
+  /** @brief Check whether there are enough reactants to perform forwardreaction. */
   virtual bool is_forward_reaction_possible (void) const;
 
-  /** @brief Check whether there are enough products to perform backwards reaction. */
+  /** @brief Check whether there are enough products to perform backward reaction. */
   virtual bool is_backward_reaction_possible (void) const;
 
 
@@ -117,54 +111,35 @@ public:
   //  */
   // ChemicalReaction& operator= (ChemicalReaction& other_chemicalreaction);
 
-
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  bool check_invariant (void) const;
-
  protected:
   // ===================
   //  Protected Methods
   // ===================
   //
-  /**
-   * @brief Update chemical quantities according to the forward reaction.
-   */
-  virtual void do_forward_reaction (void);
-  
-  /**
-   * @brief Update chemical quantities according to the backward reaction.
-   */
-  virtual void do_backward_reaction (void);
-
 
  private:
-
   // ============
   //  Attributes
   // ============
   //
-  /** @brief Number of components of the reaction. */
-  int _number_components;
+  /** @brief Stoichiometry of the forward reactants. */
+  std::vector <int> _forward_stoichiometry;
 
-  /** @brief Components of the reaction. */
-  std::vector<Chemical*> _component_vector;
+  /** @brief Stoichiometry of the backward reactants. */
+  std::vector <int> _backward_stoichiometry;  
+
+  /** @brief Number of free chemicals among forward reactants. */
+  int _free_reactant_number;
+
+  /** @brief Number of free chemicals among forward reactants. */
+  int _free_product_number;
   
-  /** @brief Stoichiometry of the reaction. */
-  std::vector<int> _stoichiometry;
+  /** @brief Bound reactant of the reaction (0 if none). */
+  BoundChemical* _bound_reactant;
 
-  /** @brief Index of the bound product of the reaction (_number_components if none). */
-  int _bound_product_index;
+  /** @brief Bound product of the reaction (0 if none). */
+  BoundChemical* _bound_product;
   
-  /** @brief Index of the bound reactant of the reaction (_number_components if none). */
-  int _bound_reactant_index;
-
   /** @brief Forward rate constant k_1. */
   double _k_1;
 
@@ -176,21 +151,88 @@ public:
   // =================
   //
   /**
-   * @brief Looks for bound chemicals in the reaction and updates corresponding indices.
-   *
-   * If no bound chemical is found, the indices for the bound reactant and product will be
-   * set to _number_components for algorithmic reasons. The routine also performs some other
-   * checks (no more than 1 bound product/reactant, if there is a bound product there needs
-   * to be a bound reactant and vice versa, the stoichiometry coefficient has to be 1).
+   * @brief Compute current forward rate.
+   * @return Current forward rate.
    */
-  void compute_bound_component_indices ( void );
+  virtual double compute_forward_rate (void) const;
 
+  /**
+   * @brief Compute current backward rate.
+   * @return Current backward rate.
+   */
+  virtual double compute_backward_rate (void) const;
+
+  /**
+   * @brief Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const;
+
+  /**
+   * @brief Looks for bound chemicals in the reaction and isolates them.
+   *
+   * If no bound chemical is found, pointers to bound elements will be null. If
+   * some are found the routine performs checks (no more than 1 bound
+   * product/reactant, if there is a bound product there needs to be a bound
+   * reactant and vice versa, the stoichiometry coefficient has to be 1). Bound
+   * elements are moved to the end of the forward/backward_reactants vectors
+   * for simplicity.
+   */
+  void isolate_bound_components (void);
+
+  /**
+   * @brief Cast forward reactant to chemical.
+   * @param index Index of the reactant.
+   * @return Reactant cast to pointer to Chemical.
+   */
+  Chemical* forward_chemical (int index);
+
+  /**
+   * @brief Cast backward reactant to chemical.
+   * @param index Index of the reactant.
+   * @return Reactant cast to pointer to Chemical.
+   */
+  Chemical* backward_chemical (int index);
+
+  /**
+   * @brief Cast forward reactant to chemical.
+   * @param index Index of the reactant.
+   * @return Reactant cast to pointer to Chemical.
+   */
+  const Chemical* forward_chemical (int index) const;
+
+  /**
+   * @brief Cast backward reactant to chemical.
+   * @param index Index of the reactant.
+   * @return Reactant cast to pointer to Chemical.
+   */
+  const Chemical* backward_chemical (int index) const;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+#include "chemical.h"
 
+inline Chemical* ChemicalReaction::forward_chemical (int index) 
+{
+  return static_cast <Chemical*> (_forward_reactants [index]);
+}
+
+inline Chemical* ChemicalReaction::backward_chemical (int index) 
+{
+  return static_cast <Chemical*> (_backward_reactants [index]);
+}
+
+inline const Chemical* ChemicalReaction::forward_chemical (int index) const
+{
+  return static_cast <const Chemical*> (_forward_reactants [index]);
+}
+
+inline const Chemical* ChemicalReaction::backward_chemical (int index) const
+{
+  return static_cast <const Chemical*> (_backward_reactants [index]);
+}
 
 #endif // CHEMICALREACTION_H

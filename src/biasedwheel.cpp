@@ -111,7 +111,7 @@ int BiasedWheel<T>::find_index (T drawn_weight)
     }  
 
   /** @post Weight associated to index must be strictly positive */
-  ENSURE (_cumulated_weights[i_min] > _cumulated_weights[i_min-1])
+  ENSURE (_cumulated_weights[min_index] > _cumulated_weights[min_index-1]);
   return min_index;
 }
   

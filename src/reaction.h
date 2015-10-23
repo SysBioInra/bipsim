@@ -17,8 +17,7 @@
 //  General Includes
 // ==================
 //
-#include <list> // std::list
-#include <set> // std::set
+#include <vector> // std::vector
 
 // ==================
 //  Project Includes
@@ -26,14 +25,16 @@
 //
 #include "forwarddeclarations.h"
 #include "observable.h"
-#include "reactionobserver.h"
 #include "simulatorinput.h"
+#include "reactionobserver.h"
 
 /**
- * @brief Abstract class that represent all possible reactions. 
+ * @brief Abstract class that represent all reactions happening in the cell. 
  *
- * All reactions that happen in the cell inherit this class. It can be used to
- * access reaction rates and perform reactions.
+ * All reactions can be represented by this class, either because they are
+ * irreversible or because they can be decomposed in a forward and a backward
+ * reaction.
+ * @sa BidirectionalReaction
  */
 class Reaction : public Observable<ReactionObserver>, public SimulatorInput
 {
@@ -57,32 +58,21 @@ public:
   /**
    * @brief Destructor
    */
-  virtual ~Reaction ( void );
+  virtual ~Reaction (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
   /**
-   * @brief Update chemical quantities according to the forward reaction.
+   * @brief Update chemical quantities.
    */
-  void perform_forward (void);
+  void perform (void);
 
   /**
-   * @brief Update chemical quantities according to the backward reaction.
+   * @brief Update reaction rate.
    */
-  void perform_backward (void);
-
-  /**
-   * @brief Update reaction rates.
-   */
-  virtual void update_rates (void) = 0;
-
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  virtual void print (std::ostream& output) const = 0;
+  void update_rate (void);
 
 
   // ============================
@@ -90,38 +80,29 @@ public:
   // ============================
   //
   /**
-   * @brief Returns previously calculated forward reaction rate.
-   * @return Forward reaction rate value computed at last update.
-   * @sa update_rates
+   * @brief Returns previously calculated rate.
+   * @return Reaction rate value computed at last update.
+   * @sa update_rate
    */
-  double forward_rate ( void ) const;
-
+  double rate (void) const;
 
   /**
-   * @brief Returns previously calculates backward reaction rate.
-   * @return Forward reaction rate value computed at last update.
-   * @sa update_rates
+   * @brief Returns chemicals consumed by reaction.
+   * @return Vector of chemicals consumed by reaction.
    */
-  double backward_rate ( void ) const;
+  const std::vector<Reactant*>& reactants (void) const;
 
   /**
-   * @brief Returns chemicals taking part in the reaction.
-   * @return List of chemicals taking part in the reaction.
+   * @brief Returns chemicals created by reaction.
+   * @return Vector of chemicals created by reaction.
    */
-  const std::list<Reactant*>& reactants ( void ) const;
+  const std::vector<Reactant*>& products (void) const;
 
   /**
-   * @brief Returns whether there are enough chemicals to perform forward reaction.
-   * @return True if there are enough reactant, false otherwise.
+   * @brief Returns whether there are enough chemicals to perform reaction.
+   * @return True if there are enough reactants, false otherwise.
    */
-  virtual bool is_forward_reaction_possible (void) const = 0;
-
-  /**
-   * @brief Returns whether there are enough chemicals to perform backward reaction.
-   * @return True if there are enough reactant, false otherwise.
-   */
-  virtual bool is_backward_reaction_possible (void) const = 0;
-
+  virtual bool is_reaction_possible (void) const = 0;
 
   // ==========================
   //  Public Methods - Setters
@@ -147,77 +128,79 @@ public:
    */
   friend std::ostream& operator<< (std::ostream& output, const Reaction& reaction);
   
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant( void ) const;
-
-
-protected:
-
+ protected:
   // ============
   //  Attributes
   // ============
   //
-  /** @brief Forward reaction rate value computed at last update. */
-  double _forward_rate;
+  /** @brief Rectants consumed by reaction. */
+  std::vector <Reactant*> _reactants;
 
-  /** @brief Backward reaction rate value computed at last update. */
-  double _backward_rate;
+  /** @brief Products created by reaction. */
+  std::vector <Reactant*> _products;
 
-  /** @brief Rectants taking part in the reaction. */
-  std::list< Reactant* > _reactants;
+ private:
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Reaction rate value computed at last update. */
+  double _rate;
 
   // ===================
-  //  Protected Methods
+  //  Private Methods
   // ===================
   //
   /**
-   * @brief Update chemical quantities according to the forward reaction.
+   * @brief Print class content.
+   * @param output Stream where output should be written.
    */
-  virtual void do_forward_reaction (void) = 0;
+  virtual void print (std::ostream& output) const = 0;
 
   /**
-   * @brief Update chemical quantities according to the backward reaction.
+   * @brief Update chemical quantities according to reaction.
    */
-  virtual void do_backward_reaction (void) = 0;
+  virtual void do_reaction (void) = 0;
+
+  /**
+   * @brief Compute current reaction rate.
+   * @return Rate according to current product concentrations.
+   */
+  virtual double compute_rate (void) const = 0;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-inline double Reaction::forward_rate ( void ) const
+#include "macros.h" // ENSURE ()
+
+inline void Reaction::update_rate (void)
 {
-  return _forward_rate;
+  _rate = compute_rate();
+  /** @post Rate must be positive. */
+  ENSURE (_rate >= 0);
 }
 
-inline double Reaction::backward_rate ( void ) const
+inline double Reaction::rate (void) const
 {
-  return _backward_rate;
+  return _rate;
 }
 
-inline const std::list<Reactant*>& Reaction::reactants ( void ) const
+inline const std::vector<Reactant*>& Reaction::reactants (void) const
 {
   return _reactants;
 }
 
-inline void Reaction::perform_forward (void)
+inline const std::vector<Reactant*>& Reaction::products (void) const
 {
-  do_forward_reaction();
-  notify_change();
+  return _products;
 }
 
-inline void Reaction::perform_backward (void)
+inline void Reaction::perform (void)
 {
-  do_backward_reaction();  
+  do_reaction();
   notify_change();
 }
-
 
 #endif // REACTION_H

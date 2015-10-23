@@ -17,7 +17,6 @@
 //  General Includes
 // ==================
 //
-#include <limits> // std::numerical_limits<double>::infinity()
 
 // ==================
 //  Project Includes
@@ -28,13 +27,14 @@
 #include "naiveratemanager.h"
 
 /**
- * @brief ConstantRateGroup enables simulation of a group of reactions during a time step
- *  for which the reaction rates are supposed to be constant.
+ * @brief Class simulating a group of reactions during a time step for which the
+ *  reaction rates are supposed to be constant.
  *
- * Under constant rate hypothesis, it is very efficient to compute a chain of reactions.
- * Once the reactions and time step are given, ConstantRateGroup computes the reaction schedule
- * for the time step at once (limited to MAX_NUMBER_REACTIONS to avoid high memory usage, scheduling
- * is performed in several steps if necessary). Access to their timing and performing them is
+ * Under constant rate hypothesis, it is very efficient to compute a chain of
+ * reactions. Once the reactions and time step are given, ConstantRateGroup
+ * computes the reaction schedule for the time step at once (limited to
+ * MAX_NUMBER_REACTIONS to avoid high memory usage, scheduling is performed in 
+ * several steps if necessary). Access to their timing and performing them is
  * therefore extremely quick.
  * This class inherits class ReactionGroup.
  * @sa ReactionGroup
@@ -50,7 +50,8 @@ class ConstantRateGroup : public ReactionGroup
   //
   /**
    * @brief Constructor
-   * @param reactions A vector of reactions simulated under constant rate hypothesis.
+   * @param reactions Vector of reactions simulated under constant rate
+   *  hypothesis.
    * @param initial_time Time at the beginning of simulation.
    * @param time_step Time interval during which reactions need to be performed.
    */
@@ -128,8 +129,8 @@ private:
   /** @brief Time points at which reactions next scheduled reactions occur. */
   std::vector<double> _reaction_times;
 
-  /** @brief Indices of the reaction rates of the next scheduled reactions. */
-  std::vector<int> _reaction_rate_indices;
+  /** @brief Indices of the next scheduled reactions. */
+  std::vector<int> _reaction_indices;
 
   /** @brief Index pointing to the next reaction time and rate index to read. */
   int _next_index;
@@ -154,9 +155,9 @@ private:
   /**
    * @brief Proceed to next scheduled reaction.
    *
-   * This function simply updates the index of _reaction_times and _reaction_rate_indices
-   * or reschedules a whole set of reactions if all reactions in these vectors have been
-   * performed.
+   * This function simply updates the index of _reaction_times and
+   * _reaction_indices or reschedules a whole set of reactions if all reactions 
+   * in these vectors have been performed.
    */
   void go_to_next_reaction (void);
 
@@ -170,19 +171,17 @@ private:
    * @brief Schedule a new set of reactions following current_time.
    *
    * The new scheduled set is stored in the vectors _reaction_times and
-   * _reaction_rate_indices. At most MAX_NUMBER_REACTIONS are scheduled and if the end of
-   * the time step is reached (i.e _final_time), an OVERTIME is added in _reaction_times
-   * after the last valid reaction.
+   * _reaction_indices. At most MAX_NUMBER_REACTIONS are scheduled and if
+   * the end of the time step is reached (i.e _final_time), an OVERTIME is added
+   * in _reaction_times after the last valid reaction.
    */
   void schedule_next_reactions (double current_time);
-
 
 
   // ======================
   //  Forbidden Operations
   // ======================
   //
-
 };
 
 // ======================

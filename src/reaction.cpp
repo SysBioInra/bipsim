@@ -25,8 +25,7 @@
 // ==========================
 //
 Reaction::Reaction (void)
-  : _forward_rate (0)
-  , _backward_rate (0)
+  : _rate (0)
 {
 }
 
@@ -66,20 +65,6 @@ std::ostream& operator<< (std::ostream& output, const Reaction& reaction)
 {
   reaction.print (output);
   return output;
-}
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool Reaction::check_invariant (void) const
-{
-  bool result = true;
-  return result;
 }
 
 

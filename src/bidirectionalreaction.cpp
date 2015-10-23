@@ -1,8 +1,8 @@
 
 
 /**
- * @file reactiongroup.cpp
- * @brief Implementation of the ReactionGroup class.
+ * @file reaction.cpp
+ * @brief Implementation of the BidirectionalReaction class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -12,32 +12,26 @@
 //  General Includes
 // ==================
 //
-#include <iostream>
-#include <limits> // std::numeric_limits
+#include <iostream> // std::cout
 
 // ==================
 //  Project Includes
 // ==================
 //
-#include "reactiongroup.h"
-#include "reaction.h"
+#include "bidirectionalreaction.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-const double ReactionGroup::OVERTIME = std::numeric_limits<double>::infinity();
-
-ReactionGroup::ReactionGroup (const std::vector<Reaction*>& reactions)
-  : _reactions (reactions)
-  , _next_reaction_time (0)
+BidirectionalReaction::BidirectionalReaction (void)
 {
 }
 
 // Not needed for this class (use of default copy constructor) !
-// ReactionGroup::ReactionGroup ( const ReactionGroup& other_reaction_group );
+// BidirectionalReaction::BidirectionalReaction (BidirectionalReaction& other_bidireactional_reaction);
 
-ReactionGroup::~ReactionGroup (void)
+BidirectionalReaction::~BidirectionalReaction (void)
 {
 }
 
@@ -45,6 +39,7 @@ ReactionGroup::~ReactionGroup (void)
 //  Public Methods - Commands
 // ===========================
 //
+
 
 // ============================
 //  Public Methods - Accessors
@@ -63,13 +58,13 @@ ReactionGroup::~ReactionGroup (void)
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// ReactionGroup& ReactionGroup::operator= ( const ReactionGroup& other_reaction_group );
+// BidirectionalReaction& BidirectionalReaction::operator= (BidirectionalReaction& other_bidireactional_reaction);
 
-
-// ===================
-//  Protected Methods
-// ===================
-//
+std::ostream& operator<< (std::ostream& output, const BidirectionalReaction& reaction)
+{
+  reaction.print (output);
+  return output;
+}
 
 
 // =================

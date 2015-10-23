@@ -1,7 +1,7 @@
 
 
 /**
- * @file inputfile.cpp
+ * @file inputdata.cpp
  * @brief Implementation of the InputData class.
  * 
  * @authors Marc Dinh, Stephan Fischer

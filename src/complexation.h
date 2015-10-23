@@ -24,7 +24,7 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "reaction.h"
+#include "bidirectionalreaction.h"
 
 /**
  * @brief This class represents complexation reactions.
@@ -32,7 +32,7 @@
  * A complexation is defined by two chemical elements and an affinity between
  * them. They can combine into a new entity.
  */
-class Complexation : public Reaction
+class Complexation : public BidirectionalReaction
 {
 public:
 
@@ -42,9 +42,9 @@ public:
   //
   /**
    * @brief Default constructor
-   * @param  component_a Reference to the first chemical involved.
-   * @param  component_b Reference to the second chemical involved.
-   * @param  complex Reference to the complex.
+   * @param component_a Reference to the first chemical involved.
+   * @param component_b Reference to the second chemical involved.
+   * @param complex Reference to the complex.
    * @param k_on Association constant.
    * @param k_off Dissociation constant.
    */
@@ -66,15 +66,14 @@ public:
   // =========================== 
   //
   /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
+   * @brief Update chemical quantities according to the forward reaction.
    */
-  virtual void print (std::ostream& output) const;
-
+  virtual void perform_forward (void);
+  
   /**
-   * @brief Update reaction rates.
+   * @brief Update chemical quantities according to the backward reaction.
    */
-  virtual void update_rates ( void );
+  virtual void perform_backward (void);
 
 
   // ============================
@@ -110,31 +109,11 @@ public:
   //  */
   // Complexation& operator= (Complexation& other_complexation);
 
-
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  bool check_invariant (void) const;
-
  protected:
   // ===================
   //  Protected Methods
   // ===================
   //
-  /**
-   * @brief Update chemical quantities according to the forward reaction.
-   */
-  virtual void do_forward_reaction (void);
-  
-  /**
-   * @brief Update chemical quantities according to the backward reaction.
-   */
-  virtual void do_backward_reaction (void);
   
 
  private:
@@ -165,6 +144,24 @@ public:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Compute current forward rate.
+   * @return Current forward rate.
+   */
+  virtual double compute_forward_rate (void) const;
+
+  /**
+   * @brief Compute current forward rate.
+   * @return Current backward rate.
+   */
+  virtual double compute_backward_rate (void) const;
+
+  /**
+   * @brief Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const;
+
   /** 
    * @brief Update the _bound_component index and performs a number of checks.
    *

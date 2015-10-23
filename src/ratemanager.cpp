@@ -27,7 +27,7 @@
 //
 RateManager::RateManager (const std::vector <Reaction*>& reactions)
   : _reactions (reactions)
-  , _rates (2*reactions.size(), 0)
+  , _rates (reactions.size(), 0)
   , _total_rate (0)
 {
   compute_all_rates();
@@ -47,9 +47,7 @@ RateManager::~RateManager (void)
 void RateManager::manage (const std::vector <Reaction*>& reactions)
 {
   _reactions = reactions;
-
-  // one forwarde rate + one backward rate for each reaction
-  _rates.resize (2*reactions.size(),0);
+  _rates.resize (reactions.size(),0);
 
   compute_all_rates();
 }
@@ -74,20 +72,6 @@ void RateManager::manage (const std::vector <Reaction*>& reactions)
 // Not needed for this class (use of default overloading) !
 // RateManager& RateManager::operator= ( const RateManager& other_rate_manager );
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool RateManager::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
-
 
 // =================
 //  Private Methods
@@ -95,10 +79,7 @@ bool RateManager::check_invariant (void) const
 //
 void RateManager::compute_all_rates (void)
 {
-  for (int i = 0; i < _reactions.size(); ++i)
-    {
-      update_reaction (i);
-    }
+  for (int i = 0; i < _reactions.size(); ++i) { update_reaction (i); }
 }
 
 void RateManager::compute_total_rate (void)

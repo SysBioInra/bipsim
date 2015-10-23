@@ -26,6 +26,8 @@
 #include "baseloading.h"
 #include "release.h"
 #include "elongation.h"
+#include "forwardreaction.h"
+#include "backwardreaction.h"
 
 #include "cellstate.h"
 
@@ -134,8 +136,11 @@ bool ReactionFactory::create_chemical_reaction ( const std::string& line )
     }
 
   // create and store
-  _cell_state.store (new ChemicalReaction (chemicals, stoichiometries,
-					   k_1, k_m1));
+  ChemicalReaction* reaction = new ChemicalReaction (chemicals, stoichiometries,
+						     k_1, k_m1);
+  _cell_state.store (reaction);
+  if (k_1 > 0) { _cell_state.store (new ForwardReaction (*reaction)); }
+  if (k_m1 > 0) { _cell_state.store (new BackwardReaction (*reaction)); } 
   return true;
 }
 
@@ -189,8 +194,11 @@ bool ReactionFactory::create_complexation ( const std::string& line )
   if (complex_ptr == 0) return false; // TODO throw error ?
   
   // create and store
-  _cell_state.store (new Complexation (*component_a_ptr, *component_b_ptr,
-				       *complex_ptr, k_on, k_off));
+  Complexation* reaction = new Complexation (*component_a_ptr, *component_b_ptr,
+					     *complex_ptr, k_on, k_off);
+  _cell_state.store (reaction);
+  if (k_on > 0) { _cell_state.store (new ForwardReaction (*reaction)); }
+  if (k_off > 0) { _cell_state.store (new BackwardReaction (*reaction)); } 
   return true;
 }
 
@@ -250,9 +258,12 @@ bool ReactionFactory::create_binding ( const std::string& line )
   if (binding_site_family == CellState::NOT_FOUND) return false; // TODO throw error ?
 
   // create and store
-  _cell_state.store (new Binding (*unit_to_bind_ptr, *binding_result_ptr,
-				  *(_cell_state.find <BindingSiteFamily> (binding_site)),
-				  binding_site_family));
+  Binding* reaction = new Binding (*unit_to_bind_ptr, *binding_result_ptr,
+				   *(_cell_state.find <BindingSiteFamily> (binding_site)),
+				   binding_site_family);
+  _cell_state.store (reaction);
+  _cell_state.store (new ForwardReaction (*reaction));
+  _cell_state.store (new BackwardReaction (*reaction)); 
   return true;
 }
 

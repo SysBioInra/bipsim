@@ -18,9 +18,6 @@
 // ==================
 //
 #include <vector> // std::vector
-#include <list> // std::list
-#include <map> // std::map
-#include <set> // std::set
 
 // ==================
 //  Project Includes
@@ -109,16 +106,6 @@ class Solver
   //  * @brief Assignment operator
   //  */
   // Solver& operator= ( const Solver& other_solver );
-
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
 
  protected:
   

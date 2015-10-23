@@ -36,11 +36,20 @@ Release::Release (BoundChemical& unit_to_release,
   , _unit_to_release (unit_to_release)
   , _product_table (product_table)
 {
+  /** @pre Rate must be strictly positive. */
+  REQUIRE (rate > 0);
+
   _reactants.push_back (&_unit_to_release);
 
   // copy components from side reaction into parent component list
-  _reactants.insert (_reactants.end(), _side_reaction.reactants().begin(),
-		     _side_reaction.reactants().end());
+  _reactants.insert (_reactants.end(),
+		     _side_reaction.forward_reactants().begin(),
+		     _side_reaction.forward_reactants().end());
+  _products.insert (_products.end(),
+		    _side_reaction.backward_reactants().begin(),
+		    _side_reaction.backward_reactants().end());
+
+  // TODO add products from the product table
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -54,42 +63,16 @@ Release::~Release (void)
 //  Public Methods - Commands
 // ===========================
 //
-void Release::print (std::ostream& output) const
-{
-  output << "Release reaction.";
-}
-
-void Release::update_rates (void)
-{
-  /**
-   * Forward rate is simply defined by r = k_1 x product ( [reactant_i] ).
-   * It is 0 if there are not enough reactants.
-   */
-  _side_reaction.update_rates();
-  _forward_rate = _unit_to_release.number()*_side_reaction.forward_rate();
-
-  /** Backward reaction is impossible. Nothing to update (it remains always 0) */
-  /** @post Forward rate must be positive. */
-  ENSURE (_forward_rate >=0);
-  /** @post Backward rate must be positive. */
-  ENSURE (_backward_rate >=0);
-}
 
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-bool Release::is_forward_reaction_possible (void) const
+bool Release::is_reaction_possible (void) const
 {
   return ((_side_reaction.is_forward_reaction_possible())
 	  && (_unit_to_release.number() > 0));
 }
-
-bool Release::is_backward_reaction_possible (void) const
-{
-  return false;
-}
-
 
 
 // ==========================
@@ -105,28 +88,14 @@ bool Release::is_backward_reaction_possible (void) const
 // Not needed for this class (use of default overloading) !
 // Release& Release::operator= ( const Release& other_release );
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool Release::check_invariant (void) const
-{
-  bool result = _side_reaction.check_invariant();
-  return result;
-}
-
 // ===================
 //  Protected Methods
 // ===================
 //
-void Release::do_forward_reaction (void)
+void Release::do_reaction (void)
 {
   /** @pre There must be enough reactants to perform reaction. */
-  REQUIRE (is_forward_reaction_possible());
+  REQUIRE (is_reaction_possible());
 
   _unit_to_release.focus_random_unit();
   _unit_to_release.focused_unit_location().unbind_unit (_unit_to_release);
@@ -152,11 +121,19 @@ void Release::do_forward_reaction (void)
   _side_reaction.perform_forward();
 }
 
-void Release::do_backward_reaction (void)
+double Release::compute_rate (void) const
 {
-  std::cerr << "ERROR: release reaction should not be performed backwards." << std::endl;
+  /**
+   * Forward rate is simply defined by r = k_1 x product ( [reactant_i] ).
+   * It is 0 if there are not enough reactants.
+   */
+  return _unit_to_release.number()*_side_reaction.forward_rate();
 }
 
+void Release::print (std::ostream& output) const
+{
+  output << "Release reaction.";
+}
 
 
 // =================

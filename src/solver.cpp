@@ -90,20 +90,6 @@ void Solver::go_to_next_reaction (void)
 // Not needed for this class (use of default overloading) !
 // Solver& Solver::operator= ( const Solver& other_solver );
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool Solver::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
-
 
 // =================
 //  Private Methods

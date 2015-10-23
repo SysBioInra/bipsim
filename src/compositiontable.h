@@ -67,7 +67,7 @@ class CompositionTable : public SimulatorInput
   //
   /**
    * @brief Add new composition rule.
-   * @param input Letter of the sequence.
+   * @param letter Letter of the sequence.
    * @param composition List of chemicals implementing the letter who will
    *  be released during degradation.
    */

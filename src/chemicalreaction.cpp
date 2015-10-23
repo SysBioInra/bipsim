@@ -28,62 +28,58 @@
 // ==========================
 //
 ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
-				    std::vector<int>& stoichiometry, double forward_rate_constant,
+				    std::vector<int>& stoichiometry,
+				    double forward_rate_constant,
 				    double backward_rate_constant)
-  : Reaction ()
-  , _number_components (components.size())
-  , _component_vector (components)
-  , _stoichiometry (stoichiometry)
-  , _k_1 (forward_rate_constant)
+  : _k_1 (forward_rate_constant)
   , _k_m1 (backward_rate_constant)
-  , _bound_product_index (_number_components)
-  , _bound_reactant_index (_number_components)
 {
 
   /** @pre Stoichiometry container size must match number of components. */
-  REQUIRE (_stoichiometry.size() == _number_components);
+  REQUIRE (stoichiometry.size() == components.size());
   /** @pre k_1 must be positive. */
-  REQUIRE (_k_1 >= 0);
+  REQUIRE (forward_rate_constant >= 0);
   /** @pre k_-1 must be positive. */
-  REQUIRE (_k_m1 >= 0);
+  REQUIRE (backward_rate_constant >= 0);
 
-  // fill in the reactant list
-  _reactants.insert (_reactants.end(), _component_vector.begin(), _component_vector.end());
+  // fill in the reactant and stoichiometry vectors
+  for (int i = 0; i < components.size(); ++i)
+    {
+      /** @pre Stoichiometries must be nonzero. */
+      REQUIRE (stoichiometry [i] != 0);
+      if (stoichiometry [i] < 0)
+	{
+	  _forward_reactants.push_back (components[i]);
+	  _forward_stoichiometry.push_back (-stoichiometry[i]);
+	}
+      else
+	{
+	  _backward_reactants.push_back (components[i]);
+	  _backward_stoichiometry.push_back (stoichiometry[i]);
+	}
+    }
 
   // look for bound chemicals in the reaction
-  compute_bound_component_indices();
+  isolate_bound_components();
 
-  // move them at the end of the vector
-  if (_bound_product_index < _number_components)
-    {
-      // swap contents
-      int desired_index = _number_components-1;
-      int tmp_stoichiometry = _stoichiometry[desired_index];
-      Chemical* tmp_chemical = _component_vector[desired_index];
-      _stoichiometry[desired_index] = _stoichiometry [_bound_product_index];
-      _component_vector[desired_index] = _component_vector[_bound_product_index];
-      _stoichiometry [_bound_product_index] = tmp_stoichiometry;
-      _component_vector[_bound_product_index] = tmp_chemical;
-      // update indices
-      if (_bound_reactant_index == desired_index)
-	{
-	  _bound_reactant_index = _bound_product_index;
-	}
-      _bound_product_index = desired_index;
-    }
-  if (_bound_reactant_index < _number_components)
-    {
-      // swap contents
-      int desired_index = _number_components-2;
-      int tmp_stoichiometry = _stoichiometry[desired_index];
-      Chemical* tmp_chemical = _component_vector[desired_index];
-      _stoichiometry[desired_index] = _stoichiometry [_bound_reactant_index];
-      _component_vector[desired_index] = _component_vector[_bound_reactant_index];
-      _stoichiometry [_bound_reactant_index] = tmp_stoichiometry;
-      _component_vector[_bound_reactant_index] = tmp_chemical;
-      // update indices
-      _bound_reactant_index = desired_index;
-    }
+  /** @post Total number of components must be conserved. */
+  ENSURE (_forward_reactants.size() + _backward_reactants.size()
+	  == components.size());
+
+  /** @post There are either no bound chemical in the reaction or one on each
+   *   side of the reaction. */
+  ENSURE (((_bound_reactant == 0) && (_bound_product == 0))
+	  || ((_bound_reactant != 0) && (_bound_product != 0)));
+
+  /** @post Sum of free and bound reactants must match total number of
+   *   reactants */
+  ENSURE (_free_reactant_number == 
+	  _forward_reactants.size() - (_bound_reactant != 0));
+
+  /** @post Sum of free and bound products must match total number of
+   *   products */
+  ENSURE (_free_product_number == 
+	  _backward_reactants.size() - (_bound_product != 0));
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -97,58 +93,48 @@ ChemicalReaction::~ChemicalReaction (void)
 //  Public Methods - Commands
 // ===========================
 //
-
-void ChemicalReaction::print (std::ostream& output) const
+void ChemicalReaction::perform_forward (void)
 {
-  output << "Chemical reaction.";
+  /** @pre There must be enough components left to perform the reaction. */
+  REQUIRE (is_forward_reaction_possible() == true);
+  
+  // update free chemical numbers
+  for (int i = 0; i < _free_reactant_number; i++)
+    { forward_chemical (i)->remove (_forward_stoichiometry[i]); }
+
+  for (int i = 0; i < _free_product_number; i++)
+    { backward_chemical (i)->add (_backward_stoichiometry[i]); }
+
+  // update bound chemical number (if applicable)
+  if (_bound_reactant != 0)
+    {
+      _bound_reactant->focus_random_unit();
+      _bound_product->add_unit_in_place_of (*_bound_reactant);
+      _bound_reactant->focused_unit_location().replace_bound_unit (*_bound_reactant, *_bound_product);      
+      _bound_reactant->remove_focused_unit();
+    }
 }
 
-void ChemicalReaction::update_rates (void)
+void ChemicalReaction::perform_backward (void)
 {
-  /**
-   * Forward rate is simply defined by r = k_1 x product ( [reactant_i] ).
-   * It is 0 if there are not enough reactants.
-   */
-  if (is_forward_reaction_possible() == true)
-    {
-      _forward_rate = _k_1;
-      for (int i = 0; i < _number_components; i++)
-	{
-	  if ( _stoichiometry[i] < 0 )
-	    {
-	      _forward_rate *= _component_vector[i]->number();
-	    }
-	} 
-    }
-  else // forward reaction is not possible
-    {
-      _forward_rate = 0;
-    }
+  /** @pre There must be enough components left to perform the reaction. */
+  REQUIRE (is_backward_reaction_possible() == true);
+  
+  // update free chemical numbers
+  for (int i = 0; i < _free_reactant_number; i++)
+    { forward_chemical (i)->add (_forward_stoichiometry[i]); }
 
-  /**
-   * Backward rate is simply defined by r = k_-1 x product ( [product_i] ).
-   * It is 0 if there are not enough reactants.
-   */
-  if (is_backward_reaction_possible() == true)
-    {
-      _backward_rate = _k_m1;
-      for (int i = 0; i < _number_components; i++)
-	{
-	  if ( _stoichiometry[i] > 0 )
-	    {
-	      _backward_rate *= _component_vector[i]->number();
-	    }
-	}  
-    }
-  else // backward reaction is not possible
-    {
-      _backward_rate = 0;
-    }
+  for (int i = 0; i < _free_product_number; i++)
+    { backward_chemical (i)->remove (_backward_stoichiometry[i]); }
 
-  /** @post Forward rate must be positive. */
-  ENSURE (_forward_rate >=0);
-  /** @post Backward rate must be positive. */
-  ENSURE (_backward_rate >=0);
+  // update bound chemical number (if applicable)
+  if (_bound_reactant != 0)
+    {
+      _bound_product->focus_random_unit ();
+      _bound_reactant->add_unit_in_place_of (*_bound_product);
+      _bound_product->focused_unit_location().replace_bound_unit (*_bound_product, *_bound_reactant);      
+      _bound_product->remove_focused_unit();
+    }
 }
 
 
@@ -158,23 +144,23 @@ void ChemicalReaction::update_rates (void)
 //
 bool ChemicalReaction::is_forward_reaction_possible (void) const
 {
-  for (int i = 0; i < _number_components; i++)
+  for (int i = 0; i < forward_reactants().size(); i++)
     {
-      if (_component_vector[i]->number() < -_stoichiometry[i]) return false;
+      if (forward_chemical(i)->number() < _forward_stoichiometry[i])
+	{ return false; }
     }
   return true;
 }
 
 bool ChemicalReaction::is_backward_reaction_possible (void) const
 {
-  for (int i = 0; i < _number_components; i++)
+  for (int i = 0; i < backward_reactants().size(); i++)
     {
-      if (_component_vector[i]->number() < _stoichiometry[i]) return false;
+      if (backward_chemical(i)->number() < _backward_stoichiometry[i])
+	{ return false; }
     }
   return true;
 }
-
-
 
 // ==========================
 //  Public Methods - Setters
@@ -189,154 +175,159 @@ bool ChemicalReaction::is_backward_reaction_possible (void) const
 // Not needed for this class (use of default overloading) !
 // ChemicalReaction& ChemicalReaction::operator= ( const ChemicalReaction& other_chemical_reaction );
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool ChemicalReaction::check_invariant (void) const
-{
-  bool result = Reaction::check_invariant();
-  return result;
-}
-
-
-// ===================
-//  Protected Methods
-// ===================
-//
-void ChemicalReaction::do_forward_reaction (void)
-{
-  /** @pre There must be enough components left to perform the reaction. */
-  REQUIRE (is_forward_reaction_possible() == true);
-  
-  // update free chemical numbers
-  for (int i = 0; i < _bound_reactant_index; i++)
-    {
-      int variation = _stoichiometry[i];
-      if ( variation > 0 )
-	{
-	  _component_vector[i]->add (variation);
-	}
-      else
-	{
-	  _component_vector[i]->remove (-variation);
-	}
-    }
-
-  // update bound chemical number (if applicable)
-  if (_bound_reactant_index < _number_components)
-    {
-      BoundChemical* product = static_cast<BoundChemical*> (_component_vector[_bound_product_index]);
-      BoundChemical* reactant = static_cast<BoundChemical*> (_component_vector[_bound_reactant_index]);
-      reactant->focus_random_unit();
-      product->add_unit_in_place_of (*reactant);
-      reactant->focused_unit_location().replace_bound_unit (*reactant, *product);      
-      reactant->remove_focused_unit();
-    }
-}
-
-void ChemicalReaction::do_backward_reaction (void)
-{
-  /** @pre There must be enough components left to perform the reaction. */
-  REQUIRE( is_backward_reaction_possible() == true );
-  
-  for (int i = 0; i < _number_components; i++)
-    {
-      int variation = _stoichiometry[i];
-      if ( variation > 0 )
-	{
-	  _component_vector[i]->remove (variation);
-	}
-      else
-	{
-	  _component_vector[i]->add (-variation);
-	}
-    }
-
-  // update bound chemical number (if applicable)
-  if (_bound_reactant_index < _number_components)
-    {
-      BoundChemical* product = static_cast<BoundChemical*> (_component_vector[_bound_product_index]);
-      BoundChemical* reactant = static_cast<BoundChemical*> (_component_vector[_bound_reactant_index]);
-      product->focus_random_unit ();
-      reactant->add_unit_in_place_of (*reactant);
-      product->focused_unit_location().replace_bound_unit (*product, *reactant);      
-      product->remove_focused_unit();
-    }
-}
-
 
 // =================
 //  Private Methods
 // =================
 //
-void ChemicalReaction::compute_bound_component_indices ( void )
+void ChemicalReaction::print (std::ostream& output) const
 {
-  _bound_product_index = _number_components;
-  _bound_reactant_index = _number_components;
-  for (int i = 0; i < _number_components; i++)
+  output << "Chemical reaction.";
+}
+
+double ChemicalReaction::compute_forward_rate (void) const
+{
+  /**
+   * Forward rate is simply defined by r = k_1 x product ( [reactant_i] ).
+   * It is 0 if there are not enough reactants.
+   */
+  double rate = _k_1;
+  for (int i = 0; i < _forward_reactants.size(); i++)
     {
-      BoundChemical* test = dynamic_cast< BoundChemical* > (_component_vector[i]);
-      if ( test != 0 ) // true if a the chemical is a bound chemical !
+      if (forward_chemical(i)->number() < _forward_stoichiometry[i])
+	{ return 0; }
+      rate *= forward_chemical(i)->number();
+    } 
+  return rate;
+}
+
+double ChemicalReaction::compute_backward_rate (void) const
+{
+  /**
+   * Backward rate is simply defined by r = k_-1 x product ( [product_i] ).
+   * It is 0 if there are not enough reactants.
+   */
+  double rate = _k_m1;
+  for (int i = 0; i < _backward_reactants.size(); i++)
+    {
+      if (backward_chemical(i)->number() < _backward_stoichiometry[i])
+	{ return 0; }
+      rate *= backward_chemical(i)->number();
+    }
+  return rate;
+}
+
+
+void ChemicalReaction::isolate_bound_components (void)
+{
+  // look for a bound reactant
+  _bound_reactant = 0;
+  int bound_reactant_index = 0;
+  for (int i = 0; i < _forward_reactants.size(); i++)
+    {
+      BoundChemical* test
+	= dynamic_cast <BoundChemical*> (_forward_reactants[i]);
+      if (test != 0) // true if chemical is a bound chemical
 	{
-	  if ( _stoichiometry[i] > 0 ) // it is a product
+	  // check whether a bound product has not already been defined
+	  if (_bound_reactant == 0)
 	    {
-	      // check whether a bound product has not already been defined
-	      if ( _bound_product_index == _number_components )
-		{
-		  _bound_product_index = i;
-		}
-	      else
-		{
-		  std::cerr << "ERROR: reaction contains 2 or more bound products. "
-			    << "Class can only handle one at the moment."
-			    << std::endl;
-		}
+	      _bound_reactant = test;
+	      bound_reactant_index = i;
 	    }
-	  else // it is a reactant
+	  else
 	    {
-	      // check whether a bound reactant has not already been defined
-	      if ( _bound_reactant_index == _number_components )
-		{
-		  _bound_reactant_index = i;
-		}
-	      else
-		{
-		  std::cerr << "ERROR: reaction contains 2 or more bound reactants. "
-			    << "Class can only handle one at the moment."
-			    << std::endl;
-		}
+	      std::cerr << "ERROR: reaction contains 2 or more bound reactants."
+			<< " Class can only handle one at the moment."
+			<< std::endl;
+	      REQUIRE (false); // TODO throw error
 	    }
 	}
     }
-
-  // check that we have a pair of bound reactant AND product
-  if ( (_bound_product_index < _number_components) || (_bound_reactant_index < _number_components) )
+      
+  // look for a bound product
+  _bound_product = 0;
+  int bound_product_index = 0;
+ for (int i = 0; i < _backward_reactants.size(); i++)
     {
-      if ( (_bound_product_index == _number_components) || (_bound_reactant_index == _number_components) )
+      BoundChemical* test
+	= dynamic_cast <BoundChemical*> (_backward_reactants[i]);
+      if (test != 0) // true if chemical is a bound chemical
 	{
-	  std::cerr << "ERROR: reaction contains a bound reactant/product without its corresponding "
-		    << "bound product/reactant counterpart (a chemical reaction cannot imply binding)."
-		    << std::endl;
+	  // check whether a bound reactant has not already been defined
+	  if (_bound_product == 0)
+	    {
+	      _bound_product = test;
+	      bound_product_index = i;
+	    }
+	  else
+	    {
+	      std::cerr << "ERROR: reaction contains 2 or more bound products."
+			<< " Class can only handle one at the moment."
+			<< std::endl;
+	      REQUIRE (false); // TODO throw error
+	    }
 	}
     }
-  
-  // check that the stoichiometry is 1
-  if ( (_bound_product_index < _number_components) && (_stoichiometry [_bound_product_index] != 1) )
+ 
+ // check that we have a pair of bound reactant AND product
+ if (((_bound_reactant == 0) && (_bound_product != 0))
+     || ((_bound_reactant != 0) && (_bound_product == 0)))
+   {
+     std::cerr << "ERROR: reaction contains a bound reactant/product without"
+	       << " its corresponding bound product/reactant counterpart (a"
+	       << " chemical reaction cannot imply binding)."
+	       << std::endl;
+     REQUIRE (false); // TODO throw error
+   }
+
+ // check that the stoichiometry is 1
+ if ((_bound_reactant != 0)
+     && (_forward_stoichiometry [bound_reactant_index] != 1))
     {
-       std::cerr << "ERROR: trying to define a chemical reaction in which the stoichiometry of a bound "
-		 << "product is not equal to 1 (" << _stoichiometry [_bound_product_index] << ")."
-		 << std::endl;
+      std::cerr << "ERROR: trying to define a chemical reaction in which the"
+		<< " stoichiometry of a bound reactant is not equal to 1 ("
+		<< _forward_stoichiometry [bound_reactant_index] << ")."
+		<< std::endl;
+    }
+ if ((_bound_product != 0)
+     && (_backward_stoichiometry [bound_product_index] != 1))
+    {
+      std::cerr << "ERROR: trying to define a chemical reaction in which the"
+		<< " stoichiometry of a bound product is not equal to 1 ("
+		<< _backward_stoichiometry [bound_product_index] << ")."
+		<< std::endl;
     }
 
-  if ( (_bound_reactant_index < _number_components) && (_stoichiometry [_bound_reactant_index] != -1) )
-    {
-       std::cerr <<  "ERROR: trying to define a chemical reaction in which the stoichiometry of a bound "
-		 << "reactant is not equal to -1 (" << _stoichiometry [_bound_reactant_index] << ")."
-		 << std::endl;
-    }
+ // move bound reactant at the end of reactants if applicable
+ if (_bound_reactant == 0)
+   {
+     _free_reactant_number = _forward_reactants.size();
+   }
+ else
+   {
+     int s = _forward_reactants.size();
+     _free_reactant_number = s-1;
+     _forward_reactants [bound_reactant_index] = _forward_reactants [s-1];
+     _forward_stoichiometry [bound_reactant_index] =
+       _forward_stoichiometry [s-1];
+     _forward_reactants [s-1] = _bound_reactant;
+     _forward_stoichiometry [s-1] = 1;
+   }
+
+ // move bound product at the end of products if applicable
+ if (_bound_product == 0)
+   {
+     _free_product_number = _backward_reactants.size();
+   }
+ else
+   {
+     int s = _backward_reactants.size();
+     _free_product_number = s-1;
+     _backward_reactants [bound_product_index] = _backward_reactants [s-1];
+     _backward_stoichiometry [bound_product_index] =
+       _backward_stoichiometry [s-1];
+     _backward_reactants [s-1] = _bound_product;
+     _backward_stoichiometry [s-1] = 1;
+   }
 }

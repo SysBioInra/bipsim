@@ -28,13 +28,13 @@
 #include "dependencyratemanager.h"
 
 /**
- * @brief UpdatedRateGroup enables simulation of a group of reactions for which the reaction
- *  rates cannot be supposed to be constant.
+ * @brief Class simulating a group of reactions for which the reaction rates
+ *  cannot be supposed to be constant.
  *
- * UpdatedRateGroup provides the possibility to constantly update reaction rates for important
- * reactions or reactions with extremely varying rate. Computations are therefore extremely
- * expensive and reaction timings need to be updated every time a reaction occurs somewhere
- * else in the system.
+ * UpdatedRateGroup provides the possibility to constantly update reaction rates
+ * for important reactions or reactions with extremely varying rate.
+ * Computations are therefore extremely expensive and reaction timings need to
+ * be updated every time a reaction occurs somewhere else in the system.
  * This class inherits class ReactionGroup.
  * @sa ReactionGroup
  * @sa ConstantRateGroup
@@ -78,12 +78,13 @@ class UpdatedRateGroup : public ReactionGroup
   /**
    * @brief Recompute rates and reschedule next reaction.
    *
-   * Because reaction rates are critical for the reactions contained in this class,
-   * they need to be updated every time a reaction happens somewhere else in the system.
-   * This function MUST be called every time a reaction occurs ELSEWHERE. Else it should
-   * NOT be called, as it is computationnaly expensive. For example, there is no need to 
-   * call it just after calling perform_next_reaction() as the latter already schedules
-   * the following reaction.
+   * Because reaction rates are critical for the reactions contained in this
+   * class, they need to be updated every time a reaction happens somewhere else
+   * in the system. This function MUST be called every time a reaction occurs
+   * ELSEWHERE. Else it should NOT be called, as it is computationnaly
+   * expensive. For example, there is no need to call it just after calling
+   * perform_next_reaction() as the latter already schedules the following
+   * reaction.
    *
    * @param current_time Current simulation time.
    */
@@ -111,16 +112,6 @@ class UpdatedRateGroup : public ReactionGroup
   //  * @brief Assignment operator
   //  */
   // UpdatedRateGroup& operator= ( const UpdatedRateGroup& other_update_rate_group );
-
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
 
 
 private:

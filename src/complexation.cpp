@@ -28,8 +28,7 @@
 //
 Complexation::Complexation (Chemical& component_a, Chemical& component_b,
 			    Chemical& complex, double k_on, double k_off)
-  : Reaction ()
-  , _component_a (component_a)
+  : _component_a (component_a)
   , _component_b (component_b)
   , _complex (complex)
   , _k_on (k_on)
@@ -42,9 +41,9 @@ Complexation::Complexation (Chemical& component_a, Chemical& component_b,
   REQUIRE (k_off >= 0);
 
   // fill in component list
-  _reactants.push_back (&component_a);
-  _reactants.push_back (&component_b);
-  _reactants.push_back (&complex);
+  _forward_reactants.push_back (&component_a);
+  _forward_reactants.push_back (&component_b);
+  _backward_reactants.push_back (&complex);
 
   look_for_bound_components();
 }
@@ -60,78 +59,7 @@ Complexation::~Complexation (void)
 //  Public Methods - Commands
 // ===========================
 //
-void Complexation::print (std::ostream& output) const
-{
-  output << "Complexation reaction.";
-}
-
-void Complexation::update_rates ( void )
-{
-  /**
-   * Complexation rate is simply defined by r = k_on x [A] x [B].
-   */
-  _forward_rate = _k_on * _component_a.number() * _component_b.number();
-
-  /**
-   * Backward complexation rate is simply defined by r = k_off x [AB].
-   */
-  _backward_rate = _k_off * _complex.number();
-
-  /** @post Forward rate must be positive. */
-  ENSURE (_forward_rate >=0);
-  /** @post Backward rate must be positive. */
-  ENSURE (_backward_rate >=0);
-}
-
-
-// ============================
-//  Public Methods - Accessors
-// ============================
-//
-bool Complexation::is_forward_reaction_possible (void) const
-{
-  return ((_component_a.number() > 0) && (_component_b.number() > 0));
-}
-
-bool Complexation::is_backward_reaction_possible (void) const
-{
-  return (_complex.number() > 0);
-}
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// Complexation& Complexation::operator= ( const Complexation& other_complexation );
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool Complexation::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
-
-
-// ===================
-//  Protected Methods
-// ===================
-//
-void Complexation::do_forward_reaction ( void )
+void Complexation::perform_forward (void)
 {
   /** @pre There must be enough reactants to perform reaction. */
   REQUIRE (is_forward_reaction_possible());
@@ -163,7 +91,7 @@ void Complexation::do_forward_reaction ( void )
     }
 }
 
-void Complexation::do_backward_reaction ( void )
+void Complexation::perform_backward (void)
 {
   /** @pre There must be enough reactants to perform reaction. */
   REQUIRE (is_backward_reaction_possible());
@@ -195,33 +123,83 @@ void Complexation::do_backward_reaction ( void )
     }
 }
 
+// ============================
+//  Public Methods - Accessors
+// ============================
+//
+bool Complexation::is_forward_reaction_possible (void) const
+{
+  return ((_component_a.number() > 0) && (_component_b.number() > 0));
+}
+
+bool Complexation::is_backward_reaction_possible (void) const
+{
+  return (_complex.number() > 0);
+}
+
+
+// ==========================
+//  Public Methods - Setters
+// ==========================
+//
+
+
+// =======================================
+//  Public Methods - Operator overloading
+// =======================================
+//
+// Not needed for this class (use of default overloading) !
+// Complexation& Complexation::operator= ( const Complexation& other_complexation );
+
+
+// ===================
+//  Protected Methods
+// ===================
+//
+
 // =================
 //  Private Methods
 // =================
 //
+double Complexation::compute_forward_rate (void) const
+{
+  /**
+   * Complexation rate is simply defined by r = k_on x [A] x [B].
+   */
+  return _k_on * _component_a.number() * _component_b.number();
+}
+
+double Complexation::compute_backward_rate (void) const
+{
+  /**
+   * Backward complexation rate is simply defined by r = k_off x [AB].
+   */
+  return _k_off * _complex.number();
+}
+
+void Complexation::print (std::ostream& output) const
+{
+  output << "Complexation reaction.";
+}
+
 void Complexation::look_for_bound_components (void)
 {
   _bound_component = 0;
 
   // test component a
   BoundChemical* test = dynamic_cast< BoundChemical* > (&_component_a);
-  if (test != 0)
-    {
-      _bound_component = 1;
-    }
+  if (test != 0) { _bound_component = 1; }
 
   // test component b
   test = dynamic_cast< BoundChemical* > (&_component_b);
   if (test != 0)
     {
-      if (_bound_component == 0)
-	{
-	  _bound_component = 2;
-	}
+      if (_bound_component == 0) { _bound_component = 2; }
       else
 	{
-	  std::cerr << "ERROR: Trying to define a complexation reaction with 2 "
-		    << "bound components. Program can currently only handle one."
+	  std::cerr << "ERROR: Trying to define a complexation reaction with 2"
+		    << " bound components. Program can currently only handle"
+		    << " one."
 		    << std::endl;
 	}
     }
@@ -231,8 +209,9 @@ void Complexation::look_for_bound_components (void)
   if ( (test == 0) && (_bound_component != 0)
        || (test != 0) && (_bound_component == 0) )
     {
-      std::cerr << "ERROR: Trying to define a complexation with a bound component/complex "
-		<< "without corresponding bound complex/component on the other side."
+      std::cerr << "ERROR: Trying to define a complexation with a bound"
+		<< " component/complex without corresponding bound"
+		<< " complex/component on the other side."
 		<< std::endl;
     }      
 }

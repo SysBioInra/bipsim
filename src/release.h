@@ -33,9 +33,10 @@
  *
  * A release reaction is defined by the release of a chemical that has been
  * synthesizing a template. By releasing it, its product is also released.
- * However, note that other components can take part in this reaction. In particular,
- * the reaction should be specify in what form the main chemical is released (it can be
- * a free form of the chemical, but it could also break down into several subparts).
+ * However, note that other components can take part in this reaction. In
+ * particular, the reaction should be specify in what form the main chemical is
+ * released (it can bea free form of the chemical, but it could also break down
+ * into several subparts).
  * This class inherits class Reaction.
  * @sa Reaction
  */
@@ -53,15 +54,17 @@ public:
    * @param other_components
    *  Vector of other chemicals involved in the reaction.
    * @param stoichiometry
-   *  Vector of stoichiometry of the other chemicals, positive for products, negative for
-   *  reactants.
+   *  Vector of stoichiometry of the other chemicals, positive for products,
+   *  negative for reactants.
    * @param rate Reaction rate constant.
-   * @param product_table If bound chemical releases a product, table listing molecules
-   *  it may produce depending on its binding and release sites.
+   * @param product_table If bound chemical releases a product, table listing
+   *  molecules it may produce depending on its binding and release sites.
    * @sa ChemicalReaction
    */
-  Release (BoundChemical& unit_to_release, std::vector<Chemical*>& other_components,
-	   std::vector<int>& stoichiometry, double rate, ProductTable* product_table = 0);
+  Release (BoundChemical& unit_to_release,
+	   std::vector<Chemical*>& other_components,
+	   std::vector<int>& stoichiometry, double rate,
+	   ProductTable* product_table = 0);
     
 
   // Not needed for this class (use of default copy constructor) !
@@ -80,33 +83,16 @@ public:
   // ===========================
   //
   //
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  virtual void print (std::ostream& output) const;
-
-    /**
-   * @brief Update reaction rates.
-   */
-  virtual void update_rates ( void );
-
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
   /**
-   * @brief Returns whether there are enough chemicals to perform forward reaction.
+   * @brief Returns whether there are enough chemicals to perform reaction.
    * @return True if there are enough reactant, false otherwise.
    */
-  virtual bool is_forward_reaction_possible (void) const;
-
-  /**
-   * @brief Returns whether there are enough chemicals to perform backward reaction.
-   * @return True if there are enough reactant, false otherwise.
-   */
-  virtual bool is_backward_reaction_possible (void) const;
+  virtual bool is_reaction_possible (void) const;
 
 
   // ==========================
@@ -124,32 +110,12 @@ public:
   //  */
   // Release& operator= (Release& other_release);
 
-  
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
-
 
  protected:
   // ===================
   //  Protected Methods
   // ===================
   //
-  /**
-   * @brief Update chemical quantities according to the forward reaction.
-   */
-  virtual void do_forward_reaction (void);
-  
-  /**
-   * @brief Update chemical quantities according to the backward reaction.
-   */
-  virtual void do_backward_reaction (void);
 
 
 private:
@@ -171,7 +137,22 @@ private:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Update chemical quantities according to the reaction.
+   */
+  virtual void do_reaction (void);
+  
+  /**
+   * @brief Compute current reaction rate.
+   * @return Current reaction rate.
+   */
+  virtual double compute_rate (void) const;
 
+  /**
+   * @brief Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const;
 };
 
 // =====================

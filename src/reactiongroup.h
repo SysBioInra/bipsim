@@ -27,12 +27,12 @@
 #include "macros.h" // REQUIRE
 
 /**
- * @brief The ReactionGroup class contains a group of reactions that need to be simulated at the same level.
+ * @brief Class containing a group of reactions being simulated together.
  *
- * ReactionGroup is an abstract class that contains reactions that need to be simulated
- * together and is able to perform them. It does not specify however in what order and
- * at what time they occur. This part of the work is left to the classes that inherit 
- * from ReactionGroup.
+ * ReactionGroup is an abstract class that contains reactions that need to be 
+ * simulated together and is able to perform them. It does not specify however
+ * in what order and at what time they occur. This part of the work is left to
+ * the classes that inherit ReactionGroup.
  */
 class ReactionGroup
 {
@@ -104,16 +104,6 @@ class ReactionGroup
   //  */
   // ReactionGroup& operator= ( const ReactionGroup& other_reaction_group );
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
-
   // ==================
   //  Public Constants
   // ==================
@@ -137,23 +127,17 @@ protected:
   // ===================
   //
   /**
-   * @brief Perform reaction according to a rate value index.
-   * @param rate_index The index should typically be specified according to a rate value
-   *  that has been drawn in the _rates vector, NOT the reaction index in the _reactions vector.
-   *  Because forward rate and backward rate are stored separately, the rate index specifies both
-   *  the reaction to perform and the sense of reaction.
+   * @brief Perform reaction with given index.
+   * @param index Reaction index.
    */
-  void perform_reaction (int rate_index);
+  void perform_reaction (int index);
 
   /**
-   * @brief Check whether there are enough reactants available for reaction with a specific rate index.
-   * @param rate_index The index should typically be specified according to a rate value
-   *  that has been drawn in the _rates vector, NOT the reaction index in the _reactions vector.
-   *  Because forward rate and backward rate are stored separately, the rate index specifies both
-   *  the reaction to perform and the sense of reaction.
+   * @brief Check whether there are enough reactants available for reaction with a specific index.
+   * @param index Reaction index.
    * @return true if there are enough reactants.
    */
-  bool is_reaction_possible (int rate_index);
+  bool is_reaction_possible (int index);
 
 private:
 
@@ -187,40 +171,20 @@ inline double ReactionGroup::next_reaction_time (void) const
   return _next_reaction_time;
 }
 
-inline void ReactionGroup::perform_reaction (int rate_index)
+inline void ReactionGroup::perform_reaction (int index)
 {
-  // compute next reaction to perform
-  Reaction& reaction = *_reactions [rate_index/2];
-  
-  // perform reaction
-  if ( (rate_index % 2) == 0 )
-    {
-      /** @pre There must be enough reactants to perform reaction. */
-      REQUIRE (reaction.is_forward_reaction_possible());
-      reaction.perform_forward();
-    }
-  else
-    {
-      // see above
-      REQUIRE (reaction.is_backward_reaction_possible());
-      reaction.perform_backward();
-    }
+  /** @pre Index must be in vector range. */
+  REQUIRE ((index >= 0) && (index < _reactions.size()));
+  /** @pre There must be enough reactants to perform reaction. */
+  REQUIRE (_reactions[index]->is_reaction_possible());
+  _reactions [index]->perform();
 }
 
-inline bool ReactionGroup::is_reaction_possible (int rate_index)
+inline bool ReactionGroup::is_reaction_possible (int index)
 {
-  // find reaction to perform
-  Reaction& reaction = *_reactions [rate_index/2];
-  
-  // compute reactant availability
-  if ( (rate_index % 2) == 0 )
-    {
-      return reaction.is_forward_reaction_possible();
-    }
-  else
-    {
-      return reaction.is_backward_reaction_possible();
-    }
+  /** @pre Index must be in vector range. */
+  REQUIRE ((index >= 0) && (index < _reactions.size()));
+  return _reactions[index]->is_reaction_possible();
 }
 
 #endif // REACTION_GROUP_H

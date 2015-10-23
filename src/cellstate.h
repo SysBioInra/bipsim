@@ -142,6 +142,9 @@ private:
   /** @brief Handler containing reaction information. */
   Handler <Reaction> _reaction_handler;
 
+  /** @brief Handler containing two-way reaction information. */
+  Handler <BidirectionalReaction> _bireaction_handler;
+
   /** @brief Handler containing information about decoding tables. */
   Handler <CompositionTable> _composition_table_handler;
 
@@ -189,6 +192,7 @@ private:
 #include "transformationtable.h"
 
 #include "reaction.h"
+#include "bidirectionalreaction.h"
 #include "chemicalreaction.h"
 #include "complexation.h"
 #include "binding.h"
@@ -220,6 +224,9 @@ inline T* CellState::find (const std::string& name) const
 
   Reaction* r = _reaction_handler.find (name);
   if (r != 0) { return dynamic_cast <T*> (r); }
+
+  BidirectionalReaction* br = _bireaction_handler.find (name);
+  if (r != 0) { return dynamic_cast <T*> (br); }
   
   CompositionTable* ct = _composition_table_handler.find (name);
   if (ct != 0) { return dynamic_cast <T*> (ct); }
