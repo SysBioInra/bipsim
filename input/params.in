@@ -12,7 +12,7 @@ INITIAL_TIME 0
 #   FINAL_TIME <real value>
 ################################################################################
 
-FINAL_TIME 2000
+FINAL_TIME 1000
 
 ################################################################################
 # INPUT FILES 
@@ -21,7 +21,7 @@ FINAL_TIME 2000
 #   INPUT_FILES path/to/file1 path/to/file2 etc.
 ################################################################################
 
-INPUT_FILES ../input/dna_info.in ../input/dna.in ../input/rna_info.in ../input/rnas.in ../input/protein_info.in ../input/proteins.in ../input/translation.in ../input/tetracyclin.in
+INPUT_FILES ../input/dna_info.in ../input/dna.in ../input/rna_info.in ../input/rnas.in ../input/protein_info.in ../input/proteins.in ../input/translation.in
 
 ################################################################################
 # OUTPUT FILE

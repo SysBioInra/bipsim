@@ -43,9 +43,10 @@ class BiasedWheel
   //
   /**
    * @brief Default constructor.
-   * @param weights Vector of weights representing the biased wheel.
+   * @param cumulated_weights Vector of cumulated weights representing the
+   *  biased wheel.
    */
-  BiasedWheel (const std::vector<T>& weights);
+  BiasedWheel (const std::vector<T>& cumulated_weights);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -117,16 +118,6 @@ class BiasedWheel
   //  */
   // BiasedWheel& operator= ( const BiasedWheel& other_class_name );
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved.
-   */
-  bool check_invariant (void) const;
-
 
 private:
 
@@ -137,7 +128,7 @@ private:
   /**
    * @brief Vector representating the wheel in a cumulative form.
    */
-  std::vector<T> _cumulated_weights;
+  const std::vector<T>& _cumulated_weights;
 
   /**
    * @brief Sum of weights contained in the biased wheel.

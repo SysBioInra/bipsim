@@ -17,6 +17,7 @@
 #include <boost/random/uniform_real.hpp> // boost::uniform_real
 #include <boost/random/uniform_01.hpp> // boost::uniform_01
 #include <boost/random/exponential_distribution.hpp> // boost::exponential_distribution
+#include <numeric> //std::partial_sum
 
 
 // ==================
@@ -47,62 +48,82 @@ RandomHandler::~RandomHandler (void)
 //  Public Methods - Commands
 // ===========================
 //
-int RandomHandler::draw_index ( const std::vector<int>& weights )
+
+int RandomHandler::draw_index (const std::vector<int>& weights)
 {
-  REQUIRE (weights.size() > 0); /** @pre There must be at least one item. */
+  /** @pre There must be at least one item. */
+  REQUIRE (weights.size() > 0); 
+  std::vector<double> cumulated_weights (weights.size());
+  std::partial_sum (weights.begin(), weights.end(), cumulated_weights.begin());
+  /** @pre Total weight must be strictly positive. */
+  REQUIRE (cumulated_weights.back() > 0);
 
-  // we create a biased wheel
-  BiasedWheel<int> biased_wheel (weights);
-
-  REQUIRE (biased_wheel.total_weight() > 0); /** @pre Total weight must be strictly positive. */
-  
-  // we draw a number in the weight distribution
-  boost::uniform_int<int> distribution (1, biased_wheel.total_weight());
-  int drawn_weight = distribution (RandomHandler::_generator);
-  
-  // we look for the corresponding index
-  int result = biased_wheel.find_index (drawn_weight);
+  int result = draw_index_cumulated (cumulated_weights);
 
   /** @post The weight associated to the drawn index must be positive. */
   ENSURE (weights[result] > 0);
-  ENSURE (result < weights.size());
-  ENSURE (result >= 0);
+  ENSURE ((result < weights.size()) && (result >= 0));
   return result;
 }
 
-int RandomHandler::draw_index ( const std::vector<double>& weights )
+int RandomHandler::draw_index (const std::vector<double>& weights)
 {
-  REQUIRE (weights.size() > 0); /** @pre There must be at least one item. */
+  /** @pre There must be at least one item. */
+  REQUIRE (weights.size() > 0); 
+  std::vector<double> cumulated_weights (weights.size());
+  std::partial_sum (weights.begin(), weights.end(), cumulated_weights.begin());
+  /** @pre Total weight must be strictly positive. */
+  REQUIRE (cumulated_weights.back() > 0);
 
-  // we create a biased wheel
-  BiasedWheel<double> biased_wheel (weights);
-
-  REQUIRE (biased_wheel.total_weight() > 0); /** @pre Total weight must be strictly positive. */
-  
-  // we draw a number in the weight distribution
-  boost::uniform_real<double> distribution (biased_wheel.total_weight()*1e-16, biased_wheel.total_weight());
-  double drawn_weight = distribution (RandomHandler::_generator);
-
-  // we look for the corresponding index
-  int result = biased_wheel.find_index (drawn_weight);
+  int result = draw_index_cumulated (cumulated_weights);
 
   /** @post The weight associated to the drawn index must be positive. */
-  ENSURE( weights[result] > 0 );
-  ENSURE( result < weights.size() );
-  ENSURE( result >= 0 );
+  ENSURE (weights[result] > 0);
+  ENSURE ((result < weights.size()) && (result >= 0));
   return result;
 }
 
-std::vector<int> RandomHandler::draw_multiple_indices ( const std::vector<double>& weights, int number_indices )
+int RandomHandler::draw_index_cumulated (const std::vector<int>& cumulated_weights)
 {
-  REQUIRE (weights.size() > 0); /** @pre There must be at least one item. */
+  /** @pre There must be at least one item. */
+  REQUIRE (cumulated_weights.size() > 0); 
 
-  // we create a biased wheel
-  BiasedWheel<double> biased_wheel (weights);
+  // we draw a number in the weight distribution
+  BiasedWheel<int> biased_wheel (cumulated_weights);
+  boost::uniform_int<int> distribution (1, biased_wheel.total_weight());
+  int result = biased_wheel.find_index 
+    (distribution (RandomHandler::_generator));
 
-  REQUIRE (biased_wheel.total_weight() > 0); /** @pre Total weight must be strictly positive. */
-  
+  /** @post The weight associated to the drawn index must be positive. */
+  ENSURE (cumulated_weights[result] > 0);
+  ENSURE ((result < cumulated_weights.size()) && (result >= 0));
+  return result;
+}
+
+int RandomHandler::draw_index_cumulated (const std::vector<double>& cumulated_weights)
+{
+  /** @pre There must be at least one item. */
+  REQUIRE (cumulated_weights.size() > 0); 
+
+  // we draw a number in the weight distribution
+  BiasedWheel<double> biased_wheel (cumulated_weights);  
+  boost::uniform_real<double> distribution (biased_wheel.total_weight()*1e-16, biased_wheel.total_weight());
+  int result = biased_wheel.find_index
+    (distribution (RandomHandler::_generator));
+
+  /** @post The weight associated to the drawn index must be positive. */
+  ENSURE (cumulated_weights[result] > 0);
+  ENSURE ((result < cumulated_weights.size()) && (result >= 0));
+  return result;
+}
+
+std::vector<int> RandomHandler::draw_multiple_indices_cumulated (const std::vector<double>& cumulated_weights, int number_indices)
+{
+  /** @pre There must be at least one item. */
+  REQUIRE (cumulated_weights.size() > 0);
+
   // we draw number_indices values in the weight distribution
+  BiasedWheel<double> biased_wheel (cumulated_weights);
   boost::uniform_real<double> distribution (biased_wheel.total_weight()*1e-16, biased_wheel.total_weight());
   std::vector<double> drawn_weights (number_indices, 0);
   for (int i = 0; i < number_indices; ++i)
@@ -112,7 +133,6 @@ std::vector<int> RandomHandler::draw_multiple_indices ( const std::vector<double
 
   // we look for the corresponding indices
   std::vector<int> result = biased_wheel.find_multiple_indices (drawn_weights);
-
   return result;
 }
 
@@ -182,20 +202,6 @@ int RandomHandler::draw_poisson ( double lambda )
 //
 // Not needed for this class (use of default overloading) !
 // RandomHandler& RandomHandler::operator= (RandomHandler& other_random_handler);
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool RandomHandler::check_invariant ( void ) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================

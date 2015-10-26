@@ -14,7 +14,6 @@
 //
 #include <iostream>
 #include <algorithm> // std::sort
-#include <numeric> //std::partial_sum
 
 // ==================
 //  Project Includes
@@ -28,16 +27,14 @@
 // ==========================
 //
 template <typename T>
-BiasedWheel<T>::BiasedWheel (const std::vector<T>& weights)
-  : _cumulated_weights (weights.size())
+BiasedWheel<T>::BiasedWheel (const std::vector<T>& cumulated_weights)
+  : _cumulated_weights (cumulated_weights)
 {
+  /** @pre There must be at least one weight. */
+  REQUIRE (cumulated_weights.size() > 0);
   /** @pre All weights must be greater or equal to 0. */
   REQUIRE (check_weight_positivity (weights));
 
-  /**
-   * Input vector is not stored as such, instead cumulative form is stored.
-   */
-  std::partial_sum (weights.begin(), weights.end(), _cumulated_weights.begin());
   _total_weight = _cumulated_weights.back();
 }
 
@@ -212,10 +209,10 @@ std::vector<int> BiasedWheel<T>::sorted_indices (const std::vector<T>& vector_to
 template <typename T>
 bool BiasedWheel<T>::check_weight_positivity (const std::vector<T>& v)
 {
-  for (typename std::vector<T>::const_iterator weight_it = v.begin();
-       weight_it != v.end(); ++weight_it)
+  if (v [0] < 0) return false;
+  for (int i = 1; i < v.size(); ++i)
     {
-      if (*weight_it < 0) return false;
+      if (v[i] < v[i-1]) return false;
     }
   return true;
 }

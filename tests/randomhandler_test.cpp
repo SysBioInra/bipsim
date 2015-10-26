@@ -16,6 +16,7 @@
 #include <iostream> // std::cerr
 #include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
 #include <cmath> // fabs exp log
+#include <numeric> // std::partial_sum
 
 
 // ==================
@@ -84,7 +85,9 @@ int main (int argc, char *argv[])
   for (int i = 0; i < vector_size; ++i)
     {
       double_test = double_zeros; double_test[i] = i+1.1;
-      if (RandomHandler::instance().draw_multiple_indices (double_test,n) != std::vector<int> (n,i))
+      std::vector <double> cumulated (double_test.size());
+      std::partial_sum (double_test.begin(), double_test.end(), cumulated.begin());
+      if (RandomHandler::instance().draw_multiple_indices_cumulated (cumulated,n) != std::vector<int> (n,i))
 	{
 	  FAILURE ("draw_multiple_indices did not return only non-zero weighted index");
 	}

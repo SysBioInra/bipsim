@@ -60,7 +60,7 @@ void GraphRateManager::update_rates (void)
 	  *reaction_it = false;
 	}
     }
-  compute_total_rate();
+  cumulate_rates();
 }
 
 void GraphRateManager::update (const std::list<int>& reactions_to_update)
@@ -102,20 +102,6 @@ void GraphRateManager::manage (const std::vector <Reaction*>& reactions, const D
 //
 // Not needed for this class (use of default overloading) !
 // GraphRateManager& GraphRateManager::operator= ( const GraphRateManager& other_graph_rate_manager );
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool GraphRateManager::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================

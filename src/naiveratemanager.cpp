@@ -43,7 +43,7 @@ NaiveRateManager::~NaiveRateManager (void)
 void NaiveRateManager::update_rates (void)
 {
   compute_all_rates();
-  compute_total_rate();
+  cumulate_rates();
 }
 
 // ============================
@@ -64,20 +64,6 @@ void NaiveRateManager::update_rates (void)
 //
 // Not needed for this class (use of default overloading) !
 // NaiveRateManager& NaiveRateManager::operator= ( const NaiveRateManager& other_naive_rate_manager );
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool NaiveRateManager::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================

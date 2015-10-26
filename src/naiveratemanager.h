@@ -93,16 +93,6 @@ class NaiveRateManager : public RateManager
   //  */
   // NaiveRateManager& operator= ( const NaiveRateManager& other_naive_rate_manager );
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved.
-   */
-  virtual bool check_invariant (void) const;
-
 
 private:
 

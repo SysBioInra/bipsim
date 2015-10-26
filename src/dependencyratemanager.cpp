@@ -14,6 +14,7 @@
 //
 #include <iostream>
 #include <algorithm> // std::fill
+#include <map> // std::map
 
 // ==================
 //  Project Includes
@@ -55,12 +56,12 @@ void DependencyRateManager::update_rates (void)
        ++reaction_index, ++reaction_it)
     {
       if (*reaction_it == true)
-	{ 
-	  update_reaction (reaction_index);
-	  *reaction_it = false;
-	}
+  	{ 
+  	  update_reaction (reaction_index);
+  	  *reaction_it = false;
+  	}
     }
-  compute_total_rate();
+  cumulate_rates();
 }
 
 void DependencyRateManager::update (const std::list<int>& reactions_to_update)
@@ -102,20 +103,6 @@ void DependencyRateManager::manage (const std::vector <Reaction*>& reactions)
 //
 // Not needed for this class (use of default overloading) !
 // DependencyRateManager& DependencyRateManager::operator= ( const DependencyRateManager& other_dependency_rate_manager );
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool DependencyRateManager::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================

@@ -113,16 +113,6 @@ class GraphRateManager : public RateManager
   //  */
   // GraphRateManager& operator= ( const GraphRateManager& other_graph_rate_manager );
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved.
-   */
-  virtual bool check_invariant (void) const;
-
 
 private:
 

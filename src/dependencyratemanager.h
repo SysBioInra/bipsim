@@ -18,7 +18,6 @@
 // ==================
 //
 #include <vector> // std::vector
-#include <map> // std::map
 #include <list> //std::list
 
 // ==================
@@ -109,16 +108,6 @@ class DependencyRateManager : public RateManager
   //  * @brief Assignment operator.
   //  */
   // DependencyRateManager& operator= ( const DependencyRateManager& other_dependency_rate_manager );
-
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved.
-   */
-  virtual bool check_invariant (void) const;
 
 
 private:

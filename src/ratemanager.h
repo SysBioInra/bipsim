@@ -80,10 +80,10 @@ class RateManager
   // ============================
   //
   /**
-   * @brief Accessor to the rate vector.
-   * @return Vector containing reaction rates (as of last update).
+   * @brief Accessor to the cumulated rate vector.
+   * @return Vector containing cumulated reaction rates (as of last update).
    */
-  const std::vector<double>& rates (void) const;
+  const std::vector<double>& cumulated_rates (void) const;
 
   /**
    * @brief Accessor to total reaction rate.
@@ -126,10 +126,9 @@ class RateManager
   void update_reaction (int reaction_index);
 
   /**
-   * @brief Compute total rate by summing all values currently contained in the
-   *  _rates vector.
+   * @brief Compute cumulated rates and total rate from the _rates vector.
    */
-  void compute_total_rate (void);
+  void cumulate_rates (void);
 
   /**
    * @brief Accessor to reaction vector.
@@ -154,6 +153,11 @@ class RateManager
   std::vector <double> _rates;
 
   /**
+   * @brief Vector of cumulated rates as of last update.
+   */
+  std::vector <double> _cumulated_rates;
+
+  /**
    * @brief Total reaction rate.
    */
   double _total_rate;
@@ -175,12 +179,24 @@ class RateManager
 //  Inline Includes
 // ==================
 //
+#include <numeric> // std::partial_sum
 #include "reaction.h"
 
 // ======================
 //  Inline declarations
 // ======================
 //
+inline void RateManager::compute_all_rates (void)
+{
+  for (int i = 0; i < _reactions.size(); ++i) { update_reaction (i); }
+}
+
+inline void RateManager::cumulate_rates (void)
+{
+  std::partial_sum (_rates.begin(), _rates.end(), _cumulated_rates.begin());
+  _total_rate = _cumulated_rates.back();
+}
+
 inline void RateManager::update_reaction (int reaction_index)
 {
   Reaction* reaction_to_update = _reactions [reaction_index];
@@ -188,9 +204,9 @@ inline void RateManager::update_reaction (int reaction_index)
   _rates [reaction_index] = reaction_to_update->rate();
 }
 
-inline const std::vector <double>& RateManager::rates (void) const
+inline const std::vector <double>& RateManager::cumulated_rates (void) const
 {
-  return _rates;
+  return _cumulated_rates;
 }
 
 inline const std::vector <Reaction*>& RateManager::reactions (void) const

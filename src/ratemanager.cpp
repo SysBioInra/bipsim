@@ -13,7 +13,6 @@
 // ==================
 //
 #include <iostream>
-#include <numeric> // std::accumulate
 
 // ==================
 //  Project Includes
@@ -28,9 +27,11 @@
 RateManager::RateManager (const std::vector <Reaction*>& reactions)
   : _reactions (reactions)
   , _rates (reactions.size(), 0)
+  , _cumulated_rates (reactions.size(), 0)
   , _total_rate (0)
 {
   compute_all_rates();
+  cumulate_rates();
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -77,13 +78,3 @@ void RateManager::manage (const std::vector <Reaction*>& reactions)
 //  Private Methods
 // =================
 //
-void RateManager::compute_all_rates (void)
-{
-  for (int i = 0; i < _reactions.size(); ++i) { update_reaction (i); }
-}
-
-void RateManager::compute_total_rate (void)
-{
-  // accumulate (start, end, initial value)
-  _total_rate = std::accumulate (_rates.begin(), _rates.end(), 0);
-}
