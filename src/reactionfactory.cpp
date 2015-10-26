@@ -370,6 +370,9 @@ bool ReactionFactory::create_degradation (const std::string& line)
     }
 
   // create and store
-  _cell_state.store (new ChemicalReaction (chemicals, stoichiometry, rate, 0));
+  ChemicalReaction* reaction = new ChemicalReaction (chemicals, stoichiometry,
+						     rate, 0);
+  _cell_state.store (reaction);
+  _cell_state.store (new ForwardReaction (*reaction));
   return true;
 }
