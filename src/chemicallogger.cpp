@@ -83,20 +83,6 @@ void ChemicalLogger::log (double simulation_time)
 // Not needed for this class (use of default overloading) !
 // ChemicalLogger& ChemicalLogger::operator= ( const ChemicalLogger& other_chemical_logger );
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool ChemicalLogger::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
-
 
 // =================
 //  Private Methods

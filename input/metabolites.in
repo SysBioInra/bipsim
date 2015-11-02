@@ -1,0 +1,9 @@
+
+###################
+# Small Chemicals #
+###################
+unit Chemical H2O 1000
+unit Chemical H+ 
+unit Chemical ppGpp 
+unit Chemical PPi
+unit Chemical Pi

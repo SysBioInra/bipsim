@@ -26,16 +26,16 @@
 //  Constructors/Destructors
 // ==========================
 //
-BindingSite::BindingSite (int family_id, ChemicalSequence& location, int position,
-			  int length, double k_on, double k_off,
+BindingSite::BindingSite (int family_id, ChemicalSequence& location, int first,
+			  int last, double k_on, double k_off,
 			  int reading_frame /*= NO_READING_FRAME*/)
-  : Site (family_id, location, position, length)
+  : Site (family_id, location, first, last)
   , _k_on (k_on)
   , _k_off (k_off)
   , _reading_frame (reading_frame)
 {
   /** @pre Reading frame must be within site. */
-  REQUIRE (reading_frame < position + length);
+  REQUIRE ((reading_frame >= first) && (reading_frame <= last));
 }
 
 // Not needed for this class (use of default copy constructor) !

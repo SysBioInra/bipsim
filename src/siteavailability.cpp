@@ -25,14 +25,16 @@
 //  Constructors/Destructors
 // ==========================
 //
-SiteAvailability::SiteAvailability (int first_position, int length, SiteObserver& site_observer)
-  : _first (first_position)
-  , _last (first_position+length-1)
+SiteAvailability::SiteAvailability (int first, int last, SiteObserver& site_observer)
+  : _first (first)
+  , _last (last)
   , _observer (site_observer)
   , _last_value_notified (-1)
 {
   /** @pre First position must be positive. */
-  REQUIRE (_first >= 0);
+  REQUIRE (first >= 0);
+  /** @pre Last position must be greater than first. */
+  REQUIRE (last >= first);
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -46,10 +48,15 @@ SiteAvailability::~SiteAvailability (void)
 //  Public Methods - Commands
 // ===========================
 //
-void SiteAvailability::notify (int current_number_sequences, const std::vector<int>& current_occupancy)
+void SiteAvailability::notify (int a, int b, int current_number_sequences,
+			       const std::vector<int>& current_occupancy)
 {
   /** @pre Occupancy vector must be larger than last base to investigate. */
   REQUIRE (current_occupancy.size() >= _last);
+
+  // check if site was affected by change
+  if (((_first < a) && (_last < a))
+       || ((_first > b) && (_last > b))) return; // site not affected by change
 
   // check current occupancy
   int max_occupied = 0;
@@ -87,20 +94,6 @@ void SiteAvailability::notify (int current_number_sequences, const std::vector<i
 //
 // Not needed for this class (use of default overloading) !
 // SiteAvailability& SiteAvailability::operator= ( const SiteAvailability& other_site_availability );
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool SiteAvailability::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================

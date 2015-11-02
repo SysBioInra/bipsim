@@ -1,10 +1,22 @@
 
-unit Chemical UDP
+unit Chemical GTP 1000000
+unit Chemical GDP 
+unit Chemical GMP
 
-unit CompositionTable rna_composition A ADP Pi
-unit CompositionTable rna_composition C CDP Pi
-unit CompositionTable rna_composition G GDP Pi
-unit CompositionTable rna_composition U UDP Pi
+unit Chemical ATP 1000000
+unit Chemical ADP
+unit Chemical AMP 
+
+unit Chemical CTP 1000000
+unit Chemical CMP
+
+unit Chemical UTP 1000000
+unit Chemical UMP
+
+unit CompositionTable rna_composition A AMP 
+unit CompositionTable rna_composition C CMP 
+unit CompositionTable rna_composition G GMP 
+unit CompositionTable rna_composition U UMP 
 
 unit TransformationTable dna2rna A U C G G C T A
 

@@ -114,16 +114,6 @@ class BoundUnit
   //  */
   // BoundUnit& operator= ( const BoundUnit& other_bound_unit );
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  bool check_invariant (void) const;
-
 
 private:
 

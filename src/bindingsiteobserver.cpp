@@ -26,12 +26,14 @@
 // ==========================
 //
 
-BindingSiteObserver::BindingSiteObserver (const BindingSite& site_to_watch, BindingSiteFamily& family_to_notify, int site_identifier)
+BindingSiteObserver::BindingSiteObserver (const BindingSite& site_to_watch,
+					  BindingSiteFamily& family_to_notify,
+					  int site_identifier)
   : _site_id (site_identifier)
   , _family (family_to_notify)
 {
   site_to_watch.location().watch_site_availability
-    (site_to_watch.position(), site_to_watch.length(), *this);
+    (site_to_watch.first(), site_to_watch.last(), *this);
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -72,20 +74,6 @@ void BindingSiteObserver::update (int number_of_available_sites)
 //
 // Not needed for this class (use of default overloading) !
 // BindingSiteObserver& BindingSiteObserver::operator= ( const BindingSiteObserver& other_binding_site_observer );
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool BindingSiteObserver::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================

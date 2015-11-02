@@ -41,7 +41,9 @@ end
 TUs = get_RNAs (Gene, prots);
 fid = fopen('rnas.dat','w');
 format = ['unit ChemicalSequence %s product_of %s %d %d ' ...
-          'rnas 10\n'];
+          'rnas\n'];
+format_promoter = 'unit BindingSite promoter_%s %s %d %d 10 1 %d\n';
+format_terminator = 'unit TerminationSite hairpin %s %d %d\n';
 for i = 1:length(TUs)
     a = TUs(i).position(1);
     b = TUs(i).position(2);
@@ -53,4 +55,7 @@ for i = 1:length(TUs)
         b = length (tab_seq) - b + 1;
     end
     fprintf(fid, format, TUs(i).name, parent, a, b);
+    fprintf(fid, format_promoter, TUs(i).sigma_factor, parent, a-35, ...
+            a+1, a);  
+    fprintf(fid, format_terminator, parent, b+1, b+1);
 end

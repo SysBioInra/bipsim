@@ -1,16 +1,10 @@
 
-unit Chemical GTP 1000
-unit Chemical GDP 
+unit Chemical dAMP
+unit Chemical dCMP
+unit Chemical dGMP
+unit Chemical dTMP
 
-unit Chemical ATP 1000
-unit Chemical ADP
-unit Chemical AMP 
-
-unit Chemical CDP
-
-unit Chemical TDP
-
-unit CompositionTable dna_composition A ADP
-unit CompositionTable dna_composition C CDP
-unit CompositionTable dna_composition G GDP
-unit CompositionTable dna_composition T TDP
+unit CompositionTable dna_composition A dAMP
+unit CompositionTable dna_composition C dCMP
+unit CompositionTable dna_composition G dGMP
+unit CompositionTable dna_composition T dTMP

@@ -37,19 +37,25 @@ class Release;
 
 // chemical entity classes
 class BaseLoader;
-class BindingSiteFamily;
-class BindingSite;
-class BindingSiteObserver;
 class BoundChemical;
 class BoundUnit;
 class Chemical;
-class ChemicalSequence;
 class ProcessiveChemical;
+
+// site classes
+class BindingSite;
+class BindingSiteFamily;
+class BindingSiteObserver;
 class Site;
 class SiteFamily;
-class SiteLocation;
 class SiteObserver;
+
+// sequence related classes
+class ChemicalSequence;
+class SequenceOccupation;
 class SiteAvailability;
+class SiteLocation;
+class WatcherGroup;
 
 // tables
 class CompositionTable;

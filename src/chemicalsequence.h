@@ -27,8 +27,8 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "macros.h"
 #include "chemical.h"
+#include "sequenceoccupation.h"
 
 /**
  * @brief This class stores chemicals that can be described by a sequence.
@@ -120,11 +120,11 @@ public:
 
   /**
    * @brief Watch availability of a specific site and notify an observer when it changes.
-   * @param position Absolute position of the site.
-   * @param length Length of the site.
+   * @param first First absolute position of the site.
+   * @param lasth Last absolute position of the site.
    * @param site_observer SiteObserver to update with the current number of available sites.
    */
-  void watch_site_availability (int position, int length,
+  void watch_site_availability (int first, int last,
 				SiteObserver& site_observer);
 
 
@@ -150,12 +150,11 @@ public:
   /**
    * @brief Returns whether the given site can be logically found on the
    *  sequence.
-   * @param position Absolute position of the site.
-   * @param length Length of the site.
-   * @return True if position + length exceeds sequence length or position is
-   *  negative.
+   * @param first Absolute position of first base of site.
+   * @param last Asolute position of last base of site.
+   * @return True if site is within sequence.
    */
-  bool is_out_of_bounds (int position, int length) const;
+  bool is_out_of_bounds (int first, int last) const;
     
   /**
    * @brief Returns whether a specific termination site can be found at a given 
@@ -183,12 +182,12 @@ public:
   /**
    * @brief Returns the sequence between two specific positions.
    * @return String sequence between two positions.
-   * @param first_position
+   * @param first
    *  Absolute position of the first base of the sequence to return (included).
-   * @param last_position
+   * @param last
    *  Absolute position of the last base of the sequence to return (included).
    */
-  const std::string sequence (int first_position, int last_position) const;
+  const std::string sequence (int first, int last) const;
 
 
   // ==========================
@@ -222,32 +221,11 @@ private:
   /** @brief Termination sites on the sequence. */
   std::map< int, std::list<int> > _termination_sites;
 
-  /** @brief Tracks available positions along the sequence. */
-  std::vector<int> _occupancy_map;
-
   /** @brief Sequence of the chemical. */
-  std::string _sequence;
+  std::string _sequence;  
 
-  /**
-   * @brief A simple list of SiteLocation.
-   */
-  typedef std::list<SiteLocation> SiteLocationList;
-  
-  /**
-   * @brief A map that stores the location of all BoundChemical.
-   *
-   * Keys of the map are references to all BoundChemical currently located on
-   * the chemical sequence, data is a SiteLocationList that stores the location
-   * of all chemicals designated by the key.
-   */
-  typedef std::map< const BoundChemical*, SiteLocationList > ChemicalMap;
-
-  /** @brief Map of bound chemicals. */
-  ChemicalMap _chemical_map;
-
-  /** @brief List of sites whose availability needs to be checked. */
-  std::list<SiteAvailability> _sites_to_watch;
-  
+  /** @brief Sequence occupation of the chemical. */
+  SequenceOccupation _sequence_occupation;
 
   // =================
   //  Private Methods
@@ -260,57 +238,46 @@ private:
    *  position.
    */
   int relative (int absolute_position) const;
-
-  /**
-   * @brief Remove a specific reference from the bound chemical map.
-   * @param chemical The type of chemical to remove.
-   * @param position Absolute position along the sequence.
-   * @param length Its length.
-   */
-  void remove_reference_from_map (const BoundChemical& chemical,
-				  int position, int length);
-
-  /**
-   * @brief Check site availability and notify observers if changes occurred.
-   */
-  void notify_site_availability (void);
-
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-inline int ChemicalSequence::length ( void ) const { return _length; }
+#include "macros.h"
 
-inline bool ChemicalSequence::is_out_of_bounds (int position, int length ) const
-{
-  return ((relative (position) + length > _length)
-	  || (relative (position) < 0));
+inline int ChemicalSequence::length (void) const
+{ 
+  return _length;
 }
 
+inline bool ChemicalSequence::is_out_of_bounds (int first, int last ) const
+{
+  /** @pre first must be smaller than last. */
+  REQUIRE (first <= last);
+  return ((relative (first) < 0) || (relative (last) >= _length));
+}
 
 inline const std::string& ChemicalSequence::sequence (void) const
 {
   return _sequence;
 }
 
-inline const std::string ChemicalSequence::sequence (int first_position,
-						     int length) const
+inline const std::string ChemicalSequence::sequence (int first,
+						     int last) const
 {
-  /** @pre Relative first position must be positive. */
-  REQUIRE (relative (first_position) >= 0);
-  /** @pre Length must be positive. */
-  REQUIRE (length > 0);
-  /** @pre Requested sequence must not exceed sequence length. */
-  REQUIRE (relative(first_position) + length - 1 < this->length());
+  /** @pre first must be smaller than last. */
+  REQUIRE (first <= last);
+  /** @pre Requested sequence must be within sequence bounds. */
+  REQUIRE (is_out_of_bounds (first, last) == false);
 
-  return _sequence.substr (relative (first_position), length);
+  return _sequence.substr (relative (first), last-first+1);
 }
 
 inline int ChemicalSequence::relative (int absolute_position) const
-{ return absolute_position - _starting_position; }
-
+{ 
+  return absolute_position - _starting_position;
+}
 
 
 #endif // CHEMICALSEQUENCE_H

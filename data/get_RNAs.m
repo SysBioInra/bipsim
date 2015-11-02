@@ -15,7 +15,7 @@ function TUs = get_RNAs (Gene, proteins)
     nb_TU_errors = 0;
     nb_no_TU_errors = 0;
     
-    TUs = struct('name',{},'position',[]);
+    TUs = struct('name',{},'position',[],'sigma_factor',[]);
     
     for i=1:length(Gene) % loop through genes
         g = Gene{i};
@@ -55,6 +55,7 @@ function TUs = get_RNAs (Gene, proteins)
         names = strvec2cell (gene_TUs.TU_name);
         assert (length(names) == nb_TUs);
         for j = 1:nb_TUs
+            sigma = gene_TUs.sigma_promoteur{j};
             position = gene_TUs.TU_position{j};
             [adjustment, mismatch] = check_gene_on_TU (g_pos, ...
                                                        position); 
@@ -65,7 +66,7 @@ function TUs = get_RNAs (Gene, proteins)
                 fprintf (ferr, [msg,'\n']);
                 nb_TU_errors = nb_TU_errors + 1;
             end
-            TUs = add_TU (TUs, names{j}, adjustment);
+            TUs = add_TU (TUs, names{j}, adjustment, sigma);
         end            
     end
             

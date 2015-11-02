@@ -111,7 +111,7 @@ void Release::do_reaction (void)
 	  std::cerr << "Unknown product ("
 		    << _unit_to_release.focused_unit_binding_site().reading_frame()
 		    << ", "
-		    << _unit_to_release.focused_unit_position()-1
+		    << _unit_to_release.focused_unit_reading_frame()-1
 		    << ")";
 	}
     }

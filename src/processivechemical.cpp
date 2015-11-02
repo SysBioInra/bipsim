@@ -53,11 +53,10 @@ void ProcessiveChemical::step_forward ( int step_size )
 //  Public Methods - Accessors
 // ============================
 //
-bool ProcessiveChemical::is_terminating ( void )
+bool ProcessiveChemical::is_terminating (void)
 {
-  const ChemicalSequence& focused_unit_location = _focused_unit->binding_site().location();
-  return focused_unit_location.is_termination_site (_focused_unit->current_position(),
-						    _termination_site_families);
+  return focused_unit_location().is_termination_site
+    (focused_unit_reading_frame(), _termination_site_families);
 }
 
 
@@ -74,19 +73,6 @@ bool ProcessiveChemical::is_terminating ( void )
 // Not needed for this class (use of default overloading) !
 // ProcessiveChemical& ProcessiveChemical::operator= (ProcessiveChemical& other_processive_chemical);
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool ProcessiveChemical::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================

@@ -45,11 +45,11 @@ public:
    * @brief Default constructor
    * @param family_id Integer family identifier.
    * @param location Chemical sequence containing the site.
-   * @param position Position along the sequence.
-   * @param length Length of the site.
+   * @param first Position of first base.
+   * @param last Position of last base.
    * @sa SiteHandler
    */
-  Site (int family_id, ChemicalSequence& location, int position, int length);
+  Site (int family_id, ChemicalSequence& location, int first, int last);
 
   // Not needed for this class (use of default copy constructor) ! 
   // /*
@@ -76,25 +76,25 @@ public:
    * @return Integer family identifier.
    * @sa SiteList
    */
-  int family ( void ) const;
+  int family (void) const;
  
   /**
    * @brief Site location.
    * @return ChemicalSequence that carries the site.
    */
-  ChemicalSequence& location ( void ) const;
+  ChemicalSequence& location (void) const;
 
   /**
-   * @brief Position accessor.
-   * @return Position along the bearer.
+   * @brief First position accessor.
+   * @return First position of site.
    */
-  int position ( void ) const;
+  int first (void) const;
  
   /**
-   * @brief Length accessor.
-   * @return Length of the motif.
+   * @brief Last position accessor.
+   * @return Last position of site.
    */
-  int length ( void ) const;
+  int last (void) const;
  
 
   // ==========================
@@ -126,11 +126,11 @@ public:
   /** @brief Chemical on which the site is located. */
   ChemicalSequence& _location;
 
-  /** @brief Exact position of the site along the sequence. */
-  int _position;
+  /** @brief First position of the site along the sequence. */
+  int _first;
   
-  /** @brief Length of the motif. */
-  int _length;
+  /** @brief Last position of site. */
+  int _last;
 
   // =================
   //  Private Methods
@@ -148,14 +148,14 @@ inline int Site::family ( void ) const
   return _family;
 }
 
-inline int Site::position ( void ) const
+inline int Site::first (void) const
 {
-  return _position;
+  return _first;
 }
 
-inline int Site::length ( void ) const
+inline int Site::last (void) const
 {
-  return _length;
+  return _last;
 }
 
 inline ChemicalSequence& Site::location ( void ) const

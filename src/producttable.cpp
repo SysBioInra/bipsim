@@ -48,15 +48,15 @@ ProductTable::~ProductTable (void)
 //
 
 ChemicalSequence* ProductTable::product (const ChemicalSequence& parent,
-					 int start, int end) const
+					 int first, int last) const
 {
   ParentMap::const_iterator p_it = _products.find (&parent);
   if (p_it == _products.end()) return 0;
 
-  StartMap::const_iterator s_it = (p_it->second).find (start);
+  StartMap::const_iterator s_it = (p_it->second).find (first);
   if (s_it == (p_it->second).end()) return 0;
 
-  EndMap::const_iterator e_it = (s_it->second).find (end);
+  EndMap::const_iterator e_it = (s_it->second).find (last);
   if (e_it == (s_it->second).end()) return 0;
 
   return e_it->second;

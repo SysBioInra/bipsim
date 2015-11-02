@@ -41,19 +41,27 @@ libsrc_a_SOURCES += \
 # chemical entity sources
 libsrc_a_SOURCES += \
 	baseloader.cpp baseloader.h \
-	bindingsite.cpp bindingsite.h \
-	bindingsitefamily.cpp bindingsitefamily.h \
-	bindingsiteobserver.cpp bindingsiteobserver.h \
 	boundchemical.cpp boundchemical.h \
 	boundunit.h \
 	chemical.cpp chemical.h \
-	chemicalsequence.cpp chemicalsequence.h \
-	processivechemical.cpp processivechemical.h \
+	processivechemical.cpp processivechemical.h 
+
+# site sources
+libsrc_a_SOURCES += \
+	bindingsite.cpp bindingsite.h \
+	bindingsitefamily.cpp bindingsitefamily.h \
+	bindingsiteobserver.cpp bindingsiteobserver.h \
 	site.cpp site.h \
 	sitefamily.h \
-	sitelocation.cpp sitelocation.h \
-	siteobserver.h \
-	siteavailability.cpp siteavailability.h
+	siteobserver.h
+
+# sequence related sources
+libsrc_a_SOURCES += \
+	chemicalsequence.cpp chemicalsequence.h \
+	sequenceoccupation.cpp sequenceoccupation.h \
+	sitelocation.h \
+	siteavailability.cpp siteavailability.h \
+	watchergroup.cpp watchergroup.h
 
 # table sources
 libsrc_a_SOURCES += \

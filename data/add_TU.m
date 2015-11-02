@@ -1,4 +1,4 @@
-function TUs = add_TU (TUs, name, adjustment)
+function TUs = add_TU (TUs, name, adjustment, sigma)
 % look up if TU is in the table
     index = find(ismember({TUs.name},name));
 
@@ -6,6 +6,7 @@ function TUs = add_TU (TUs, name, adjustment)
         index = length(TUs)+1;
         TUs(index).name = name;
         TUs(index).position = adjustment;
+        TUs(index).sigma_factor = sigma;
     else
         % write adjustment if necessery
         a = TUs(index).position (1);

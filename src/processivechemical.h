@@ -72,13 +72,13 @@ public:
    * @param termination_site_family
    *  Integer identifier for the family recognized by the chemical.
    */
-  void add_recognized_termination_site ( int termination_site_family );
+  void add_recognized_termination_site (int termination_site_family);
   
   /**
    * @brief Move focused unit by a step of a given size.
    * @param step_size Size of step.
    */  
-  void step_forward ( int step_size );
+  void step_forward (int step_size);
 
   
 
@@ -90,13 +90,13 @@ public:
    * @brief Checks wether focused unit is on a termination site.
    * @return True if focused unit is on a termination site.
    */
-  bool is_terminating ( void );
+  bool is_terminating (void);
 
   /**
    * @brief Stalled form of processive chemical.
    * @return BoundChemical that represents the stalled form.
    */
-  BoundChemical& stalled_form ( void );
+  BoundChemical& stalled_form (void);
 
   // ==========================
   //  Public Methods - Setters
@@ -113,16 +113,6 @@ public:
   //  * @brief Assignment operator
   //  */
   // ProcessiveChemical& operator= (ProcessiveChemical& other_processive_chemical);
-
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
 
 
 private:

@@ -20,8 +20,6 @@
 // ==================
 //
 #include "chemicalsequence.h"
-#include "sitelocation.h"
-#include "siteavailability.h"
 #include "siteobserver.h"
 #include "boundchemical.h"
 #include "processivechemical.h"
@@ -33,12 +31,10 @@
 ChemicalSequence::ChemicalSequence (const std::string& sequence,
 				    int starting_position /*= 1*/)
   : _sequence (sequence)
+  , _length (sequence.size())
   , _starting_position (starting_position)
+  , _sequence_occupation (sequence.size(), 0)
 {
-  _length = _sequence.size();
-  
-  // initialize occupancy map with zero values
-  _occupancy_map.resize (_length, 0);
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -52,130 +48,88 @@ ChemicalSequence::~ChemicalSequence (void)
 //  Public Methods - Commands
 // ===========================
 //
-void ChemicalSequence::bind_unit ( const BoundChemical& chemical_to_bind )
+void ChemicalSequence::bind_unit (const BoundChemical& chemical_to_bind)
 {
-  int position = chemical_to_bind.focused_unit_position();
-  int length = chemical_to_bind.focused_unit_length();
-  /** @pre Relative position must be positive. */
-  REQUIRE (relative (position) >= 0); 
-  REQUIRE (length > 0); /** @pre Length must be positive. */
-  /** @pre Position and length must be consistent with sequence length. */
-  int last_position = position + length - 1;
-  REQUIRE (relative (last_position) < _length);
-  
-  // add the reference and position to the chemicals map
-  _chemical_map[ &chemical_to_bind ].push_back (SiteLocation(position, length));
-  
-  // update occupancy status
-  for (int i = relative (position); i <= relative (last_position); i++)
-    { _occupancy_map [i] += 1; }
+  /** @pre Unit positions must be consistent with sequence length. */
+  REQUIRE (is_out_of_bounds (chemical_to_bind.focused_unit_first(),
+			     chemical_to_bind.focused_unit_last()) == false); 
 
-  // notify changes
-  notify_site_availability();
+  _sequence_occupation.add_element
+    (chemical_to_bind, relative (chemical_to_bind.focused_unit_first()),
+     relative (chemical_to_bind.focused_unit_last()));
 }
+
 
 void ChemicalSequence::unbind_unit ( const BoundChemical& chemical_to_unbind )
 {
-  int position = chemical_to_unbind.focused_unit_position();
-  int length = chemical_to_unbind.focused_unit_length();
-  /** @pre Relative position must be positive. */
-  REQUIRE (relative (position) >= 0); 
-  REQUIRE (length > 0); /** @pre Length must be positive. */
-  /** @pre Position and length must be consistent with sequence length. */
-  int last_position = position + length - 1;
-  REQUIRE (relative (last_position) < _length);
-
-  // remove the reference and position from the chemicals map
-  remove_reference_from_map (chemical_to_unbind, position, length);
-
-  // update occupancy status
-  for (int i = relative (position); i <= relative (last_position); i++)
-    { _occupancy_map [i] -= 1; }
-
-  // notify changes
-  notify_site_availability();
+  /** @pre Unit positions must be consistent with sequence length. */
+  REQUIRE (is_out_of_bounds (chemical_to_unbind.focused_unit_first(),
+			     chemical_to_unbind.focused_unit_last()) == false); 
+  
+  _sequence_occupation.remove_element
+    (chemical_to_unbind, relative (chemical_to_unbind.focused_unit_first()),
+     relative (chemical_to_unbind.focused_unit_last()));
 }
 
 void ChemicalSequence::replace_bound_unit (const BoundChemical& old_chemical,
 					   const BoundChemical& new_chemical)
 {
-  int old_position = old_chemical.focused_unit_position();
-  int old_length = old_chemical.focused_unit_length();
-  int old_last_position = old_position + old_length - 1;
-  int new_position = new_chemical.focused_unit_position();
-  int new_length = new_chemical.focused_unit_length();
-  int new_last_position = new_position + new_length - 1;
+  /** @pre Unit positions must be consistent with sequence length. */
+  REQUIRE (is_out_of_bounds (old_chemical.focused_unit_first(),
+			     old_chemical.focused_unit_last()) == false); 
+  REQUIRE (is_out_of_bounds (new_chemical.focused_unit_first(),
+			     new_chemical.focused_unit_last()) == false); 
 
-  // update occupancy status
-  for (int i = relative (old_position); i <= relative (old_last_position); i++)
-    { _occupancy_map [i] -= 1; }
-  for (int i = relative (new_position); i <= relative (new_last_position); i++)
-    { _occupancy_map [i] += 1; }
-
-  // notify changes
-  notify_site_availability();
-
-  // add the reference and position to the chemicals map
-  remove_reference_from_map (old_chemical, old_position, old_length);
-  _chemical_map [&new_chemical].push_back (SiteLocation (new_position,
-							 new_length));
+  _sequence_occupation.remove_element
+    (old_chemical, relative (old_chemical.focused_unit_first()),
+     relative (old_chemical.focused_unit_last()));
+  _sequence_occupation.add_element
+    (new_chemical, relative (new_chemical.focused_unit_first()),
+     relative (new_chemical.focused_unit_last()));
 }
 
 void ChemicalSequence::move_bound_unit (ProcessiveChemical& chemical_to_move,
-					 int number_steps)
+					int number_steps)
 {
-  int old_position = chemical_to_move.focused_unit_position();
-  int new_position = old_position + number_steps;
-  int length = chemical_to_move.focused_unit_length();
-  int old_last_position = old_position + length - 1;
-  int new_last_position = new_position + length - 1;
+  /** @pre Position and length must be consistent with sequence length. */
+  REQUIRE (is_out_of_bounds (chemical_to_move.focused_unit_first(),
+			     chemical_to_move.focused_unit_last()) == false); 
 
   // update occupancy status
-  for (int i = relative (old_position); i <= relative (old_last_position); i++)
-    { _occupancy_map [i] -= 1; }
-  for (int i = relative (new_position); i <= relative (new_last_position); i++)
-    { _occupancy_map [i] += 1; }
-
-  // notify changes
-  notify_site_availability();
-  
-  // add the reference and position to the chemicals map
-  remove_reference_from_map (chemical_to_move, old_position, length);
-  _chemical_map [&chemical_to_move].push_back (SiteLocation (new_position, length));
-}
-
+  int first = relative (chemical_to_move.focused_unit_first());
+  int last = relative (chemical_to_move.focused_unit_last());
+  _sequence_occupation.remove_element (chemical_to_move, first, last);
+  _sequence_occupation.add_element (chemical_to_move, first+number_steps,
+				    last+number_steps);
+ }
+     
 void ChemicalSequence::add (int quantity)
 {
-  Chemical::add (quantity);
+  /** @pre Quantity must be positive. */
+  REQUIRE (quantity >= 0);
 
-  // notify changes
-  notify_site_availability();
+  Chemical::add (quantity);
+  _sequence_occupation.add_sequence (quantity);
 }
 
 void ChemicalSequence::remove (int quantity)
 {
+  /** @pre Quantity must be positive. */
+  REQUIRE (quantity > 0);
+
   Chemical::remove (quantity);
-  
-  // notify changes
-  notify_site_availability();
+  _sequence_occupation.remove_sequence (quantity);
 }
 
-void ChemicalSequence::watch_site_availability (int position, int length, SiteObserver& site_observer)
+void ChemicalSequence::watch_site_availability (int first, int last,
+						SiteObserver& site_observer)
 {
-  /** @pre Relative position must be positive. */
-  REQUIRE (relative (position) >= 0); 
-  REQUIRE (length > 0); /** @pre Length must be positive. */
-  /** @pre Position and length must be consistent with sequence length. */
-  REQUIRE (relative (position + length - 1) < _length);
-
-  // site_observer.update (0); // how is this useful ???
-			
-  // create site availability notifier
-  _sites_to_watch.push_back (SiteAvailability (relative (position), length, site_observer));
-
-  // send first notification about site availability
-  _sites_to_watch.back().notify (number(), _occupancy_map);
-}
+  /** @pre Site must be on sequence. */
+  REQUIRE (is_out_of_bounds (first, last) == false); 
+  
+  _sequence_occupation.add_watcher (relative (first), relative (last),
+				    site_observer);
+ }
 
 
 void ChemicalSequence::print (std::ostream& output) const
@@ -189,11 +143,11 @@ void ChemicalSequence::add_termination_site (const Site& termination_site)
 {
   // as a first approximation, we consider that reaching any base of the
   // termination site sends a termination signal
-  int first_position = termination_site.position();
-  int last_position = first_position + termination_site.length();
-  for ( int i = first_position; i < last_position; i++ )
+  int first = termination_site.first();
+  int last = termination_site.last();
+  for ( int i = first; i <= last; i++ )
     {
-      _termination_sites [i].push_back ( termination_site.family() );
+      _termination_sites [i].push_back (termination_site.family());
     }
 }
 
@@ -202,8 +156,8 @@ void ChemicalSequence::add_termination_site (const Site& termination_site)
 //  Public Methods - Accessors
 // ============================
 //
-bool ChemicalSequence::is_termination_site ( int position,
-					     const std::list<int>& termination_site_families ) const
+bool ChemicalSequence::is_termination_site (int position,
+					    const std::list<int>& termination_site_families ) const
 {
   /** @pre Relative Position must be positive. */
   REQUIRE (relative (position) >= 0 );
@@ -264,55 +218,3 @@ bool ChemicalSequence::is_termination_site ( int position,
 //  Private Methods
 // =================
 //
-void ChemicalSequence::remove_reference_from_map (const BoundChemical& chemical,
-						  int position, int length )
-{
-  SiteLocationList& location_list = _chemical_map [&chemical];
-  /** @pre There must be a chemical of this type in the map. */
-  REQUIRE( location_list.size() > 0 ); 
-
-  if (location_list.size() == 1) // there is only one element in the list
-    {
-      // the list will be empty, we can remove it from the map
-      // (no more chemical of the same type is bound to the sequence)
-      _chemical_map.erase (&chemical);
-    }
-  else // at least one chemical of same type will be left on the sequence
-    {
-      // we erase a chemical at the right location
-      SiteLocationList::iterator site_location = location_list.begin();
-      while ( (( site_location->position() != position )
-	       || ( site_location->length() != length ))
-	      && (site_location != location_list.end()) )
-	{ 
-	  site_location++;
-	}
-
-      if ( site_location != location_list.end() )
-	{
-	  location_list.erase ( site_location );
-	}
-      else 
-	{
-	  std::cerr << "ERROR: trying to delete bound chemical " << &chemical
-		    << " that does not exist at position " << position
-		    << " with length " << length << std::endl;
-	  site_location = location_list.begin();
-	  while (site_location != location_list.end())
-	    { 
-	      std::cout << site_location->position() << " " << site_location->length() << std::endl;
-	      site_location++;
-	    }
-	}
-    }
-}
-
-void ChemicalSequence::notify_site_availability (void)
-{
-  for (std::list<SiteAvailability>::iterator site_it = _sites_to_watch.begin();
-       site_it != _sites_to_watch.end(); site_it++)
-    {
-      site_it->notify (number(), _occupancy_map);
-    }
-  
-}

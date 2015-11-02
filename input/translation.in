@@ -160,16 +160,6 @@ unit BoundChemical t70S_V_cp
 unit BoundChemical t70S_W_cp
 unit BoundChemical t70S_Y_cp
 
-###################
-# Small Chemicals #
-###################
-unit Chemical H2O 1000
-unit Chemical H+ 
-unit Chemical ppGpp 
-unit Chemical PPi
-unit Chemical Pi
-
-
 ##################################
 # Translation initiation Factors #
 ##################################
@@ -222,6 +212,7 @@ reaction Complexation fMet2d m30S31 m30S312d 1 10
 reaction Complexation IF3 m30S12a m30S312a 0 1
 
 # ribosome formation
+unit Chemical ribosome
 reaction ChemicalReaction m30S12a -1 50S -1 EFt70S 1 IF1 1 IF2d 1 Pi 1 H2O 1 tRNA_fM 1 rates 1 0
 
 # tRNA activation
@@ -271,72 +262,72 @@ reaction Complexation tRNA_Y_c EFTua EtRNA_Y_ca 1 0
 # ribosome movement
 reaction BaseLoading 70S
 
-reaction ChemicalReaction Et70S_A_ca -1 H2O -1 t70S_A_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_C_ca -1 H2O -1 t70S_C_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_D_ca -1 H2O -1 t70S_D_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_E_ca -1 H2O -1 t70S_E_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_F_ca -1 H2O -1 t70S_F_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_G_ca -1 H2O -1 t70S_G_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_H_ca -1 H2O -1 t70S_H_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_I_ca -1 H2O -1 t70S_I_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_K_ca -1 H2O -1 t70S_K_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_L_ca -1 H2O -1 t70S_L_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_M_ca -1 H2O -1 t70S_M_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_N_ca -1 H2O -1 t70S_N_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_P_ca -1 H2O -1 t70S_P_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_Q_ca -1 H2O -1 t70S_Q_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_R_ca -1 H2O -1 t70S_R_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_S_ca -1 H2O -1 t70S_S_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_T_ca -1 H2O -1 t70S_T_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_V_ca -1 H2O -1 t70S_V_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_W_ca -1 H2O -1 t70S_W_c 1 EFTud 1 Pi 1 rates 1 0
-reaction ChemicalReaction Et70S_Y_ca -1 H2O -1 t70S_Y_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_A_ca -1 t70S_A_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_C_ca -1 t70S_C_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_D_ca -1 t70S_D_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_E_ca -1 t70S_E_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_F_ca -1 t70S_F_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_G_ca -1 t70S_G_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_H_ca -1 t70S_H_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_I_ca -1 t70S_I_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_K_ca -1 t70S_K_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_L_ca -1 t70S_L_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_M_ca -1 t70S_M_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_N_ca -1 t70S_N_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_P_ca -1 t70S_P_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_Q_ca -1 t70S_Q_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_R_ca -1 t70S_R_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_S_ca -1 t70S_S_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_T_ca -1 t70S_T_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_V_ca -1 t70S_V_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_W_ca -1 t70S_W_c 1 EFTud 1 Pi 1 rates 1 0
+reaction ChemicalReaction Et70S_Y_ca -1 t70S_Y_c 1 EFTud 1 Pi 1 rates 1 0
 
 
 reaction Complexation EFP GTP EFPa 1 1
 reaction Complexation EFP GDP EFPd 0.1 10
 
-reaction ChemicalReaction t70S_A_c -1 EFPa -1 t70S_A_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_C_c -1 EFPa -1 t70S_C_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_D_c -1 EFPa -1 t70S_D_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_E_c -1 EFPa -1 t70S_E_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_F_c -1 EFPa -1 t70S_F_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_G_c -1 EFPa -1 t70S_G_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_H_c -1 EFPa -1 t70S_H_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_I_c -1 EFPa -1 t70S_I_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_K_c -1 EFPa -1 t70S_K_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_L_c -1 EFPa -1 t70S_L_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_M_c -1 EFPa -1 t70S_M_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_N_c -1 EFPa -1 t70S_N_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_P_c -1 EFPa -1 t70S_P_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_Q_c -1 EFPa -1 t70S_Q_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_R_c -1 EFPa -1 t70S_R_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_S_c -1 EFPa -1 t70S_S_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_T_c -1 EFPa -1 t70S_T_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_V_c -1 EFPa -1 t70S_V_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_W_c -1 EFPa -1 t70S_W_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
-reaction ChemicalReaction t70S_Y_c -1 EFPa -1 t70S_Y_cp 1 EFPd 1 Pi 1 H2O 1 rates 1 0
+reaction ChemicalReaction t70S_A_c -1 EFPa -1 t70S_A_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_C_c -1 EFPa -1 t70S_C_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_D_c -1 EFPa -1 t70S_D_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_E_c -1 EFPa -1 t70S_E_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_F_c -1 EFPa -1 t70S_F_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_G_c -1 EFPa -1 t70S_G_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_H_c -1 EFPa -1 t70S_H_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_I_c -1 EFPa -1 t70S_I_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_K_c -1 EFPa -1 t70S_K_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_L_c -1 EFPa -1 t70S_L_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_M_c -1 EFPa -1 t70S_M_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_N_c -1 EFPa -1 t70S_N_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_P_c -1 EFPa -1 t70S_P_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_Q_c -1 EFPa -1 t70S_Q_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_R_c -1 EFPa -1 t70S_R_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_S_c -1 EFPa -1 t70S_S_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_T_c -1 EFPa -1 t70S_T_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_V_c -1 EFPa -1 t70S_V_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_W_c -1 EFPa -1 t70S_W_cp 1 EFPd 1 Pi 1 rates 1 0
+reaction ChemicalReaction t70S_Y_c -1 EFPa -1 t70S_Y_cp 1 EFPd 1 Pi 1 rates 1 0
 
-reaction ChemicalReaction t70S_A_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_A 1 rates 1 0 
-reaction ChemicalReaction t70S_C_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_C 1 rates 1 0 
-reaction ChemicalReaction t70S_D_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_D 1 rates 1 0 
-reaction ChemicalReaction t70S_E_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_E 1 rates 1 0 
-reaction ChemicalReaction t70S_F_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_F 1 rates 1 0 
-reaction ChemicalReaction t70S_G_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_G 1 rates 1 0 
-reaction ChemicalReaction t70S_H_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_H 1 rates 1 0 
-reaction ChemicalReaction t70S_I_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_I 1 rates 1 0 
-reaction ChemicalReaction t70S_K_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_K 1 rates 1 0 
-reaction ChemicalReaction t70S_L_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_L 1 rates 1 0 
-reaction ChemicalReaction t70S_M_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_M 1 rates 1 0 
-reaction ChemicalReaction t70S_N_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_N 1 rates 1 0 
-reaction ChemicalReaction t70S_P_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_P 1 rates 1 0 
-reaction ChemicalReaction t70S_Q_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_Q 1 rates 1 0 
-reaction ChemicalReaction t70S_R_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_R 1 rates 1 0 
-reaction ChemicalReaction t70S_S_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_S 1 rates 1 0 
-reaction ChemicalReaction t70S_T_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_T 1 rates 1 0 
-reaction ChemicalReaction t70S_V_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_V 1 rates 1 0 
-reaction ChemicalReaction t70S_W_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_W 1 rates 1 0 
-reaction ChemicalReaction t70S_Y_cp -1 GTP -1 H2O -1 EFt70S 1 GDP 1 Pi 1 tRNA_Y 1 rates 1 0 
+reaction ChemicalReaction t70S_A_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_A 1 rates 1 0 
+reaction ChemicalReaction t70S_C_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_C 1 rates 1 0 
+reaction ChemicalReaction t70S_D_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_D 1 rates 1 0 
+reaction ChemicalReaction t70S_E_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_E 1 rates 1 0 
+reaction ChemicalReaction t70S_F_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_F 1 rates 1 0 
+reaction ChemicalReaction t70S_G_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_G 1 rates 1 0 
+reaction ChemicalReaction t70S_H_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_H 1 rates 1 0 
+reaction ChemicalReaction t70S_I_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_I 1 rates 1 0 
+reaction ChemicalReaction t70S_K_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_K 1 rates 1 0 
+reaction ChemicalReaction t70S_L_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_L 1 rates 1 0 
+reaction ChemicalReaction t70S_M_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_M 1 rates 1 0 
+reaction ChemicalReaction t70S_N_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_N 1 rates 1 0 
+reaction ChemicalReaction t70S_P_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_P 1 rates 1 0 
+reaction ChemicalReaction t70S_Q_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_Q 1 rates 1 0 
+reaction ChemicalReaction t70S_R_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_R 1 rates 1 0 
+reaction ChemicalReaction t70S_S_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_S 1 rates 1 0 
+reaction ChemicalReaction t70S_T_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_T 1 rates 1 0 
+reaction ChemicalReaction t70S_V_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_V 1 rates 1 0 
+reaction ChemicalReaction t70S_W_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_W 1 rates 1 0 
+reaction ChemicalReaction t70S_Y_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_Y 1 rates 1 0 
 
 reaction Elongation EFt70S 70S 3 200
 
@@ -345,7 +336,8 @@ reaction Release stalled_ribosome 30S 1 50S 1 protein 1 RF 1 rate 1 produces pro
 
 # small molecule turnover
 reaction ChemicalReaction EFTud -1 GTP -1 EFTua 1 GDP 1 rates 1 0
-reaction ChemicalReaction PPi -1 H2O -1 Pi 2 rates 1 0
+reaction ChemicalReaction PPi -1 Pi 2 rates 1 0
 
 reaction ChemicalReaction GDP -1 Pi -1 GTP 1 rates 1 0
 reaction ChemicalReaction AMP -1 Pi -2 ATP 1 H2O 2 rates 1 0 
+reaction ChemicalReaction GMP -1 Pi -2 CTP 1 H2O 2 rates 1 0 

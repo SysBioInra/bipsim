@@ -111,19 +111,19 @@ public:
   const BindingSite& focused_unit_binding_site (void) const;
 
   /**
-   * @brief Returns the position of focused unit.
-   * @return Position of focused unit.
+   * @brief Accessor of first position of focused unit.
+   * @return First position of focused unit.
    */
-  int focused_unit_position (void) const;
+  int focused_unit_first (void) const;
 
   /**
-   * @brief Returns the position of focused unit.
-   * @return Length of focused unit.
+   * @brief Accessor to last position of focused unit.
+   * @return Last position of focused unit.
    */
-  int focused_unit_length (void) const;
+  int focused_unit_last (void) const;
 
   /**
-   * @brief Returns the reading frame of focused unit.
+   * @brief Accessor to reading frame of focused unit.
    * @return Position where unit can potentially read its sequence.
    */
   int focused_unit_reading_frame (void) const;
@@ -226,9 +226,11 @@ inline const BindingSite& BoundChemical::focused_unit_binding_site (void) const
   return _focused_unit->binding_site();
 }
 
-inline int BoundChemical::focused_unit_length (void) const
+inline int BoundChemical::focused_unit_last (void) const
 {
-  return (_focused_unit->binding_site()).length();
+  return (_focused_unit->binding_site()).last()
+    + _focused_unit->current_position() 
+    - (_focused_unit->binding_site()).first();
 }
 
 inline ChemicalSequence& BoundChemical::focused_unit_location (void) const
@@ -236,7 +238,7 @@ inline ChemicalSequence& BoundChemical::focused_unit_location (void) const
   return (_focused_unit->binding_site()).location();
 }
 
-inline int BoundChemical::focused_unit_position (void) const
+inline int BoundChemical::focused_unit_first (void) const
 {
   return _focused_unit->current_position();
 }

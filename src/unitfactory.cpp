@@ -138,7 +138,7 @@ bool UnitFactory::create_binding_site (const std::string& line)
 		<< "starting position is smaller than end..." << std::endl;
       return false;
     }
-  if (sequence->is_out_of_bounds (start, end-start+1))
+  if (sequence->is_out_of_bounds (start, end))
     {
       std::cerr << "Site of family " << family_name 
 		<< " at position [" << start << "," << end << "]"
@@ -160,10 +160,10 @@ bool UnitFactory::create_binding_site (const std::string& line)
   int reading_frame = 0;
   BindingSite* binding_site;
   if (not (line_stream >> reading_frame)) // no reading frame
-    { binding_site = new BindingSite (family_id, *sequence, start, end-start+1,
+    { binding_site = new BindingSite (family_id, *sequence, start, end,
 				      k_on, k_off); }
   else
-    { binding_site = new BindingSite (family_id, *sequence, start, end-start+1,
+    { binding_site = new BindingSite (family_id, *sequence, start, end,
 				      k_on, k_off, reading_frame); }
 
   // add created unit to family and cell state
@@ -200,7 +200,7 @@ bool UnitFactory::create_termination_site (const std::string& line)
   int family_id = _cell_state.find_id (family_name);
 
   // create and store entity
-  Site* site = new Site (family_id, *sequence, start, end-start+1);
+  Site* site = new Site (family_id, *sequence, start, end);
   family->add (site);
   sequence->add_termination_site (*site);
   _cell_state.store (site);
@@ -437,7 +437,7 @@ bool UnitFactory::create_chemical_sequence ( const std::string& line )
       if (table == 0) { return false; }
 
       // check position consistency
-        if (parent->is_out_of_bounds (pos1, pos2-pos1+1))
+        if (parent->is_out_of_bounds (pos1, pos2))
 	  {
 	    std::cerr << "Product " << name 
 		      << " at position [" << pos1 << "," << pos2 << "]"
@@ -473,6 +473,7 @@ bool UnitFactory::create_chemical_sequence ( const std::string& line )
 
   int initial_quantity;
   if (not (line_stream >> initial_quantity)) { initial_quantity = 0; }
+  if (initial_quantity < 0) { return false;} // TODO throw error
   chemical->add (initial_quantity);
 
   _cell_state.store (chemical, name);

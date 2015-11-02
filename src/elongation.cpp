@@ -96,12 +96,14 @@ void Elongation::do_reaction (void)
   
   // update position on location if it is possible
   ChemicalSequence& location = _processive_chemical.focused_unit_location();
-  if ( not location.is_out_of_bounds (_processive_chemical.focused_unit_position() + _step_size,
-				      _processive_chemical.focused_unit_length()))
+  if (not location.is_out_of_bounds 
+      (_processive_chemical.focused_unit_first() + _step_size,
+       _processive_chemical.focused_unit_last() + _step_size))
     {
       // move the processive chemical (order is important here)
-      location.move_bound_unit ( _processive_chemical, _step_size ); // first update location
-      _processive_chemical.step_forward ( _step_size );
+      // first update location
+      location.move_bound_unit (_processive_chemical, _step_size); 
+      _processive_chemical.step_forward (_step_size);
     }
   else 
     {

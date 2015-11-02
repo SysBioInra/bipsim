@@ -33,7 +33,7 @@ BiasedWheel<T>::BiasedWheel (const std::vector<T>& cumulated_weights)
   /** @pre There must be at least one weight. */
   REQUIRE (cumulated_weights.size() > 0);
   /** @pre All weights must be greater or equal to 0. */
-  REQUIRE (check_weight_positivity (weights));
+  REQUIRE (check_weight_positivity (cumulated_weights));
 
   _total_weight = _cumulated_weights.back();
 }
@@ -225,7 +225,8 @@ bool BiasedWheel<T>::check_drawn_weight_validity (const std::vector<T>& v)
     {
       if ((*weight_it <= 0) || (*weight_it > _total_weight))
 	{
-	  std::cerr << "drawn weight = " << *weight_it << ", total weight = " << _total_weight << std::endl;
+	  std::cerr << "drawn weight = " << *weight_it
+		    << ", total weight = " << _total_weight << std::endl;
 	  return false;
 	}
     }

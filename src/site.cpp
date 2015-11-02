@@ -26,17 +26,17 @@
 //  Constructors/Destructors
 // ==========================
 //
-Site::Site (int family_id, ChemicalSequence& location, int position, int length)
+Site::Site (int family_id, ChemicalSequence& location, int first, int last)
   : _family (family_id)
   , _location (location)
-  , _position (position)
-  , _length (length)
+  , _first (first)
+  , _last (last)
 {
-  /** @pre Length must be strictly positive.*/
-  REQUIRE (length > 0);
+  /** @pre First must be smaller than last.*/
+  REQUIRE (first <= last);
 
   /** @pre Site must be within location.*/
-  REQUIRE (location.is_out_of_bounds (position, length) == false);
+  REQUIRE (location.is_out_of_bounds (first, last) == false);
 }
 
 // Not needed for this class (use of default copy constructor) !

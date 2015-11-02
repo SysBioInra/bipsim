@@ -42,12 +42,12 @@ class SiteLocation
   //
   /**
    * @brief Constructor based on position and length.
-   * @param position Position of site.
-   * @param length Length of site.
+   * @param first First position of site.
+   * @param last Last position of site.
    */
-  SiteLocation ( int position, int length )
-    : _position ( position )
-    , _length ( length ) {}
+  SiteLocation (int first, int last)
+    : _first (first)
+    , _last (last) {}
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -58,7 +58,7 @@ class SiteLocation
   /**
    * @brief Destructor.
    */
-  virtual ~SiteLocation (void);
+  virtual ~SiteLocation (void) {}
 
   // ===========================
   //  Public Methods - Commands
@@ -71,34 +71,22 @@ class SiteLocation
   // ============================
   //
   /**
-   * @brief Returns position of the site.
-   * @return Position of site.
+   * @brief Returns first position of site.
+   * @return First position of site.
    */
-  int position ( void ) const;
+  int first (void) const;
 
 
   /**
-   * @brief Returns length of the site.
-   * @return Length of site.
+   * @brief Returns last position of site.
+   * @return Last position of site.
    */
-  int length ( void ) const;
+  int last (void) const;
 
   // ==========================
   //  Public Methods - Setters
   // ==========================
   //
-  /**
-   * @brief Sets position of the site.
-   * @param position Position of site.
-   */
-  void set_position ( int position );
-
-
-  /**
-   * @brief Sets length of the site.
-   * @param length Length of site.
-   */
-  void set_length ( int length );
   
 
   // =======================================
@@ -111,15 +99,6 @@ class SiteLocation
   //  */
   // SiteLocation& operator= (SiteLocation& other_site_location);
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
 
 
 private:
@@ -128,11 +107,11 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief Position of site. */
-  int _position;
+  /** @brief First position of site. */
+  int _first;
 
-  /** @brief Length of site. */
-  int _length;
+  /** @brief Last position of site. */
+  int _last;
 
   // =================
   //  Private Methods
@@ -145,21 +124,9 @@ private:
 //  Inline declarations
 // ======================
 //
-inline int SiteLocation::length ( void ) const { return _length; }
+inline int SiteLocation::first (void) const { return _first; }
 
-inline int SiteLocation::position ( void ) const { return _position; }
-
-inline void SiteLocation::set_length ( int length )
-{ 
-  REQUIRE( length > 0 ); /** @pre Length must be positive. */
-  _length = length;
-}
-
-inline void SiteLocation::set_position ( int position )
-{ 
-  REQUIRE( position > 0 ); /** @pre Position must be positive. */
-  _position = position;
-}
+inline int SiteLocation::last (void) const { return _last; }
 
 
 #endif // SITELOCATION_H

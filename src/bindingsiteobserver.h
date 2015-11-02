@@ -50,7 +50,9 @@ class BindingSiteObserver : public SiteObserver
    * @param site_identifier Integer identifier of the site within the BindingSiteFamily passed along in the notification.
    * @sa BindingSiteFamily
    */
-  BindingSiteObserver (const BindingSite& site_to_watch, BindingSiteFamily& family_to_notify, int site_identifier);
+  BindingSiteObserver (const BindingSite& site_to_watch,
+		       BindingSiteFamily& family_to_notify,
+		       int site_identifier);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -94,17 +96,6 @@ class BindingSiteObserver : public SiteObserver
   //  * @brief Assignment operator.
   //  */
   // BindingSiteObserver& operator= ( const BindingSiteObserver& other_bindingsite_observer );
-
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved.
-   */
-  virtual bool check_invariant (void) const;
-
 
 private:
 

@@ -46,15 +46,15 @@ public:
    * @brief Default constructor
    * @param family_id Integer family identifier.
    * @param location Chemical sequence containing the site.
-   * @param position Position along the sequence.
-   * @param length Length of the binding site.
+   * @param first First position of site.
+   * @param last Last position of site.
    * @param k_on On rate of binding on the site.
    * @param k_off Off rate of unbinding on the site.
    * @param reading_frame Position of the reading frame (if applicable).
    * @sa BindingSiteHandler
    */
-  BindingSite (int family_id, ChemicalSequence& location, int position,
-	       int length, double k_on, double k_off,
+  BindingSite (int family_id, ChemicalSequence& location, int first,
+	       int last, double k_on, double k_off,
 	       int reading_frame = NO_READING_FRAME );
 
   // Not needed for this class (use of default copy constructor) ! 
@@ -92,19 +92,19 @@ public:
    * @brief k_on accessor.
    * @return on-rate constant of the binding site.
    */
-  double k_on ( void ) const;
+  double k_on (void) const;
 
   /**
    * @brief k_off accessor.
    * @return off-rate constant of the binding site.
    */
-  double k_off ( void ) const;
+  double k_off (void) const;
 
   /**
    * @brief Reading frame accessor.
    * @return Reading frame on the binding site, BindingSite::NO_READING_FRAME if there is none.
    */
-  int reading_frame ( void ) const;
+  int reading_frame (void) const;
 
   /**
    * @brief Binding rate contributon.

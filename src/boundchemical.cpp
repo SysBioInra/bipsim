@@ -39,9 +39,9 @@ BoundChemical::~BoundChemical (void)
 // ===========================
 //
 
-void BoundChemical::add_unit_at_site ( const BindingSite& binding_site )
+void BoundChemical::add_unit_at_site (const BindingSite& binding_site)
 {
-  add_unit (binding_site, binding_site.position(), binding_site.reading_frame());
+  add_unit (binding_site, binding_site.first(), binding_site.reading_frame());
 }
 
 void BoundChemical::add_unit_in_place_of ( const BoundChemical& precursor )
@@ -49,7 +49,7 @@ void BoundChemical::add_unit_in_place_of ( const BoundChemical& precursor )
   // here we add a new unit but we copy the characteristics of the focused unit
   // of the precursor species
   const BindingSite& binding_site = precursor.focused_unit_binding_site();
-  int position = precursor.focused_unit_position();
+  int position = precursor.focused_unit_first();
   int reading_frame = precursor.focused_unit_reading_frame();
 
   add_unit (binding_site, position, reading_frame);  
@@ -191,7 +191,7 @@ void BoundChemical::print ( std::ostream& output ) const
 	      unit != family_units.end(); unit++ )
 	  {
 	    output << "Bound chemical initially bound at position "
-		   << unit->binding_site().position()
+		   << unit->binding_site().first()
 		   << " and now at position "
 		   << unit->current_position()
 		   << "." << std::endl;
