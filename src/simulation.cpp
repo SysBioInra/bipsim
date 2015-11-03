@@ -44,6 +44,10 @@ Simulation::Simulation (const std::string& filename)
   Parser parser (_cell_state, _event_handler);
   parser.parse (input_data);
   input_data.write_warnings (std::cerr);
+  std::cout << "Loaded system containing "
+	    << _cell_state.number_chemicals() << " chemicals and "
+	    << _cell_state.reactions().size() << " reactions."
+	    << std::endl;
 
   // create solver
 #ifdef CLASSIFICATION

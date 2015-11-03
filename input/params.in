@@ -46,4 +46,4 @@ OUTPUT_STEP 10000
 #   OUTPUT_ENTITIES name1 name2 etc.
 ################################################################################
 
-OUTPUT_ENTITIES protein rna GTP
+OUTPUT_ENTITIES protein rna GTP CTP ATP UTP

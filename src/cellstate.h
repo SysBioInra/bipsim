@@ -97,6 +97,12 @@ class CellState
    */
   const std::vector <Reaction*>& reactions (void) const;
 
+  /**
+   * @brief Accessor to number of chemicals.
+   * @return Number of chemicals in the cell.
+   */
+  int number_chemicals (void) const;
+
 
   // ==========================
   //  Public Methods - Setters
@@ -204,6 +210,11 @@ private:
 inline const std::vector <Reaction*>& CellState::reactions (void) const
 {
   return _reaction_handler.references();
+}
+
+inline int CellState::number_chemicals (void) const
+{
+  return _chemical_handler.references().size();
 }
 
 

@@ -1,45 +1,27 @@
-#######################################################################
-#                              EVENT FILE                             #
-#######################################################################
-#
-# An event should have the following format (one event per line):
-# 
-#   event TIME EVENT_TAG TARGET QUANTITY
-# 
-# where
-#  - TIME is the time at which the event should occur
-#  - EVENT_TAG is the type of event among
-#     + ADD: add some molecules.
-#     + REMOVE: remove some molecules if possible.
-#     + SET: set the number of molecules.
-#  - TARGET is the target chemical
-#  - QUANTITY is the quantity to add/remove/etc.
-#
-# example:
-#  event 100 ADD ATP 1000
-# adds 1000 ATP molecules at time t=100.
-#
-#######################################################################
 
-event 3000 SET ppGpp 10000
-event 3000 SET GTP 0
-event 3010 SET GTP 0
-event 3020 SET GTP 0
-event 3030 SET GTP 0
-event 3040 SET GTP 0
-event 3050 SET GTP 0
-event 3060 SET GTP 0
-event 3070 SET GTP 0
-event 3080 SET GTP 0
-event 3090 SET GTP 0
-event 4500 ADD GTP 1000
-event 4500 SET ppGpp 0
-event 4510 SET ppGpp 0
-event 4520 SET ppGpp 0
-event 4530 SET ppGpp 0
-event 4540 SET ppGpp 0
-event 4550 SET ppGpp 0
-event 4560 SET ppGpp 0
-event 4570 SET ppGpp 0
-event 4580 SET ppGpp 0
-event 4590 SET ppGpp 0
+# ppGpp injection
+event 1000 SET ppGpp 10000
+
+# GTP purification
+event 1000 SET GTP 0
+event 1001 SET GTP 0
+event 1002 SET GTP 0
+event 1003 SET GTP 0
+event 1004 SET GTP 0
+event 1005 SET GTP 0
+event 1006 SET GTP 0
+event 1007 SET GTP 0
+event 1008 SET GTP 0
+event 1009 SET GTP 0
+
+# ppGpp purification
+#event 1500 SET ppGpp 0
+#event 1501 SET ppGpp 0
+#event 1502 SET ppGpp 0
+#event 1503 SET ppGpp 0
+#event 1504 SET ppGpp 0
+#event 1505 SET ppGpp 0
+#event 1506 SET ppGpp 0
+#event 1507 SET ppGpp 0
+#event 1508 SET ppGpp 0
+#event 1509 SET ppGpp 0
