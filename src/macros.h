@@ -37,18 +37,6 @@
 #define ENSURE( postcondition ) // Empty macro: no check performed
 #endif // CHECK POSTCONDITIONS
 
-/**
- * @brief Invariant checking.
- *
- * If CHECK_INVARIANT is defined, this macro will check the 
- * postconditions of all classes, else it is empty.
- */
-#ifdef CHECK_INVARIANT
-#define INVARIANT( invariant ) assert(invariant)
-#else
-#define INVARIANT( invariant ) // Empty macro: no check performed
-#endif // CHECK INVARIANT
-
 
 
 #endif // MACROS_H

@@ -102,6 +102,11 @@ class GraphRateManager;
 class ConcentrationObserver;
 class ReactionObserver;
 
+// exceptions
+class DependencyException;
+class FormatException;
+class ParserException;
+
 // template typedefs
 /**
  * @brief Class representing any entity that can be involved in a reaction.

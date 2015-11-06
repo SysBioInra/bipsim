@@ -121,7 +121,7 @@ public:
   /**
    * @brief Watch availability of a specific site and notify an observer when it changes.
    * @param first First absolute position of the site.
-   * @param lasth Last absolute position of the site.
+   * @param last Last absolute position of the site.
    * @param site_observer SiteObserver to update with the current number of available sites.
    */
   void watch_site_availability (int first, int last,

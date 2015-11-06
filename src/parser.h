@@ -118,6 +118,8 @@ private:
    * @return True if at least one entity was successfully created.
    */
   bool loop_through_data (InputData& input_data);
+
+  void display_dependency_errors (InputData& input_data);
 };
 
 // ======================

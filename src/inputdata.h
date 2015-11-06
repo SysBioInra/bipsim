@@ -102,6 +102,18 @@ class InputData
    */
   std::string line (void);
 
+  /**
+   * @brief Returns current file name.
+   * @return Name of file containing current line.
+   */
+  std::string file_name (void);
+
+  /**
+   * @brief Returns current line number within file.
+   * @return Position of current line within its file.
+   */
+  int line_number (void);
+
   // ==========================
   //  Public Methods - Setters
   // ==========================
@@ -203,6 +215,16 @@ inline bool InputData::is_line_treated (void)
 inline std::string InputData::line (void)
 {
   return _line;
+}
+
+inline std::string InputData::file_name (void)
+{
+  return *_file_name;
+}
+
+inline int InputData::line_number (void)
+{
+  return _file_line_number;
 }
 
 inline void InputData::mark_line_as_treated (void)

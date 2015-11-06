@@ -113,5 +113,8 @@ libsrc_a_SOURCES += \
 	concentrationobserver.cpp concentrationobserver.h \
 	reactionobserver.cpp reactionobserver.h
 
+# exceptions
+libsrc_a_SOURCES += \
+	formatexception.h parserexception.h dependencyexception.h
 
 ###############################################################################

@@ -1,7 +1,7 @@
 
 
 /**
- * @file reaction.h
+ * @file bidirectionalreaction.h
  * @brief Header for the BidirectionalReaction class.
  * 
  * @authors Marc Dinh, Stephan Fischer

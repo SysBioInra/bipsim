@@ -20,6 +20,10 @@
 //
 #include "reactionfactory.h"
 
+#include "dependencyexception.h"
+#include "formatexception.h"
+#include "parserexception.h"
+
 #include "chemicalreaction.h"
 #include "complexation.h"
 #include "binding.h"
@@ -73,7 +77,6 @@ bool ReactionFactory::handle (const std::string& line)
 			     || create_degradation (remaining)
 			     || create_base_loading (remaining));
 			     
-  // if (creation_succeeded == false)  { TODO throw error !!! }
   return creation_succeeded;
 }
 
@@ -101,7 +104,7 @@ bool ReactionFactory::handle (const std::string& line)
 //  Private Methods
 // =================
 //
-bool ReactionFactory::create_chemical_reaction ( const std::string& line )
+bool ReactionFactory::create_chemical_reaction (const std::string& line)
 {
   std::istringstream line_stream (line);
   if (check_tag (line_stream, "ChemicalReaction") == false) { return false; }
@@ -115,13 +118,9 @@ bool ReactionFactory::create_chemical_reaction ( const std::string& line )
     {
       // check that the chemical is known
       Chemical* chemical_ptr = _cell_state.find <Chemical> (chemical);
-      if (chemical_ptr == 0) return false; // TODO throw error ?
+      if (chemical_ptr == 0) { throw DependencyException (chemical); }
 
-      if (not (line_stream >> stoichiometry))
-	{
-	  // TODO throw error
-	  return false;
-	}
+      if (not (line_stream >> stoichiometry)) { throw FormatException(); }
 
       chemicals.push_back (chemical_ptr);
       stoichiometries.push_back (stoichiometry);
@@ -130,10 +129,7 @@ bool ReactionFactory::create_chemical_reaction ( const std::string& line )
   // read rates
   double k_1, k_m1;
   if ((chemicals.size() == 0) || (not (line_stream >> k_1 >> k_m1)))
-    {
-      // TODO throw error
-      return false;
-    }
+    { throw FormatException(); }
 
   // create and store
   ChemicalReaction* reaction = new ChemicalReaction (chemicals, stoichiometries,
@@ -146,22 +142,18 @@ bool ReactionFactory::create_chemical_reaction ( const std::string& line )
 
 
 
-bool ReactionFactory::create_base_loading ( const std::string& line )
+bool ReactionFactory::create_base_loading (const std::string& line)
 {
   std::istringstream line_stream (line);
   if (check_tag (line_stream, "BaseLoading") == false) { return false; }
 
   // read base data
   std::string base_loader;
-  if (not (line_stream >> base_loader))
-    {
-      // TODO throw error
-      return false;
-    }
+  if (not (line_stream >> base_loader)) { throw FormatException(); }
 
   // check that the chemicals are known and valid
   BaseLoader* base_loader_ptr = _cell_state.find <BaseLoader> (base_loader);
-  if (base_loader_ptr == 0) return false; // TODO throw error ?
+  if (base_loader_ptr == 0) { throw DependencyException (base_loader); }
     
   // create and store
   _cell_state.store (new BaseLoading (*base_loader_ptr));
@@ -170,7 +162,7 @@ bool ReactionFactory::create_base_loading ( const std::string& line )
 
 
 
-bool ReactionFactory::create_complexation ( const std::string& line )
+bool ReactionFactory::create_complexation (const std::string& line)
 {
   std::istringstream line_stream (line);
   if (check_tag (line_stream, "Complexation") == false) { return false; }
@@ -180,18 +172,15 @@ bool ReactionFactory::create_complexation ( const std::string& line )
   double k_on, k_off;
   if (not (line_stream >> component_a >> component_b >> complex
 	   >> k_on >> k_off))
-    {
-      // TODO throw error
-      return false;
-    }
+    { throw FormatException(); }
 
   // check that the chemicals are known
   Chemical* component_a_ptr = _cell_state.find <Chemical> (component_a); 
-  if (component_a_ptr == 0) return false; // TODO throw error ?
+  if (component_a_ptr == 0) { throw DependencyException (component_a); }
   Chemical* component_b_ptr = _cell_state.find <Chemical> (component_b); 
-  if (component_b_ptr == 0) return false; // TODO throw error ?
+  if (component_b_ptr == 0)  { throw DependencyException (component_b); }
   Chemical* complex_ptr = _cell_state.find <Chemical> (complex); 
-  if (complex_ptr == 0) return false; // TODO throw error ?
+  if (complex_ptr == 0)  { throw DependencyException (complex); }
   
   // create and store
   Complexation* reaction = new Complexation (*component_a_ptr, *component_b_ptr,
@@ -204,7 +193,7 @@ bool ReactionFactory::create_complexation ( const std::string& line )
 
 
 
-bool ReactionFactory::create_elongation ( const std::string& line )
+bool ReactionFactory::create_elongation (const std::string& line)
 {
   std::istringstream line_stream (line);
   if (check_tag (line_stream, "Elongation") == false) { return false; }
@@ -214,18 +203,15 @@ bool ReactionFactory::create_elongation ( const std::string& line )
   int step_size ;
   double rate;
   if (not (line_stream >> chemical >> second_chemical >> step_size >> rate))
-    {
-      // TODO throw error
-      return false;
-    }
+    { throw FormatException(); }
 
   // check that the chemicals are valid
   ProcessiveChemical* 
     processive_chemical = _cell_state.find <ProcessiveChemical> (chemical);
-  if (processive_chemical == 0) return false; // TODO throw error ?
+  if (processive_chemical == 0)  { throw DependencyException (chemical); }
   BoundChemical* 
     chemical_after_step = _cell_state.find <BoundChemical> (second_chemical);
-  if (chemical_after_step == 0) return false; // TODO throw error ?
+  if (chemical_after_step == 0)  throw DependencyException (second_chemical);
 
   // create and store
   _cell_state.store (new Elongation (*processive_chemical, *chemical_after_step,
@@ -235,7 +221,7 @@ bool ReactionFactory::create_elongation ( const std::string& line )
 
 
 
-bool ReactionFactory::create_binding ( const std::string& line )
+bool ReactionFactory::create_binding (const std::string& line)
 {
   std::istringstream line_stream (line);
   if (check_tag (line_stream, "Binding") == false) { return false; }
@@ -243,19 +229,17 @@ bool ReactionFactory::create_binding ( const std::string& line )
   // read base data
   std::string unit_to_bind, binding_result, binding_site;
   if (not (line_stream >> unit_to_bind >> binding_result >> binding_site))
-    {
-      // TODO throw error
-      return false;
-    }
+    { throw FormatException(); }
 
   // check that the data is valid
   Chemical* unit_to_bind_ptr = _cell_state.find <Chemical> (unit_to_bind);
-  if (unit_to_bind_ptr == 0) return false; // TODO throw error ?
+  if (unit_to_bind_ptr == 0)  { throw DependencyException (unit_to_bind); }
   BoundChemical*
     binding_result_ptr = _cell_state.find <BoundChemical> (binding_result);
-  if (binding_result_ptr == 0) return false; // TODO throw error ?
+  if (binding_result_ptr == 0)  { throw DependencyException (binding_result); }
   int binding_site_family = _cell_state.find_id (binding_site);
-  if (binding_site_family == CellState::NOT_FOUND) return false; // TODO throw error ?
+  if (binding_site_family == CellState::NOT_FOUND)
+     { throw DependencyException (binding_site); }
 
   // create and store
   Binding* reaction = new Binding (*unit_to_bind_ptr, *binding_result_ptr,
@@ -267,7 +251,7 @@ bool ReactionFactory::create_binding ( const std::string& line )
   return true;
 }
 
-bool ReactionFactory::create_release ( const std::string& line )
+bool ReactionFactory::create_release (const std::string& line)
 {
   std::istringstream line_stream (line);
   if (check_tag (line_stream, "Release") == false) { return false; }
@@ -279,25 +263,18 @@ bool ReactionFactory::create_release ( const std::string& line )
   int stoichiometry;
 
   // get the chemical to release
-  if (not (line_stream >> chemical)) 
-    {
-      // TODO throw error
-      return false;
-    }
+  if (not (line_stream >> chemical)) { throw FormatException(); }
+
   BoundChemical* unit_to_release = _cell_state.find <BoundChemical> (chemical);
-  if (unit_to_release == 0) return false; // TODO throw error ?
+  if (unit_to_release == 0)  { throw DependencyException (chemical); }
 
   // get other components of the reaction
   while ((line_stream >> chemical) && (chemical != std::string ("rate")))
     {
       Chemical* chemical_ptr = _cell_state.find <Chemical> (chemical);
-      if (chemical_ptr == 0) return false; // TODO throw error ?
+      if (chemical_ptr == 0)  { throw DependencyException (chemical); }
 
-      if (not (line_stream >> stoichiometry))
-	{
-	  // TODO throw error
-	  return false;
-	}
+      if (not (line_stream >> stoichiometry)) { throw FormatException(); }
 
       chemicals.push_back (chemical_ptr);
       stoichiometries.push_back (stoichiometry);
@@ -306,19 +283,16 @@ bool ReactionFactory::create_release ( const std::string& line )
   // get rates
   double rate;
   if ((chemicals.size() == 0) || (not (line_stream >> rate)))
-    {
-      // TODO throw error
-      return false;
-    }
+    { throw FormatException(); }
   
   // get associated products (if applicable)
   ProductTable* table = 0;
   if (check_tag (line_stream, "produces"))
     {
       std::string table_name;
-      if (not (line_stream >> table_name)) { return false; } // throw error
+      if (not (line_stream >> table_name)) { throw FormatException(); }
       table = _cell_state.find <ProductTable> (table_name);
-      if (table == 0) { return false; } // throw error
+      if (table == 0) { throw DependencyException (table_name); } // throw error
     }
 
   // create and store
@@ -337,24 +311,28 @@ bool ReactionFactory::create_degradation (const std::string& line)
   std::string sequence_name, table_name;
   double rate;
   if (not (line_stream >> sequence_name >> table_name >> rate))
-    {
-      // TODO throw error
-      return false;
-    }
+    { throw FormatException(); }
 
   // check that the names are valid
   ChemicalSequence* 
     sequence = _cell_state.find <ChemicalSequence> (sequence_name);
-  if (sequence == 0) return false; // TODO throw error ?
+  if (sequence == 0) { throw DependencyException (sequence_name); }
   CompositionTable* 
     table = _cell_state.find <CompositionTable> (table_name);
-  if (table == 0) return false; // TODO throw error ?
+  if (table == 0) { throw DependencyException (table_name); }
   
   // get sequence composition
   std::map <Chemical*, int>
     composition = table->composition (sequence->sequence());
   int num_el = composition.size();
-  if (num_el == 0) { return false; } // TODO throw error
+  if (num_el == 0)
+    { 
+      std::ostringstream message;
+      message << "Could not compute composition after degradation of "
+	      << sequence_name << ", check table " << table_name
+	      << " consistency";
+      throw ParserException (message.str());
+    }
 
   // create chemical and stoichiometry vector to represent reaction
   std::vector <Chemical*> chemicals (num_el+1);

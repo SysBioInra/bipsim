@@ -21,7 +21,7 @@ FINAL_TIME 2000
 #   INPUT_FILES path/to/file1 path/to/file2 etc.
 ################################################################################
 
-INPUT_FILES ../input/dna_info.in ../input/dna.in ../input/rna_info.in ../input/test_rnas.in ../input/protein_info.in ../input/test_proteins.in ../input/translation.in
+INPUT_FILES ../input/dna_info.in ../input/dna.in ../input/rna_info.in ../input/test_rnas.in ../input/protein_info.in ../input/test_proteins.in ../input/translation.in ../input/metabolites.in
 
 ################################################################################
 # OUTPUT FILE
