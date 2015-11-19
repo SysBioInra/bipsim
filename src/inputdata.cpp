@@ -41,6 +41,7 @@ InputData::InputData (const std::list <std::string>& input_file_names)
 	{
 	  // TODO: throw exception ?
 	  std::cerr << "Warning: could not open input file\n" << *file_it << "\nFile ignored." << std::endl;
+	  delete _files.back();
 	  _files.pop_back();
 	}
       else

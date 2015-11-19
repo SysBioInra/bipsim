@@ -26,6 +26,7 @@
 //
 #include "forwarddeclarations.h"
 #include "ratemanager.h"
+#include "cobserverclient.h"
 
 /**
  * @brief Class handling updates of reaction rates by using dependencies between reactions and reactants.
@@ -37,7 +38,7 @@
  * change. All rates that may have changed are stored in a set until user asks to update rates.
  * @sa RateManager
  */
-class DependencyRateManager : public RateManager
+class DependencyRateManager : public RateManager, public CObserverClient
 {
  public:
 
@@ -86,7 +87,7 @@ class DependencyRateManager : public RateManager
    * @param reactions_to_update Indices of the reactions that need to be updated. This function
    *  is intended to be called by a ConcentrationObserver.
    */
-  void update (const std::list<int>& reactions_to_update);
+  void update (int reaction_to_update);
 
   // ============================
   //  Public Methods - Accessors
@@ -121,11 +122,6 @@ private:
    */
   std::vector <bool> _reactions_to_update;
 
-  /**
-   * @brief List of observers used to monitor concentration changes.
-   */
-  std::list <ConcentrationObserver*> _concentration_observers;
-
   // =================
   //  Private Methods
   // =================
@@ -134,11 +130,6 @@ private:
    * @brief Create dependency map from the list of reactions and subscribe for notfication by reactants.
    */
   void create_dependencies (void);
-
-  /**
-   * @brief Clear dependency map and unsubscribe reactant notifications.
-   */
-  void clear_dependencies (void);
 
   // ======================
   //  Forbidden Operations
@@ -151,5 +142,9 @@ private:
 //  Inline declarations
 // ======================
 //
+inline void DependencyRateManager::update (int reaction_to_update)
+{
+  _reactions_to_update [reaction_to_update] = true;
+}
 
 #endif // DEPENDENCY_RATE_MANAGER_H

@@ -26,6 +26,7 @@
 #include "cellstate.h"
 #include "naiveratemanager.h"
 #include "graphratemanager.h"
+#include "dependencyratemanager.h"
 
 // ==========================
 //  Constructors/Destructors

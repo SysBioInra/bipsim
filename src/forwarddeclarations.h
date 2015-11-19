@@ -100,7 +100,9 @@ class NaiveRateManager;
 class DependencyRateManager;
 class GraphRateManager;
 class ConcentrationObserver;
+class CObserverClient;
 class ReactionObserver;
+class SubRateVector;
 
 // exceptions
 class DependencyException;

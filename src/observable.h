@@ -59,7 +59,14 @@ class Observable
   /**
    * @brief Destructor.
    */
-  virtual ~Observable (void) {}
+  virtual ~Observable (void)
+    {
+      for (typename std::set<T*>::iterator obs_it = _observers.begin();
+	   obs_it != _observers.end(); ++obs_it)
+	{
+	  (*obs_it)->deregister();
+	}
+    }
 
   // ===========================
   //  Public Methods - Commands
@@ -105,15 +112,6 @@ class Observable
   //  */
   // Observable& operator= ( const Observable& other_observable );
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved.
-   */
-  virtual bool check_invariant (void) const {return true;}
 
  protected:
   // ===================

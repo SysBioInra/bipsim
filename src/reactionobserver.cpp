@@ -39,7 +39,7 @@ ReactionObserver::ReactionObserver (GraphRateManager& parent, Reaction* reaction
 
 ReactionObserver::~ReactionObserver (void)
 {
-  _reaction->detach (*this);
+  if (_reaction != 0) _reaction->detach (*this);
 }
 
 
@@ -71,20 +71,6 @@ void ReactionObserver::update (void)
 //
 // Not needed for this class (use of default overloading) !
 // ReactionObserver& ReactionObserver::operator= ( const ReactionObserver& other_reaction_observer );
-
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool ReactionObserver::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================

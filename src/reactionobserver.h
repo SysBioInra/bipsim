@@ -71,6 +71,12 @@ class ReactionObserver
    */
   void update (void);  
 
+  /**
+   * @brief Called to signal that observed subject is destructed.
+   */
+  void deregister (void);
+  
+
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -93,15 +99,6 @@ class ReactionObserver
   //  */
   // ReactionObserver& operator= (const ReactionObserver& other_reaction_observer);
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved.
-   */
-  bool check_invariant (void) const;
 
 private:
 
@@ -139,5 +136,9 @@ private:
 //  Inline declarations
 // ======================
 //
+inline void ReactionObserver::deregister (void)
+{
+  _reaction = 0;
+}
 
 #endif // REACTION_OBSERVER_H

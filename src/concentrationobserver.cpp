@@ -20,15 +20,18 @@
 //
 #include "concentrationobserver.h"
 #include "reactant.h"
+#include "cobserverclient.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-ConcentrationObserver::ConcentrationObserver (DependencyRateManager& parent, Reactant* reactant_to_observe, const std::list<int>& message)
+ConcentrationObserver::ConcentrationObserver (CObserverClient& parent,
+					      Reactant* reactant,
+					      int identifier)
   : _parent (parent)
-  , _reactant (reactant_to_observe)
-  , _message (message)
+  , _reactant (reactant)
+  , _message (identifier)
 {
   _reactant->attach (*this);
 }
@@ -38,7 +41,7 @@ ConcentrationObserver::ConcentrationObserver (DependencyRateManager& parent, Rea
 
 ConcentrationObserver::~ConcentrationObserver (void)
 {
-  _reactant->detach (*this);
+  if (_reactant != 0) _reactant->detach (*this);
 }
 
 // ===========================
@@ -66,19 +69,6 @@ ConcentrationObserver::~ConcentrationObserver (void)
 // Not needed for this class (use of default overloading) !
 // ConcentrationObserver& ConcentrationObserver::operator= ( const ConcentrationObserver& other_concentration_observer );
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool ConcentrationObserver::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
 
 
 // =================

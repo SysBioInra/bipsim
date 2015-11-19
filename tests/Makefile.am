@@ -7,7 +7,7 @@
 # the programs to build (the names of the final binaries)
 check_PROGRAMS = biasedwheel_test inputdata_test randomhandler_test \
 	transformationtable_test producttable_test cellstate_test \
-	compositiontable_test
+	compositiontable_test cobserverclient_test
 
 # declare programs to be part of `make check`
 TESTS = $(check_PROGRAMS)
@@ -33,5 +33,8 @@ cellstate_test_LDADD = ../src/libsrc.a
 
 compositiontable_test_SOURCES = compositiontable_test.cpp
 compositiontable_test_LDADD = ../src/libsrc.a
+
+cobserverclient_test_SOURCES = cobserverclient_test.cpp
+cobserverclient_test_LDADD = ../src/libsrc.a
 
 ###############################################################################

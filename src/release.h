@@ -22,6 +22,7 @@
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "reaction.h"
 #include "chemicalreaction.h"
 
 // ===================

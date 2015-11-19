@@ -29,6 +29,8 @@
 #include "forwarddeclarations.h"
 #include "boundchemical.h"
 #include "decodingtable.h"
+#include "subratevector.h"
+#include "cobserverclient.h"
 
 /**
  * @brief Chemical that loads a new base during sequence synthesis.
@@ -38,7 +40,7 @@
  * onto the elongating strand.
  * This class inherits class BoundChemical.
  */
-class BaseLoader : public BoundChemical
+class BaseLoader : public BoundChemical, public CObserverClient
 {
 public:
 
@@ -100,13 +102,19 @@ public:
    */
   void focus_random_unit_from_loading_rates (void);
 
+  /**
+   * @brief Update loading rate corresponding to a specific index.
+   * @param index Integer associated with a specific base-codon pairing.
+   */
+  void update (int index);
+
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
   /**
-   * @brief Loading rate averaged over all elements.
-   * @return Loading rate averaged over all elements.
+   * @brief Loading rate summed over all elements.
+   * @return Loading rate summed over all elements.
    */
    double loading_rate (void);
 
@@ -165,13 +173,10 @@ private:
   std::vector< std::list<BoundUnitList::iterator> > _unit_map;
 
   /** @brief Loading rates associated with each template. */
-  std::vector< double > _loading_rates;
+  SubRateVector _loading_rates;
 
   /** @brief Index of template that the focused unit is reading. */
   int _focused_template_index;
-
-  /** @brief Loading rate. */
-  double _total_loading_rate;
   
   // =================
   //  Private Methods
@@ -181,11 +186,6 @@ private:
    * @brief Update _focused_template_index according to current _focused_unit.
    */
   void update_focused_template (void);
-
-  /**
-   * @brief Updates loading rates associated with each template and total loading rate.
-   */
-  void update_loading_rates (void);
 
   // ===================
   //  Private Constants
@@ -201,9 +201,7 @@ private:
 //
 inline double BaseLoader::loading_rate (void)
 { 
-  // update loading rates first
-  update_loading_rates();
-  return _total_loading_rate;
+  return _loading_rates.total_rate();
 }
 
 inline Chemical& BaseLoader::focused_base_to_load (void) const

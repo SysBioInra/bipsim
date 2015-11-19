@@ -128,7 +128,7 @@ private:
    * @param quantity Quantity indicating how chemical is affected by event.
    * @return True if event was successfully created and stored.
    */
-  bool create_event (double time, const std::string& event_tag, Chemical& target, int quantity);
+  void create_event (double time, const std::string& event_tag, Chemical& target, int quantity);
 
   // ======================
   //  Forbidden Operations

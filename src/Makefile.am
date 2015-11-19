@@ -111,7 +111,9 @@ libsrc_a_SOURCES += \
 	dependencyratemanager.cpp dependencyratemanager.h \
 	graphratemanager.cpp graphratemanager.h \
 	concentrationobserver.cpp concentrationobserver.h \
-	reactionobserver.cpp reactionobserver.h
+	cobserverclient.h \
+	reactionobserver.cpp reactionobserver.h \
+	subratevector.h
 
 # exceptions
 libsrc_a_SOURCES += \

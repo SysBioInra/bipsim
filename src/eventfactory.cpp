@@ -18,6 +18,11 @@
 // ==================
 //
 #include "eventfactory.h"
+
+#include "dependencyexception.h"
+#include "formatexception.h"
+#include "parserexception.h"
+
 #include "cellstate.h"
 #include "eventhandler.h"
 #include "addevent.h"
@@ -58,17 +63,16 @@ bool EventFactory::handle (const std::string& line)
   double time;
   std::string event_tag, target_name;
   int quantity;
-  if (not (line_stream >> time >> event_tag >> target_name >> quantity)) return false;
+  if (not (line_stream >> time >> event_tag >> target_name >> quantity))
+    { throw FormatException(); }
 
   // get target reference
   Chemical* target = _cell_state.find<Chemical> (target_name);
-  if (target == 0) return false; // TODO throw error ?
+  if (target == 0) { throw DependencyException (target_name); }
 
   // create event and return
-  bool creation_succeeded = create_event (time, event_tag, *target, quantity);
-
-  // if (creation_succeeded == false) // TODO throw error ?
-  return creation_succeeded;
+  create_event (time, event_tag, *target, quantity);
+  return true;
 }
 
 
@@ -96,27 +100,14 @@ bool EventFactory::handle (const std::string& line)
 //  Private Methods
 // =================
 //
-bool EventFactory::create_event (double time, const std::string& event_tag, Chemical& target, int quantity)
+void EventFactory::create_event (double time, const std::string& event_tag, Chemical& target, int quantity)
 {
   if (event_tag == "ADD")
-    {
-      _event_handler.store (new AddEvent (time, target, quantity));
-      return true;
-    }
-  
-  if (event_tag == "REMOVE")
-    {
-      _event_handler.store (new RemoveEvent (time, target, quantity));
-      return true;
-    }
-  
-  if (event_tag == "SET")
-    {
-      _event_handler.store (new SetEvent (time, target, quantity));
-      return true;
-    }
-  
-  // TODO throw error
-  std::cerr << "unrecognized event type" << std::endl;
-  return false;
+    { _event_handler.store (new AddEvent (time, target, quantity)); }
+  else if (event_tag == "REMOVE")
+    { _event_handler.store (new RemoveEvent (time, target, quantity)); }
+  else if (event_tag == "SET")
+    { _event_handler.store (new SetEvent (time, target, quantity)); }
+  else
+    { throw ParserException ("unrecognized event type (" + event_tag + ")"); }
 }

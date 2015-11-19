@@ -26,6 +26,7 @@
 #include "forwarddeclarations.h"
 #include "bindingsite.h"
 #include "reactant.h"
+#include "subratevector.h"
 
 /**
  * @brief Class handling a family of binding sites.
@@ -118,28 +119,12 @@ class BindingSiteFamily : public Reactant, public SimulatorInput
   //  */
   // BindingSiteFamily& operator= ( const BindingSiteFamily& other_CLASSNAME );
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  bool check_invariant (void) const;
-
 
 private:
 
   // ============
   //  Attributes
   // ============
-  //
-  /**
-   * @brief Total contribution to the binding rate.
-   */
-  double _total_rate_contribution;
-
   /**
    * @brief Binding sites belonging to the family.
    */
@@ -148,7 +133,7 @@ private:
   /**
    * @brief Contribution of each binding site to the binding rate.
    */
-  std::vector<double> _rate_contributions;
+  SubRateVector _rate_contributions;
   
   /**
    * @brief Observers monitoring availability of all the sites.
@@ -160,10 +145,6 @@ private:
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Compute total rate contribution from the _rate_contributions vector
-   */
-  void compute_total_rate_contribution (void);
 
   // ======================
   //  Forbidden Operations
@@ -179,7 +160,7 @@ private:
 
 inline double BindingSiteFamily::total_binding_rate_contribution (void) const
 {
-  return _total_rate_contribution;
+  return _rate_contributions.total_rate();
 }
 
 
