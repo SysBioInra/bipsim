@@ -26,7 +26,7 @@
 #include "forwarddeclarations.h"
 
 /**
- * @brief Template class representing a weighted vector from which values are drawn.
+ * @brief Generic class representing a weighted vector from which values are drawn.
  *
  * BiasedWheel is a template class that is initialized with a weight vector. It does
  * NOT do any of the RNG part, it enables searching the index/indices corresponding
@@ -71,7 +71,7 @@ class BiasedWheel
    *  rules: if cw[0] >= dw, i = 0, else (a) cw[i-1] < dw and (b) cw[i] >= dw,
    *  where i is the returned index, cw the cumulated weights vector and dw the drawn weight.
    */
-  int find_index (T drawn_weight);
+  int find_index (T drawn_weight) const;
   
   /**
    * @brief Find indices corresponding to a list of cumulated weights.
@@ -79,28 +79,12 @@ class BiasedWheel
    * @return Vector of indices corresponding to list of cumulated weights by 
    *  following exactly the same rules as find_index().
    */
-  std::vector<int> find_multiple_indices (const std::vector<T>& drawn_weights);
+  std::vector<int> find_multiple_indices (const std::vector<T>& drawn_weights) const;
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  /**
-   * @brief Accessor to the cumulated form of the wheel.
-   * @return Vector containing cumulative form of the wheel, all 0 values in the
-   *  original vector being totally skipped (i.e. the cumulative form may be shorter
-   *  than the original vector).
-   *
-   * Mainly for maintenance purposes, as this really is an internal representation
-   * of the wheel that should be of no interest for a user.
-   */
-  const std::vector<T>& cumulated_weights (void);
-
-  /**
-   * @brief Accessor to total of weights contained in the wheel.
-   * @return Sum of weights contained in the wheel.
-   */
-  T total_weight (void);
 
   // ==========================
   //  Public Methods - Setters
@@ -130,10 +114,6 @@ private:
    */
   const std::vector<T>& _cumulated_weights;
 
-  /**
-   * @brief Sum of weights contained in the biased wheel.
-   */
-  T _total_weight;
 
   // =================
   //  Private Methods
@@ -144,14 +124,14 @@ private:
    * @param v Weight vector to check.
    * @return true if all values are greater or equal to 0, false else.
    */
-  bool check_weight_positivity (const std::vector<T>& v);
+  bool check_weight_positivity (const std::vector<T>& v) const;
 
   /**
    * @brief Check wether values of a vector can effectively be drawn on current wheel..
    * @param v Drawn weight vector to check.
    * @return true if all values are in the (0, _total_weight] range, false else.
    */
-  bool check_drawn_weight_validity (const std::vector<T>& v);
+  bool check_drawn_weight_validity (const std::vector<T>& v) const;
 
   /**
    * @brief Class for comparing values of a vector by inputting indices.
@@ -174,7 +154,7 @@ private:
    * @return Order vector giving indices of elements from the smallest to the largest
    *  (e.g. sorted_indices(v)[0] yields the index of smallest value in v).
    */
-  std::vector<int> sorted_indices (const std::vector<T>& vector_to_sort);
+  std::vector<int> sorted_indices (const std::vector<T>& vector_to_sort) const;
   
   // ======================
   //  Forbidden Operations
@@ -186,17 +166,6 @@ private:
 //  Inline declarations
 // ======================
 //
-template <typename T>
-inline const std::vector<T>& BiasedWheel<T>::cumulated_weights (void)
-{
-  return _cumulated_weights;
-}
-
-template <typename T>
-inline T BiasedWheel<T>::total_weight (void)
-{
-  return _total_weight;
-}
 
 
 

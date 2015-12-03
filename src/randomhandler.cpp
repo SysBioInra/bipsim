@@ -53,12 +53,15 @@ int RandomHandler::draw_index (const std::vector<int>& weights)
 {
   /** @pre There must be at least one item. */
   REQUIRE (weights.size() > 0); 
-  std::vector<double> cumulated_weights (weights.size());
+  std::vector<int> cumulated_weights (weights.size());
   std::partial_sum (weights.begin(), weights.end(), cumulated_weights.begin());
   /** @pre Total weight must be strictly positive. */
   REQUIRE (cumulated_weights.back() > 0);
 
-  int result = draw_index_cumulated (cumulated_weights);
+  BiasedWheel<int> biased_wheel (cumulated_weights);
+  boost::uniform_int<int> distribution (1, cumulated_weights.back());
+  int result = biased_wheel.find_index 
+    (distribution (RandomHandler::_generator));
 
   /** @post The weight associated to the drawn index must be positive. */
   ENSURE (weights[result] > 0);
@@ -75,64 +78,16 @@ int RandomHandler::draw_index (const std::vector<double>& weights)
   /** @pre Total weight must be strictly positive. */
   REQUIRE (cumulated_weights.back() > 0);
 
-  int result = draw_index_cumulated (cumulated_weights);
-
+  // we draw a number in the weight distribution
+  BiasedWheel<double> biased_wheel (cumulated_weights);  
+  boost::uniform_real<double> distribution (cumulated_weights.back()*1e-16, 
+					    cumulated_weights.back());
+  int result = biased_wheel.find_index
+    (distribution (RandomHandler::_generator));
+  
   /** @post The weight associated to the drawn index must be positive. */
   ENSURE (weights[result] > 0);
   ENSURE ((result < weights.size()) && (result >= 0));
-  return result;
-}
-
-int RandomHandler::draw_index_cumulated (const std::vector<int>& cumulated_weights)
-{
-  /** @pre There must be at least one item. */
-  REQUIRE (cumulated_weights.size() > 0); 
-
-  // we draw a number in the weight distribution
-  BiasedWheel<int> biased_wheel (cumulated_weights);
-  boost::uniform_int<int> distribution (1, biased_wheel.total_weight());
-  int result = biased_wheel.find_index 
-    (distribution (RandomHandler::_generator));
-
-  /** @post The weight associated to the drawn index must be positive. */
-  ENSURE (cumulated_weights[result] > 0);
-  ENSURE ((result < cumulated_weights.size()) && (result >= 0));
-  return result;
-}
-
-int RandomHandler::draw_index_cumulated (const std::vector<double>& cumulated_weights)
-{
-  /** @pre There must be at least one item. */
-  REQUIRE (cumulated_weights.size() > 0); 
-
-  // we draw a number in the weight distribution
-  BiasedWheel<double> biased_wheel (cumulated_weights);  
-  boost::uniform_real<double> distribution (biased_wheel.total_weight()*1e-16, biased_wheel.total_weight());
-  int result = biased_wheel.find_index
-    (distribution (RandomHandler::_generator));
-
-  /** @post The weight associated to the drawn index must be positive. */
-  ENSURE (cumulated_weights[result] > 0);
-  ENSURE ((result < cumulated_weights.size()) && (result >= 0));
-  return result;
-}
-
-std::vector<int> RandomHandler::draw_multiple_indices_cumulated (const std::vector<double>& cumulated_weights, int number_indices)
-{
-  /** @pre There must be at least one item. */
-  REQUIRE (cumulated_weights.size() > 0);
-
-  // we draw number_indices values in the weight distribution
-  BiasedWheel<double> biased_wheel (cumulated_weights);
-  boost::uniform_real<double> distribution (biased_wheel.total_weight()*1e-16, biased_wheel.total_weight());
-  std::vector<double> drawn_weights (number_indices, 0);
-  for (int i = 0; i < number_indices; ++i)
-    {
-      drawn_weights [i] = distribution (RandomHandler::_generator);
-    }
-
-  // we look for the corresponding indices
-  std::vector<int> result = biased_wheel.find_multiple_indices (drawn_weights);
   return result;
 }
 

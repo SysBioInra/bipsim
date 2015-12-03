@@ -18,7 +18,6 @@
 //  General Includes
 // ==================
 //
-#include <list>  // std::list
 #include <map>  // std::map
 
 // ==================
@@ -27,7 +26,7 @@
 //
 #include "forwarddeclarations.h"
 #include "chemical.h"
-#include "boundunit.h"
+#include "boundunitlist.h"
 
 
 /**
@@ -141,7 +140,8 @@ public:
    *   bound.
    * @return Total unbinding rate for chemicals bound to given family.
    */
-  double get_total_unbinding_rate_contribution (int binding_site_family) const;
+  double get_total_unbinding_rate_contribution
+    (int binding_site_family) const;
 
   /**
    * @brief Print class content.
@@ -167,17 +167,12 @@ public:
   // CLASSNAME& operator= (CLASSNAME& other_CLASSNAME);
 
  protected:
-  /**
-   * @brief A list of BoundUnit.
-   */
-  typedef std::list< BoundUnit > BoundUnitList;
-
   // ============
   //  Attributes
   // ============
   //
-  /** @brief Iterator to the focused unit. */
-  BoundUnitList::iterator _focused_unit;
+  /** @brief Pointer to the focused unit. */
+  BoundUnit* _focused_unit;
 
   // =================
   //  Protected Methods
@@ -191,11 +186,11 @@ public:
    * @param position Current position.
    * @param reading_frame Reading frame position.
    */
-  virtual void add_unit (const BindingSite&, int position, int reading_frame);
+  virtual void add_unit (const BindingSite& binding_site,
+			 int position, int reading_frame);
   
 
  private:
-
   // ============
   //  Attributes
   // ============
@@ -204,7 +199,7 @@ public:
    * @brief A map that classifies all BoundChemical depending on the family of BindingSite they
    * bound to.
    */
-  typedef std::map< int, BoundUnitList > UnitFamilyMap;
+  typedef std::map <int, BoundUnitList> UnitFamilyMap;
 
   /** @brief Binding sites to which chemicals bound and current position (sorted by family). */
   UnitFamilyMap _family_map;
@@ -221,6 +216,8 @@ public:
 //  Inline declarations
 // ======================
 //
+#include "boundunit.h"
+
 inline const BindingSite& BoundChemical::focused_unit_binding_site (void) const
 {
   return _focused_unit->binding_site();

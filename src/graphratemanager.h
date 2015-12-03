@@ -79,13 +79,6 @@ class GraphRateManager : public RateManager
   virtual void update_rates (void);
 
   /**
-   * @brief [Re]set the vector of reactions handled by the class.
-   * @param reactions Vector of reactions whose rates need to be stored and updated.   
-   * @param dependency_graph Global dependencies between reactions.
-   */
-  virtual void manage (const std::vector <Reaction*>& reactions, const DependencyGraph& dependency_graph);
-
-  /**
    * @brief Notify a change in concentration levels and update list of rates to recompute.
    * @param reactions_to_update Indices of the reactions that need to be updated. This function
    *  is intended to be called by a ReactionObserver.

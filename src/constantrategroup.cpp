@@ -143,8 +143,11 @@ void ConstantRateGroup::schedule_next_reactions (double current_time)
   // << current_time << "(rate is " << total_rate << ")" << std::endl;
 
   // compute reaction indices
-  _reaction_indices = RandomHandler::instance().draw_multiple_indices_cumulated 
-    (_rate_manager.cumulated_rates(), number_reactions);
+  _reaction_indices.clear();
+  for (int i = 0; i < number_reactions; ++i)
+    {
+      _reaction_indices.push_back (_rate_manager.random_index());
+    }
 
   _next_index = 0;
 }

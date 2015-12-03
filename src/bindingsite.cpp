@@ -34,8 +34,9 @@ BindingSite::BindingSite (int family_id, ChemicalSequence& location, int first,
   , _k_off (k_off)
   , _reading_frame (reading_frame)
 {
-  /** @pre Reading frame must be within site. */
-  REQUIRE ((reading_frame >= first) && (reading_frame <= last));
+  /** @pre If defined, reading frame must be within site. */
+  REQUIRE ((reading_frame == NO_READING_FRAME)
+	   || ((reading_frame >= first) && (reading_frame <= last)));
 }
 
 // Not needed for this class (use of default copy constructor) !

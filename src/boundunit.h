@@ -10,8 +10,8 @@
 
 // Multiple include protection
 //
-#ifndef BOUNDUNIT_H
-#define BOUNDUNIT_H
+#ifndef BOUND_UNIT_H
+#define BOUND_UNIT_H
 
 // ==================
 //  General Includes
@@ -24,7 +24,6 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "bindingsite.h"
 
 /**
  * @brief The BoundUnit class describes a bound unit.
@@ -170,4 +169,4 @@ inline void BoundUnit::move (int step_size)
 }
 
 
-#endif // BOUNDUNIT_H
+#endif // BOUND_UNIT_H

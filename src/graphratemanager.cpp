@@ -73,17 +73,6 @@ void GraphRateManager::update (const std::list<int>& reactions_to_update)
     }
 }
 
-void GraphRateManager::manage (const std::vector <Reaction*>& reactions, const DependencyGraph& dependency_graph)
-{
-  clear_observers();
-  // parent class handles both _reactions and _rates updates
-  RateManager::manage (reactions);
-  create_observers (dependency_graph);
-
-  std::fill (_reactions_to_update.begin(), _reactions_to_update.end(), false);
-  _reactions_to_update.resize (reactions.size(), false);
-}
-
 // ============================
 //  Public Methods - Accessors
 // ============================

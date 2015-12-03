@@ -30,12 +30,6 @@ template <typename T>
 BiasedWheel<T>::BiasedWheel (const std::vector<T>& cumulated_weights)
   : _cumulated_weights (cumulated_weights)
 {
-  /** @pre There must be at least one weight. */
-  REQUIRE (cumulated_weights.size() > 0);
-  /** @pre All weights must be greater or equal to 0. */
-  REQUIRE (check_weight_positivity (cumulated_weights));
-
-  _total_weight = _cumulated_weights.back();
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -51,8 +45,12 @@ BiasedWheel<T>::~BiasedWheel (void)
 // ===========================
 //
 template <typename T>
-int BiasedWheel<T>::find_index (T drawn_weight)
+int BiasedWheel<T>::find_index (T drawn_weight) const
 {
+  /** @pre There must be at least one weight. */
+  REQUIRE (_cumulated_weights.size() > 0);
+  /** @pre All weights must be greater or equal to 0. */
+  REQUIRE (check_weight_positivity (_cumulated_weights));
   /** 
    * @pre drawn_weight must be strictly (!) positive. Positive is not enough: if the weights are integer,
    *  the wheel would be strongly biased.
@@ -61,7 +59,7 @@ int BiasedWheel<T>::find_index (T drawn_weight)
   /** 
    * @pre drawn_weight must be smaller or equal to total weight.
    */
-  REQUIRE (drawn_weight <= _total_weight);
+  REQUIRE (drawn_weight <= _cumulated_weights.back());
 
   // The correct index verifies the following:
   //
@@ -113,9 +111,9 @@ int BiasedWheel<T>::find_index (T drawn_weight)
 }
   
 template <typename T>
-std::vector<int> BiasedWheel<T>::find_multiple_indices (const std::vector<T>& drawn_weights)
+std::vector<int> BiasedWheel<T>::find_multiple_indices (const std::vector<T>& drawn_weights) const
 {
-  /** @pre All drawn_weights must be in the (0, _total_weight] range. */
+  /** @pre All drawn_weights must be in the (0,_total_weight] range. */
   REQUIRE (check_drawn_weight_validity (drawn_weights));
 
   // the rules are the same as find_index, see above
@@ -191,7 +189,7 @@ std::vector<int> BiasedWheel<T>::find_multiple_indices (const std::vector<T>& dr
 //
 
 template<typename T>
-std::vector<int> BiasedWheel<T>::sorted_indices (const std::vector<T>& vector_to_sort)
+std::vector<int> BiasedWheel<T>::sorted_indices (const std::vector<T>& vector_to_sort) const
 {
   CompareValues compare_vector_to_sort_values (vector_to_sort);
 
@@ -207,7 +205,7 @@ std::vector<int> BiasedWheel<T>::sorted_indices (const std::vector<T>& vector_to
 }
 
 template <typename T>
-bool BiasedWheel<T>::check_weight_positivity (const std::vector<T>& v)
+bool BiasedWheel<T>::check_weight_positivity (const std::vector<T>& v) const
 {
   if (v [0] < 0) return false;
   for (int i = 1; i < v.size(); ++i)
@@ -218,15 +216,16 @@ bool BiasedWheel<T>::check_weight_positivity (const std::vector<T>& v)
 }
 
 template <typename T>
-bool BiasedWheel<T>::check_drawn_weight_validity (const std::vector<T>& v)
+bool BiasedWheel<T>::check_drawn_weight_validity (const std::vector<T>& v) const
 {
+  double total_weight = _cumulated_weights.back();
   for (typename std::vector<T>::const_iterator weight_it = v.begin();
        weight_it != v.end(); ++weight_it)
     {
-      if ((*weight_it <= 0) || (*weight_it > _total_weight))
+      if ((*weight_it <= 0) || (*weight_it > total_weight))
 	{
 	  std::cerr << "drawn weight = " << *weight_it
-		    << ", total weight = " << _total_weight << std::endl;
+		    << ", total weight = " << total_weight << std::endl;
 	  return false;
 	}
     }

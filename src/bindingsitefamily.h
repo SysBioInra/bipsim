@@ -26,7 +26,7 @@
 #include "forwarddeclarations.h"
 #include "bindingsite.h"
 #include "reactant.h"
-#include "subratevector.h"
+#include "updatedtotalratevector.h"
 
 /**
  * @brief Class handling a family of binding sites.
@@ -39,7 +39,6 @@
 class BindingSiteFamily : public Reactant, public SimulatorInput
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -133,7 +132,7 @@ private:
   /**
    * @brief Contribution of each binding site to the binding rate.
    */
-  SubRateVector _rate_contributions;
+  mutable UpdatedTotalRateVector _rate_contributions;
   
   /**
    * @brief Observers monitoring availability of all the sites.
@@ -163,5 +162,10 @@ inline double BindingSiteFamily::total_binding_rate_contribution (void) const
   return _rate_contributions.total_rate();
 }
 
+inline const BindingSite& BindingSiteFamily::get_random_available_site (void) const
+{
+  _rate_contributions.update_cumulates();
+  return *(_binding_sites [_rate_contributions.random_index()]);
+}
 
 #endif // BINDING_SITE_FAMILY_H

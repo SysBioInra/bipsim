@@ -49,7 +49,7 @@ public:
    *  BoundChemical that results when the processive chemical encounters
    *  a termination site (for example).
    */
-  ProcessiveChemical ( BoundChemical& stalled_form );
+  ProcessiveChemical (BoundChemical& stalled_form);
 
   // Not needed for this class (use of default copy constructor) !
   // /*

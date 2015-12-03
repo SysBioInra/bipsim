@@ -95,8 +95,7 @@ double NaiveSolver::compute_next_reaction (void)
     }
   
   // compute next reaction to perform
-  reactions()[RandomHandler::instance().draw_index_cumulated
-	      (_rate_manager->cumulated_rates())]->perform();
+  reactions() [_rate_manager->random_index()]->perform();
  
   // return updated time
   return time() +

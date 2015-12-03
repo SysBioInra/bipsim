@@ -79,19 +79,6 @@ int main (int argc, char *argv[])
       if (RandomHandler::instance().draw_index (double_test) != i)
 	FAILURE ("draw_index did not return only non-zero weighted index");
     }
-
-  // draw_multiple_indices should return n times the only non-zero weighted index
-  int n = 10;
-  for (int i = 0; i < vector_size; ++i)
-    {
-      double_test = double_zeros; double_test[i] = i+1.1;
-      std::vector <double> cumulated (double_test.size());
-      std::partial_sum (double_test.begin(), double_test.end(), cumulated.begin());
-      if (RandomHandler::instance().draw_multiple_indices_cumulated (cumulated,n) != std::vector<int> (n,i))
-	{
-	  FAILURE ("draw_multiple_indices did not return only non-zero weighted index");
-	}
-    }
   
   // draw_uniform with min = max = a should return a
   int a = 7;

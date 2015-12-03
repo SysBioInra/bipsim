@@ -24,6 +24,7 @@
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "ratetree.h"
 
 /**
  * @brief Abstract class for handling updates of reaction rates.
@@ -69,22 +70,15 @@ class RateManager
   virtual void update_rates (void) = 0;
 
   /**
-   * @brief [Re]set the vector of reactions handled by the class.
-   * @param reactions Vector of reactions whose rates need to be stored and
-   *  updated.   
+   * @brief Draw a random index according to current rates.
+   * @return Index obtained from multinomial drawing.
    */
-  virtual void manage (const std::vector <Reaction*>& reactions);
+  int random_index (void);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  /**
-   * @brief Accessor to the cumulated rate vector.
-   * @return Vector containing cumulated reaction rates (as of last update).
-   */
-  const std::vector<double>& cumulated_rates (void) const;
-
   /**
    * @brief Accessor to total reaction rate.
    * @brief Total reaction rate (as of last update).
@@ -109,15 +103,14 @@ class RateManager
 
 
  protected:
-  
   // ===================
   //  Protected Methods
   // ===================
   //
   /**
-   * @brief Recompute rates for all reactions and refill whole _rates vector..
+   * @brief Recompute rates for all reactions and refill whole _rates vector.
    */
-  void compute_all_rates (void);  
+  void compute_all_rates (void);
 
   /**
    * @brief Update rates for reaction at a specific index.
@@ -126,18 +119,17 @@ class RateManager
   void update_reaction (int reaction_index);
 
   /**
-   * @brief Compute cumulated rates and total rate from the _rates vector.
+   * @brief Cumulate reaction rates.
    */
   void cumulate_rates (void);
 
   /**
    * @brief Accessor to reaction vector.
-   * @return Reactions handled by the rate manager.
    */
   const std::vector <Reaction*>& reactions (void) const;
+  
 
  private:
-
   // ============
   //  Attributes
   // ============
@@ -147,20 +139,8 @@ class RateManager
    */
   std::vector <Reaction*> _reactions;
 
-  /**
-   * @brief Vector of rates as of last update.
-   */
-  std::vector <double> _rates;
-
-  /**
-   * @brief Vector of cumulated rates as of last update.
-   */
-  std::vector <double> _cumulated_rates;
-
-  /**
-   * @brief Total reaction rate.
-   */
-  double _total_rate;
+  /** @brief Tree storing reaction rates. */
+  RateTree _rates;
 
   // ===================
   //  Protected Methods
@@ -186,6 +166,11 @@ class RateManager
 //  Inline declarations
 // ======================
 //
+inline int RateManager::random_index (void)
+{
+  return _rates.random_index();
+}
+
 inline void RateManager::compute_all_rates (void)
 {
   for (int i = 0; i < _reactions.size(); ++i) { update_reaction (i); }
@@ -193,30 +178,24 @@ inline void RateManager::compute_all_rates (void)
 
 inline void RateManager::cumulate_rates (void)
 {
-  std::partial_sum (_rates.begin(), _rates.end(), _cumulated_rates.begin());
-  _total_rate = _cumulated_rates.back();
+  _rates.update_cumulates();
 }
 
 inline void RateManager::update_reaction (int reaction_index)
 {
   Reaction* reaction_to_update = _reactions [reaction_index];
   reaction_to_update->update_rate();
-  _rates [reaction_index] = reaction_to_update->rate();
-}
-
-inline const std::vector <double>& RateManager::cumulated_rates (void) const
-{
-  return _cumulated_rates;
-}
-
-inline const std::vector <Reaction*>& RateManager::reactions (void) const
-{
-  return _reactions;
+  _rates.set_rate (reaction_index, reaction_to_update->rate());
 }
 
 inline double RateManager::total_rate (void) const
 {
-  return _total_rate;
+  return _rates.total_rate();
+}
+
+inline const std::vector<Reaction*>& RateManager::reactions (void) const
+{
+  return _reactions;
 }
 
 

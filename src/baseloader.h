@@ -18,7 +18,6 @@
 // ==================
 //
 #include <map> // std::map
-#include <list> // std::list
 #include <vector> // std::vector
 #include <set> // std::set
 
@@ -29,8 +28,9 @@
 #include "forwarddeclarations.h"
 #include "boundchemical.h"
 #include "decodingtable.h"
-#include "subratevector.h"
-#include "cobserverclient.h"
+#include "ratevalidity.h"
+#include "updatedtotalratevector.h"
+#include "boundunitlist.h"
 
 /**
  * @brief Chemical that loads a new base during sequence synthesis.
@@ -40,7 +40,7 @@
  * onto the elongating strand.
  * This class inherits class BoundChemical.
  */
-class BaseLoader : public BoundChemical, public CObserverClient
+class BaseLoader : public BoundChemical
 {
 public:
 
@@ -102,12 +102,6 @@ public:
    */
   void focus_random_unit_from_loading_rates (void);
 
-  /**
-   * @brief Update loading rate corresponding to a specific index.
-   * @param index Integer associated with a specific base-codon pairing.
-   */
-  void update (int index);
-
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -168,12 +162,15 @@ private:
   const DecodingTable& _decoding_table;
 
   /**
-   * @brief Iterators to chemicals indexed by template they are reading.
+   * @brief Pointers to chemicals indexed by template they are reading.
    */
-  std::vector< std::list<BoundUnitList::iterator> > _unit_map;
+  std::vector <BoundUnitList> _unit_map;
 
   /** @brief Loading rates associated with each template. */
-  SubRateVector _loading_rates;
+  UpdatedTotalRateVector _loading_rates;
+
+  /** @brief */
+  RateValidity _rate_validity;
 
   /** @brief Index of template that the focused unit is reading. */
   int _focused_template_index;
@@ -186,6 +183,11 @@ private:
    * @brief Update _focused_template_index according to current _focused_unit.
    */
   void update_focused_template (void);
+
+  /**
+   *
+   */
+  void update_rates (void);
 
   // ===================
   //  Private Constants
@@ -201,6 +203,7 @@ private:
 //
 inline double BaseLoader::loading_rate (void)
 { 
+  update_rates();
   return _loading_rates.total_rate();
 }
 

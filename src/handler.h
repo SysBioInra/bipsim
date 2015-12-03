@@ -28,7 +28,7 @@
 #include "macros.h"
 
 /**
- * @brief Template class for storing elements.
+ * @brief Generic class for storing elements.
  * @tparam T Type of objects to store (must derive from SimulatorInput).
  *
  * Handler stores elements created on the heap with their

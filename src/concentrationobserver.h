@@ -50,7 +50,7 @@ class ConcentrationObserver
    * @param identifier Identifier used by the parent, passed along as message 
    *  when an update happens.
    */
-  ConcentrationObserver (CObserverClient& parent, Reactant* reactant, 
+  ConcentrationObserver (RateValidity& parent, Reactant* reactant, 
 			 int identifier);
 
   // Not needed for this class (use of default copy constructor) !
@@ -111,7 +111,7 @@ private:
   // ============
   //
   /** @brief Parent to warn when concentration changes. */
-  CObserverClient& _parent;
+  RateValidity& _parent;
   
   /** @brief Reactant to observe. */
   Reactant* _reactant;
@@ -136,7 +136,7 @@ private:
 // ======================
 //
 #include "macros.h"
-#include "cobserverclient.h"
+#include "ratevalidity.h"
 
 inline void ConcentrationObserver::update (void)
 {

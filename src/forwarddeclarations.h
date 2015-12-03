@@ -39,6 +39,7 @@ class Release;
 class BaseLoader;
 class BoundChemical;
 class BoundUnit;
+class BoundUnitList;
 class Chemical;
 class ProcessiveChemical;
 
@@ -99,10 +100,22 @@ class RateManager;
 class NaiveRateManager;
 class DependencyRateManager;
 class GraphRateManager;
+
 class ConcentrationObserver;
-class CObserverClient;
 class ReactionObserver;
-class SubRateVector;
+class RateValidity;
+
+// containers
+class RateContainer;
+class RateVector;
+class UpdatedTotalRateVector;
+class RateTree;
+class RateNode;
+class SumNode;
+class DummyNode;
+class ReactionNode;
+template <class T> class VectorQueue;
+template <class T> class VectorStack;
 
 // exceptions
 class DependencyException;

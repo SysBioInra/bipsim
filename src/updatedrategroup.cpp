@@ -49,9 +49,7 @@ UpdatedRateGroup::~UpdatedRateGroup (void)
 bool UpdatedRateGroup::perform_next_reaction (void)
 {
   // perform next scheduled reaction
-  int random_index = RandomHandler::instance().draw_index_cumulated
-    (_rate_manager.cumulated_rates());   // draw reaction index randomly
-  perform_reaction (random_index);
+  perform_reaction (_rate_manager.random_index());
 
   // schedule next reaction
   reschedule_next_reaction (_next_reaction_time);

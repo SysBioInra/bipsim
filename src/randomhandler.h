@@ -68,28 +68,6 @@ class RandomHandler
   int draw_index (const std::vector<double>& weights);
 
   /**
-   * @brief Draw an index from a weight vector of integers.
-   * @return Index within the array drawn according to weights within the array.
-   * @param cumulated_weights Vector containing cumulated weights.
-   */ 
-  int draw_index_cumulated (const std::vector<int>& cumulated_weights);
-
-  /**
-   * @brief Draw an index from a weight vector of doubles.
-   * @return Index within the array drawn according to weights within the array.
-   * @param cumulated_weights Array containing cumulated_weights.
-   */ 
-  int draw_index_cumulated (const std::vector<double>& cumulated_weights);
-
-  /**
-   * @brief Draw several indices from a weight vector of doubles.
-   * @return Vector of indices within the array drawn according to weights within the array.
-   * @param cumulated_weights Array containing cumulated_weights.
-   * @param number_indices Number of indices wanted.
-   */ 
-  std::vector<int> draw_multiple_indices_cumulated (const std::vector<double>& cumulated_weights, int number_indices);
-
-  /**
    * @brief Draw an integer uniformly from an interval [a,b].
    * @return Random integer in interval [a,b].
    * @param a First integer of the interval.

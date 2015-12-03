@@ -145,7 +145,7 @@ void ChemicalSequence::add_termination_site (const Site& termination_site)
   // termination site sends a termination signal
   int first = termination_site.first();
   int last = termination_site.last();
-  for ( int i = first; i <= last; i++ )
+  for (int i = first; i <= last; i++)
     {
       _termination_sites [i].push_back (termination_site.family());
     }

@@ -29,17 +29,16 @@
 //
 BaseLoader::BaseLoader (const DecodingTable& decoding_table)
   : _decoding_table (decoding_table)
-  , _loading_rates (decoding_table.size())
+  , _rate_validity (decoding_table.size())
   , _focused_template_index (BaseLoader::UNKNOWN_TEMPLATE)
+  , _loading_rates (decoding_table.size())
 {
   // resize unit_map and leave it empty
   _unit_map.resize (decoding_table.size());
 
   // create an observer for every loadable base
   for (int i = 0; i < decoding_table.size(); ++i)
-    {
-      add_observer (_decoding_table.decode(i), i);
-    }
+    { _rate_validity.add_observer (_decoding_table.decode(i), i); }
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -55,25 +54,12 @@ BaseLoader::~BaseLoader (void)
 //
 void BaseLoader::remove_focused_unit (void)
 {
-  if (_focused_template_index != BaseLoader::UNKNOWN_TEMPLATE) // if unit was reading an identifed template
+  // if unit was reading an identifed template
+  if (_focused_template_index != BaseLoader::UNKNOWN_TEMPLATE) 
     {
       // remove the unit from the map
-      // find the unit to remove in the map
-      std::list<BoundUnitList::iterator>::iterator candidate =_unit_map [_focused_template_index].begin();
-      bool found = false;
-      while (found == false)
-	{
-	  if (*candidate == _focused_unit)
-	    {
-	      found = true;
-	      _unit_map [_focused_template_index].erase (candidate);
-	      update (_focused_template_index);
-	    }
-	  else
-	    {
-	      candidate++;
-	    }
-	}
+      _unit_map [_focused_template_index].erase (_focused_unit);
+      _rate_validity.update (_focused_template_index);
     }
   // else there is nothing to do, nothing was written into the table at creation
 
@@ -99,38 +85,34 @@ void BaseLoader::focus_random_unit (int binding_site_family)
 void BaseLoader::focus_random_unit_from_loading_rates (void)
 {
   // draw a random chemical to load depending on loading rates
-  _focused_template_index =
-    RandomHandler::instance().draw_index (_loading_rates.subrates());
+  update_rates();
+  _loading_rates.update_cumulates();
+  _focused_template_index = _loading_rates.random_index();
 
   // select a random unit that loads this chemical
-  std::list<BoundUnitList::iterator>& unit_list = _unit_map [_focused_template_index];
-  int index_drawn = RandomHandler::instance().draw_uniform (0, unit_list.size()-1);
-  int current_index = 0;
-  // loop through units for the exact index
-  std::list<BoundUnitList::iterator>::iterator unit = unit_list.begin();
-  for (int index = current_index; index < index_drawn; index++)
-    { 
-      unit++; 
-    }
-
-  // focus unit
-  _focused_unit = *unit;
+  BoundUnitList& unit_list = _unit_map [_focused_template_index];
+  _focused_unit = unit_list 
+    [RandomHandler::instance().draw_uniform (0, unit_list.size()-1)];
 }
 
-void BaseLoader::update (int index)
+void BaseLoader::update_rates (void)
 {
   /**
-   * Loading rate is generally defined by k_on_i x [A_i] x [B_i], where [A_i] is the
-   * concentration of BaseLoader reading template i and [B_i] the concentration of
-   * base i. k_on_i may vary from a base to another. The latter information is stored
-   * within the decoding table. The total rate is given by
+   * Loading rate is generally defined by k_on_i x [A_i] x [B_i], where [A_i] is
+   * the concentration of BaseLoader reading template i and [B_i] the
+   * concentration of base i. k_on_i may vary from a base to another. The latter
+   * information is stored within the decoding table. The total rate is given by
    *   r_total = sum ( k_on_i x [A_i] x [B_i] )
    */
-  
-  _loading_rates.update (index,
-			 _decoding_table.loading_rate (index) // k_on_i
-			 * _unit_map [index].size() // [A_i]
-			 * _decoding_table.decode(index).number()); // [B_i]
+  while (_rate_validity.empty() == false)
+    {
+      int index = _rate_validity.front();
+      _loading_rates.set_rate (_rate_validity.front(),
+			       _decoding_table.loading_rate (index) // k_on_i
+			       * _unit_map [index].size() // [A_i]
+			       * _decoding_table.decode(index).number()); // [B_i]
+      _rate_validity.pop();
+    }
 }
 
 // ============================
@@ -170,11 +152,11 @@ void BaseLoader::add_unit (const BindingSite& binding_site, int position,
 
   // decode the template
   _focused_template_index = _decoding_table.template_index (focused_template);
-  if (_focused_template_index != DecodingTable::UNKNOWN_TEMPLATE) // valid template
+  if (_focused_template_index != DecodingTable::UNKNOWN_TEMPLATE) 
     {
       // update unit map
-      _unit_map [_focused_template_index].push_back (_focused_unit);
-      update (_focused_template_index);
+      _unit_map [_focused_template_index].push_front (_focused_unit);
+      _rate_validity.update (_focused_template_index);
     }
   else // unvalid template
     {

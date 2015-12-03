@@ -26,9 +26,7 @@
 //
 RateManager::RateManager (const std::vector <Reaction*>& reactions)
   : _reactions (reactions)
-  , _rates (reactions.size(), 0)
-  , _cumulated_rates (reactions.size(), 0)
-  , _total_rate (0)
+  , _rates (reactions.size())
 {
   compute_all_rates();
   cumulate_rates();
@@ -45,13 +43,6 @@ RateManager::~RateManager (void)
 //  Public Methods - Commands
 // ===========================
 //
-void RateManager::manage (const std::vector <Reaction*>& reactions)
-{
-  _reactions = reactions;
-  _rates.resize (reactions.size(),0);
-
-  compute_all_rates();
-}
 
 
 // ============================

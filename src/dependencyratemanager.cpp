@@ -31,7 +31,7 @@
 //
 DependencyRateManager::DependencyRateManager (const std::vector <Reaction*>& reactions)
   : RateManager (reactions)
-  , _reactions_to_update (reactions.size(), false)
+  , _rate_validity (reactions.size())
 {
   create_dependencies();
 }
@@ -49,31 +49,14 @@ DependencyRateManager::~DependencyRateManager (void)
 //
 void DependencyRateManager::update_rates (void)
 {
-  int reaction_index = 0;
-  for (std::vector <bool>::iterator reaction_it = _reactions_to_update.begin();
-       reaction_it != _reactions_to_update.end();
-       ++reaction_index, ++reaction_it)
+  while (!_rate_validity.empty())
     {
-      if (*reaction_it == true)
-  	{ 
-  	  update_reaction (reaction_index);
-  	  *reaction_it = false;
-  	}
+      update_reaction (_rate_validity.front());
+      _rate_validity.pop();
     }
   cumulate_rates();
 }
 
-
-void DependencyRateManager::manage (const std::vector <Reaction*>& reactions)
-{
-  clear_observers();
-  // parent class handles both _reactions and _rates updates
-  RateManager::manage (reactions);
-  create_dependencies();
-
-  std::fill (_reactions_to_update.begin(), _reactions_to_update.end(), false);
-  _reactions_to_update.resize (reactions.size(), false);
-}
 
 // ============================
 //  Public Methods - Accessors
@@ -108,7 +91,7 @@ void DependencyRateManager::create_dependencies (void)
       for (std::vector <Reactant*>::const_iterator reactant_it = reactants.begin();
 	   reactant_it != reactants.end(); ++reactant_it)
 	{
-	  add_observer (**reactant_it, i);
+	  _rate_validity.add_observer (**reactant_it, i);
 	}
     }
 }

@@ -53,7 +53,7 @@ void BindingSiteFamily::add (const BindingSite* binding_site)
   _binding_sites.push_back (binding_site);
 
   // extend contribution vector
-  _rate_contributions.resize (_rate_contributions.size() + 1, 0);
+  _rate_contributions.extend (1);
 
   // create binding site observer
   int site_index = _rate_contributions.size()-1;
@@ -63,7 +63,7 @@ void BindingSiteFamily::add (const BindingSite* binding_site)
 
 void BindingSiteFamily::update (int site_index, int number_available_sites)
 {  
-  _rate_contributions.update
+  _rate_contributions.set_rate
     (site_index,
      _binding_sites [site_index]->k_on() * number_available_sites);
       
@@ -76,25 +76,13 @@ void BindingSiteFamily::update (int site_index, int number_available_sites)
 //  Public Methods - Accessors
 // ============================
 //
-const BindingSite& BindingSiteFamily::get_random_available_site (void) const
-{
-  /**
-   * We draw a site according to the rate contributions, which is
-   *    k_on * site_availability.
-   */
-  int index_drawn =
-    RandomHandler::instance().draw_index (_rate_contributions.subrates());
-
-  return *(_binding_sites [index_drawn]);
-}
-
 bool BindingSiteFamily::is_site_available (void) const
 {
   // we loop through sites and return as soon as we find that is available
   int number_sites = _binding_sites.size();
   for (int i = 0; i < number_sites; ++i)
    {
-     if (_rate_contributions.subrates() [i] > 0) return true;
+     if (_rate_contributions [i] > 0) return true;
    }
 
   // if we arrive here, it means that all sites are occupied

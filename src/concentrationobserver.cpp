@@ -20,13 +20,12 @@
 //
 #include "concentrationobserver.h"
 #include "reactant.h"
-#include "cobserverclient.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-ConcentrationObserver::ConcentrationObserver (CObserverClient& parent,
+ConcentrationObserver::ConcentrationObserver (RateValidity& parent,
 					      Reactant* reactant,
 					      int identifier)
   : _parent (parent)

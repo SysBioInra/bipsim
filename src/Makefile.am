@@ -42,7 +42,7 @@ libsrc_a_SOURCES += \
 libsrc_a_SOURCES += \
 	baseloader.cpp baseloader.h \
 	boundchemical.cpp boundchemical.h \
-	boundunit.h \
+	boundunit.h boundunitlist.h \
 	chemical.cpp chemical.h \
 	processivechemical.cpp processivechemical.h 
 
@@ -111,9 +111,15 @@ libsrc_a_SOURCES += \
 	dependencyratemanager.cpp dependencyratemanager.h \
 	graphratemanager.cpp graphratemanager.h \
 	concentrationobserver.cpp concentrationobserver.h \
-	cobserverclient.h \
 	reactionobserver.cpp reactionobserver.h \
-	subratevector.h
+	ratevalidity.h
+
+# containers
+libsrc_a_SOURCES += \
+	ratecontainer.h ratevector.h updatedtotalratevector.h \
+	ratetree.cpp ratetree.h \
+	ratenode.h sumnode.h dummynode.h reactionnode.h \
+	vectorqueue.h vectorstack.h
 
 # exceptions
 libsrc_a_SOURCES += \
