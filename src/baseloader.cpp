@@ -155,7 +155,7 @@ void BaseLoader::add_unit (const BindingSite& binding_site, int position,
   if (_focused_template_index != DecodingTable::UNKNOWN_TEMPLATE) 
     {
       // update unit map
-      _unit_map [_focused_template_index].push_front (_focused_unit);
+      _unit_map [_focused_template_index].insert (_focused_unit);
       _rate_validity.update (_focused_template_index);
     }
   else // unvalid template

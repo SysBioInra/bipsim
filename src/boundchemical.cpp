@@ -203,8 +203,7 @@ void BoundChemical::print (std::ostream& output) const
 void BoundChemical::add_unit (const BindingSite& binding_site, int position, int reading_frame)
 {
   add (1);
-  _family_map [binding_site.family()].push_front
-    (new BoundUnit (binding_site, position, reading_frame));
-  _focused_unit = _family_map [binding_site.family()][0];
+  _focused_unit = new BoundUnit (binding_site, position, reading_frame);
+  _family_map [binding_site.family()].insert (_focused_unit);
 }
 

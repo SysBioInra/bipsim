@@ -17,7 +17,7 @@
 //  General Includes
 // ==================
 //
-#include <list> // std::list
+#include <vector> // std::vector
 
 // ======================
 //  Forward declarations
@@ -33,7 +33,9 @@
  * BoundUnitList stores pointers to BoundUnit. It enables simple operations
  * like adding, optimized accessing and erasing of elements. What is more,
  * compared to STL lists (as of C++ 98), it yields constant time access to 
- * size (linear in C++ 98).
+ * size (linear in C++ 98). For convenience, a [] operator is provided, but
+ * there is NO WARRANTY on the order of elements in the list, the user MUST
+ * assume that it is random.
  */
 class BoundUnitList
 {
@@ -45,10 +47,7 @@ class BoundUnitList
   /**
    * @brief Default constructor.
    */
-  BoundUnitList (void)
-    : _size (0)
-    , _current_position (0)
-    { _current_element = _list.begin(); }
+  BoundUnitList (void) { _current_element = _v.begin(); }
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -68,28 +67,13 @@ class BoundUnitList
   // ===========================
   //
   /**
-   * @brief Add element at beginning of list.
+   * @brief Add element to list (in unknown position).
    * @param unit Pointer to add to list.
    */
-  void push_front (BoundUnit* unit)
+  void insert (BoundUnit* unit)
   {
-    ++_size;
-    _list.push_front (unit);
-    _current_position = 0;
-    _current_element = _list.begin();
-  }
-
-  /**
-   * @brief Add element at end of list.
-   * @param unit Pointer to add to list.
-   */
-  void push_back (BoundUnit* unit)
-  {
-    ++_size;
-    _list.push_back (unit);
-    _current_position = _size-1;
-    _current_element = _list.end();
-    --_current_element;
+    _v.push_back (unit);
+    _current_element = _v.end()-1;
   }
 
   /**
@@ -101,24 +85,23 @@ class BoundUnitList
    */
   void erase (const BoundUnit* unit)
   {
+    /** @pre List must not be empty. */
+    REQUIRE (_v.size() > 0);
+
     // often the user will want to erase the last element accessed
-    if (unit == *_current_element) { _list.erase (_current_element); }
-    else
+    if (unit == *_current_element) { _erase (_current_element); return; }
+
+    // else we just parse the vector until the right element is found.
+    std::vector <BoundUnit*>::iterator unit_it = _v.begin();
+    while (unit_it != _v.end())
       {
-	// else we just parse the list until the right element is found.
-	std::list <BoundUnit*>::iterator unit_it = _list.begin();
-	while ((unit_it != _list.end()) && (unit != *unit_it)) { ++unit_it; }
-	if (unit_it != _list.end()) { _list.erase (unit_it); }
-	else
-	  {
-	    std::cerr << "WARNING: trying to erase non existent element "
-		      << "from a BoundUnitList." << std::endl;
-	    return;
-	  }
+	if (unit == *unit_it) { _erase (unit_it); return; }
+	++unit_it;
       }
-    --_size;
-    _current_position = 0;
-    _current_element = _list.begin();
+
+    // element was not found...
+    std::cerr << "WARNING: trying to erase non existent element "
+	      << "from a BoundUnitList." << std::endl;
   }
   
   // ============================
@@ -129,27 +112,25 @@ class BoundUnitList
    * @brief Accessor to list size.
    * @return Number of elements stored in list.
    */
-  int size (void) const { return _size; }
+  int size (void) const { return _v.size(); }
 
   /**
    * @brief Accessor to element of list.
    * @param index Index of element to access.
    * @return Pointer to element at position corresponding to index.
+   * 
+   * Note that position CANNOT be directly deduced from insertion order. This
+   * function is provided for convenience. It was prefered to a random_item()
+   * method to avoid drawing a random number within the class. Basically, it
+   * only make sense to use this operator with a random number, but letting
+   * the caller draw the random number allows for optimizations on the caller's
+   * side.
    */
   BoundUnit* operator[] (int index)
   {
     /** @pre index must be consistent with list size. */
-    REQUIRE ((index >= 0) && (index < _size));
-    if (index < _current_position) 
-      { 
-	_current_position = 0;
-	_current_element = _list.begin();
-      }
-    while (_current_position < index)
-      { 
-	++_current_position;
-	++_current_element;
-      }
+    REQUIRE ((index >= 0) && (index < _v.size()));
+    _current_element = _v.begin()+index;
     return *_current_element;
   }
 
@@ -157,22 +138,13 @@ class BoundUnitList
    * @brief Accessor to element of list (const version).
    * @param index Index of element to access.
    * @return Const pointer to element at position corresponding to index.
+   * @sa operator[]
    */
   const BoundUnit* operator[] (int index) const
   {
     /** @pre index must be consistent with list size. */
-    REQUIRE ((index >= 0) && (index < _size));
-    if (index < _current_position) 
-      { 
-	_current_position = 0;
-	_current_element = 
-	  const_cast <std::list <BoundUnit*>&> (_list).begin();
-      }
-    while (_current_position < index)
-      { 
-	++_current_position;
-	++_current_element;
-      }
+    _current_element = 
+      const_cast <std::vector <BoundUnit*>&> (_v).begin()+index;
     return *_current_element;
   }
 
@@ -185,8 +157,8 @@ class BoundUnitList
   {
     // we loop through the list and sum the k_off
     double r_total = 0;
-    for (std::list <BoundUnit*>::const_iterator unit_it = _list.begin();
-	 unit_it != _list.end(); ++unit_it)
+    for (std::vector <BoundUnit*>::const_iterator unit_it = _v.begin();
+	 unit_it != _v.end(); ++unit_it)
       { r_total += (*unit_it)->binding_site().k_off(); }
     return r_total;
   }
@@ -225,14 +197,14 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief List holding the stored pointers. */
-  std::list <BoundUnit*> _list;
+  /** @brief Vector holding the stored pointers. */
+  std::vector <BoundUnit*> _v;
 
   /** @brief Iterator to last element accessed. */
-  mutable std::list <BoundUnit*>::iterator _current_element;
+  mutable std::vector <BoundUnit*>::iterator _current_element;
 
-  /** @brief Iterator to last position accessed. */
-  mutable int _current_position;
+  /** @brief Iterator to last valid element. */
+  mutable std::vector <BoundUnit*>::iterator _last_element;
 
   /** @brief size of the list. */
   int _size;
@@ -241,6 +213,12 @@ private:
   //  Private Methods
   // =================
   //
+  void _erase (std::vector <BoundUnit*>::iterator _element)
+  {
+    *_element = _v.back();
+    _v.pop_back();
+    _current_element = _v.begin();
+  }
 
   // ======================
   //  Forbidden Operations
