@@ -12,7 +12,6 @@
 //
 #include <vector> // std::vector
 #include <list> // std::list
-#include <set> // std::set
 #include <iostream> // std::cerr
 #include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
 #include <cmath> // fabs exp log
@@ -42,16 +41,9 @@ double cumulative_poisson_13_5 (int k);
 // Cumulative distribution of Poisson(50000)
 double cumulative_poisson_2000 (int k);
 
-// Compute supremum distance from experimental cumulative to theoretical
-// cumulative distribution for discrete distributions.
-double distance_to_discrete_cumulative (ExperimentalCumulative<int>& exp_cum, double (*theor_cum)(int));
-
 // Cumulative distribution of Exp(1)
 double cumulative_exp_1 (double x);
 
-// Compute supremum distance from experimental cumulative to theoretical
-// cumulative distribution for continuous distributions.
-double distance_to_continuous_cumulative (ExperimentalCumulative<double>& exp_cum, double (*theor_cum)(double));
 
 int main (int argc, char *argv[])
 { 
@@ -169,55 +161,8 @@ double cumulative_uniform_1_10 (int k)
   return k*0.1;
 }
 
-double distance_to_discrete_cumulative (ExperimentalCumulative<int>& exp_cum, double (*theor_cum)(int))
-{
-  // it suffices to compute the distance at each jump
-  double max_distance = 0;
-  double d = 0;
-
-  std::set<int> jump_values = exp_cum.jump_values();
-  for (std::set<int>::iterator k = jump_values.begin(); k != jump_values.end(); ++k)
-    {
-      // distance at jump
-      d = fabs (exp_cum (*k) - (*theor_cum)(*k));
-      if ( d > max_distance ) max_distance = d;
-      // std::cout << exp_cum(*k) << " " << (*theor_cum)(*k) << " " << d << std::endl;
-    }
-
-  return max_distance;
-}
-
 double cumulative_exp_1 (double x)
 {
   return 1 - exp (-x);
 }
 
-double distance_to_continuous_cumulative (ExperimentalCumulative<double>& exp_cum, double (*theor_cum)(double))
-{
-  double max_distance = 0;
-  double d = 0;
-
-  // it suffices to compute the distance before and after each jump
-  double prev = 0;  // the value of the experimental distribution before the first jump is 0
-  std::set<double> jump_values = exp_cum.jump_values();
-  for (std::set<double>::iterator x = jump_values.begin(); x != jump_values.end(); ++x)
-    {
-      double theoretical = (*theor_cum) (*x);
-
-      // distance before jump
-      d = fabs (prev - theoretical);
-      if ( d > max_distance ) max_distance = d;
-      // std::cout << prev << " " << theoretical << " " << d << " ";
-
-      // distance after jump
-      double after = exp_cum (*x);
-      d = fabs (after - theoretical);
-      if ( d > max_distance ) max_distance = d;
-      // std::cout << after << " " << theoretical << " " << d << std::endl;
-
-      // prepare value before jump for next iteration
-      prev = after;
-    }
-
-  return max_distance;
-}

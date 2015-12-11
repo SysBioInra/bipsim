@@ -24,7 +24,9 @@
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "hybridratecontainer.h"
 #include "ratetree.h"
+#include "ratevector.h"
 
 /**
  * @brief Abstract class for handling updates of reaction rates.
@@ -139,8 +141,8 @@ class RateManager
    */
   std::vector <Reaction*> _reactions;
 
-  /** @brief Tree storing reaction rates. */
-  RateTree _rates;
+  /** @brief Container storing reaction rates. */
+  HybridRateContainer _rates;
 
   // ===================
   //  Protected Methods

@@ -15,15 +15,18 @@
 #include <vector> // std::vector
 #include <cmath> // fabs
 
-#include "../src/ratetree.h"
-
 // ==================
 //  Project Includes
 // ==================
 //
+#include "../src/ratetree.h"
+#include "experimentalcumulative.h"
+
 #define FAILURE(msg) {std::cerr << "TEST FAILED: " << msg << std::endl; return EXIT_FAILURE;}
 
 bool test (RateTree&, double expected);
+
+double cumulative (int index);
 
 int main (int argc, char *argv[])
 {
@@ -55,6 +58,28 @@ int main (int argc, char *argv[])
   if (tree.find(6) != 2) { FAILURE ("wrong lookup."); }
   if (tree.find(9) != 4) { FAILURE ("wrong lookup."); }
   if (tree.find(14) != 4) { FAILURE ("wrong lookup."); } 
+
+  // test if drawing statistics are correct
+  ExperimentalCumulative <int> ecf;
+  for (int i = 0; i < 10000; ++i)
+    ecf.add_pick (tree.random_index());
+  if (ecf(3) != ecf(2)) { FAILURE ("Incorrect drawing statistics."); }
+  if (distance_to_discrete_cumulative (ecf, cumulative) > 0.01)
+    { FAILURE ("Incorrect drawing statistics."); }
+
+}
+
+double cumulative (int index)
+{
+  // cum: r0 : 2, r1 : 5, r2 : 8, r4 : 14
+  switch (index)
+    {
+    case 0: return 2.0/14;
+    case 1: return 5.0/14;
+    case 2: return 8.0/14;
+    case 3: return 8.0/14;
+    case 4: return 1;
+    }
 }
 
 bool test (RateTree& tree, double expected)

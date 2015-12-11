@@ -114,11 +114,16 @@ libsrc_a_SOURCES += \
 	reactionobserver.cpp reactionobserver.h \
 	ratevalidity.h
 
-# containers
+# rate containers
 libsrc_a_SOURCES += \
 	ratecontainer.h ratevector.h updatedtotalratevector.h \
 	ratetree.cpp ratetree.h \
 	ratenode.h sumnode.h dummynode.h reactionnode.h \
+	hybridratecontainer.cpp hybridratecontainer.h  \
+	rategroup.h ratetoken.h
+
+# generic containers
+libsrc_a_SOURCES += \
 	vectorqueue.h vectorstack.h
 
 # exceptions

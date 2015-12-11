@@ -1,0 +1,28 @@
+/**
+ * @file classname_test.cpp
+ * @brief Unit testing for ClassName class.
+ * 
+ * @authors Marc Dinh, Stephan Fischer
+ */
+
+
+// ==================
+//  General Includes
+// ==================
+//
+#include <iostream> // std::cerr
+#include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
+
+#include "../src/classname.h"
+
+// ==================
+//  Project Includes
+// ==================
+//
+#define FAILURE(msg) {std::cerr << "TEST FAILED: " << msg << std::endl; return EXIT_FAILURE;}
+
+int main (int argc, char *argv[])
+{ 
+  return EXIT_SUCCESS;
+}
+

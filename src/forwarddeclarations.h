@@ -105,15 +105,22 @@ class ConcentrationObserver;
 class ReactionObserver;
 class RateValidity;
 
-// containers
+// rate containers
 class RateContainer;
 class RateVector;
 class UpdatedTotalRateVector;
+
 class RateTree;
 class RateNode;
 class SumNode;
 class DummyNode;
 class ReactionNode;
+
+class HybridRateContainer;
+class RateGroup;
+class RateToken;
+
+// generic containers
 template <class T> class VectorQueue;
 template <class T> class VectorStack;
 

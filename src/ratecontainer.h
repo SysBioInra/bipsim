@@ -70,26 +70,10 @@ class RateContainer
   virtual void update_cumulates (void) = 0;
 
   /**
-   * @brief Find reaction index corresponding to cumulated rate value.
-   * @param cumulated_value Cumulated rate value.
-   * @return Reaction index such that the cumulated rate < index
-   *  is smaller than cumulated_value while the cumulated rate <= index
-   *  is greater or equal to cumulated_value. This index is computed from
-   *  the cumulated rates as of last update, not current rates.
-   */
-  virtual int find (double cumulated_value) const = 0;
-
-  /**
    * @brief Draw random reaction index (weighted by rates as of last update).
    * @return Reaction index obtained by multinomial drawing.
    */
-  int random_index (void) const
-  {
-    /** Total rate must be strictly positive. */
-    ENSURE (total_rate() > 0);
-    return find (RandomHandler::instance().draw_uniform
-		      (1e-16*total_rate(), total_rate()));
-  }
+  virtual int random_index (void) const = 0;
 
   // ============================
   //  Public Methods - Accessors

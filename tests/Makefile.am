@@ -7,7 +7,8 @@
 # the programs to build (the names of the final binaries)
 check_PROGRAMS = biasedwheel_test inputdata_test randomhandler_test \
 	transformationtable_test producttable_test cellstate_test \
-	compositiontable_test ratetree_test boundunitlist_test
+	compositiontable_test ratetree_test boundunitlist_test \
+	rategroup_test hybridratecontainer_test
 
 # declare programs to be part of `make check`
 TESTS = $(check_PROGRAMS)
@@ -39,4 +40,11 @@ ratetree_test_LDADD = ../src/libsrc.a
 
 boundunitlist_test_SOURCES = boundunitlist_test.cpp
 boundunitlist_test_LDADD = ../src/libsrc.a
+
+rategroup_test_SOURCES = rategroup_test.cpp
+rategroup_test_LDADD = ../src/libsrc.a
+
+hybridratecontainer_test_SOURCES = hybridratecontainer_test.cpp
+hybridratecontainer_test_LDADD = ../src/libsrc.a
+
 ###############################################################################

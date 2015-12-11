@@ -68,21 +68,35 @@ class RateTree : public RateContainer
   //  Public Methods - Commands
   // ===========================
   //
-  virtual int find (double value) const;
+  /**
+   * @brief Find reaction index corresponding to cumulated rate value.
+   * @param value Cumulated rate value.
+   * @return Reaction index such that the cumulated rate < index
+   *  is smaller than cumulated_value while the cumulated rate <= index
+   *  is greater or equal to cumulated_value. This index is computed from
+   *  the cumulated rates as of last update, not current rates.
+   */
+  int find (double value) const;
 
-  virtual void update_cumulates (void);
+  // inherited (virtual)
+  int random_index (void) const;
+
+  // inherited (virtual)
+  void update_cumulates (void);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  virtual double total_rate (void) const;
+  // inherited (virtual)
+  double total_rate (void) const;
 
   // ==========================
   //  Public Methods - Setters
   // ==========================
   //
-  virtual void set_rate (int index, double value);
+  // inherited (virtual)
+  void set_rate (int index, double value);
 
 
   // =======================================
@@ -171,5 +185,12 @@ inline void RateTree::set_rate (int index, double value)
   if (next != 0) _update_queue.push (next);
 }
 
+inline int RateTree::random_index (void) const
+{
+  /** Total rate must be strictly positive. */
+  ENSURE (total_rate() > 0);
+  return find (RandomHandler::instance().draw_uniform
+	       (1e-16*total_rate(), total_rate()));
+}
 
 #endif // RATE_TREE_H

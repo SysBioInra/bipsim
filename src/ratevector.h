@@ -74,16 +74,34 @@ class RateVector : public RateContainer
   //  Public Methods - Commands
   // ===========================
   //
+  // inherited (virtual)
   void update_cumulates (void)
   {
     std::partial_sum (_rates.begin(), _rates.end(), _cumulated_rates.begin());
   }
 
+  /**
+   * @brief Find reaction index corresponding to cumulated rate value.
+   * @param value Cumulated rate value.
+   * @return Reaction index such that the cumulated rate < index
+   *  is smaller than cumulated_value while the cumulated rate <= index
+   *  is greater or equal to cumulated_value. This index is computed from
+   *  the cumulated rates as of last update, not current rates.
+   */
   int find (double value) const
   {
     /** @pre drawn value must be consistent with total rate. */
     REQUIRE ((value > 0) && (value <= _cumulated_rates.back()));
     return _biased_wheel.find_index (value);
+  }
+
+  // inherited (virtual)
+  int random_index (void) const
+  {
+    /** Total rate must be strictly positive. */
+    ENSURE (total_rate() > 0);
+    return find (RandomHandler::instance().draw_uniform
+		 (1e-16*total_rate(), total_rate()));
   }
 
   /**
@@ -106,6 +124,7 @@ class RateVector : public RateContainer
   //  Public Methods - Accessors
   // ============================
   //
+  // inherited (virtual)
   double total_rate (void) const
   { 
     /** @post total rate should be positive. */
@@ -131,6 +150,7 @@ class RateVector : public RateContainer
   //  Public Methods - Setters
   // ==========================
   //
+  // inherited (virtual)
   void set_rate (int index, double value)
   {
     /** @pre index must be within vector bounds. */
