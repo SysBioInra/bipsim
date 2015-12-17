@@ -336,8 +336,3 @@ reaction Release stalled_ribosome 30S 1 50S 1 protein 1 RF 1 rate 1 produces pro
 
 # small molecule turnover
 reaction ChemicalReaction EFTud -1 GTP -1 EFTua 1 GDP 1 rates 1 0
-reaction ChemicalReaction PPi -1 Pi 2 rates 1 0
-
-reaction ChemicalReaction GDP -1 Pi -1 GTP 1 rates 1 0
-reaction ChemicalReaction AMP -1 Pi -2 ATP 1 H2O 2 rates 1 0 
-reaction ChemicalReaction GMP -1 Pi -2 CTP 1 H2O 2 rates 1 0 

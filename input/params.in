@@ -1,4 +1,12 @@
 ################################################################################
+# SEED
+# Random handler seed. Format is  
+#   SEED <integer value>
+################################################################################
+
+SEED 0
+
+################################################################################
 # INITIAL TIME 
 # Time at the beginning of simulation. Format is  
 #   INITIAL_TIME <real value>
@@ -16,20 +24,20 @@ FINAL_TIME 1000
 
 ################################################################################
 # INPUT FILES 
-# Write path to input files relative to binary. Any # number of files can be
+# Path to input files relative to binary. Any number of files can be
 # specified. Format is 
 #   INPUT_FILES path/to/file1 path/to/file2 etc.
 ################################################################################
 
-INPUT_FILES ../input/dna_info.in ../input/dna.in ../input/rna_info.in ../input/rnas.in ../input/protein_info.in ../input/proteins.in ../input/transcription.in ../input/metabolites.in ../input/translation.in
+INPUT_FILES ../input/dna_info.in ../input/dna.in ../input/rna_info.in ../input/rnas.in ../input/protein_info.in ../input/proteins.in ../input/transcription.in ../input/metabolites.in ../input/translation.in ../input/rna_degradation.in
 
 ################################################################################
-# OUTPUT FILE
-# Write path to output file relative to binary. Format is 
-#   OUTPUT_FILE path/to/output/file
+# OUTPUT DIRECTORY
+# Path to output directory relative to binary. Format is 
+#   OUTPUT_DIR path/to/output/directory
 ################################################################################
 
-OUTPUT_FILE ../output/output.txt
+OUTPUT_DIR ../output
 
 ################################################################################
 # OUTPUT STEP
@@ -46,4 +54,4 @@ OUTPUT_STEP 100000
 #   OUTPUT_ENTITIES name1 name2 etc.
 ################################################################################
 
-OUTPUT_ENTITIES protein rna GTP CTP ATP UTP 50S
+OUTPUT_ENTITIES protein rna GTP GMP CTP CMP ATP AMP UTP UMP 50S

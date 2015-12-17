@@ -14,6 +14,7 @@
 //
 #include <iostream> // std::cout
 #include <queue> // std::queue
+#include <cmath> // fabs
 
 // ==================
 //  Project Includes
@@ -100,6 +101,9 @@ void RateTree::update_cumulates (void)
       _update_queue.next();
     }
   _update_queue.clear();
+
+  // total must be approximately equal to sum of leaf nodes 
+  ENSURE (fabs (_root->rate() - _sum_of_leaf_rates()) <= 1e-13*_root->rate());
 }
 
 // ============================

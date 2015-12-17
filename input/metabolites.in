@@ -7,3 +7,11 @@ unit Chemical H+
 unit Chemical ppGpp
 unit Chemical PPi
 unit Chemical Pi
+
+reaction ChemicalReaction PPi -1 Pi 2 rates 1 0
+
+reaction ChemicalReaction GDP -1 Pi -1 GTP 1 rates 1 0
+reaction ChemicalReaction AMP -1 Pi -2 ATP 1 rates 1 0 
+reaction ChemicalReaction GMP -1 Pi -2 CTP 1 rates 1 0 
+reaction ChemicalReaction UMP -1 Pi -2 UTP 1 rates 1 0 
+reaction ChemicalReaction CMP -1 Pi -2 CTP 1 rates 1 0 

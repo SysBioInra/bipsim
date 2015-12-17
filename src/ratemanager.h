@@ -102,6 +102,14 @@ class RateManager
   //  * @brief Assignment operator.
   //  */
   // RateManager& operator= ( const RateManager& other_rate_manager );
+  /**
+   * @brief Standard output.
+   * @return A reference to the stream containing the output.
+   * @param output Stream where output should be written.
+   * @param manager Reference to the manager whose information should be written.
+   */
+  friend std::ostream& operator<< (std::ostream& output,
+				   const RateManager& manager);
 
 
  protected:
@@ -200,5 +208,11 @@ inline const std::vector<Reaction*>& RateManager::reactions (void) const
   return _reactions;
 }
 
+inline std::ostream& operator<< (std::ostream& output,
+				 const RateManager& manager)
+{
+  output << manager._rates;
+  return output;
+}
 
 #endif // RATE_MANAGER_H

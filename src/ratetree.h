@@ -142,7 +142,17 @@ private:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Compute sum of rates contained in leaves directly.
+   * @return Sum of rates contained in leaves.
+   *
+   * This function is for verification purposes.
+   */
+  double _sum_of_leaf_rates (void) const;
   
+  // inherited
+  std::ostream& _print (std::ostream& output) const;
+
   // ======================
   //  Forbidden Operations
   // ======================
@@ -191,6 +201,28 @@ inline int RateTree::random_index (void) const
   ENSURE (total_rate() > 0);
   return find (RandomHandler::instance().draw_uniform
 	       (1e-16*total_rate(), total_rate()));
+}
+
+inline double RateTree::_sum_of_leaf_rates (void) const
+{
+  double total = 0;
+  for (std::vector <ReactionNode*>::const_iterator l_it = _leaves.begin();
+       l_it != _leaves.end(); ++l_it)
+    {
+      total += (*l_it)->rate();
+    }
+  return total;
+}
+
+inline std::ostream& RateTree::_print (std::ostream& output) const
+{
+  for (std::vector <ReactionNode*>::const_iterator l_it = _leaves.begin();
+       l_it != _leaves.end(); ++l_it)
+    {
+      output << (*l_it)->rate() << " ";
+    }
+  output << total_rate();
+  return output;
 }
 
 #endif // RATE_TREE_H

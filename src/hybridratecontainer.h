@@ -25,6 +25,8 @@
 // ==================
 //
 #include "ratecontainer.h"
+#include "flyratevector.h"
+#include "ratevector.h"
 
 // ======================
 //  Forward declarations
@@ -141,8 +143,10 @@ private:
   /** @brief Vector of groups. */
   std::vector <RateGroup*> _groups;
 
-  /** @brief Tree used to store the total rates associated with each group. */
-  RateTree* _rate_tree;
+  /** 
+   * @brief Container used to store the total rates associated with each group. 
+   */
+  FlyRateVector _group_container;
 
   /** @brief Stack storing group indices that need to be updated in the tree. */
   RateValidity* _update_stack;
@@ -168,6 +172,9 @@ private:
    */
   void _create_new_groups (double value);
 
+  // inherited
+  std::ostream& _print (std::ostream& output) const; 
+  
   // ======================
   //  Forbidden Operations
   // ======================
@@ -179,7 +186,6 @@ private:
 //  Inline declarations
 // ======================
 //
-#include "ratetree.h"
 #include "macros.h"
 #include "rategroup.h"
 #include "ratevalidity.h"
@@ -190,20 +196,20 @@ inline void HybridRateContainer::update_cumulates (void)
   while (!_update_stack->empty())
     {	
       int next = _update_stack->front();
-      _rate_tree->set_rate (next, _groups [next]->total_rate());
+      _group_container.set_rate (next, _groups [next]->total_rate());
       _update_stack->pop();
     }
-  _rate_tree->update_cumulates();
+  _group_container.update_cumulates();
 }
 
 inline int HybridRateContainer::random_index (void) const
 {
-  return _groups [_rate_tree->random_index()]->random_index();
+  return _groups [_group_container.random_index()]->random_index();
 }
 
 inline double HybridRateContainer::total_rate (void) const
 { 
-  return _rate_tree->total_rate();
+  return _group_container.total_rate();
 }
 
 inline int HybridRateContainer::number_groups (void) const
@@ -249,6 +255,19 @@ inline int HybridRateContainer::_rate_to_group (double value)
   /** @post Index must be consistent with number of groups. */
   ENSURE ((group > 0) && (group < _groups.size()));
   return group;
+}
+
+inline std::ostream& HybridRateContainer::_print (std::ostream& output) const
+{
+  for (std::vector <RateGroup*>::const_iterator r_it = _groups.begin();
+       r_it != _groups.end(); ++r_it)
+    {	
+      output << (*r_it)->total_rate() << " ("
+		<< (*r_it)->size() << ") ";
+    }
+  output << total_rate() << "\n";
+  output << _group_container << "\n";
+  return output;
 }
 
 #endif // HYBRID_RATE_CONTAINER_H

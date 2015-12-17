@@ -107,6 +107,15 @@ class RateContainer
   //  */
   // RateContainer& operator= (const RateContainer& other_rate_container);
 
+  /**
+   * @brief Standard output.
+   * @return A reference to the stream containing the output.
+   * @param output Stream where output should be written.
+   * @param container Reference to the container whose information should be written.
+   */
+  friend std::ostream& operator<< (std::ostream& output,
+				   const RateContainer& container);
+
 protected:
   // ======================
   //  Protected Attributes
@@ -129,6 +138,12 @@ private:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Print container information to output stream.
+   * @return A reference to the stream containing the output.
+   * @param output Stream where output should be written.
+   */
+  virtual std::ostream& _print (std::ostream& output) const { return output; }
 
   // ======================
   //  Forbidden Operations
@@ -141,5 +156,10 @@ private:
 //  Inline declarations
 // ======================
 //
+inline std::ostream& operator<< (std::ostream& output,
+				 const RateContainer& container)	   
+{ 
+  return container._print (output);
+}
 
 #endif // RATE_CONTAINER_H

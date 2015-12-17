@@ -14,6 +14,7 @@
 //
 #include <iostream> // std::cout
 #include <sstream> // std::istringstream
+#include <stdexcept> // std::runtime_error
 
 // ==================
 //  Project Includes
@@ -32,6 +33,7 @@ InputData::InputData (const std::list <std::string>& input_file_names)
   , _line ("")
   , _eof (false)
 {
+  std::cout << "Opening input files... " << std::endl;
   // open files
   for (std::list <std::string>::const_iterator file_it = input_file_names.begin();
        file_it != input_file_names.end(); file_it++)
@@ -39,10 +41,13 @@ InputData::InputData (const std::list <std::string>& input_file_names)
       _files.push_back (new std::ifstream (file_it->c_str()));
       if (_files.back()->fail())
 	{
-	  // TODO: throw exception ?
-	  std::cerr << "Warning: could not open input file\n" << *file_it << "\nFile ignored." << std::endl;
-	  delete _files.back();
-	  _files.pop_back();
+	  for (_file = _files.begin(); _file != _files.end(); ++_file)
+	    {
+	      delete *_file;
+	    }
+	  std::ostringstream message;
+	  message << "Could not open input file " << *file_it << ".";
+	  throw std::runtime_error (message.str());
 	}
       else
 	{

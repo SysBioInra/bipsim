@@ -38,7 +38,7 @@ int main (int argc, char *argv[])
   tree.set_rate (3, 0);
   tree.update_cumulates();
   if (!test (tree, 0)) { FAILURE ("wrong update."); }
-
+ 
   tree.set_rate (0,2);
   tree.update_cumulates();
   if (!test (tree, 2)) { FAILURE ("wrong update."); }
@@ -66,7 +66,6 @@ int main (int argc, char *argv[])
   if (ecf(3) != ecf(2)) { FAILURE ("Incorrect drawing statistics."); }
   if (distance_to_discrete_cumulative (ecf, cumulative) > 0.01)
     { FAILURE ("Incorrect drawing statistics."); }
-
 }
 
 double cumulative (int index)

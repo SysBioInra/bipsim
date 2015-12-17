@@ -29,6 +29,7 @@
 #include "eventhandler.h"
 #include "inputdata.h"
 #include "parser.h"
+#include "randomhandler.h"
 
 // #define CLASSIFICATION
 
@@ -39,6 +40,8 @@
 Simulation::Simulation (const std::string& filename)
   : _params (filename)
 {
+  RandomHandler::instance().set_seed (_params.seed());
+
   // read input files and create units, reactions and events
   InputData input_data (_params.input_files());
   Parser parser (_cell_state, _event_handler);
@@ -77,7 +80,7 @@ Simulation::Simulation (const std::string& filename)
 	  name_it = chemical_names.erase (name_it);
 	}
     }
-  _logger = new ChemicalLogger (_params.output_file(),
+  _logger = new ChemicalLogger (_params.concentration_file(),
 				chemical_refs, chemical_names);
 
 }

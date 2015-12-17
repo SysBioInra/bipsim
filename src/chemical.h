@@ -114,7 +114,8 @@ public:
    * @param output Stream where output should be written.
    * @param chemical Reference to the chemical whose information should be written.
    */
-  friend std::ostream& operator<< (std::ostream& output, const Chemical& chemical);
+  friend std::ostream& operator<< (std::ostream& output,
+				   const Chemical& chemical);
 
 private:
 

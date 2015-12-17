@@ -107,6 +107,7 @@ class RateValidity;
 
 // rate containers
 class RateContainer;
+class FlyRateVector;
 class RateVector;
 class UpdatedTotalRateVector;
 

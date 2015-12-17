@@ -68,14 +68,20 @@ class SimulationParams
   // ============================
   //
   /**
+   * @brief Accessor to random handler seed.
+   * @return Random handler seed. 0 if none specified.
+   */
+  double seed (void) const;
+
+  /**
    * @brief Accessor to initial simulation time.
-   * @return Initial simulation time. 0 if none specified
+   * @return Initial simulation time. 0 if none specified.
    */
   double initial_time (void) const;
 
   /**
    * @brief Accessor to final simulation time.
-   * @return Final simulation time. 1000 if none specified
+   * @return Final simulation time. 1000 if none specified.
    */
   double final_time (void) const;
 
@@ -86,10 +92,16 @@ class SimulationParams
   const std::list<std::string>& input_files (void) const;
   
   /**
-   * @brief Accessor to output file.
-   * @return Output file name. Empty if none specified.
+   * @brief Accessor to name for concentration output file.
+   * @return Output file name.
    */
-  const std::string& output_file (void) const;
+  std::string concentration_file (void) const;
+
+  /**
+   * @brief Accessor to name for reaction output file.
+   * @return Output file name.
+   */
+  std::string reaction_file (void) const;
 
   /**
    * @brief Accessor to output step.
@@ -137,6 +149,12 @@ private:
   //  Attributes
   // ============
   //
+  /** @brief Random handler seed. 0 if none specified. */
+  int _seed;
+
+  /** @brief Seed tag. */
+  static const std::string _seed_tag;
+
   /** @brief Initial simulation time. 0 if none specified. */
   double _initial_time;
 
@@ -155,11 +173,20 @@ private:
   /** @brief Input files tag. */
   static const std::string _input_files_tag;
 
-  /** @brief Output file name. Empty if none specified. */
-  std::string _output_file;
+  /** @brief Output dir name. Empty if none specified. */
+  std::string _output_dir;
 
-  /** @brief Output file tag. */
-  static const std::string _output_file_tag;
+  /** @brief Output dir tag. */
+  static const std::string _output_dir_tag;
+
+  /** @brief Output file name for concentrations. */
+  static const std::string _concentration_file;
+
+  /** @brief Output file name for reactions. */
+  static const std::string _reaction_file;
+
+  /** @brief Output file name for parameters.. */
+  static const std::string _param_file;
 
   /** @brief Output step in number of reactions. 10000 if none specified. */
   int _output_step;
@@ -204,6 +231,13 @@ private:
 			const std::string& line_tag);
   
   /**
+   * @brief Read seed.
+   * @param line Line to read.
+   * @return True if seed was successfully read.
+   */
+  bool read_seed (const std::string& line);
+
+  /**
    * @brief Read initial simulation time.
    * @param line Line to read.
    * @return True if initial time was successfully read.
@@ -225,11 +259,11 @@ private:
   bool read_input_files (const std::string& line);
   
   /**
-   * @brief Read output file.
+   * @brief Read output directory.
    * @param line Line to read.
-   * @return True if output file was successfully read.
+   * @return True if output directory was successfully read.
    */
-  bool read_output_file (const std::string& line);
+  bool read_output_dir (const std::string& line);
 
   /**
    * @brief Read output step.
@@ -244,6 +278,11 @@ private:
    * @return True if output entities were successfully read.
    */
   bool read_output_entities (const std::string& line);
+
+  /**
+   * @brief Wrie relevant simulation parameters to a file for future reference.
+   */
+  void _write_params_out (void) const;
 
   // ======================
   //  Forbidden Operations
@@ -274,6 +313,11 @@ inline bool SimulationParams::read_or_error (std::istringstream& line_stream,
   return false;
 }
 
+inline double SimulationParams::seed (void) const
+{
+  return _seed;
+}
+
 inline double SimulationParams::initial_time (void) const
 {
   return _initial_time;
@@ -289,9 +333,14 @@ inline const std::list<std::string>& SimulationParams::input_files (void) const
   return _input_files;
 }
 
-inline const std::string& SimulationParams::output_file (void) const
+inline std::string SimulationParams::concentration_file (void) const
 {
-  return _output_file;
+  return _output_dir + "/" + _concentration_file;
+}
+
+inline std::string SimulationParams::reaction_file (void) const
+{
+  return _output_dir + "/" + _reaction_file;
 }
 
 inline int SimulationParams::output_step (void) const

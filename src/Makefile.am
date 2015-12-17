@@ -117,6 +117,7 @@ libsrc_a_SOURCES += \
 # rate containers
 libsrc_a_SOURCES += \
 	ratecontainer.h ratevector.h updatedtotalratevector.h \
+	flyratevector.h \
 	ratetree.cpp ratetree.h \
 	ratenode.h sumnode.h dummynode.h reactionnode.h \
 	hybridratecontainer.cpp hybridratecontainer.h  \

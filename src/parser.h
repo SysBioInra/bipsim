@@ -119,7 +119,7 @@ private:
    */
   bool loop_through_data (InputData& input_data);
 
-  void display_dependency_errors (InputData& input_data);
+  bool display_dependency_errors (InputData& input_data);
 };
 
 // ======================

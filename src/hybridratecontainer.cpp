@@ -29,7 +29,7 @@ HybridRateContainer::HybridRateContainer (int number_rates, double base_rate)
   , _tokens (number_rates)
   , _groups (1)
   , _update_stack (new RateValidity (1))
-  , _rate_tree (new RateTree (1))
+  , _group_container (1, false)
   , _current_max_rate (base_rate)
 {
   // create one group to start with
@@ -53,9 +53,6 @@ HybridRateContainer::~HybridRateContainer (void)
   
   // destroy tokens
   for (int i = 0; i < _tokens.size(); ++i) { delete _tokens [i]; }
-  
-  // detroy tree
-  delete _rate_tree;
   
   // destroy update stack
   delete _update_stack;
@@ -94,14 +91,18 @@ HybridRateContainer::~HybridRateContainer (void)
 //
 void HybridRateContainer::_create_new_groups (double value)
 {
+  // create new groups
   while (_current_max_rate <= value)
     {
       _groups.push_back (new RateGroup (_current_max_rate, 
 					2*_current_max_rate));
       _current_max_rate *= 2;
     }
-  delete _rate_tree;
-  _rate_tree = new RateTree (_groups.size());
+  
+  // extend group container
+  _group_container.extend (_groups.size() - _group_container.size ());
+
+  // create new update stack
   RateValidity* new_update_stack = new RateValidity (_groups.size());
   while (!_update_stack->empty())
     {

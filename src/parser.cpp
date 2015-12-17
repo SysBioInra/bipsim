@@ -16,6 +16,7 @@
 #include <fstream> // std::ifstream
 #include <sstream> // std::istringstream
 #include <string> // std::string
+#include <stdexcept> // std::runtime_error
 
 // ==================
 //  Project Includes
@@ -55,8 +56,12 @@ void Parser::parse (InputData& input_data)
   // we loop through the data until no creation takes place anymore
   // the idea is that as long as dependencies may not have been resolved
   // we need to try to create everything again
+  std::cout << "Parsing data..." << std::endl;
   while (loop_through_data (input_data) == true) {}
-  display_dependency_errors (input_data);
+  if (display_dependency_errors (input_data))
+    {
+      throw std::runtime_error ("corrupted input data");
+    }
 }
 
 // ============================
@@ -120,8 +125,9 @@ bool Parser::loop_through_data (InputData& input_data)
   return entity_created;
 }
 
-void Parser::display_dependency_errors (InputData& input_data)
+bool Parser::display_dependency_errors (InputData& input_data)
 {
+  bool error_occurred = false;
   input_data.rewind();
   while (input_data.is_eof()==false)
     {
@@ -133,6 +139,7 @@ void Parser::display_dependency_errors (InputData& input_data)
 	}
       catch (const DependencyException& error)
 	{
+	  error_occurred = true;
 	  std::cerr << "DEPENDENCY ERROR (file " << input_data.file_name()
 		    << ", line " << input_data.line_number() << "): "
 		    << error.what() << "." << std::endl;
@@ -141,4 +148,5 @@ void Parser::display_dependency_errors (InputData& input_data)
       
       input_data.go_next();
     }
+  return error_occurred;
 }

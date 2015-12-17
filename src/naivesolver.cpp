@@ -83,6 +83,8 @@ double NaiveSolver::compute_next_reaction (void)
 {
   // update reaction rates
   _rate_manager->update_rates();
+  //std::cout << time() << " " << number_reactions_performed() << "\n";
+  //std::cout << (*_rate_manager) << "\n\n";
   
   if (_rate_manager->total_rate() <= 0)
     {

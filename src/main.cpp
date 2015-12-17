@@ -14,6 +14,8 @@
 #include <fstream> // std::ofstream
 #include <sstream> // std::istringstream
 #include <ctime> // clock()
+#include <cstdlib> // EXIT_FAILURE
+#include <exception>
 
 // ==================
 //  Project Includes
@@ -40,11 +42,19 @@ int main (int argc, char *argv[])
   if (param_file != "")
     {
       clock_t t = clock();
-      Simulation simulation (param_file);
-      simulation.run();
-      t = clock() - t;
-      std::cout << "CPU runtime: " << t << " clicks ("
-		<< ((float)t)/CLOCKS_PER_SEC << " seconds).\n";
+      try 
+	{
+	  Simulation simulation (param_file);
+	  simulation.run();
+	  t = clock() - t;
+	  std::cout << "CPU runtime: " << t << " clicks ("
+		    << ((float)t)/CLOCKS_PER_SEC << " seconds).\n";
+	}
+      catch (const std::exception& e)
+	{
+	  std::cerr << "Interrupting execution: " << e.what() << ".\n";
+	  return EXIT_FAILURE;
+	}
     }
   else
     {
