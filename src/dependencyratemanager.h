@@ -51,9 +51,11 @@ class DependencyRateManager : public RateManager
   //
   /**
    * @brief Default constructor.
+   * @param params Simulation parameters.
    * @param reactions Vector of reactions whose rates need to be stored and updated.
    */
-  DependencyRateManager (const std::vector <Reaction*>& reactions);
+  DependencyRateManager (const SimulationParams& params,
+			 const std::vector <Reaction*>& reactions);
 
   // Not needed for this class (use of default copy constructor) !
   // /*

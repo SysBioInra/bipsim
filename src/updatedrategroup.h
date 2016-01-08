@@ -49,10 +49,13 @@ class UpdatedRateGroup : public ReactionGroup
   //
   /**
    * @brief Constructor
+   * @param params Simulation parameters.
    * @param reactions A vector of reactions simulated under constant rate hypothesis.
    * @param initial_time Time at the beginning of simulation.
    */
-  UpdatedRateGroup (const std::vector<Reaction*>& reactions, double initial_time);
+  UpdatedRateGroup (const SimulationParams& params,
+		    const std::vector<Reaction*>& reactions,
+		    double initial_time);
 
   // Not needed for this class (use of default copy constructor) !
   // /*

@@ -23,6 +23,19 @@ class ChemicalLogger;
 namespace boost { namespace serialization { class access; }}
 #endif // HAVE_BOOST_SERIALIZATION
 
+// factories
+class SolverFactory;
+class NaiveSolverFactory;
+class ManualDispatchFactory;
+class RateManagerFactory;
+class NaiveRateManagerFactory;
+class DependencyRateManagerFactory;
+class GraphRateManagerFactory;
+class RateContainerFactory;
+class RateVectorFactory;
+class RateTreeFactory;
+class HybridRateContainerFactory;
+
 // reaction classes
 class BackwardReaction;
 class BaseLoading;

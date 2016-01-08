@@ -163,7 +163,6 @@ private:
 //  Inline declarations
 // ======================
 //
-#include "ratemanager.h"
 #include "reaction.h"
 
 inline double ReactionGroup::next_reaction_time (void) const

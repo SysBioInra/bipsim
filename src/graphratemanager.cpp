@@ -28,8 +28,10 @@
 //  Constructors/Destructors
 // ==========================
 //
-GraphRateManager::GraphRateManager (const std::vector <Reaction*>& reactions, const DependencyGraph& dependency_graph)
-  : RateManager (reactions)
+GraphRateManager::GraphRateManager (const SimulationParams& params,
+				    const std::vector <Reaction*>& reactions,
+				    const DependencyGraph& dependency_graph)
+  : RateManager (params, reactions)
   , _reactions_to_update (reactions.size(), false)
 {
   create_observers (dependency_graph);

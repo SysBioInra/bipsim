@@ -24,8 +24,9 @@
 //  Constructors/Destructors
 // ==========================
 //
-NaiveRateManager::NaiveRateManager (const std::vector <Reaction*>& reactions)
-  : RateManager (reactions)
+NaiveRateManager::NaiveRateManager (const SimulationParams& params,
+				    const std::vector <Reaction*>& reactions)
+  : RateManager (params, reactions)
 {
 }
 

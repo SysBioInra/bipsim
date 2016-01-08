@@ -140,8 +140,7 @@ public:
    *   bound.
    * @return Total unbinding rate for chemicals bound to given family.
    */
-  double get_total_unbinding_rate_contribution
-    (int binding_site_family) const;
+  double unbinding_rate_contribution (int binding_site_family) const;
 
   /**
    * @brief Print class content.

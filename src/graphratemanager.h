@@ -49,10 +49,13 @@ class GraphRateManager : public RateManager
   //
   /**
    * @brief Default constructor.
+   * @param params Simulation parameters.
    * @param reactions Vector of reactions whose rates need to be stored and updated.
    * @param dependency_graph Global dependencies between reactions.
    */
-  GraphRateManager (const std::vector <Reaction*>& reactions, const DependencyGraph& dependency_graph);
+  GraphRateManager (const SimulationParams& params,
+		    const std::vector <Reaction*>& reactions,
+		    const DependencyGraph& dependency_graph);
 
   // Not needed for this class (use of default copy constructor) !
   // /*

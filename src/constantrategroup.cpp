@@ -30,14 +30,15 @@
 //  Constructors/Destructors
 // ==========================
 //
-ConstantRateGroup::ConstantRateGroup (const std::vector<Reaction*>& reactions,
+ConstantRateGroup::ConstantRateGroup (const SimulationParams& params,
+				      const std::vector<Reaction*>& reactions,
 				      double initial_time, double time_step)
   : ReactionGroup (reactions)
   , _reaction_times (MAX_NUMBER_REACTIONS)
   , _next_index (0)
   , _final_time (initial_time + time_step)
   , _time_step (time_step)
-  , _rate_manager (reactions)
+  , _rate_manager (params, reactions)
 {
   reinitialize (initial_time);
 }

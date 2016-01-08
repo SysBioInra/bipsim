@@ -25,6 +25,10 @@ libsrc_a_SOURCES = \
 	observable.h \
 	chemicallogger.cpp chemicallogger.h
 
+# factories
+libsrc_a_SOURCES += \
+	solverfactory.h ratemanagerfactory.h ratecontainerfactory.h
+
 # reaction sources
 libsrc_a_SOURCES += \
 	backwardreaction.h \

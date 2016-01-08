@@ -20,7 +20,7 @@ INITIAL_TIME 0
 #   FINAL_TIME <real value>
 ################################################################################
 
-FINAL_TIME 1000
+FINAL_TIME 10
 
 ################################################################################
 # INPUT FILES 
@@ -37,7 +37,7 @@ INPUT_FILES ../input/dna_info.in ../input/dna.in ../input/rna_info.in ../input/r
 #   OUTPUT_DIR path/to/output/directory
 ################################################################################
 
-OUTPUT_DIR ../output
+OUTPUT_DIR ../output/
 
 ################################################################################
 # OUTPUT STEP
@@ -55,3 +55,21 @@ OUTPUT_STEP 100000
 ################################################################################
 
 OUTPUT_ENTITIES protein rna GTP GMP CTP CMP ATP AMP UTP UMP 50S
+
+################################################################################
+# DRAWING_ALGORITHM
+# Algorithm to use to determine next reaction to perform. Format is
+#   DRAWING_ALGORITHM <algorithm>
+#   HYBRID_BASE_RATE <real value>
+#
+# where <algorithm> is picked among
+#  - vector (rates stored/drawn from a vector - complexity O(N))
+#  - tree (rates stored/drawn from a tree - complexity O(logN))
+#  - hybrid (group structure using a rejection method - complexity O(1))
+#
+# HYBRID_BASE_RATE is only relevant if "hybrid" was chosen.
+################################################################################
+
+DRAWING_ALGORITHM hybrid
+
+HYBRID_BASE_RATE 1e-6

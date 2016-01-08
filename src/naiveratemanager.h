@@ -43,10 +43,12 @@ class NaiveRateManager : public RateManager
   // ==========================
   //
   /**
-   * @brief Default constructor.
+   * @brief Constructor.
+   * @param params Simulation parameters.
    * @param reactions Vector of reactions whose rates need to be stored and updated.
    */
-  NaiveRateManager (const std::vector <Reaction*>& reactions);
+  NaiveRateManager (const SimulationParams& params,
+		    const std::vector <Reaction*>& reactions);
 
   // Not needed for this class (use of default copy constructor) !
   // /*

@@ -47,11 +47,12 @@ class ManualDispatchSolver : public Solver
   //
   /**
    * @brief Default constructor
-   * @param initial_time Initial simulation time.
+   * @param params Simulation parameters.
    * @param cell_state Reference to a cell state describing current state and reactions within the cell.
    * @param reaction_classification Classification specifying how reactions should be integrated.
    */
-  ManualDispatchSolver (double initial_time, CellState& cell_state, const ReactionClassification& reaction_classification);
+  ManualDispatchSolver (const SimulationParams& params, CellState& cell_state,
+			const ReactionClassification& reaction_classification);
 
   /**
    * @brief Destructor

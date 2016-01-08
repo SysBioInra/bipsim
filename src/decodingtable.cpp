@@ -98,20 +98,6 @@ std::ostream& operator<< (std::ostream& output, const DecodingTable& decoding_ta
 }
 
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool DecodingTable::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
-
 
 // =================
 //  Private Methods

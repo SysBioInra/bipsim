@@ -22,16 +22,13 @@
 #include "simulation.h"
 #include "cellstate.h"
 #include "chemical.h"
-#include "naivesolver.h"
-#include "manualdispatchsolver.h"
-#include "reactionclassification.h"
+#include "solverfactory.h"
 #include "chemicallogger.h"
 #include "eventhandler.h"
 #include "inputdata.h"
 #include "parser.h"
 #include "randomhandler.h"
 
-// #define CLASSIFICATION
 
 // ==========================
 //  Constructors/Destructors
@@ -53,16 +50,7 @@ Simulation::Simulation (const std::string& filename)
 	    << std::endl;
 
   // create solver
-#ifdef CLASSIFICATION
-  ReactionClassification classification;
-  int class_id = classification.create_new_class (0.001);
-  // int class_id = classification.create_new_class (ReactionClassification::ALWAYS_UPDATED);
-  classification.add_reactions_to_class (class_id, _cell_state.reactions());
-  _solver = new ManualDispatchSolver (_params.initial_time(),
-				      _cell_state, classification);
-#else
-  _solver = new NaiveSolver (_params.initial_time(), _cell_state);
-#endif
+  _solver = _params.solver_factory().create (_params, _cell_state);
 
   // create logger
   std::list <std::string> chemical_names = _params.output_entities();

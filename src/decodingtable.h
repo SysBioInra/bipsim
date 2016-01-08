@@ -161,17 +161,6 @@ class DecodingTable : public SimulatorInput
    */
   friend std::ostream& operator<< (std::ostream& output, const DecodingTable& decoding_table);
 
-
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  virtual bool check_invariant (void) const;
-
   
   // ==================
   //  Public Constants

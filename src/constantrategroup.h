@@ -50,12 +50,15 @@ class ConstantRateGroup : public ReactionGroup
   //
   /**
    * @brief Constructor
+   * @param params Simulation parameters.
    * @param reactions Vector of reactions simulated under constant rate
    *  hypothesis.
    * @param initial_time Time at the beginning of simulation.
    * @param time_step Time interval during which reactions need to be performed.
    */
-  ConstantRateGroup (const std::vector<Reaction*>& reactions, double initial_time, double time_step);
+  ConstantRateGroup (const SimulationParams& params,
+		     const std::vector<Reaction*>& reactions,
+		     double initial_time, double time_step);
 
   // Not needed for this class (use of default copy constructor) !
   // /*

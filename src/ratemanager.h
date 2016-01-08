@@ -24,9 +24,6 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "hybridratecontainer.h"
-#include "ratetree.h"
-#include "ratevector.h"
 
 /**
  * @brief Abstract class for handling updates of reaction rates.
@@ -47,9 +44,12 @@ class RateManager
   //
   /**
    * @brief Default constructor.
-   * @param reactions Vector of reactions whose rates need to be stored and updated.
+   * @param params Simulation parameters.
+   * @param reactions Vector of reactions whose rates need to be stored and
+   *  updated.
    */
-  RateManager (const std::vector <Reaction*>& reactions);
+  RateManager (const SimulationParams& params,
+	       const std::vector <Reaction*>& reactions);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
@@ -150,7 +150,7 @@ class RateManager
   std::vector <Reaction*> _reactions;
 
   /** @brief Container storing reaction rates. */
-  HybridRateContainer _rates;
+  RateContainer* _rates;
 
   // ===================
   //  Protected Methods
@@ -171,6 +171,7 @@ class RateManager
 //
 #include <numeric> // std::partial_sum
 #include "reaction.h"
+#include "ratecontainer.h"
 
 // ======================
 //  Inline declarations
@@ -178,7 +179,7 @@ class RateManager
 //
 inline int RateManager::random_index (void)
 {
-  return _rates.random_index();
+  return _rates->random_index();
 }
 
 inline void RateManager::compute_all_rates (void)
@@ -188,19 +189,19 @@ inline void RateManager::compute_all_rates (void)
 
 inline void RateManager::cumulate_rates (void)
 {
-  _rates.update_cumulates();
+  _rates->update_cumulates();
 }
 
 inline void RateManager::update_reaction (int reaction_index)
 {
   Reaction* reaction_to_update = _reactions [reaction_index];
   reaction_to_update->update_rate();
-  _rates.set_rate (reaction_index, reaction_to_update->rate());
+  _rates->set_rate (reaction_index, reaction_to_update->rate());
 }
 
 inline double RateManager::total_rate (void) const
 {
-  return _rates.total_rate();
+  return _rates->total_rate();
 }
 
 inline const std::vector<Reaction*>& RateManager::reactions (void) const

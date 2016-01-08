@@ -27,8 +27,10 @@
 //  Constructors/Destructors
 // ==========================
 //
-ManualDispatchSolver::ManualDispatchSolver (double initial_time, CellState& cell_state, const ReactionClassification& classification)
-  : Solver (initial_time, cell_state)
+ManualDispatchSolver::ManualDispatchSolver (const SimulationParams& params,
+					    CellState& cell_state, 
+					    const ReactionClassification& classification)
+  : Solver (params, cell_state)
 {
   int number_groups = classification.number_classes();
 
@@ -39,12 +41,16 @@ ManualDispatchSolver::ManualDispatchSolver (double initial_time, CellState& cell
 	{
 	  // if the rates need to be alwas updated, we need to use UpdatedRateGroup
 	  _updated_rate_group_indices.push_back (i);
-	  _reaction_groups.push_back (new UpdatedRateGroup (classification.reactions (i), time()));
+	  _reaction_groups.push_back 
+	    (new UpdatedRateGroup (params, classification.reactions (i),
+				   time()));
 	}
       else
 	{
 	  // else we use ConstantRateGroup with the provided time step
-	  _reaction_groups.push_back (new ConstantRateGroup (classification.reactions (i), time(), classification.time_step(i)));
+	  _reaction_groups.push_back 
+	    (new ConstantRateGroup (params, classification.reactions (i), 
+				    time(), classification.time_step(i)));
 	}
       // log next event of the newly created group in the event list
       add_event_for_group (i);

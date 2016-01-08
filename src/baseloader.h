@@ -72,16 +72,6 @@ public:
   // ===========================
   // 
   /**
-   * @brief Add a new unit in place of an existing new chemical.
-   *
-   * This function MUST be called every time a unit is added.
-   * @param binding_site The binding site to which it bound.
-   * @param position Current position.
-   * @param reading_frame Reading frame position.
-   */
-  virtual void add_unit (const BindingSite& binding_site, int position, int reading_frame);
-
-  /**
    * @brief Remove focused unit.
    */
   virtual void remove_focused_unit (void);
@@ -188,6 +178,17 @@ private:
    *
    */
   void update_rates (void);
+
+  /**
+   * @brief Add a new unit in place of an existing new chemical.
+   *
+   * This function MUST be called every time a unit is added.
+   * @param binding_site The binding site to which it bound.
+   * @param position Current position.
+   * @param reading_frame Reading frame position.
+   */
+  virtual void add_unit (const BindingSite& binding_site, int position, int reading_frame);
+  
 
   // ===================
   //  Private Constants

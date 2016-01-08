@@ -115,6 +115,30 @@ class SimulationParams
    */
   const std::list<std::string>& output_entities (void) const;
 
+  /**
+   * @brief Accessor to default solver factory.
+   * @return A factory creating the default type of solver to use.
+   */
+  const SolverFactory& solver_factory (void) const;
+
+  /**
+   * @brief Accessor to default rate manager factory.
+   * @return A factory creating the default type of rate manager to use.
+   */
+  const RateManagerFactory& rate_manager_factory (void) const;
+
+  /**
+   * @brief Accessor to default rate container factory.
+   * @return A factory creating the default type of rate container to use.
+   */
+  const RateContainerFactory& rate_container_factory (void) const;
+
+  /**
+   * @brief Accessor to base rate to use for hybrid method.
+   * @return Base rate to use for hybrid method (1 by default).
+   */
+  double hybrid_base_rate (void) const;
+
   // ==========================
   //  Public Methods - Setters
   // ==========================
@@ -149,6 +173,9 @@ private:
   //  Attributes
   // ============
   //
+  /** @brief Current line read. */
+  std::string _line;
+
   /** @brief Random handler seed. 0 if none specified. */
   int _seed;
 
@@ -200,16 +227,33 @@ private:
   /** @brief Initial time tag. */
   static const std::string _output_entities_tag;
 
+  /** @brief Drawing algorithm tag. */
+  static const std::string _drawing_algorithm_tag;
+
+  /** @brief Factory for default solver. */
+  SolverFactory* _solver_factory;
+
+  /** @brief Factory for default rate manager. */
+  RateManagerFactory* _rate_manager_factory;
+
+  /** @brief Factory for default rate container. */
+  RateContainerFactory* _rate_container_factory;
+
+  /** @brief Hybrid base rate tag. */
+  static const std::string _hybrid_base_rate_tag;
+
+  /** @brief Base rate for the HybridRateContainer. */
+  double _hybrid_base_rate;
+
   // =================
   //  Private Methods
   // =================
   //
   /**
    * @brief Check whether line is empty or commented.
-   * @param line Line to check.
    * @return True if line is empty or commented.
    */
-  bool is_line_empty (const std::string& line);
+  bool is_line_empty (void) const;
 
   /**
    * @brief Check that next word in stream corresponds to desired tag.
@@ -229,58 +273,36 @@ private:
   template <typename T>
     bool read_or_error (std::istringstream& line_stream, T& element,
 			const std::string& line_tag);
+
+  /**
+   * @brief Extract value from line if it holds a given tag.
+   * @tparam T Type of element to extract.
+   * @param line_tag Tag to check against.
+   * @param element Reference where element should be stored.
+   */
+  template <typename T>
+    inline bool decode_tag_value (const std::string& line_tag, T& element);
   
-  /**
-   * @brief Read seed.
-   * @param line Line to read.
-   * @return True if seed was successfully read.
-   */
-  bool read_seed (const std::string& line);
-
-  /**
-   * @brief Read initial simulation time.
-   * @param line Line to read.
-   * @return True if initial time was successfully read.
-   */
-  bool read_initial_time (const std::string& line);
-
-  /**
-   * @brief Read final simulation time.
-   * @param line Line to read.
-   * @return True if final time was successfully read.
-   */
-  bool read_final_time (const std::string& line);
-
   /**
    * @brief Read input files.
-   * @param line Line to read.
    * @return True if input files were successfully read.
    */
-  bool read_input_files (const std::string& line);
-  
-  /**
-   * @brief Read output directory.
-   * @param line Line to read.
-   * @return True if output directory was successfully read.
-   */
-  bool read_output_dir (const std::string& line);
-
-  /**
-   * @brief Read output step.
-   * @param line Line to read.
-   * @return True if output step was successfully read.
-   */
-  bool read_output_step (const std::string& line);
+  bool read_input_files (void);
   
   /**
    * @brief Read entities to output.
-   * @param line Line to read.
    * @return True if output entities were successfully read.
    */
-  bool read_output_entities (const std::string& line);
+  bool read_output_entities (void);
 
   /**
-   * @brief Wrie relevant simulation parameters to a file for future reference.
+   * @brief Read drawing algorithm.
+   * @return True if drawing algorithm was successfully read.
+   */
+  bool read_drawing_algorithm (void);
+
+  /**
+   * @brief Write relevant simulation parameters to a file for future reference.
    */
   void _write_params_out (void) const;
 
@@ -311,6 +333,15 @@ inline bool SimulationParams::read_or_error (std::istringstream& line_stream,
   if (line_stream >> element) return true;
   std::cerr << "ERROR: could not read " << line_tag << ", invalid format.\n";
   return false;
+}
+
+template <typename T>
+inline bool SimulationParams::decode_tag_value (const std::string& line_tag,
+						T& element)
+{
+  std::istringstream line_stream (_line);
+  if (!check_tag (line_stream, line_tag)) return false;
+  return read_or_error (line_stream, element, line_tag);
 }
 
 inline double SimulationParams::seed (void) const
@@ -353,5 +384,24 @@ inline const std::list<std::string>& SimulationParams::output_entities (void) co
   return _output_entities;
 }
 
+inline const SolverFactory& SimulationParams::solver_factory (void) const
+{
+  return *_solver_factory;
+}
+
+inline const RateManagerFactory& SimulationParams::rate_manager_factory (void) const
+{
+  return *_rate_manager_factory;
+}
+
+inline const RateContainerFactory& SimulationParams::rate_container_factory (void) const
+{
+  return *_rate_container_factory;
+}
+
+inline double SimulationParams::hybrid_base_rate (void) const
+{
+  return _hybrid_base_rate;
+}			       
 
 #endif // SIMULATION_PARAMS_H

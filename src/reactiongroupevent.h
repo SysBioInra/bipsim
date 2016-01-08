@@ -113,19 +113,6 @@ class ReactionGroupEvent
   //  */
   // ReactionGroupEvent& operator= ( const ReactionGroupEvent& other_reaction_event );
 
-  // ==================================
-  //  Public Methods - Class invariant
-  // ==================================
-  //
-  /**
-   * @brief Check class invariant.
-   * @return True if class invariant is preserved
-   */
-  bool check_invariant (void) const
-  {
-    return true;
-  }
-
 
 private:
 

@@ -29,8 +29,9 @@
 //  Constructors/Destructors
 // ==========================
 //
-DependencyRateManager::DependencyRateManager (const std::vector <Reaction*>& reactions)
-  : RateManager (reactions)
+DependencyRateManager::DependencyRateManager (const SimulationParams& params,
+					      const std::vector <Reaction*>& reactions)
+  : RateManager (params, reactions)
   , _rate_validity (reactions.size())
 {
   create_dependencies();

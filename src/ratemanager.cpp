@@ -19,15 +19,19 @@
 // ==================
 //
 #include "ratemanager.h"
+#include "simulationparams.h"
+#include "ratecontainerfactory.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-RateManager::RateManager (const std::vector <Reaction*>& reactions)
+RateManager::RateManager (const SimulationParams& params,
+			  const std::vector <Reaction*>& reactions)
   : _reactions (reactions)
-  , _rates (reactions.size(), 1e-6)
 {
+  _rates = params.rate_container_factory().create (params, reactions.size());
+
   compute_all_rates();
   cumulate_rates();
 }
@@ -37,6 +41,7 @@ RateManager::RateManager (const std::vector <Reaction*>& reactions)
 
 RateManager::~RateManager (void)
 {
+  delete _rates;
 }
 
 // ===========================

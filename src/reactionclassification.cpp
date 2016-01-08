@@ -80,20 +80,6 @@ int ReactionClassification::create_new_class (double time_step)
 // Not needed for this class (use of default overloading) !
 // ReactionClassification& ReactionClassification::operator= ( const ReactionClassification& other_reaction_classification );
 
-// ==================================
-//  Public Methods - Class invariant
-// ==================================
-//
-/**
- * Checks all the conditions that must remain true troughout the life cycle of
- * every object.
- */
-bool ReactionClassification::check_invariant (void) const
-{
-  bool result = true;
-  return result;
-}
-
 
 // =================
 //  Private Methods

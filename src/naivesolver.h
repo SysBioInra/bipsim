@@ -50,10 +50,10 @@ class NaiveSolver : public Solver
   //
   /**
    * @brief Default constructor
-   * @param initial_time Initial simulation time.
+   * @param params Simulation parameters.
    * @param cell_state Reference to a cell state describing current state and reactions within the cell.
    */
-  NaiveSolver (double initial_time, CellState& cell_state);
+  NaiveSolver (const SimulationParams& params, CellState& cell_state);
 
   // Not needed for this class (use of default copy constructor) !
   // /*

@@ -27,9 +27,11 @@
 //  Constructors/Destructors
 // ==========================
 //
-UpdatedRateGroup::UpdatedRateGroup (const std::vector<Reaction*>& reactions, double initial_time)
+UpdatedRateGroup::UpdatedRateGroup (const SimulationParams& params,
+				    const std::vector<Reaction*>& reactions,
+				    double initial_time)
   : ReactionGroup (reactions)
-  , _rate_manager (reactions)
+  , _rate_manager (params, reactions)
 {
   reschedule_next_reaction (initial_time);
 }

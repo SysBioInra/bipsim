@@ -105,12 +105,6 @@ public:
    * @return Reading frame on the binding site, BindingSite::NO_READING_FRAME if there is none.
    */
   int reading_frame (void) const;
-
-  /**
-   * @brief Binding rate contributon.
-   * @return Contribution to binding rate coming from this site.
-   */
-  double rate_contribution (void) const;
   
 
   

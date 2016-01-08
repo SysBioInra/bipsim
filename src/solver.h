@@ -42,11 +42,12 @@ class Solver
   // ==========================
   //
   /**
-   * @brief Default constructor
-   * @param initial_time Initial simulation time.
-   * @param cell_state Reference to a cell state describing current state and reactions within the cell.
+   * @brief Constructor
+   * @param params Simulation parameters.
+   * @param cell_state Reference to a cell state describing current state and
+   *  reactions within the cell.
    */
-  Solver (double initial_time, CellState& cell_state);
+  Solver (const SimulationParams& params, CellState& cell_state);
 
   // Not needed for this class (use of default copy constructor) !
   // /*

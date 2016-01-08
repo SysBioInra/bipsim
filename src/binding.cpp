@@ -139,7 +139,7 @@ double Binding::compute_backward_rate (void) const
    * Which is also the dot product between the vector of concentrations of binding_result bound
    * to every single binding sites and the vector of corresponding unbinding rates.
    */
-  return _binding_result.get_total_unbinding_rate_contribution (_binding_site_family_id);
+  return _binding_result.unbinding_rate_contribution (_binding_site_family_id);
 }
 
 

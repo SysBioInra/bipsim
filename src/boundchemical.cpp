@@ -142,7 +142,7 @@ int BoundChemical::number_bound_to_family (int binding_site_family) const
     }
 }
 
-double BoundChemical::get_total_unbinding_rate_contribution (int binding_site_family) const
+double BoundChemical::unbinding_rate_contribution (int binding_site_family) const
 {
   /**
    * Unbinding rate is generally defined by   r = k_off x [A].
