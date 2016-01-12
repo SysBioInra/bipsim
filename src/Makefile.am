@@ -32,19 +32,19 @@ libsrc_a_SOURCES += \
 # reaction sources
 libsrc_a_SOURCES += \
 	backwardreaction.h \
-	baseloading.cpp baseloading.h \
 	bidirectionalreaction.cpp bidirectionalreaction.h \
-	binding.cpp binding.h \
 	chemicalreaction.cpp chemicalreaction.h \
 	complexation.cpp complexation.h \
-	elongation.cpp elongation.h \
 	forwardreaction.h \
+	loading.cpp loading.h \
 	reaction.cpp reaction.h \
-	release.cpp release.h
+	release.cpp release.h \
+	sequencebinding.cpp sequencebinding.h \
+	translocation.cpp translocation.h
 
 # chemical entity sources
 libsrc_a_SOURCES += \
-	baseloader.cpp baseloader.h \
+	loader.cpp loader.h \
 	boundchemical.cpp boundchemical.h \
 	boundunit.h boundunitlist.h \
 	chemical.cpp chemical.h \

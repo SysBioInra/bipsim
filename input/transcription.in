@@ -15,8 +15,8 @@ unit BoundChemical stable_RNAP_SigB
 reaction Complexation RNAP SigA RNAP_SigA 1 1
 reaction Complexation RNAP SigB RNAP_SigB 1 1
 
-reaction Binding RNAP_SigA bound_RNAP_SigA promoter_SigA
-reaction Binding RNAP_SigB bound_RNAP_SigB promoter_SigB
+reaction SequenceBinding RNAP_SigA bound_RNAP_SigA promoter_SigA
+reaction SequenceBinding RNAP_SigB bound_RNAP_SigB promoter_SigB
 
 reaction ChemicalReaction bound_RNAP_SigA -1 stable_RNAP_SigA 1 rates 1 0
 reaction ChemicalReaction bound_RNAP_SigB -1 stable_RNAP_SigB 1 rates 1 0
@@ -29,13 +29,13 @@ reaction Complexation stable_RNAP SigB stable_RNAP_SigB 0 1
 unit Chemical Mg2+ 1000
 unit BoundChemical loaded_RNAP
 unit DecodingTable NTP_loading A ATP loaded_RNAP 1 C CTP loaded_RNAP 1 G GTP loaded_RNAP 1 T UTP loaded_RNAP 1
-unit BaseLoader stable_RNAP NTP_loading
+unit Loader stable_RNAP NTP_loading
 unit BoundChemical stalled_RNAP
 unit ProcessiveChemical translocating_RNAP stalled_RNAP hairpin
 
-reaction BaseLoading stable_RNAP
+reaction Loading stable_RNAP
 reaction ChemicalReaction loaded_RNAP -1 Mg2+ -2 translocating_RNAP 1 PPi 1 Mg2+ 2 rates 1 0
-reaction Elongation translocating_RNAP stable_RNAP 1 6
+reaction Translocation translocating_RNAP stable_RNAP 1 6
 
 # termination
 

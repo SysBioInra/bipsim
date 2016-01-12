@@ -1,8 +1,8 @@
 
 
 /**
- * @file binding.cpp
- * @brief Implementation of the Binding class.
+ * @file sequencebinding.cpp
+ * @brief Implementation of the SequenceBinding class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -19,7 +19,7 @@
 // ==================
 //
 #include "macros.h" // REQUIRE()
-#include "binding.h"
+#include "sequencebinding.h"
 #include "bindingsite.h"
 #include "bindingsitefamily.h"
 #include "boundchemical.h"
@@ -29,9 +29,10 @@
 //  Constructors/Destructors
 // ==========================
 //
-Binding::Binding (Chemical& unit_to_bind, BoundChemical& binding_result,
-		  BindingSiteFamily& binding_site_family,
-		  int binding_site_family_id)
+SequenceBinding::SequenceBinding (Chemical& unit_to_bind,
+				  BoundChemical& binding_result,
+				  BindingSiteFamily& binding_site_family,
+				  int binding_site_family_id)
   : _unit_to_bind (unit_to_bind)
   , _binding_result (binding_result)
   , _binding_site_family (binding_site_family)
@@ -44,9 +45,9 @@ Binding::Binding (Chemical& unit_to_bind, BoundChemical& binding_result,
 }
  
 // Not needed for this class (use of default copy constructor) !
-// Binding::Binding (Binding& other_Binding);
+// SequenceBinding::SequenceBinding (SequenceBinding& other_SequenceBinding);
 
-Binding::~Binding (void)
+SequenceBinding::~SequenceBinding (void)
 {
 }
 
@@ -54,22 +55,25 @@ Binding::~Binding (void)
 //  Public Methods - Commands
 // ===========================
 //
-void Binding::perform_forward (void)
+void SequenceBinding::perform_forward (void)
 {
-  REQUIRE (is_forward_reaction_possible()); /** @pre There is at least one element to bind. */
+  /** @pre There is at least one element to bind. */
+  REQUIRE (is_forward_reaction_possible()); 
 
   // Number of free elements is updated.
   _unit_to_bind.remove (1);
   
-  // A binding site in the family is randomly chosen and occupied by a newly created binding result
+  // A binding site in the family is randomly chosen and occupied by a newly
+  // created binding result
   const BindingSite& binding_site = _binding_site_family.get_random_available_site();
   _binding_result.add_unit_at_site (binding_site);
   binding_site.location().bind_unit (_binding_result);
 }
 
-void Binding::perform_backward (void)
+void SequenceBinding::perform_backward (void)
 {
-  REQUIRE (is_backward_reaction_possible()); /** @pre There is at least one element to unbind. */
+  /** @pre There is at least one element to unbind. */
+  REQUIRE (is_backward_reaction_possible()); 
 
   // Number of free elements is updated.
   _unit_to_bind.add (1);
@@ -87,12 +91,12 @@ void Binding::perform_backward (void)
 //  Public Methods - Accessors
 // ============================
 //
-bool Binding::is_forward_reaction_possible (void) const
+bool SequenceBinding::is_forward_reaction_possible (void) const
 {
   return (_unit_to_bind.number() > 0);
 }
 
-bool Binding::is_backward_reaction_possible (void) const
+bool SequenceBinding::is_backward_reaction_possible (void) const
 {
   return (_binding_result.number() > 0);
 }
@@ -109,28 +113,29 @@ bool Binding::is_backward_reaction_possible (void) const
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// Binding& Binding::operator= (Binding& other_Binding);
+// SequenceBinding& SequenceBinding::operator= (SequenceBinding& other_sequence_binding);
 
 
 // =================
 //  Private Methods
 // =================
 //
-double Binding::compute_forward_rate (void) const
+double SequenceBinding::compute_forward_rate (void) const
 {
   /**
-   * Binding rate is generally defined by r = k_on x [A] x [B], where [A] is the concentration
-   * of units_to_bind and [B] the concentration of binding sites. However, k_on varies from a
-   * site to another so the total binding rate becomes
+   * SequenceBinding rate is generally defined by r = k_on x [A] x [B],
+   * where [A] is the concentration of units_to_bind and [B] the concentration
+   * of binding sites. However, k_on varies from a site to another so the total
+   * binding rate becomes
    *   r_total = [A] sum ( k_on_i x [B_i] ) = [A] vector(k_on_i).vector([B_i])
-   * The concentration of units to bind is easy to get, the binding site handler can compute
-   * the rest of the formula for us as it holds information about binding rates and binding site
-   * concentrations.
+   * The concentration of units to bind is easy to get, the binding site
+   * family can compute the rest of the formula for us as it holds information
+   * about binding rates and binding site concentrations.
    */
   return _unit_to_bind.number() * _binding_site_family.total_binding_rate_contribution();
 }
 
-double Binding::compute_backward_rate (void) const
+double SequenceBinding::compute_backward_rate (void) const
 {
   /**
    * Unbinding rate is generally defined by r = k_off x [A], where [A] is the concentration
@@ -143,8 +148,8 @@ double Binding::compute_backward_rate (void) const
 }
 
 
-void Binding::print (std::ostream& output) const
+void SequenceBinding::print (std::ostream& output) const
 {
-  output << "Binding reaction.";
+  output << "SequenceBinding reaction.";
 }
 

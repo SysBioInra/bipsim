@@ -116,77 +116,77 @@ private:
   // =================
   //
   /**
-   * @brief Create binding site from stream and store it in cell state.
+   * @brief Create binding site from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
   bool create_binding_site (const std::string& line);
 
   /**
-   * @brief Create termination site from stream and store it in cell state.
+   * @brief Create termination site from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
   bool create_termination_site (const std::string& line);
 
   /**
-   * @brief Create composition table from stream and store it in cell state.
+   * @brief Create composition table from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
   bool create_composition_table (const std::string& line);
 
   /**
-   * @brief Create decoding table from stream and store it in cell state.
+   * @brief Create decoding table from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
   bool create_decoding_table (const std::string& line);
 
   /**
-   * @brief Create product table from stream and store it in cell state.
+   * @brief Create product table from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
   bool create_product_table (const std::string& line);
 
   /**
-   * @brief Create transformation table from stream and store it in cell state.
+   * @brief Create transformation table from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
   bool create_transformation_table (const std::string& line);
 
   /**
-   * @brief Create chemical from stream and store it in cell state.
+   * @brief Create chemical from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
   bool create_chemical (const std::string& line);
 
   /**
-   * @brief Create bound chemical from stream and store it in cell state.
+   * @brief Create bound chemical from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
   bool create_bound_chemical (const std::string& line);
 
   /**
-   * @brief Create base loader from stream and store it in cell state.
+   * @brief Create loader from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
-  bool create_base_loader (const std::string& line);
+  bool create_loader (const std::string& line);
 
   /**
-   * @brief Create chemical sequence from stream and store it in cell state.
+   * @brief Create chemical sequence from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
   bool create_chemical_sequence (const std::string& line);
 
   /**
-   * @brief Create processive chemical from stream and store it in cell state.
+   * @brief Create processive chemical from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */

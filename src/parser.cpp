@@ -133,9 +133,16 @@ bool Parser::display_dependency_errors (InputData& input_data)
     {
       try
 	{
-	  _unit_factory.handle (input_data.line())
-	    || _reaction_factory.handle (input_data.line())
-	    || _event_factory.handle (input_data.line());
+	  if (not (_unit_factory.handle (input_data.line())
+		   || _reaction_factory.handle (input_data.line())
+		   || _event_factory.handle (input_data.line())))
+	    {
+	      error_occurred = true;
+	      std::cerr << "ERROR (file " << input_data.file_name()
+			<< ", line " << input_data.line_number() << "): "
+			<< "line does not make sense." << std::endl;
+	      input_data.mark_line_as_treated();
+	    }
 	}
       catch (const DependencyException& error)
 	{

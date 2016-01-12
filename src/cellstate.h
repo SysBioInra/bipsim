@@ -189,7 +189,7 @@ private:
 #include "chemical.h"
 #include "boundchemical.h"
 #include "processivechemical.h"
-#include "baseloader.h"
+#include "loader.h"
 #include "chemicalsequence.h"
 
 #include "compositiontable.h"
@@ -201,10 +201,10 @@ private:
 #include "bidirectionalreaction.h"
 #include "chemicalreaction.h"
 #include "complexation.h"
-#include "binding.h"
-#include "baseloading.h"
+#include "sequencebinding.h"
+#include "loading.h"
 #include "release.h"
-#include "elongation.h"
+#include "translocation.h"
 
 
 inline const std::vector <Reaction*>& CellState::reactions (void) const

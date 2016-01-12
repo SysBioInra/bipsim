@@ -1,7 +1,7 @@
 
 /**
- * @file baseloading.h
- * @brief Header for the BaseLoading class.
+ * @file loading.h
+ * @brief Header for the Loading class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -9,8 +9,8 @@
 
 // Multiple include protection
 //
-#ifndef BASELOADING_H
-#define BASELOADING_H
+#ifndef LOADING_H
+#define LOADING_H
 
 // ==================
 //  General Includes
@@ -30,14 +30,14 @@
 // ===================
 //
 /**
- * @brief Class for representing base loading reactions.
+ * @brief Class for representingloading reactions.
  *
- * BaseLoading represents reaction in which a chemical (a BaseLoader) matches
- * up a base with the template it is currently bound to.
+ * Loading represents reaction in which a chemical (a Loader) matches
+ * up a chemical with the template it is currently bound to.
  * This class inherits class Reaction.
  * @sa Reaction
  */
-class BaseLoading : public Reaction
+class Loading : public Reaction
 {
 public:
 
@@ -47,23 +47,23 @@ public:
   //
   /**
    * @brief Constructor
-   * @param base_loader
+   * @param loader
    *  Element that recognizes and loads a chemical corresponding to the template
    *  it is reading.
    */
-  BaseLoading (BaseLoader& base_loader);
+  Loading (Loader& loader);
     
 
   // Not needed for this class (use of default copy constructor) !
   // /*
   //  * @brief Copy constructor
   //  */
-  // BaseLoading (BaseLoading& other_base_loading);
+  // Loading (Loading& other_loading);
 
   /**
    * @brief Destructor
    */
-  virtual ~BaseLoading (void);
+  virtual ~Loading (void);
   
   // ===========================
   //  Public Methods - Commands
@@ -94,7 +94,7 @@ public:
   // /*
   //  * @brief Assignment operator
   //  */
-  // BaseLoading& operator= (BaseLoading& other_base_loading);
+  // Loading& operator= (Loading& other_loading);
 
 
  protected:
@@ -110,8 +110,8 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief Chemical loading a base corresponding to current template. */
-  BaseLoader& _base_loader;  
+  /** @brief Chemical loading an element corresponding to current template. */
+  Loader& _loader;  
   
   // =================
   //  Private Methods
@@ -140,4 +140,4 @@ private:
 // =====================
 //
 
-#endif // BASELOADING_H
+#endif // LOADING_H

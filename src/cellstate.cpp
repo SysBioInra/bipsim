@@ -18,7 +18,6 @@
 //  Project Includes
 // ==================
 //
-#include "binding.h"
 #include "cellstate.h"
 #include "parser.h"
 

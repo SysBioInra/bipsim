@@ -1,7 +1,7 @@
 
 /**
- * @file binding.h
- * @brief Header for the Binding class.
+ * @file sequencebinding.h
+ * @brief Header for the SequenceBinding class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -9,8 +9,8 @@
 
 // Multiple include protection
 //
-#ifndef BINDING_H
-#define BINDING_H
+#ifndef SEQUENCE_BINDING_H
+#define SEQUENCE_BINDING_H
 
 // ==================
 //  General Includes
@@ -31,14 +31,14 @@
 /**
  * @brief Class for representing binding reactions.
  *
- * The Binding class can represent the binding of chemical elements onto
+ * The SequenceBinding class can represent the binding of chemical elements onto
  * binding sites. A binding reaction is represented by an element to bind, the
  * same element in its bound form and the type of binding sites it can bind
  * onto.
  * This class inherits class Reaction.
  * @sa Reaction
  */
-class Binding: public BidirectionalReaction
+class SequenceBinding: public BidirectionalReaction
 {
 public:
 
@@ -61,7 +61,7 @@ public:
    *  onto.
    * @sa BindingSite
    */
-  Binding (Chemical& unit_to_bind, BoundChemical& binding_result,
+  SequenceBinding (Chemical& unit_to_bind, BoundChemical& binding_result,
 	   BindingSiteFamily& binding_site_family, int binding_site_family_id);
     
 
@@ -69,12 +69,12 @@ public:
   // /*
   //  * @brief Copy constructor
   //  */
-  // Binding (Binding& other_binding);
+  // SequenceBinding (SequenceBinding& other_sequence_binding);
 
   /**
    * @brief Destructor
    */
-  virtual ~Binding (void);
+  virtual ~SequenceBinding (void);
   
   // ===========================
   //  Public Methods - Commands
@@ -123,7 +123,7 @@ public:
   // /*
   //  * @brief Assignment operator
   //  */
-  // Binding& operator= (Binding& other_binding);
+  // SequenceBinding& operator= (SequenceBinding& other_sequence_binding);
 
  protected:
   // ===================
@@ -155,7 +155,6 @@ public:
 
   /**
    * @brief Identifier of the binding site family the chemical can bind onto.
-   * @sa BindingSiteHandler
    */
   int _binding_site_family_id;
 

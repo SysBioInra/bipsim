@@ -116,49 +116,49 @@ private:
   // =================
   //
   /**
-   * @brief Create base loading reaction from stream and store it in cell state.
+   * @brief Create oading reaction from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
-  bool create_base_loading (const std::string& line);
+  bool create_loading (const std::string& line);
 
   /**
-   * @brief Create chemical reaction from stream and store it in cell state.
+   * @brief Create chemical reaction from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
   bool create_chemical_reaction (const std::string& line);
 
   /**
-   * @brief Create complexation from stream and store it in cell state.
+   * @brief Create complexation from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
   bool create_complexation (const std::string& line);
 
   /**
-   * @brief Create elongation from stream and store it in cell state.
+   * @brief Create translocation from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
-  bool create_elongation (const std::string& line);
+  bool create_translocation (const std::string& line);
 
   /**
-   * @brief Create binding from stream and store it in cell state.
+   * @brief Create sequence binding from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
-  bool create_binding (const std::string& line);
+  bool create_sequence_binding (const std::string& line);
 
   /**
-   * @brief Create release from stream and store it in cell state.
+   * @brief Create release from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
   bool create_release (const std::string& line);
 
   /**
-   * @brief Create release from stream and store it in cell state.
+   * @brief Create release from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */

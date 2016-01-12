@@ -32,9 +32,9 @@
 
 
 /**
- * @brief Table that stores base-template pairings.
+ * @brief Table that stores chemical-template pairings.
  *
- * Templates are user-defined strings and bases are any chemical that can be
+ * Templates are user-defined strings and chemical are any chemical that can be
  * used for synthesis. It inherits class SimulatorInput.
  */
 class DecodingTable : public SimulatorInput
@@ -70,14 +70,17 @@ class DecodingTable : public SimulatorInput
   /**
    * @brief Add pairing to the decoding table.
    *
-   * If template is already defined, the corresponding base is overwritten.
+   * If template is already defined, the corresponding chemical to load is 
+   * overwritten.
    * @param template_ String template to decode.
-   * @param corresponding_base Chemical that matches the template.
-   * @param occupied_polymerase Occupied polymerase when it has loaded the base.
-   * @param loading_rate Rate at which a base is loaded onto its template.
+   * @param chemical_to_load Chemical that matches the template.
+   * @param occupied_polymerase Occupied polymerase when it has loaded the
+   *  chemical corresponding to the template read.
+   * @param loading_rate Rate at which a chemical is loaded onto its template.
    */
-  void add_template (const std::string& template_, Chemical& corresponding_base, BoundChemical& occupied_polymerase, double loading_rate);
-
+  void add_template (const std::string& template_,
+		     Chemical& chemical_to_load,
+		     BoundChemical& occupied_polymerase, double loading_rate);
 
   // ============================
   //  Public Methods - Accessors
@@ -98,11 +101,11 @@ class DecodingTable : public SimulatorInput
 
 
   /**
-   * @brief Get base corresponding to template.
+   * @brief Get chemical to load ont the template.
    * @param template_index Template index.
    * @return Reference to chemical corresponding to template.
    */
-  Chemical& decode (int template_index) const;
+  Chemical& chemical_to_load (int template_index) const;
 
   /**
    * @brief Get occupied polymerase state corresponding to template.
@@ -126,10 +129,10 @@ class DecodingTable : public SimulatorInput
 
 
   /**
-   * @brief Accessor to all loadable bases.
-   * @return Set of all loadable bases.
+   * @brief Accessor to all loadable chemicals.
+   * @return Set of all loadable chemicals.
    */
-  const std::set<Chemical*> bases (void) const;
+  const std::set<Chemical*> chemicals_loaded (void) const;
 
   /**
    * @brief Accessor to all possible occupied polymerases.
@@ -182,7 +185,7 @@ private:
   std::vector< double > _loading_rates;
   
   /** @brief Vector of loadable chemicals. */
-  std::vector< Chemical* > _bases;
+  std::vector< Chemical* > _chemicals_to_load;
 
   /** @brief Vector of occupied polymerases. */
   std::vector< BoundChemical* > _occupied_polymerases;
@@ -201,7 +204,7 @@ private:
    * @brief Print class content.
    * @param output Stream where output should be written.
    */
-  void print ( std::ostream& output ) const;
+  void print (std::ostream& output) const;
 
 };
 
@@ -223,24 +226,30 @@ inline int DecodingTable::template_index (const std::string& template_) const
     }
 }
 
-inline Chemical& DecodingTable::decode (int template_index) const
+inline Chemical& DecodingTable::chemical_to_load (int template_index) const
 {
-  REQUIRE( template_index >= 0 ); /** @pre Template index must be nonnegative. */
-  REQUIRE( template_index < _bases.size() ); /** @pre Template index must be smaller than number of templates. */
-  return *(_bases [template_index]);
+  /** @pre Template index must be nonnegative. */
+  REQUIRE (template_index >= 0); 
+  /** @pre Template index must be smaller than number of templates. */
+  REQUIRE (template_index < _chemicals_to_load.size()); 
+  return *(_chemicals_to_load [template_index]);
 }
 
 inline BoundChemical& DecodingTable::occupied_polymerase (int template_index) const
 {
-  REQUIRE( template_index >= 0 ); /** @pre Template index must be nonnegative. */
-  REQUIRE( template_index < _bases.size() ); /** @pre Template index must be smaller than number of templates. */
+  /** @pre Template index must be nonnegative. */
+  REQUIRE (template_index >= 0); 
+  /** @pre Template index must be smaller than number of templates. */
+  REQUIRE (template_index < _chemicals_to_load.size()); 
   return *(_occupied_polymerases [template_index]);
 }
 
 inline double DecodingTable::loading_rate (int template_index) const
 {
-  REQUIRE( template_index >= 0 ); /** @pre Template index must be nonnegative. */
-  REQUIRE( template_index < _loading_rates.size() ); /** @pre Template index must be smaller than number of templates. */
+  /** @pre Template index must be nonnegative. */
+  REQUIRE (template_index >= 0); 
+  /** @pre Template index must be smaller than number of templates. */
+  REQUIRE (template_index < _loading_rates.size()); 
   return _loading_rates [template_index];
 }
 
@@ -254,9 +263,10 @@ inline int DecodingTable::template_length (void) const
   return _template_length;
 }
 
-inline const std::set<Chemical*> DecodingTable::bases (void) const
+inline const std::set<Chemical*> DecodingTable::chemicals_loaded (void) const
 {
-  return std::set<Chemical*> (_bases.begin(), _bases.end());
+  return std::set<Chemical*> (_chemicals_to_load.begin(), 
+			      _chemicals_to_load.end());
 }
 
 inline const std::set<BoundChemical*> DecodingTable::occupied_polymerases (void) const

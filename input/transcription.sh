@@ -24,7 +24,7 @@ done
 printf "\n" >> $FILE
 for factor in ${sigma[@]}
 do
-    printf "\nreaction Binding RNAP_%s bound_RNAP_%s promoter_%s" $factor $factor $factor >> $FILE
+    printf "\nreaction SequenceBinding RNAP_%s bound_RNAP_%s promoter_%s" $factor $factor $factor >> $FILE
 done
 
 printf "\n" >> $FILE
@@ -48,14 +48,14 @@ printf " A ATP loaded_RNAP 1" >> $FILE
 printf " C CTP loaded_RNAP 1" >> $FILE
 printf " G GTP loaded_RNAP 1" >> $FILE
 printf " T UTP loaded_RNAP 1" >> $FILE
-printf "\nunit BaseLoader stable_RNAP NTP_loading" >> $FILE
+printf "\nunit Loader stable_RNAP NTP_loading" >> $FILE
 printf "\nunit BoundChemical stalled_RNAP" >> $FILE
 printf "\nunit ProcessiveChemical translocating_RNAP stalled_RNAP hairpin" >> $FILE
 
 printf "\n" >> $FILE
-printf "\nreaction BaseLoading stable_RNAP" >> $FILE
+printf "\nreaction Loading stable_RNAP" >> $FILE
 printf "\nreaction ChemicalReaction loaded_RNAP -1 Mg2+ -2 translocating_RNAP 1 PPi 1 Mg2+ 2 rates 1 0" >> $FILE
-printf "\nreaction Elongation translocating_RNAP stable_RNAP 1 6" >> $FILE
+printf "\nreaction Translocation translocating_RNAP stable_RNAP 1 6" >> $FILE
 
 #termination
 printf "\n\n# termination\n" >> $FILE

@@ -6,14 +6,14 @@ source ("save_concentrations.R");
 source ("add_concentrations.R");
 
 data_dir = "../output/"
-#data_name = "output.txt"
-data_name = "drawing_algorithm/hybrid/t27e4.txt"
+data_name = "concentrations.out"
+#data_name = "drawing_algorithm/hybrid/t27e4.txt"
 
 data = load_concentrations (paste (data_dir, data_name, sep = ""));
 #ref = load_concentrations (paste (data_dir, "ref.txt", sep = ""));
 
 min_time = 0;
-max_time = 200;
+max_time = 1000;
 #toplot = c('');
 toplot = c('protein','rna','50S');
 #toplot = c('50S');

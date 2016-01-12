@@ -26,10 +26,10 @@
 
 #include "chemicalreaction.h"
 #include "complexation.h"
-#include "binding.h"
-#include "baseloading.h"
+#include "sequencebinding.h"
+#include "loading.h"
 #include "release.h"
-#include "elongation.h"
+#include "translocation.h"
 #include "forwardreaction.h"
 #include "backwardreaction.h"
 
@@ -71,11 +71,11 @@ bool ReactionFactory::handle (const std::string& line)
   std::getline (line_stream, remaining);
   bool creation_succeeded = (create_chemical_reaction (remaining)
 			     || create_complexation (remaining)
-			     || create_binding (remaining)
-			     || create_elongation (remaining)
+			     || create_sequence_binding (remaining)
+			     || create_translocation (remaining)
 			     || create_release (remaining)
 			     || create_degradation (remaining)
-			     || create_base_loading (remaining));
+			     || create_loading (remaining));
 			     
   return creation_succeeded;
 }
@@ -108,7 +108,7 @@ bool ReactionFactory::create_chemical_reaction (const std::string& line)
 {
   std::istringstream line_stream (line);
   if (check_tag (line_stream, "ChemicalReaction") == false) { return false; }
-
+  
   // read base data
   std::vector <Chemical*> chemicals;
   std::vector <int> stoichiometries;
@@ -142,21 +142,21 @@ bool ReactionFactory::create_chemical_reaction (const std::string& line)
 
 
 
-bool ReactionFactory::create_base_loading (const std::string& line)
+bool ReactionFactory::create_loading (const std::string& line)
 {
   std::istringstream line_stream (line);
-  if (check_tag (line_stream, "BaseLoading") == false) { return false; }
+  if (check_tag (line_stream, "Loading") == false) { return false; }
 
   // read base data
-  std::string base_loader;
-  if (not (line_stream >> base_loader)) { throw FormatException(); }
+  std::string loader;
+  if (not (line_stream >> loader)) { throw FormatException(); }
 
   // check that the chemicals are known and valid
-  BaseLoader* base_loader_ptr = _cell_state.find <BaseLoader> (base_loader);
-  if (base_loader_ptr == 0) { throw DependencyException (base_loader); }
+  Loader* loader_ptr = _cell_state.find <Loader> (loader);
+  if (loader_ptr == 0) { throw DependencyException (loader); }
     
   // create and store
-  _cell_state.store (new BaseLoading (*base_loader_ptr));
+  _cell_state.store (new Loading (*loader_ptr));
   return true;
 }
 
@@ -193,10 +193,10 @@ bool ReactionFactory::create_complexation (const std::string& line)
 
 
 
-bool ReactionFactory::create_elongation (const std::string& line)
+bool ReactionFactory::create_translocation (const std::string& line)
 {
   std::istringstream line_stream (line);
-  if (check_tag (line_stream, "Elongation") == false) { return false; }
+  if (check_tag (line_stream, "Translocation") == false) { return false; }
 
   // read base data
   std::string chemical, second_chemical;
@@ -214,17 +214,18 @@ bool ReactionFactory::create_elongation (const std::string& line)
   if (chemical_after_step == 0)  throw DependencyException (second_chemical);
 
   // create and store
-  _cell_state.store (new Elongation (*processive_chemical, *chemical_after_step,
-				     step_size, rate));
+  _cell_state.store (new Translocation (*processive_chemical,
+					*chemical_after_step,
+					step_size, rate));
   return true;
 }
 
 
 
-bool ReactionFactory::create_binding (const std::string& line)
+bool ReactionFactory::create_sequence_binding (const std::string& line)
 {
   std::istringstream line_stream (line);
-  if (check_tag (line_stream, "Binding") == false) { return false; }
+  if (check_tag (line_stream, "SequenceBinding") == false) { return false; }
 
   // read base data
   std::string unit_to_bind, binding_result, binding_site;
@@ -242,9 +243,10 @@ bool ReactionFactory::create_binding (const std::string& line)
      { throw DependencyException (binding_site); }
 
   // create and store
-  Binding* reaction = new Binding (*unit_to_bind_ptr, *binding_result_ptr,
-				   *(_cell_state.find <BindingSiteFamily> (binding_site)),
-				   binding_site_family);
+  SequenceBinding* reaction = 
+    new SequenceBinding (*unit_to_bind_ptr, *binding_result_ptr,
+			 *(_cell_state.find <BindingSiteFamily> (binding_site)),
+			 binding_site_family);
   _cell_state.store (reaction);
   _cell_state.store (new ForwardReaction (*reaction));
   _cell_state.store (new BackwardReaction (*reaction)); 

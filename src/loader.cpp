@@ -1,8 +1,8 @@
 
 
 /**
- * @file baseloader.cpp
- * @brief Implementation of the BaseLoader class.
+ * @file loader.cpp
+ * @brief Implementation of the Loader class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -18,7 +18,7 @@
 //  Project Includes
 // ==================
 //
-#include "baseloader.h"
+#include "loader.h"
 #include "decodingtable.h"
 #include "randomhandler.h"
 #include "chemicalsequence.h"
@@ -27,10 +27,10 @@
 //  Constructors/Destructors
 // ==========================
 //
-BaseLoader::BaseLoader (const DecodingTable& decoding_table)
+Loader::Loader (const DecodingTable& decoding_table)
   : _decoding_table (decoding_table)
   , _rate_validity (decoding_table.size())
-  , _focused_template_index (BaseLoader::UNKNOWN_TEMPLATE)
+  , _focused_template_index (Loader::UNKNOWN_TEMPLATE)
   , _loading_rates (decoding_table.size())
 {
   // resize unit_map and leave it empty
@@ -38,13 +38,13 @@ BaseLoader::BaseLoader (const DecodingTable& decoding_table)
 
   // create an observer for every loadable base
   for (int i = 0; i < decoding_table.size(); ++i)
-    { _rate_validity.add_observer (_decoding_table.decode(i), i); }
+    { _rate_validity.add_observer (_decoding_table.chemical_to_load(i), i); }
 }
 
 // Not needed for this class (use of default copy constructor) !
-// BaseLoader::BaseLoader ( const BaseLoader& other_base_loader );
+// Loader::Loader ( const Loader& other_loader );
 
-BaseLoader::~BaseLoader (void)
+Loader::~Loader (void)
 {
 }
 
@@ -52,10 +52,10 @@ BaseLoader::~BaseLoader (void)
 //  Public Methods - Commands
 // ===========================
 //
-void BaseLoader::remove_focused_unit (void)
+void Loader::remove_focused_unit (void)
 {
   // if unit was reading an identifed template
-  if (_focused_template_index != BaseLoader::UNKNOWN_TEMPLATE) 
+  if (_focused_template_index != Loader::UNKNOWN_TEMPLATE) 
     {
       // remove the unit from the map
       _unit_map [_focused_template_index].erase (_focused_unit);
@@ -68,21 +68,21 @@ void BaseLoader::remove_focused_unit (void)
   BoundChemical::remove_focused_unit();
 }
 
-void BaseLoader::focus_random_unit (void)
+void Loader::focus_random_unit (void)
 {
   // focus random unit by using the parent function
   BoundChemical::focus_random_unit();
   update_focused_template();
 }
 
-void BaseLoader::focus_random_unit (int binding_site_family)
+void Loader::focus_random_unit (int binding_site_family)
 {
   // focus random unit by using the parent function
   BoundChemical::focus_random_unit (binding_site_family);
   update_focused_template();
 }
 
-void BaseLoader::focus_random_unit_from_loading_rates (void)
+void Loader::focus_random_unit_from_loading_rates (void)
 {
   // draw a random chemical to load depending on loading rates
   update_rates();
@@ -95,12 +95,13 @@ void BaseLoader::focus_random_unit_from_loading_rates (void)
     [RandomHandler::instance().draw_uniform (0, unit_list.size()-1)];
 }
 
-void BaseLoader::update_rates (void)
+void Loader::update_rates (void)
 {
   /**
    * Loading rate is generally defined by k_on_i x [A_i] x [B_i], where [A_i] is
-   * the concentration of BaseLoader reading template i and [B_i] the
-   * concentration of base i. k_on_i may vary from a base to another. The latter
+   * the concentration of Loader reading template i and [B_i] the
+   * concentration of chemical to load on template i.
+   * k_on_i may vary from one template to another. The latter
    * information is stored within the decoding table. The total rate is given by
    *   r_total = sum ( k_on_i x [A_i] x [B_i] )
    */
@@ -110,7 +111,7 @@ void BaseLoader::update_rates (void)
       _loading_rates.set_rate (_rate_validity.front(),
 			       _decoding_table.loading_rate (index) // k_on_i
 			       * _unit_map [index].size() // [A_i]
-			       * _decoding_table.decode(index).number()); // [B_i]
+			       * _decoding_table.chemical_to_load(index).number()); // [B_i]
       _rate_validity.pop();
     }
 }
@@ -132,14 +133,14 @@ void BaseLoader::update_rates (void)
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// BaseLoader& BaseLoader::operator= ( const BaseLoader& other_base_loader );
+// Loader& Loader::operator= ( const Loader& other_loader );
 
 
 // =================
 //  Private Methods
 // =================
 //
-void BaseLoader::add_unit (const BindingSite& binding_site, int position,
+void Loader::add_unit (const BindingSite& binding_site, int position,
 			   int reading_frame)
 {
   // update quantity and references to focused unit
@@ -160,15 +161,15 @@ void BaseLoader::add_unit (const BindingSite& binding_site, int position,
     }
   else // unvalid template
     {
-      // if the chemical reads an unknown template, it cannot load a base
+      // if the chemical reads an unknown template, it cannot load anything
       // there is nothing to update in the different vectors and maps
       // this unit will act as a plain bound_chemical
-      _focused_template_index = BaseLoader::UNKNOWN_TEMPLATE;
+      _focused_template_index = Loader::UNKNOWN_TEMPLATE;
       std::cerr << "UNKNOWN TEMPLATE " << focused_template;
     }
 }
 
-void BaseLoader::update_focused_template (void)
+void Loader::update_focused_template (void)
 {
   // retrieve template read by focused unit
   ChemicalSequence& target_sequence = _focused_unit->binding_site().location();

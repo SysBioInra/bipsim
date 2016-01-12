@@ -10,8 +10,8 @@
  */
 
 
-#ifndef FORWARDDECLARATIONS_H
-#define FORWARDDECLARATIONS_H
+#ifndef FORWARD_DECLARATIONS_H
+#define FORWARD_DECLARATIONS_H
 
 
 // utility classes
@@ -38,18 +38,18 @@ class HybridRateContainerFactory;
 
 // reaction classes
 class BackwardReaction;
-class BaseLoading;
 class BidirectionalReaction;
-class Binding;
 class ChemicalReaction;
 class Complexation;
-class Elongation;
 class ForwardReaction;
+class Loading;
 class Reaction;
 class Release;
+class SequenceBinding;
+class Translocation;
 
 // chemical entity classes
-class BaseLoader;
+class Loader;
 class BoundChemical;
 class BoundUnit;
 class BoundUnitList;
@@ -154,4 +154,4 @@ class ParserException;
  */
 typedef Observable<ConcentrationObserver> Reactant;
 
-#endif // FORWARDDECLARATIONS_H
+#endif // FORWARD_DECLARATIONS_H

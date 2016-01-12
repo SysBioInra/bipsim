@@ -1,17 +1,17 @@
 
 
 /**
- * @file elongation.h
+ * @file translocation.h
  * @authors Marc Dinh, Stephan Fischer
- * @brief Header for the Elongation class.
+ * @brief Header for the Translocation class.
  * 
  */
 
 
 // Multiple include protection
 //
-#ifndef ELONGATION_H
-#define ELONGATION_H
+#ifndef TRANSLOCATION_H
+#define TRANSLOCATION_H
 
 
 // ==================
@@ -28,13 +28,13 @@
 #include "reaction.h"
 
 /**
- * @brief Class that represents elongation of a polymerase.
+ * @brief Class that represents translocation of a polymerase.
  *
  * The polymerase is supposed to process along a sequence and to generate a
- * a product for which the sequence is a template. Elongation corresponds to
+ * a product for which the sequence is a template. Translocation corresponds to
  * the movement along the sequence and synthesis of the product.
  */
-class Elongation : public Reaction
+class Translocation : public Reaction
 {
 public:
 
@@ -45,26 +45,27 @@ public:
   /**
    * @brief Constructor
    * @param  processive_chemical 
-   *  Polymerase that does the elongation.
+   *  Polymerase that does the translocation.
    * @param  chemical_after_step
-   *  Chemical after elongation.
+   *  Chemical after translocation.
    * @param  step_size
-   *  Number of bases processed at each elongation step.
-   * @param rate Elongation rate (in steps/s).
+   *  Number of bases processed at each translocation step.
+   * @param rate Translocation rate (in steps/s).
    */
-  Elongation (ProcessiveChemical& processive_chemical,
-	      BoundChemical& chemical_after_step, int step_size, double rate);
+  Translocation (ProcessiveChemical& processive_chemical,
+		 BoundChemical& chemical_after_step,
+		 int step_size, double rate);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
   //  * @brief Copy constructor
   //  */
-  // Elongation (Elongation& other_elongation);
+  // Translocation (Translocation& other_translocation);
 
   /**
    * @brief Destructor
    */
-  virtual ~Elongation (void);
+  virtual ~Translocation (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -97,7 +98,7 @@ public:
   // /*
   //  * @brief Assignment operator
   //  */
-  // Elongation& operator= (Elongation& other_elongation);
+  // Translocation& operator= (Translocation& other_translocation);
 
  protected:
   // ===================
@@ -110,16 +111,16 @@ public:
   //  Attributes
   // ============
   //
-  /** @brief Polymerase that does the elongation. */
+  /** @brief Polymerase that does the translocation. */
   ProcessiveChemical& _processive_chemical;
 
   /** @brief New polymerase from after stepping. */
   BoundChemical& _chemical_after_step;
 
-  /** @brief Number of bases processed at each elongation step. */
+  /** @brief Number of bases processed at each translocation step. */
   int _step_size;
 
-  /** @brief Elongation rate (in s^-1). */
+  /** @brief Translocation rate (in s^-1). */
   double _rate;
 
   // =================
@@ -150,4 +151,4 @@ public:
 //
 
 
-#endif // ELONGATION_H
+#endif // TRANSLOCATION_H

@@ -95,7 +95,7 @@ unit BoundChemical m30S12a
 # Bound ribosome variants
 unit BoundChemical stalled_ribosome
 unit ProcessiveChemical EFt70S stalled_ribosome stop_codon
-unit BaseLoader 70S EtRNAs
+unit Loader 70S EtRNAs
 
 unit BoundChemical Et70S_A_ca
 unit BoundChemical Et70S_C_ca
@@ -198,7 +198,7 @@ unit DecodingTable EtRNAs UUU EtRNA_F_ca Et70S_F_ca 1 UUC EtRNA_F_ca Et70S_F_ca 
 # pre-initiation
 reaction Complexation 30S IF3 30S3 1 1
 reaction Complexation 30S3 IF1 30S31 1 1
-reaction Binding 30S31 m30S31 RBS
+reaction SequenceBinding 30S31 m30S31 RBS
 
 # fMet loading
 reaction Complexation IF2 GTP IF2a 1 1
@@ -260,7 +260,7 @@ reaction Complexation tRNA_W_c EFTua EtRNA_W_ca 1 0
 reaction Complexation tRNA_Y_c EFTua EtRNA_Y_ca 1 0
 
 # ribosome movement
-reaction BaseLoading 70S
+reaction Loading 70S
 
 reaction ChemicalReaction Et70S_A_ca -1 t70S_A_c 1 EFTud 1 Pi 1 rates 1 0
 reaction ChemicalReaction Et70S_C_ca -1 t70S_C_c 1 EFTud 1 Pi 1 rates 1 0
@@ -329,7 +329,7 @@ reaction ChemicalReaction t70S_V_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_V 1 rates
 reaction ChemicalReaction t70S_W_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_W 1 rates 1 0 
 reaction ChemicalReaction t70S_Y_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_Y 1 rates 1 0 
 
-reaction Elongation EFt70S 70S 3 200
+reaction Translocation EFt70S 70S 3 200
 
 # ribosome release
 reaction Release stalled_ribosome 30S 1 50S 1 protein 1 RF 1 rate 1 produces proteins

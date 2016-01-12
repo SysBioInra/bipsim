@@ -31,7 +31,7 @@
 #include "chemical.h"
 #include "boundchemical.h"
 #include "processivechemical.h"
-#include "baseloader.h"
+#include "loader.h"
 #include "chemicalsequence.h"
 
 #include "compositiontable.h"
@@ -80,7 +80,7 @@ bool UnitFactory::handle (const std::string& line)
 			     || create_bound_chemical (remaining)
 			     || create_chemical_sequence (remaining)
 			     || create_processive_chemical (remaining)
-			     || create_base_loader (remaining)
+			     || create_loader (remaining)
 			     || create_composition_table (remaining)
 			     || create_decoding_table (remaining)
 			     || create_product_table (remaining)
@@ -483,10 +483,10 @@ bool UnitFactory::create_bound_chemical ( const std::string& line )
   return true;
 }
 
-bool UnitFactory::create_base_loader ( const std::string& line )
+bool UnitFactory::create_loader ( const std::string& line )
 {
   std::istringstream line_stream (line);  
-  if (check_tag (line_stream, "BaseLoader") == false) { return false; }
+  if (check_tag (line_stream, "Loader") == false) { return false; }
 
   // read base data
   std::string name, decoding_table;
@@ -496,7 +496,7 @@ bool UnitFactory::create_base_loader ( const std::string& line )
   DecodingTable* decoding_table_ptr = _cell_state.find <DecodingTable> (decoding_table);
   if (decoding_table_ptr == 0) { throw DependencyException (decoding_table); }
 
-  _cell_state.store (new BaseLoader (*decoding_table_ptr), name);
+  _cell_state.store (new Loader (*decoding_table_ptr), name);
   return true;
 }
 

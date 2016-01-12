@@ -47,7 +47,7 @@ class RateManagerFactory
    * @param params Simulation parameter.
    * @param reactions Vector of reactions that need to be handled by the rate 
    *  manager.
-   * @param dependencygraph DependencyGraph used to determine dependencies
+   * @param dependency_graph DependencyGraph used to determine dependencies
    *  between relations.
    * @return RateManager whose implementation depends on the factory used.
    */

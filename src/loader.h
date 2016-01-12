@@ -1,8 +1,8 @@
 
 
 /**
- * @file baseloader.h
- * @brief Header for the BaseLoader class.
+ * @file loader.h
+ * @brief Header for the Loader class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -10,8 +10,8 @@
 
 // Multiple include protection
 //
-#ifndef BASELOADER_H
-#define BASELOADER_H
+#ifndef LOADER_H
+#define LOADER_H
 
 // ==================
 //  General Includes
@@ -40,7 +40,7 @@
  * onto the elongating strand.
  * This class inherits class BoundChemical.
  */
-class BaseLoader : public BoundChemical
+class Loader : public BoundChemical
 {
 public:
 
@@ -51,21 +51,21 @@ public:
   /**
    * @brief Constructor
    * @param decoding_table
-   *  The table that contains the template-base association that the
-   *  BaseLoader uses to import new elements onto the elongating strand.
+   *  The table that contains the template-chemical association that the
+   *  Loader uses to import new elements onto the matrix strand.
    */
-  BaseLoader (const DecodingTable& decoding_table);
+  Loader (const DecodingTable& decoding_table);
 
   // Not needed for this class (use of default copy constructor) !
   // /*
   //  * @brief Copy constructor
   //  */
-  // BaseLoader (BaseLoader& other_base_loader);
+  // Loader (Loader& other_loader);
 
   /**
    * @brief Destructor
    */
-  virtual ~BaseLoader (void);
+  virtual ~Loader (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -103,10 +103,10 @@ public:
    double loading_rate (void);
 
   /**
-   * @brief Base that the focused chemical tries to load.
-   * @return Base that the focused chemical tries to load.
+   * @brief Chemical that the focused loader tries to load.
+   * @return Chemical that the focused loader tries to load.
    */
-  Chemical& focused_base_to_load (void) const;
+  Chemical& focused_chemical_to_load (void) const;
 
   /**
    * @brief Occupied state of the focused loader.
@@ -115,10 +115,10 @@ public:
   BoundChemical& focused_occupied_state (void) const;
 
   /**
-   * @brief Accessor to list of bases loaded by the base loader.
-   * @return List of bases loaded by the base loader.
+   * @brief Accessor to list of chemicals loaded by the loader.
+   * @return List of chemicals loaded by the loader.
    */
-  const std::set<Chemical*> bases_loaded (void) const;
+  const std::set<Chemical*> chemicals_loaded (void) const;
 
   /**
    * @brief Accessor to list of occupied states yielded by the base loader.
@@ -140,7 +140,7 @@ public:
   // /*
   //  * @brief Assignment operator
   //  */
-  // BaseLoader& operator= (BaseLoader& other_base_loader);
+  // Loader& operator= (Loader& other_loader);
 
 private:
 
@@ -148,7 +148,7 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief The table of template-base associations. */
+  /** @brief The table of template-chemical associations. */
   const DecodingTable& _decoding_table;
 
   /**
@@ -202,32 +202,34 @@ private:
 //  Inline declarations
 // ======================
 //
-inline double BaseLoader::loading_rate (void)
+inline double Loader::loading_rate (void)
 { 
   update_rates();
   return _loading_rates.total_rate();
 }
 
-inline Chemical& BaseLoader::focused_base_to_load (void) const
+inline Chemical& Loader::focused_chemical_to_load (void) const
 {
-  REQUIRE( _focused_template_index != UNKNOWN_TEMPLATE ); /** @pre Template must be recognized by the base loader. */
-  return _decoding_table.decode (_focused_template_index);
+  /** @pre Template must be recognized by the loader. */
+  REQUIRE (_focused_template_index != UNKNOWN_TEMPLATE); 
+  return _decoding_table.chemical_to_load (_focused_template_index);
 }
 
-inline BoundChemical& BaseLoader::focused_occupied_state (void) const
+inline BoundChemical& Loader::focused_occupied_state (void) const
 {
-  REQUIRE( _focused_template_index != UNKNOWN_TEMPLATE ); /** @pre Template must be recognized by the base loader. */
+  /** @pre Template must be recognized by the loader. */
+  REQUIRE (_focused_template_index != UNKNOWN_TEMPLATE); 
   return _decoding_table.occupied_polymerase (_focused_template_index);
 }
 
-inline const std::set<Chemical*> BaseLoader::bases_loaded (void) const
+inline const std::set<Chemical*> Loader::chemicals_loaded (void) const
 {
-  return _decoding_table.bases();
+  return _decoding_table.chemicals_loaded();
 }
 
-inline const std::set<BoundChemical*> BaseLoader::occupied_states (void) const
+inline const std::set<BoundChemical*> Loader::occupied_states (void) const
 {
   return _decoding_table.occupied_polymerases();
 }
 
-#endif // BASELOADER_H
+#endif // LOADER_H

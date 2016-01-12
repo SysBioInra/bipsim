@@ -1,8 +1,8 @@
 
 
 /**
- * @file elongation.cpp
- * @brief Implementation of the Elongation class.
+ * @file translocation.cpp
+ * @brief Implementation of the Translocation class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -19,7 +19,7 @@
 // ==================
 //
 #include "macros.h" // REQUIRE()
-#include "elongation.h"
+#include "translocation.h"
 #include "processivechemical.h"
 #include "chemicalsequence.h"
 
@@ -27,9 +27,9 @@
 //  Constructors/Destructors
 // ==========================
 //
-Elongation::Elongation (ProcessiveChemical& processive_chemical,
-			BoundChemical& chemical_after_step,
-			int step_size, double rate)
+Translocation::Translocation (ProcessiveChemical& processive_chemical,
+			      BoundChemical& chemical_after_step,
+			      int step_size, double rate)
   : _processive_chemical (processive_chemical)
   , _chemical_after_step (chemical_after_step)
   , _step_size (step_size)
@@ -46,9 +46,9 @@ Elongation::Elongation (ProcessiveChemical& processive_chemical,
 }
  
 // Not needed for this class (use of default copy constructor) !
-// Elongation::Elongation (Elongation& other_elongation);
+// Translocation::Translocation (Translocation& other_translocation);
 
-Elongation::~Elongation( void )
+Translocation::~Translocation( void )
 {
 }
 
@@ -61,7 +61,7 @@ Elongation::~Elongation( void )
 //  Public Methods - Accessors
 // ============================
 //
-bool Elongation::is_reaction_possible (void) const
+bool Translocation::is_reaction_possible (void) const
 {
   return (_processive_chemical.number() > 0);
 }
@@ -77,14 +77,14 @@ bool Elongation::is_reaction_possible (void) const
 // =======================================
 //
 // Not needed for this class (use of default overloading) !
-// Elongation& Elongation::operator= (Elongation& other_elongation);
+// Translocation& Translocation::operator= (Translocation& other_translocation);
 
 
 // =================
 //  Private Methods
 // =================
 //
-void Elongation::do_reaction (void)
+void Translocation::do_reaction (void)
 {
   /** @pre There must be enough reactants to perform reaction. */
   REQUIRE (is_reaction_possible());
@@ -134,15 +134,16 @@ void Elongation::do_reaction (void)
     }
 }
 
-double Elongation::compute_rate (void) const
+double Translocation::compute_rate (void) const
 {
   /**
-   * Elongation rate is simply r = #(processive_chemical) * elongation_rate / step_size.
+   * Translocation rate is simply
+   *  r = #(processive_chemical) * translocation_rate / step_size.
    */
   return (_rate * _processive_chemical.number()) / _step_size;
 }
 
-void Elongation::print (std::ostream& output) const
+void Translocation::print (std::ostream& output) const
 {
-  output << "Elongation reaction.";
+  output << "Translocation reaction.";
 }
