@@ -25,9 +25,7 @@
 
 #include "cellstate.h"
 #include "eventhandler.h"
-#include "addevent.h"
-#include "removeevent.h"
-#include "setevent.h"
+#include "event.h"
 
 // ==========================
 //  Constructors/Destructors

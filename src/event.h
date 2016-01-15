@@ -2,7 +2,7 @@
 
 /**
  * @file event.h
- * @brief Header for the Event class.
+ * @brief Header for the Event, AddEvent, SetEvent and RemoveEvent classes.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -18,6 +18,11 @@
 // ==================
 //
 
+// ==================
+//  Project Includes
+// ==================
+//
+#include "macros.h" // ENSURE
 
 // ======================
 //  Forward declarations
@@ -45,18 +50,18 @@ class Event
    * @param time Time at which the event happens during simulation.
    * @param target Chemical impacted by the event.
    */
-  Event (double time, Chemical& target);
+  Event (double time, Chemical& target)
+    : _time (time)
+    , _target (target)
+  { REQUIRE (time>0); /** @pre time must be positive. */ }
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions) !
+  // /* @brief Copy constructor. */
   // Event (const Event& other_event);
-
-  /**
-   * @brief Destructor.
-   */
-  virtual ~Event (void);
+  // /* @brief Assignment operator. */
+  // Event& operator= (const Event& other_event);
+  // /* @brief Destructor. */
+  // ~Event (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -75,30 +80,14 @@ class Event
    * @brief Accessor to event time.
    * @return Time at which event occurs.
    */
-  double time (void);
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // Event& operator= (const Event& other_event);
+  double time (void)
+  {
+    /** @post Returned value is positive. */
+    ENSURE (_time >= 0);
+    return _time;
+  }
 
  protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
   // ===================
   //  Protected Methods
   // ===================
@@ -107,10 +96,9 @@ class Event
    * @brief Accessor to the target of event.
    * @return Reference to event target.
    */
-  Chemical& target (void);
+  Chemical& target (void) { return _target; }
 
- private:
-  
+ private:  
   // ============
   //  Attributes
   // ============
@@ -125,30 +113,210 @@ class Event
   //  Private Methods
   // =================
   //
+};
 
-  // ======================
-  //  Forbidden Operations
-  // ======================
+
+/**
+ * @brief Class representing events where chemicals are added.
+ *
+ * AddEvent is a class used for user-defined events that happen
+ * throughout simulation, where a given amount of a target chemical
+ * is added at some point in time. It inherits class Event.
+ */
+class AddEvent : public Event
+{
+ public:
+
+  // ==========================
+  //  Constructors/Destructors
+  // ==========================
   //
+  /**
+   * @brief Constructor.
+   * @param time Time at which the event happens during simulation.
+   * @param target Chemical impacted by the event.
+   * @param quantity Amout of chemical to add.
+   */
+  AddEvent (double time, Chemical& target, int quantity)
+    : Event (time, target)
+    , _quantity (quantity)
+  { REQUIRE (quantity > 0); /** @pre Quantity must be strictly positive. */ }
 
+
+  // Not needed for this class (use of compiler-generated versions)
+  // /* @brief Copy constructor. */
+  // AddEvent (const AddEvent& other_add_event);
+  // /* @brief Assignment operator. */
+  // AddEvent& operator= (const AddEvent& other_event);
+  // /* @brief Destructor. */
+  // ~AddEvent (void);
+
+  // ===========================
+  //  Public Methods - Commands
+  // ===========================
+  //
+  /** Perform event (add specified amount of chemical). */
+  void perform (void);
+
+  // ============================
+  //  Public Methods - Accessors
+  // ============================
+  //
+private:
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Quantity of chemical to add. */
+  int _quantity;
+
+  // =================
+  //  Private Methods
+  // =================
+  //
+};
+
+
+/**
+ * @brief Class representing events where amount of chemical is set.
+ *
+ * SetEvent is a class used for user-defined events that happen
+ * throughout simulation, where a given amount of a target chemical
+ * is set at some point in time. It inherits class Event.
+ */
+class SetEvent : public Event
+{
+ public:
+
+  // ==========================
+  //  Constructors/Destructors
+  // ==========================
+  //
+  /**
+   * @brief Constructor.
+   * @param time Time at which the event happens during simulation.
+   * @param target Chemical impacted by the event.
+   * @param quantity Amout of chemical to set.
+   */
+  SetEvent (double time, Chemical& target, int quantity)
+    : Event (time, target)
+    , _quantity (quantity)
+  { REQUIRE (quantity >= 0); /** @pre Quantity must be positive. */ }
+
+  // Not needed for this class (use of compiler-generated version)
+  // /* @brief Copy constructor. */
+  // SetEvent (const SetEvent& other_set_event);
+  // /* @brief Assignment operator. */
+  // SetEvent& operator= (const SetEvent& other_set_event);
+  // /* @brief Destructor. */
+  // ~SetEvent (void);
+
+  // ===========================
+  //  Public Methods - Commands
+  // ===========================
+  //
+  /** Perform event (set specified amount of chemical). */
+  void perform (void);
+
+  // ============================
+  //  Public Methods - Accessors
+  // ============================
+  //
+private:
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Quantity of chemical to set. */
+  int _quantity;
+
+  // =================
+  //  Private Methods
+  // =================
+  //
+};
+
+/**
+ * @brief Class representing events where chemicals are removed.
+ *
+ * RemoveEvent is a class used for user-defined events that happen
+ * throughout simulation, where a given amount of a target chemical
+ * is removed at some point in time. It inherits class Event.
+ */
+class RemoveEvent : public Event
+{
+ public:
+
+  // ==========================
+  //  Constructors/Destructors
+  // ==========================
+  //
+  /**
+   * @brief Constructor.
+   * @param time Time at which the event happens during simulation.
+   * @param target Chemical impacted by the event.
+   * @param quantity Amout of chemical to remove.
+   */
+  RemoveEvent (double time, Chemical& target, int quantity)
+    : Event (time, target), _quantity (quantity)
+  { REQUIRE (quantity > 0); /** @pre Quantity must be strictly positive. */ }
+
+  // Not needed for this class (use of compiler generated versions) !
+  // /* @brief Copy constructor. */
+  // RemoveEvent (const RemoveEvent& other_remove_event);
+  // /* @brief Assignment operator. */
+  // RemoveEvent& operator= (const RemoveEvent& other_remove_event);
+  // /* @brief Destructor. */
+  // ~RemoveEvent (void);
+
+  // ===========================
+  //  Public Methods - Commands
+  // ===========================
+  //
+  /** Remove specified amount of chemical. */
+  void perform (void);
+
+  // ============================
+  //  Public Methods - Accessors
+  // ============================
+  //
+private:
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Quantity of chemical to remove. */
+  int _quantity;
+
+  // =================
+  //  Private Methods
+  // =================
+  //
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-#include "macros.h" // ENSURE
+#include "chemical.h"
 
-inline double Event::time (void)
+inline void AddEvent::perform (void) { target().add (_quantity); }
+
+inline void SetEvent::perform (void)
 {
-  /** @post Returned value is positive. */
-  ENSURE (_time >= 0);
-  return _time;
+  int difference = _quantity - target().number();
+  if (difference > 0) { target().add (difference); }
+  else if (difference < 0) { target().remove (-difference); }
 }
 
-inline Chemical& Event::target (void)
+inline void RemoveEvent::perform (void)
 {
-  return _target;
+  if (_quantity < target().number()) { target().remove (_quantity); }
+  else { target().remove (target().number()); }
 }
+
 
 #endif // EVENT_H

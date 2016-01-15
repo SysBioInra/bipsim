@@ -77,7 +77,7 @@ libsrc_a_SOURCES += \
 # parser, handler and factory sources
 libsrc_a_SOURCES += \
 	eventhandler.cpp eventhandler.h \
-	eventfactory.cpp eventfactory.h \
+	eventfactory.cpp eventfactory.h event.h \
 	factory.h \
 	handler.h \
 	inputdata.cpp inputdata.h \
@@ -87,13 +87,6 @@ libsrc_a_SOURCES += \
 	simulationparams.cpp simulationparams.h \
 	simulatorinput.h \
 	unitfactory.cpp unitfactory.h
-
-# event sources
-libsrc_a_SOURCES += \
-	addevent.cpp addevent.h \
-	event.cpp event.h \
-	removeevent.cpp removeevent.h \
-	setevent.cpp setevent.h
 
 # solver sources
 libsrc_a_SOURCES += \
