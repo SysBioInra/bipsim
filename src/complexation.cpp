@@ -48,12 +48,10 @@ Complexation::Complexation (Chemical& component_a, Chemical& component_b,
   look_for_bound_components();
 }
 
-// Not needed for this class (use of default copy constructor) !
-// Complexation::Complexation ( const Complexation& other_complexation );
-
-Complexation::~Complexation (void)
-{
-}
+// Not needed for this class (use of compiler-generated versions)
+// Complexation::Complexation (const Complexation& other_complexation);
+// Complexation& Complexation::operator= (const Complexation& other_complexation);
+// Complexation::~Complexation (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -136,26 +134,6 @@ bool Complexation::is_backward_reaction_possible (void) const
 {
   return (_complex.number() > 0);
 }
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// Complexation& Complexation::operator= ( const Complexation& other_complexation );
-
-
-// ===================
-//  Protected Methods
-// ===================
-//
 
 // =================
 //  Private Methods

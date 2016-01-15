@@ -43,12 +43,10 @@ ConstantRateGroup::ConstantRateGroup (const SimulationParams& params,
   reinitialize (initial_time);
 }
 
-// Not needed for this class (use of default copy constructor) !
-// ConstantRateGroup::ConstantRateGroup ( const ConstantRateGroup& other_constant_rate_group );
-
-ConstantRateGroup::~ConstantRateGroup (void)
-{
-}
+// Not needed for this class (use of compiler-generated versions)
+// ConstantRateGroup::ConstantRateGroup (const ConstantRateGroup& other_group);
+// ConstantRateGroup& ConstantRateGroup::operator= (const ConstantRateGroup& other_group);
+// ConstantRateGroup::~ConstantRateGroup (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -85,7 +83,7 @@ void ConstantRateGroup::reinitialize (double initial_time)
 
   // compute next reaction timings
   schedule_next_reactions (initial_time);
-  _next_reaction_time = next_reaction_time();
+  _next_reaction_time = _reaction_times [_next_index];
 }
 
 
@@ -93,20 +91,6 @@ void ConstantRateGroup::reinitialize (double initial_time)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// ConstantRateGroup& ConstantRateGroup::operator= ( const ConstantRateGroup& other_constant_rate_group );
 
 
 // =================

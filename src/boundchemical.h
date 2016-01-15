@@ -64,6 +64,12 @@ public:
   //  Public Methods - Commands
   // ===========================
   //
+  // redefined from Chemical
+  /** Cannot be called directly, will be ignored. */
+  void add (int quantity);
+  /** Cannot be called directly, will be ignored. */
+  void remove (int quantity);
+
   /**
    * @brief Add a new unit specific binding site.
    * @param binding_site The binding site to which it bound.
@@ -196,7 +202,20 @@ public:
 //  Inline declarations
 // ======================
 //
+#include <iostream>
 #include "boundunit.h"
+
+inline void BoundChemical::add (int quantity)
+{
+  std::cerr << "ERROR: cannot directly add molecules of type BoundChemical."
+	    << " Command ignored.\n";
+}
+
+inline void BoundChemical::remove (int quantity)
+{
+  std::cerr << "ERROR: cannot directly remove molecules of type BoundChemical."
+	    << " Command ignored.\n";
+}
 
 inline const BindingSite& BoundChemical::focused_unit_binding_site (void) const
 {

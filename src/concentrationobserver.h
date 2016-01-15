@@ -53,11 +53,13 @@ class ConcentrationObserver
   ConcentrationObserver (RateValidity& parent, Reactant* reactant, 
 			 int identifier);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // ConcentrationObserver ( const ConcentrationObserver& other_concentration_observer );
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  ConcentrationObserver (const ConcentrationObserver& other_observer);
+  /** @brief Assignment operator. */
+  ConcentrationObserver& operator= (const ConcentrationObserver& other_observer);
+ public:
 
   /**
    * @brief Destructor.
@@ -85,24 +87,6 @@ class ConcentrationObserver
   //  Public Methods - Accessors
   // ============================
   //
-
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // ConcentrationObserver& operator= (const ConcentrationObserver& other_concentration_observer);
-
 
 private:
 
@@ -137,6 +121,23 @@ private:
 //
 #include "macros.h"
 #include "ratevalidity.h"
+#include "reactant.h"
+
+inline
+ConcentrationObserver::ConcentrationObserver (RateValidity& parent,
+					      Reactant* reactant,
+					      int identifier)
+  : _parent (parent)
+  , _reactant (reactant)
+  , _message (identifier)
+{
+  _reactant->attach (*this);
+}
+
+inline ConcentrationObserver::~ConcentrationObserver (void)
+{
+  if (_reactant != 0) _reactant->detach (*this);
+}
 
 inline void ConcentrationObserver::update (void)
 {

@@ -44,20 +44,24 @@ class ChemicalLogger
   // ==========================
   //
   /**
-   * @brief Default constructor.
+   * @brief Constructor.
    * @param filename File where output should be written.
    * @param chemicals Chemicals whose concentrations must be logged.
    * @param names Name of the chemicals (used for writing header).
    * @param overwrite True if existing file should be overwritten (true by default).
    *
    */
-  ChemicalLogger (const std::string& filename, const std::list <const Chemical*>& chemicals, const std::list <std::string>& names, bool overwrite = true);
+  ChemicalLogger (const std::string& filename, 
+		  const std::list <const Chemical*>& chemicals, 
+		  const std::list <std::string>& names, bool overwrite = true);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // ChemicalLogger ( const ChemicalLogger& other_chemical_logger );
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  ChemicalLogger (const ChemicalLogger& other_chemical_logger);
+  /** @brief Assignment operator. */
+  ChemicalLogger& operator= (const ChemicalLogger& other_chemical_logger);
+ public:
 
   /**
    * @brief Destructor.
@@ -73,27 +77,11 @@ class ChemicalLogger
    * @param simulation_time Current simulation time.
    */
   void log (double simulation_time);
+
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // ChemicalLogger& operator= ( const ChemicalLogger& other_chemical_logger );
 
 private:
 
@@ -119,13 +107,6 @@ private:
    * tab separated fields.
    */
   void write_header (const std::list <std::string>& names);
-
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

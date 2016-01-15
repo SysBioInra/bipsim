@@ -43,21 +43,16 @@ class CellState
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Default constructor.
-   */
-  CellState ();
-
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // /* @brief Default constructor. */
+  // CellState ();
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor */
   // CellState ( const CellState& other_cell_state );
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~CellState (void);
+  // /* @brief Assignment operator */
+  // CellState& operator= ( const CellState& other_cell_state );
+  // /* @brief Destructor */
+  // ~CellState (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -103,22 +98,6 @@ class CellState
    */
   int number_chemicals (void) const;
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // CellState& operator= ( const CellState& other_cell_state );
 
   // ==================
   //  Public Constants
@@ -167,12 +146,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================
@@ -182,15 +155,10 @@ private:
 #include <typeinfo>
 
 #include "site.h"
-#include "bindingsite.h"
 #include "bindingsitefamily.h"
 #include "sitefamily.h"
 
 #include "chemical.h"
-#include "boundchemical.h"
-#include "processivechemical.h"
-#include "loader.h"
-#include "chemicalsequence.h"
 
 #include "compositiontable.h"
 #include "decodingtable.h"
@@ -199,13 +167,6 @@ private:
 
 #include "reaction.h"
 #include "bidirectionalreaction.h"
-#include "chemicalreaction.h"
-#include "complexation.h"
-#include "sequencebinding.h"
-#include "loading.h"
-#include "release.h"
-#include "translocation.h"
-
 
 inline const std::vector <Reaction*>& CellState::reactions (void) const
 {

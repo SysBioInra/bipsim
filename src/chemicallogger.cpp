@@ -25,24 +25,26 @@
 //  Constructors/Destructors
 // ==========================
 //
-ChemicalLogger::ChemicalLogger (const std::string& filename, const std::list <const Chemical*>& chemicals, const std::list <std::string>& names,  bool overwrite /*= true*/)
+ChemicalLogger::ChemicalLogger (const std::string& filename,
+				const std::list <const Chemical*>& chemicals,
+				const std::list <std::string>& names, 
+				bool overwrite /*= true*/)
  : _chemicals (chemicals)
 {
   /** @pre List of names must be as long as list of references. */
   REQUIRE (chemicals.size() == names.size());
   
   // open file
-  if (overwrite)
-    _output.open (filename.c_str());
-  else
-    _output.open (filename.c_str(), std::ofstream::app);
+  if (overwrite) { _output.open (filename.c_str()); }
+  else { _output.open (filename.c_str(), std::ofstream::app); }
   
   // write header (if necessary)
   if (overwrite) { write_header (names); }
 }
 
-// Not needed for this class (use of default copy constructor) !
-// ChemicalLogger::ChemicalLogger ( const ChemicalLogger& other_chemical_logger );
+// Forbidden
+// ChemicalLogger::ChemicalLogger (const ChemicalLogger& logger);
+// ChemicalLogger& ChemicalLogger::operator= (const ChemicalLogger& other_logger);
 
 ChemicalLogger::~ChemicalLogger (void)
 {
@@ -63,25 +65,6 @@ void ChemicalLogger::log (double simulation_time)
     }
   _output << "\n";
 }
-
-// ============================
-//  Public Methods - Accessors
-// ============================
-//
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// ChemicalLogger& ChemicalLogger::operator= ( const ChemicalLogger& other_chemical_logger );
 
 
 // =================

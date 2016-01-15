@@ -5,7 +5,6 @@
  * @file chemicalreaction.h
  * @authors Marc Dinh, Stephan Fischer
  * @brief Header for the ChemicalReaction class.
- * 
  */
 
 
@@ -38,18 +37,15 @@
 class ChemicalReaction : public BidirectionalReaction
 {
 public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
   //
   /**
    * @brief Constructor
-   * @param components
-   *  Vector of chemicals involved in the reaction.
-   * @param stoichiometry
-   *  Vector of stoichiometry of the chemicals, positive for products, negative for
-   *  reactants.
+   * @param components Vector of chemicals involved in the reaction.
+   * @param stoichiometry Vector of stoichiometry of the chemicals, 
+   *  positive for products, negative for reactants.
    * @param forward_rate_constant Forward rate constant.
    * @param backward_rate_constant Backward rate constant.
    */
@@ -58,64 +54,30 @@ public:
 		    double forward_rate_constant,
 		    double backward_rate_constant);
   
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // ChemicalReaction (ChemicalReaction& other_chemicalreaction);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~ChemicalReaction (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor */
+  // ChemicalReaction (ChemicalReaction& other_reaction);
+  // /* @brief Assignment operator */
+  // ChemicalReaction& operator= (ChemicalReaction& other_reaction);
+  // /* @brief Destructor */
+  // virtual ~ChemicalReaction (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Update chemical quantities according to the forward reaction.
-   */
-  virtual void perform_forward (void);
-  
-  /**
-   * @brief Update chemical quantities according to the backward reaction.
-   */
-  virtual void perform_backward (void);
-
+  // Redefinitions from BidirectionalReaction
+  void perform_forward (void);
+  void perform_backward (void);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  /** @brief Check whether there are enough reactants to perform forwardreaction. */
-  virtual bool is_forward_reaction_possible (void) const;
-
-  /** @brief Check whether there are enough products to perform backward reaction. */
-  virtual bool is_backward_reaction_possible (void) const;
-
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // ChemicalReaction& operator= (ChemicalReaction& other_chemicalreaction);
-
- protected:
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
+  // Redefinitions from BidirectionalReaction
+  bool is_forward_reaction_possible (void) const;
+  bool is_backward_reaction_possible (void) const;
 
  private:
   // ============
@@ -150,23 +112,10 @@ public:
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Compute current forward rate.
-   * @return Current forward rate.
-   */
-  virtual double compute_forward_rate (void) const;
-
-  /**
-   * @brief Compute current backward rate.
-   * @return Current backward rate.
-   */
-  virtual double compute_backward_rate (void) const;
-
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  virtual void print (std::ostream& output) const;
+  // redefinitions from BidirectionalReaction
+  double compute_forward_rate (void) const;
+  double compute_backward_rate (void) const;
+  void print (std::ostream& output) const;
 
   /**
    * @brief Looks for bound chemicals in the reaction and isolates them.

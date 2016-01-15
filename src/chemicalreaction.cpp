@@ -82,12 +82,10 @@ ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
 	  _backward_reactants.size() - (_bound_product != 0));
 }
 
-// Not needed for this class (use of default copy constructor) !
-// ChemicalReaction::ChemicalReaction ( const ChemicalReaction& other_chemical_reaction );
-
-ChemicalReaction::~ChemicalReaction (void)
-{
-}
+// Not needed for this class (use of compiler-generated versions)
+// ChemicalReaction::ChemicalReaction (const ChemicalReaction& other_reaction);
+// ChemicalReaction& ChemicalReaction::operator= (const ChemicalReaction& other_reaction);
+// ChemicalReaction::~ChemicalReaction (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -162,20 +160,6 @@ bool ChemicalReaction::is_backward_reaction_possible (void) const
   return true;
 }
 
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// ChemicalReaction& ChemicalReaction::operator= ( const ChemicalReaction& other_chemical_reaction );
-
-
 // =================
 //  Private Methods
 // =================
@@ -216,7 +200,6 @@ double ChemicalReaction::compute_backward_rate (void) const
     }
   return rate;
 }
-
 
 void ChemicalReaction::isolate_bound_components (void)
 {

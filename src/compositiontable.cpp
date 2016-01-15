@@ -25,16 +25,11 @@
 //  Constructors/Destructors
 // ==========================
 //
-CompositionTable::CompositionTable (void)
-{
-}
-
-// Not needed for this class (use of default copy constructor) !
+// Not needed for this class (use of compiler-generated versions)
+// CompositionTable::CompositionTable (void);
 // CompositionTable::CompositionTable (const CompositionTable& other_composition_table);
-
-CompositionTable::~CompositionTable (void)
-{
-}
+// CompositionTable& CompositionTable::operator= (const CompositionTable& other_composition_table);
+// CompositionTable::~CompositionTable (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -72,24 +67,11 @@ CompositionTable::composition (const std::string& sequence) const
 
   return result;
 }
+
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// CompositionTable& CompositionTable::operator= (const CompositionTable& other_composition_table);
 
 
 // =================

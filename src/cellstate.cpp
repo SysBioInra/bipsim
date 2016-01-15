@@ -25,22 +25,19 @@
 //  Constructors/Destructors
 // ==========================
 //
-CellState::CellState (void)
-{
-}
 
-// Not needed for this class (use of default copy constructor) !
-// CellState::CellState ( const CellState& other_cell_state );
-
-CellState::~CellState (void)
-{
-}
+// Not needed for this class (use of compiler-generated versions)
+// CellState::CellState (void);
+// CellState::CellState (const CellState& other_cell_state);
+// CellState& CellState::operator= (const CellState& other_cell_state);
+// CellState::~CellState (void);
 
 // ===========================
 //  Public Methods - Commands
 // ===========================
 //
-void CellState::store (SimulatorInput* element, const std::string& name /*= ""*/)
+void CellState::store (SimulatorInput* element,
+		       const std::string& name /*= ""*/)
 {
   // try to store element
   if (not (_site_handler.store (element, name)
@@ -98,21 +95,6 @@ int CellState::find_id (const std::string& name) const
 
   return NOT_FOUND;
 }  
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// CellState& CellState::operator= ( const CellState& other_cell_state );
-
 
 // =================
 //  Private Methods

@@ -115,7 +115,7 @@ void BoundChemical::remove_focused_unit (void)
   // remove chemical
   delete _focused_unit;
   family_units.erase (_focused_unit);
-  remove (1);
+  Chemical::remove (1);
 
   // if there are no more binding sites belonging to the family
   if (family_units.size() == 0) 
@@ -173,7 +173,7 @@ double BoundChemical::unbinding_rate_contribution (int binding_site_family) cons
 //
 void BoundChemical::add_unit (const BindingSite& binding_site, int position, int reading_frame)
 {
-  add (1);
+  Chemical::add (1);
   _focused_unit = new BoundUnit (binding_site, position, reading_frame);
   _family_map [binding_site.family()].insert (_focused_unit);
 }

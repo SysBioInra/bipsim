@@ -50,74 +50,33 @@ public:
    */
   Complexation (Chemical& component_a, Chemical& component_b, Chemical& complex, double k_on, double k_off);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor */
   // Complexation (Complexation& other_complexation);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~Complexation (void);
+  // /* @brief Assignment operator */
+  // Complexation& operator= (Complexation& other_complexation);
+  // /* @brief Destructor */
+  // virtual ~Complexation (void);
 
   // ===========================
   //  Public Methods - Commands
   // =========================== 
   //
-  /**
-   * @brief Update chemical quantities according to the forward reaction.
-   */
-  virtual void perform_forward (void);
-  
-  /**
-   * @brief Update chemical quantities according to the backward reaction.
-   */
-  virtual void perform_backward (void);
+  // redefined from Reaction
+  void perform_forward (void);
+  void perform_backward (void);
 
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  /**
-   * @brief Returns whether there are enough chemicals to perform forward reaction.
-   * @return True if there are enough reactant, false otherwise.
-   */
-  virtual bool is_forward_reaction_possible (void) const;
-
-  /**
-   * @brief Returns whether there are enough chemicals to perform backward reaction.
-   * @return True if there are enough reactant, false otherwise.
-   */
-  virtual bool is_backward_reaction_possible (void) const;
-
-
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // Complexation& operator= (Complexation& other_complexation);
-
- protected:
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-  
+  // redefined from Reaction
+  bool is_forward_reaction_possible (void) const;
+  bool is_backward_reaction_possible (void) const;
 
  private:
-
   // ============
   //  Attributes
   // ============
@@ -144,25 +103,12 @@ public:
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Compute current forward rate.
-   * @return Current forward rate.
-   */
-  virtual double compute_forward_rate (void) const;
+  // redefined from Reaction
+  double compute_forward_rate (void) const;
+  double compute_backward_rate (void) const;
+  void print (std::ostream& output) const;
 
   /**
-   * @brief Compute current forward rate.
-   * @return Current backward rate.
-   */
-  virtual double compute_backward_rate (void) const;
-
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  virtual void print (std::ostream& output) const;
-
-  /** 
    * @brief Update the _bound_component index and performs a number of checks.
    *
    * Checks include the fact that both components cannot be bound and if one of 

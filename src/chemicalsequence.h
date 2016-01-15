@@ -39,8 +39,6 @@
 class ChemicalSequence : public Chemical
 {
 public:
-
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -52,28 +50,29 @@ public:
    */
   ChemicalSequence (const std::string& sequence, int starting_position = 1);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // ChemicalSequence (ChemicalSequence& other_chemical_sequence);
-
-  /**
-   * @brief Destructor
-   */
-  ~ChemicalSequence (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor */
+  // ChemicalSequence (ChemicalSequence& other_chemical);
+  // /* @brief Assignment operator */
+  // ChemicalSequence& operator= (ChemicalSequence& other_chemical);
+  // /* @brief Destructor */
+  // ~ChemicalSequence (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
+  // redefined from Chemical
+  void add (int quantity);
+  void remove (int quantity);
+
   /**
    * @brief Binds a chemical element to a binding site of the sequence.
    * @param chemical_to_bind
    *  The chemical element to bind.
    */
   void bind_unit (const BoundChemical& chemical_to_bind);
-
 
   /**
    * @brief Unbinds one of the chemical elements that is bound to the sequence
@@ -82,7 +81,6 @@ public:
    *  The element to unbind.
    */
   void unbind_unit (const BoundChemical& chemical_to_unbind);
-
 
   /**
    * @brief Changes the nature of a bound unit.
@@ -94,7 +92,6 @@ public:
   void replace_bound_unit (const BoundChemical& old_chemical,
 			   const BoundChemical& new_chemical);
 
-
   /**
    * @brief Move a bound unit
    * @param chemical_to_move
@@ -103,20 +100,6 @@ public:
    *  The number of steps by which it moves.
    */
   void move_bound_unit (ProcessiveChemical& chemical_to_move, int number_steps);
-
-
-  /**
-   * @brief Adds a given quantity of chemical to the existing pool.
-   * @param quantity Amount to add
-   */
-  void add (int quantity);
-
-
-  /**
-   * @brief Remove a given quantity of chemical to the existing pool.
-   * @param quantity Amount to remove.
-   */
-  void remove (int quantity);
 
   /**
    * @brief Watch availability of a specific site and notify an observer when it changes.
@@ -127,21 +110,12 @@ public:
   void watch_site_availability (int first, int last,
 				SiteObserver& site_observer);
 
-
   /**
    * @brief Add termination site on element.
    * @param termination_site
    *  Termination site located on sequence.
    */
   void add_termination_site (const Site& termination_site);
-
-
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  void print (std::ostream& output) const;
-
 
   // ============================
   //  Public Methods - Accessors
@@ -189,25 +163,7 @@ public:
    */
   const std::string sequence (int first, int last) const;
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // ChemicalSequence& operator= (ChemicalSequence& other_chemical_sequence);
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -231,6 +187,12 @@ private:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Print class content.
+   * @param output Stream where output should be written.
+   */
+  void print (std::ostream& output) const;
+
   /**
    * @brief Transform absolute positions to relative [0,length) positions.
    * @param absolute_position Absolute position to transform.

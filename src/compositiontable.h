@@ -40,26 +40,20 @@
 class CompositionTable : public SimulatorInput
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Default constructor.
-   */
-  CompositionTable (void);
-
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // /* @brief Default constructor. */
+  // CompositionTable (void);
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // CompositionTable (const CompositionTable& other_composition_table);
-
-  /**
-   * @brief Destructor.
-   */
-  ~CompositionTable (void);
+  // /* @brief Assignment operator. */
+  // CompositionTable& operator= (const CompositionTable& other_table);  
+  // /* @brief Destructor. */
+  // ~CompositionTable (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -86,34 +80,6 @@ class CompositionTable : public SimulatorInput
   // ============================
   //
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // CompositionTable& operator= (const CompositionTable& other_composition_table);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
 
   // ============
@@ -127,12 +93,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

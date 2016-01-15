@@ -43,21 +43,17 @@ public:
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Default constructor
-   */
+  /** @brief Default constructor */
   Chemical (void);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor */
   // Chemical (Chemical& other_chemical);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~Chemical (void);
+  // /* @brief Assignment operator */
+  // Chemical& operator= (Chemical& other_chemical);
+  // /* @brief Destructor */
+  // virtual ~Chemical (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -75,12 +71,6 @@ public:
    */
   virtual void remove (int quantity);
 
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  virtual void print (std::ostream& output) const;
-
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -91,28 +81,12 @@ public:
    */
   int number (void) const;
 
- 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // Chemical& operator= (Chemical& other_chemical);
-  
   /**
    * @brief Standard output.
    * @return A reference to the stream containing the output.
    * @param output Stream where output should be written.
-   * @param chemical Reference to the chemical whose information should be written.
+   * @param chemical Reference to the chemical whose information should be 
+   *  written.
    */
   friend std::ostream& operator<< (std::ostream& output,
 				   const Chemical& chemical);
@@ -130,6 +104,11 @@ private:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const;
 
 };
 
@@ -137,6 +116,9 @@ private:
 //  Inline declarations
 // ======================
 //
+
+inline Chemical::Chemical (void) : _number (0) {}
+
 inline int Chemical::number (void) const { return _number; }
 
 inline void Chemical::add (int quantity)
@@ -161,5 +143,11 @@ inline std::ostream& operator<< (std::ostream& output, const Chemical& chemical)
   chemical.print (output);
   return output;
 }
+
+inline void Chemical::print (std::ostream& output) const
+{
+  output << "Chemical with currently " << _number << " molecules.";
+}
+
 
 #endif // CHEMICAL_H

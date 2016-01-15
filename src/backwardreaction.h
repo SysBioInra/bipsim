@@ -77,7 +77,7 @@ public:
   //  Public Methods - Accessors
   // ============================
   //
-  // inherited from Reaction
+  // redifined from Reaction
   bool is_reaction_possible (void) const
   {
     return _reaction.is_backward_reaction_possible();
@@ -95,13 +95,9 @@ private:
   //  Private Methods
   // =================
   //
-  // inherited from Reaction
+  // redefined from Reaction
   virtual void do_reaction (void) { _reaction.perform_backward(); }
-
-  // inherited from Reaction
   virtual double compute_rate (void) const { return _reaction.backward_rate(); }
-
-  // inherited from Reaction
   virtual void print (std::ostream& output) const { output << _reaction; }
 };
 

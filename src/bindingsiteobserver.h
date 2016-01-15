@@ -70,7 +70,7 @@ class BindingSiteObserver : public SiteObserver
   //  Public Methods - Commands
   // ===========================
   //
-  // inherited from SiteObserver
+  // redefined from SiteObserver
   /** Notify BindingSiteFamily that the number of available site has changed. */
   void update (int number_available_sites);
 

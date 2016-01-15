@@ -49,7 +49,7 @@ class ConstantRateGroup : public ReactionGroup
   // ==========================
   //
   /**
-   * @brief Constructor
+   * @brief Constructor.
    * @param params Simulation parameters.
    * @param reactions Vector of reactions simulated under constant rate
    *  hypothesis.
@@ -60,25 +60,21 @@ class ConstantRateGroup : public ReactionGroup
 		     const std::vector<Reaction*>& reactions,
 		     double initial_time, double time_step);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // ConstantRateGroup ( const ConstantRateGroup& other_constant_rate_group );
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~ConstantRateGroup (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // ConstantRateGroup (const ConstantRateGroup& other_group);
+  // /* @brief Assignment operator */
+  // ConstantRateGroup& operator= (const ConstantRateGroup& other_group);
+  // /* @brief Destructor */
+  // virtual ~ConstantRateGroup (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Perform next scheduled reaction and schedule following reaction.
-   */
-  virtual bool perform_next_reaction (void);
+  // redefined from ReactionGroup
+  bool perform_next_reaction (void);
 
   /**
    * @brief Reinitialize reaction timings with different initial_time.
@@ -94,31 +90,13 @@ class ConstantRateGroup : public ReactionGroup
   //  Public Methods - Accessors
   // ============================
   //
-  
   /**
    * @brief Accessor to final time of simulation.
    * @return Maximal time for which timings have been computed. If all reactions
-   *  have been performed, next reaction time is OVERTIME, indicating that reaction
-   *  timings greater than final_time need to be computed.
+   *  have been performed, next reaction time is OVERTIME, indicating that
+   * reaction timings greater than final_time need to be computed.
    */
   double final_time (void) const;
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // ConstantRateGroup& operator= ( const ConstantRateGroup& other_constant_rate_group );
-
 
 private:
 
@@ -140,8 +118,8 @@ private:
 
   /**
    * @brief Maximal time for which timings should be computed. If all reactions
-   *  have been performed, next reaction time is OVERTIME, indicating that reaction
-   *  timings greater than final_time need to be computed.
+   *  have been performed, next reaction time is OVERTIME, indicating that
+   *  reaction timings greater than final_time need to be computed.
    */
   double _final_time;
 
@@ -165,12 +143,6 @@ private:
   void go_to_next_reaction (void);
 
   /**
-   * @brief Accessor to the timing of the next scheduled reaction.
-   * @return Next scheduled reaction timing.
-   */
-  double next_reaction_time (void);
-
-  /**
    * @brief Schedule a new set of reactions following current_time.
    *
    * The new scheduled set is stored in the vectors _reaction_times and
@@ -179,12 +151,6 @@ private:
    * in _reaction_times after the last valid reaction.
    */
   void schedule_next_reactions (double current_time);
-
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
 };
 
 // ======================
@@ -206,13 +172,7 @@ inline void ConstantRateGroup::go_to_next_reaction (void)
     {
       schedule_next_reactions (_reaction_times [_next_index]);
     }
-  _next_reaction_time = next_reaction_time();
+  _next_reaction_time = _reaction_times [_next_index];
 }
-
-inline double ConstantRateGroup::next_reaction_time (void)
-{
-  return _reaction_times [_next_index];
-}
-
 
 #endif // CONSTANT_RATE_GROUP_H

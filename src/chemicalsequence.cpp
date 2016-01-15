@@ -37,12 +37,10 @@ ChemicalSequence::ChemicalSequence (const std::string& sequence,
 {
 }
 
-// Not needed for this class (use of default copy constructor) !
-// ChemicalSequence::ChemicalSequence (ChemicalSequence& other_chemical_sequence);
-
-ChemicalSequence::~ChemicalSequence (void)
-{
-}
+// Not needed for this class (use of compiler-generated versions)
+// ChemicalSequence::ChemicalSequence (ChemicalSequence& other_chemical);
+// ChemicalSequence& ChemicalSequence::operator= (ChemicalSequence& other_chemical);
+// ChemicalSequence::~ChemicalSequence (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -132,13 +130,6 @@ void ChemicalSequence::watch_site_availability (int first, int last,
  }
 
 
-void ChemicalSequence::print (std::ostream& output) const
-{
-  output << "Chemical sequence of length " << _length << " with currently "
-	 << number() << " molecules.";
-}
-
-
 void ChemicalSequence::add_termination_site (const Site& termination_site)
 {
   // as a first approximation, we consider that reaching any base of the
@@ -165,7 +156,8 @@ bool ChemicalSequence::is_termination_site (int position,
   REQUIRE (relative (position) < _length ); 
 
   // if there is no site to check or no termination site at the position to enquire
-  const std::map< int, std::list<int> >::const_iterator local_sites = _termination_sites.find (position);
+  const std::map< int, std::list<int> >::const_iterator 
+    local_sites = _termination_sites.find (position);
   if ((termination_site_families.size() == 0)
       || (local_sites == _termination_sites.end()))
     {
@@ -199,22 +191,12 @@ bool ChemicalSequence::is_termination_site (int position,
   return false;
 }
 
-  
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// ChemicalSequence& ChemicalSequence::operator= (ChemicalSequence& other_chemical_sequence);
-
 // =================
 //  Private Methods
 // =================
 //
+void ChemicalSequence::print (std::ostream& output) const
+{
+  output << "Chemical sequence of length " << _length << " with currently "
+	 << number() << " molecules.";
+}

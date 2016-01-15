@@ -46,7 +46,7 @@ libsrc_a_SOURCES += \
 	loader.cpp loader.h \
 	boundchemical.cpp boundchemical.h \
 	boundunit.h boundunitlist.h \
-	chemical.cpp chemical.h \
+	chemical.h \
 	processivechemical.cpp processivechemical.h 
 
 # site sources
@@ -106,7 +106,7 @@ libsrc_a_SOURCES += \
 	naiveratemanager.cpp naiveratemanager.h \
 	dependencyratemanager.cpp dependencyratemanager.h \
 	graphratemanager.cpp graphratemanager.h \
-	concentrationobserver.cpp concentrationobserver.h \
+	concentrationobserver.h \
 	reactionobserver.cpp reactionobserver.h \
 	ratevalidity.h
 

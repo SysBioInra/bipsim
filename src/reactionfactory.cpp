@@ -33,6 +33,11 @@
 #include "forwardreaction.h"
 #include "backwardreaction.h"
 
+#include "boundchemical.h"
+#include "processivechemical.h"
+#include "loader.h"
+#include "chemicalsequence.h"
+
 #include "cellstate.h"
 
 // ==========================
