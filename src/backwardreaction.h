@@ -58,17 +58,14 @@ public:
     _products = _reaction.forward_reactants();
   }
     
-
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // Not needed for this class (use of compiler generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor */
   // BackwardReaction (BackwardReaction& other_base_loading);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~BackwardReaction (void) {}
+  // /* @brief Assignment operator */
+  // BackwardReaction& operator= (BackwardReaction& other_base_loading);
+  // /* @brief Destructor */
+  // ~BackwardReaction (void) {}
   
   // ===========================
   //  Public Methods - Commands
@@ -80,40 +77,13 @@ public:
   //  Public Methods - Accessors
   // ============================
   //
-  /**
-   * @brief Returns whether there are enough chemicals to perform reaction.
-   * @return True if there are enough reactant, false otherwise.
-   */
-  virtual bool is_reaction_possible (void) const
+  // inherited from Reaction
+  bool is_reaction_possible (void) const
   {
     return _reaction.is_backward_reaction_possible();
   }
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // BackwardReaction& operator= (BackwardReaction& other_base_loading);
-
-
- protected:
-  // ===================
-  //  Protected Methods
-  // ===================
-  //  
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -125,21 +95,13 @@ private:
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Update chemical quantities according to the reaction.
-   */
+  // inherited from Reaction
   virtual void do_reaction (void) { _reaction.perform_backward(); }
 
-  /**
-   * @brief Compute current reaction rates.
-   * @return Current reaction rate.
-   */
+  // inherited from Reaction
   virtual double compute_rate (void) const { return _reaction.backward_rate(); }
 
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
+  // inherited from Reaction
   virtual void print (std::ostream& output) const { output << _reaction; }
 };
 

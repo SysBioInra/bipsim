@@ -51,22 +51,19 @@ public:
    * @param k_on On rate of binding on the site.
    * @param k_off Off rate of unbinding on the site.
    * @param reading_frame Position of the reading frame (if applicable).
-   * @sa BindingSiteHandler
    */
   BindingSite (int family_id, ChemicalSequence& location, int first,
 	       int last, double k_on, double k_off,
 	       int reading_frame = NO_READING_FRAME );
 
-  // Not needed for this class (use of default copy constructor) ! 
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor */
   // BindingSite (BindingSite& other_binding_site);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~BindingSite (void);
+  // /* @brief Assignment operator */
+  // BindingSite& operator= (BindingSite other_binding_site);
+  // /* @brief Destructor */
+  // ~BindingSite (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -106,25 +103,6 @@ public:
    */
   int reading_frame (void) const;
   
-
-  
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-  
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // CLASSNAME& operator= (CLASSNAME& other_binding);
-
-  
   // ==================
   //  Public Constants
   // ==================
@@ -133,7 +111,6 @@ public:
   static const int NO_READING_FRAME = -1;
 
  private:
-
   // ============
   //  Attributes
   // ============
@@ -151,13 +128,28 @@ public:
   //  Private Methods
   // =================
   //
-
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+#include "macros.h"
+
+inline BindingSite::BindingSite (int family_id, 
+				 ChemicalSequence& location, int first,
+				 int last, double k_on, double k_off,
+				 int reading_frame /*= NO_READING_FRAME*/)
+  : Site (family_id, location, first, last)
+  , _k_on (k_on)
+  , _k_off (k_off)
+  , _reading_frame (reading_frame)
+{
+  /** @pre If defined, reading frame must be within site. */
+  REQUIRE ((reading_frame == NO_READING_FRAME)
+	   || ((reading_frame >= first) && (reading_frame <= last)));
+}
+
 inline double BindingSite::k_on ( void ) const
 {
   return _k_on;
@@ -172,7 +164,5 @@ inline int BindingSite::reading_frame ( void ) const
 {
   return _reading_frame;
 }
-
-
 
 #endif // BINDINGSITE_H

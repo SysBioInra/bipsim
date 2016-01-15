@@ -44,12 +44,10 @@ class ClassName
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Constructor.
-   */
-  ClassName (void);
-
-  // Not needed for this class (use of compiler-generated versions - 3/0 rule)
+  // Not needed for this class (use of compiler-generated versions)
+  // /* @brief Default constructor. */
+  // ClassName (void);
+  // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
   // ClassName (const ClassName& other_class_name);
   // /* @brief Assignment operator. */

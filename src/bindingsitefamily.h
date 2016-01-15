@@ -24,8 +24,8 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "bindingsite.h"
 #include "reactant.h"
+#include "simulatorinput.h"
 #include "updatedtotalratevector.h"
 
 /**
@@ -43,17 +43,18 @@ class BindingSiteFamily : public Reactant, public SimulatorInput
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Default constructor
-   */
+  //
+  /** @brief Default constructor */
   BindingSiteFamily (void);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // BindingSiteFamily ( const BindingSiteFamily& other_CLASSNAME );
+ private:
+  // Forbidden
+  /* @brief Copy constructor */
+  BindingSiteFamily (const BindingSiteFamily& other_family);
+  /* @brief Assignment operator */
+  BindingSiteFamily& operator= (const BindingSiteFamily& other_family);
 
+ public:
   /**
    * @brief Destructor
    */
@@ -70,7 +71,8 @@ class BindingSiteFamily : public Reactant, public SimulatorInput
   void add (const BindingSite* binding_site);
 
   /**
-   * @brief Update contributions given that a binding site availability has changed.
+   * @brief Update contributions given that a binding site availability has
+   *  changed.
    * @param site_index Index of the binding site that has changed.
    * @param number_available_sites New number of available sites.
    */
@@ -81,14 +83,18 @@ class BindingSiteFamily : public Reactant, public SimulatorInput
   // ============================
   //
   /**
-   * @brief Return total binding rate contribution as computed during the last update.
-   * @return Total binding rate contribution reflecting global affinity for ligand and availability.
+   * @brief Return total binding rate contribution as computed during the last
+   *  update.
+   * @return Total binding rate contribution reflecting global affinity for
+   *  ligand and availability.
    */
   double total_binding_rate_contribution (void) const;
 
   /**
-   * @brief Return a random available site based on contributions computed during the last update.
-   * @return Available site drawn according to a biased wheel favoring high affinity and availability.
+   * @brief Return a random available site based on contributions computed
+   *  during the last update.
+   * @return Available site drawn according to a biased wheel favoring high
+   *  affinity and availability.
    */
   const BindingSite& get_random_available_site (void) const;
 
@@ -96,31 +102,14 @@ class BindingSiteFamily : public Reactant, public SimulatorInput
    * @brief Checks whether a site from this family is currently available.
    * @return True if there is at least one site available.
    *
-   * Note that compared to the rate accessors, this accessor is based on the current state of the cell,
-   * not that at the time of the last update_rate_contributions(). Some computations are involved in this
+   * Note that compared to the rate accessors, this accessor is based on the
+   * current state of the cell, not that at the time of the last 
+   * update_rate_contributions(). Some computations are involved in this
    * accessor, but it is less expensive than update_rate_contributions().
    */
   bool is_site_available (void) const;
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // BindingSiteFamily& operator= ( const BindingSiteFamily& other_CLASSNAME );
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -144,12 +133,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

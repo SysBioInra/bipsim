@@ -26,17 +26,17 @@
 #include "forwarddeclarations.h"
 
 /**
- * @brief Generic class representing a weighted vector from which values are drawn.
+ * @brief Generic class representing a weighted vector from which values are
+ *  drawn.
  *
- * BiasedWheel is a template class that is initialized with a weight vector. It does
- * NOT do any of the RNG part, it enables searching the index/indices corresponding
- * to some user-provided cumulated weight.
+ * BiasedWheel is a template class that is initialized with a weight vector.
+ * It does NOT do any of the RNG part, it enables searching the index/indices
+ * corresponding to some user-provided cumulated weight.
  */
 template <typename T>
 class BiasedWheel
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -48,16 +48,14 @@ class BiasedWheel
    */
   BiasedWheel (const std::vector<T>& cumulated_weights);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // BiasedWheel ( const BiasedWheel& other_class_name );
-
-  /**
-   * @brief Destructor.
-   */
-  ~BiasedWheel (void);
+  // Not needed for this class (use of default compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // BiasedWheel (const BiasedWheel& other_class_name);
+  // /* @brief Assignment operator. */
+  // BiasedWheel& operator= (const BiasedWheel& other_class_name);
+  // /* @brief Destructor. */
+  // ~BiasedWheel (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -65,11 +63,12 @@ class BiasedWheel
   //
   /**
    * @brief Find the index corresponding to some cumulated weight.
-   * @param drawn_weight Cumulated weight to search for in the wheel in the range
-   *  (0, total_weight].
+   * @param drawn_weight Cumulated weight to search for in the wheel in the
+   *  range (0, total_weight].
    * @return Index corresponding to cumulated weights by applying the following
    *  rules: if cw[0] >= dw, i = 0, else (a) cw[i-1] < dw and (b) cw[i] >= dw,
-   *  where i is the returned index, cw the cumulated weights vector and dw the drawn weight.
+   *  where i is the returned index, cw the cumulated weights vector and dw the
+   *  drawn weight.
    */
   int find_index (T drawn_weight) const;
   
@@ -86,25 +85,7 @@ class BiasedWheel
   // ============================
   //
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // BiasedWheel& operator= ( const BiasedWheel& other_class_name );
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -127,7 +108,8 @@ private:
   bool check_weight_positivity (const std::vector<T>& v) const;
 
   /**
-   * @brief Check wether values of a vector can effectively be drawn on current wheel..
+   * @brief Check wether values of a vector can effectively be drawn on current
+   *  wheel.
    * @param v Drawn weight vector to check.
    * @return true if all values are in the (0, _total_weight] range, false else.
    */
@@ -149,17 +131,14 @@ private:
   };
 
   /**
-   * @brief Provide order of vector elements by indices, leaving original vector unchanged.
+   * @brief Provide order of vector elements by indices, leaving original vector
+   *  unchanged.
    * @param vector_to_sort Vector whose sorting is needed.
-   * @return Order vector giving indices of elements from the smallest to the largest
-   *  (e.g. sorted_indices(v)[0] yields the index of smallest value in v).
+   * @return Order vector giving indices of elements from the smallest to the
+   *  largest (e.g. sorted_indices(v)[0] yields the index of smallest value in
+   *  v).
    */
   std::vector<int> sorted_indices (const std::vector<T>& vector_to_sort) const;
-  
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
 };
 
 // ======================

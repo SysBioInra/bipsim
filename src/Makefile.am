@@ -31,8 +31,7 @@ libsrc_a_SOURCES += \
 
 # reaction sources
 libsrc_a_SOURCES += \
-	backwardreaction.h \
-	bidirectionalreaction.cpp bidirectionalreaction.h \
+	backwardreaction.h bidirectionalreaction.h \
 	chemicalreaction.cpp chemicalreaction.h \
 	complexation.cpp complexation.h \
 	forwardreaction.h \
@@ -52,9 +51,9 @@ libsrc_a_SOURCES += \
 
 # site sources
 libsrc_a_SOURCES += \
-	bindingsite.cpp bindingsite.h \
+	bindingsite.h \
 	bindingsitefamily.cpp bindingsitefamily.h \
-	bindingsiteobserver.cpp bindingsiteobserver.h \
+	bindingsiteobserver.h \
 	site.cpp site.h \
 	sitefamily.h \
 	siteobserver.h

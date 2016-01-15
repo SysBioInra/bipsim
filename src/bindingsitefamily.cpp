@@ -19,6 +19,7 @@
 // ==================
 //
 #include "bindingsitefamily.h"
+#include "bindingsite.h"
 #include "bindingsiteobserver.h"
 #include "randomhandler.h"
 #include "macros.h"
@@ -27,12 +28,11 @@
 //  Constructors/Destructors
 // ==========================
 //
-BindingSiteFamily::BindingSiteFamily (void)
-{
-}
+BindingSiteFamily::BindingSiteFamily (void) {}
 
-// Not needed for this class (use of default copy constructor) !
-// BindingSiteFamily::BindingSiteFamily ( const BindingSiteFamily& other_binding_site_family );
+// Forbidden
+// BindingSiteFamily::BindingSiteFamily (const BindingSiteFamily& other_family);
+// BindingSiteFamily& BindingSiteFamily::operator= ( const BindingSiteFamily& other_family );
 
 BindingSiteFamily::~BindingSiteFamily (void)
 {
@@ -88,21 +88,6 @@ bool BindingSiteFamily::is_site_available (void) const
   // if we arrive here, it means that all sites are occupied
   return false;
 }
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// BindingSiteFamily& BindingSiteFamily::operator= ( const BindingSiteFamily& other_binding_site_family );
-
 
 
 // =================

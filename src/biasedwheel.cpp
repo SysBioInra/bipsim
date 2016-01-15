@@ -33,12 +33,9 @@ BiasedWheel<T>::BiasedWheel (const std::vector<T>& cumulated_weights)
 }
 
 // Not needed for this class (use of default copy constructor) !
-// BiasedWheel::BiasedWheel ( const BiasedWheel& other_biased_wheel );
-
-template <typename T>
-BiasedWheel<T>::~BiasedWheel (void)
-{
-}
+// BiasedWheel::BiasedWheel (const BiasedWheel& other_biased_wheel);
+// BiasedWheel& BiasedWheel::operator= (const BiasedWheel& other_biased_wheel);
+// template <typename T> BiasedWheel<T>::~BiasedWheel (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -169,19 +166,6 @@ std::vector<int> BiasedWheel<T>::find_multiple_indices (const std::vector<T>& dr
 // ============================
 //
 
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// BiasedWheel& BiasedWheel::operator= ( const BiasedWheel& other_biased_wheel );
 
 // =================
 //  Private Methods

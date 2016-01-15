@@ -34,13 +34,12 @@
 class BoundUnit
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
   //
   /**
-   * @brief Default constructor
+   * @brief Constructor
    * @param binding_site Position to which the unit bound.
    * @param current_position Position it currently occupies.
    * @param reading_frame Position where it can potentially read its sequence.
@@ -52,16 +51,14 @@ class BoundUnit
   {
   }
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor */
   // BoundUnit ( const BoundUnit& other_bound_unit );
-
-  /**
-   * @brief Destructor
-   */
-  // virtual ~BoundUnit (void);
+  // /* @brief Assignment operator */
+  // BoundUnit& operator= ( const BoundUnit& other_bound_unit );
+  // /* @brief Destructor */
+  // ~BoundUnit (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -96,26 +93,7 @@ class BoundUnit
    */
   int reading_frame (void) const;
   
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // BoundUnit& operator= ( const BoundUnit& other_bound_unit );
-
-
 private:
-
   // ============
   //  Attributes
   // ============

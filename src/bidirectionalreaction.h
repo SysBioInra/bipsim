@@ -27,7 +27,8 @@
 #include "simulatorinput.h"
 
 /**
- * @brief Abstract class that represent all reactions that can happen in both directions. 
+ * @brief Abstract class that represent all reactions that can happen in both
+ *  directions. 
  *
  * This class serves as a storage convenience, its members should really be
  * accessed by the reaction subclasses that interface it as if it were
@@ -44,21 +45,16 @@ public:
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Default constructor
-   */
-  BidirectionalReaction (void);
-
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // Not needed for this class (use of compiler-generated version)
+  // /* @brief Default constructor. */
+  // BidirectionalReaction (void);
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor */
   // BidirectionalReaction (BidirectionalReaction& other_reaction);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~BidirectionalReaction (void);
+  // /* @brief Assignment operator */
+  // BidirectionalReaction& operator= (BidirectionalReaction& other_reaction);
+  // /* @brief Destructor */
+  // ~BidirectionalReaction (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -103,39 +99,25 @@ public:
   const std::vector<Reactant*>& backward_reactants (void) const;
 
   /**
-   * @brief Returns whether there are enough chemicals to perform forward reaction.
+   * @brief Returns whether there are enough chemicals to perform forward
+   *  reaction.
    * @return True if there are enough reactant, false otherwise.
    */
   virtual bool is_forward_reaction_possible (void) const = 0;
 
   /**
-   * @brief Returns whether there are enough chemicals to perform backward reaction.
+   * @brief Returns whether there are enough chemicals to perform backward
+   *  reaction.
    * @return True if there are enough reactant, false otherwise.
    */
   virtual bool is_backward_reaction_possible (void) const = 0;
-
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // BidirectionalReaction& operator= (BidirectionalReaction& other_reaction);
   
   /**
    * @brief Standard output.
    * @return A reference to the stream containing the output.
    * @param output Stream where output should be written.
-   * @param reaction Reference to the reaction whose information should be written.
+   * @param reaction Reference to the reaction whose information should be 
+   *  written.
    */
   friend std::ostream& operator<< (std::ostream& output,
 				   const BidirectionalReaction& reaction);
@@ -213,5 +195,11 @@ BidirectionalReaction::backward_reactants ( void ) const
   return _backward_reactants;
 }
 
+inline std::ostream& operator<< (std::ostream& output,
+				 const BidirectionalReaction& reaction)
+{
+  reaction.print (output);
+  return output;
+}
 
 #endif // BIDIRECTIONAL_REACTION_H

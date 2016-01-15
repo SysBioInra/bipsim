@@ -27,8 +27,12 @@
 //  Constructors/Destructors
 // ==========================
 //
-// Not needed for this class (use of default copy constructor) !
+
+BoundChemical::BoundChemical (void) {}
+
+// Forbidden
 // BoundChemical::BoundChemical (BoundChemical& other_bound_chemical);
+// BoundChemical& BoundChemical::operator= (BoundChemical& other_bound_chemical);
 
 BoundChemical::~BoundChemical (void)
 {
@@ -148,10 +152,10 @@ double BoundChemical::unbinding_rate_contribution (int binding_site_family) cons
    * Unbinding rate is generally defined by   r = k_off x [A].
    * However here k_off varies from a binding site to another so it becomes
    * r_total = sum (r_i) = sum ( k_off_i x [A_i] )
-   * Which is also the dot product between the vector of concentrations and the vector
-   * of k_off. As we loop through individual units, this can even be seen
-   * as a simple sum of unbinding rates (each k_off_i is counted the appropriate number
-   * of times).
+   * Which is also the dot product between the vector of concentrations and the
+   * vector of k_off. As we loop through individual units, this can even be seen
+   * as a simple sum of unbinding rates (each k_off_i is counted the 
+   * appropriate number of times).
    */
 
   // get the list of positions of chemicals bound to requested family
@@ -161,6 +165,17 @@ double BoundChemical::unbinding_rate_contribution (int binding_site_family) cons
   // we check whether there are indeed some chemicals in the list
   if (family == _family_map.end()) { return 0; }
   else { return (family->second).unbinding_rate(); }
+}
+
+// =================
+//  Private Methods
+// =================
+//
+void BoundChemical::add_unit (const BindingSite& binding_site, int position, int reading_frame)
+{
+  add (1);
+  _focused_unit = new BoundUnit (binding_site, position, reading_frame);
+  _family_map [binding_site.family()].insert (_focused_unit);
 }
 
 void BoundChemical::print (std::ostream& output) const
@@ -180,30 +195,3 @@ void BoundChemical::print (std::ostream& output) const
 	  }
     }
 }
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// BoundChemical& BoundChemical::operator= (BoundChemical& other_bound_chemical);
-
-
-// =================
-//  Private Methods
-// =================
-//
-void BoundChemical::add_unit (const BindingSite& binding_site, int position, int reading_frame)
-{
-  add (1);
-  _focused_unit = new BoundUnit (binding_site, position, reading_frame);
-  _family_map [binding_site.family()].insert (_focused_unit);
-}
-

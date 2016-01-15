@@ -24,8 +24,6 @@
 // ======================
 //
 #include "forwarddeclarations.h"
-#include "bindingsite.h"
-#include "boundunit.h"
 
 /**
  * @brief Class storing a list of BoundUnit.
@@ -49,18 +47,14 @@ class BoundUnitList
    */
   BoundUnitList (void) { _current_element = _v.begin(); }
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // BoundUnitList (const BoundUnitList& other_bound_unit_list);
-
-  /**
-   * @brief Destructor.
-   */
-  ~BoundUnitList (void) 
-    {
-    }
+  // /* @brief Assignment operator. */
+  // BoundUnitList& operator= (const BoundUnitList& other_bound_unit_list);
+  /* @brief Destructor. */
+  // ~BoundUnitList (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -83,26 +77,7 @@ class BoundUnitList
    * Only the first instance of element found is removed. If no element to
    * erase is found, a warning is displayed and the list remains unchanged.
    */
-  void erase (const BoundUnit* unit)
-  {
-    /** @pre List must not be empty. */
-    REQUIRE (_v.size() > 0);
-
-    // often the user will want to erase the last element accessed
-    if (unit == *_current_element) { _erase (_current_element); return; }
-
-    // else we just parse the vector until the right element is found.
-    std::vector <BoundUnit*>::iterator unit_it = _v.begin();
-    while (unit_it != _v.end())
-      {
-	if (unit == *unit_it) { _erase (unit_it); return; }
-	++unit_it;
-      }
-
-    // element was not found...
-    std::cerr << "WARNING: trying to erase non existent element "
-	      << "from a BoundUnitList." << std::endl;
-  }
+  void erase (const BoundUnit* unit);
   
   // ============================
   //  Public Methods - Accessors
@@ -153,43 +128,7 @@ class BoundUnitList
    * @return Sum of k_offs of binding sites of the BoundUnit stored.
    * @sa BoundUnit.
    */
-  double unbinding_rate (void) const
-  {
-    // we loop through the list and sum the k_off
-    double r_total = 0;
-    for (std::vector <BoundUnit*>::const_iterator unit_it = _v.begin();
-	 unit_it != _v.end(); ++unit_it)
-      { r_total += (*unit_it)->binding_site().k_off(); }
-    return r_total;
-  }
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // BoundUnitList& operator= (const BoundUnitList& other_bound_unit_list);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
+  double unbinding_rate (void) const;
 
 private:
 
@@ -205,9 +144,6 @@ private:
 
   /** @brief Iterator to last valid element. */
   mutable std::vector <BoundUnit*>::iterator _last_element;
-
-  /** @brief size of the list. */
-  int _size;
 
   // =================
   //  Private Methods
@@ -231,5 +167,39 @@ private:
 //  Inline declarations
 // ======================
 //
+#include "bindingsite.h"
+#include "boundunit.h"
+
+inline void BoundUnitList::erase (const BoundUnit* unit)
+{
+  /** @pre List must not be empty. */
+  REQUIRE (_v.size() > 0);
+  
+  // often the user will want to erase the last element accessed
+  if (unit == *_current_element) { _erase (_current_element); return; }
+  
+  // else we just parse the vector until the right element is found.
+  std::vector <BoundUnit*>::iterator unit_it = _v.begin();
+  while (unit_it != _v.end())
+    {
+      if (unit == *unit_it) { _erase (unit_it); return; }
+      ++unit_it;
+    }
+  
+  // element was not found...
+  std::cerr << "WARNING: trying to erase non existent element "
+	    << "from a BoundUnitList." << std::endl;
+}
+
+inline double BoundUnitList::unbinding_rate (void) const
+{
+  // we loop through the list and sum the k_off
+  double r_total = 0;
+  for (std::vector <BoundUnit*>::const_iterator unit_it = _v.begin();
+       unit_it != _v.end(); ++unit_it)
+    { r_total += (*unit_it)->binding_site().k_off(); }
+  return r_total;
+}
+
 
 #endif // BOUND_UNIT_LIST_H

@@ -44,22 +44,21 @@ public:
   // ==========================
   //  Constructors/Destructors
   // ==========================
-  // Not needed here
-  // /*
-  // * @brief Default constructor
-  // */
-  // BoundChemical (void);
-
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // BoundChemical (BoundChemical& other_bound_chemical);
+  /** @brief Default constructor */
+  BoundChemical (void);
+  
+ private:
+  // Forbidden
+  /** @brief Copy constructor */
+  BoundChemical (BoundChemical& other_bound_chemical);
+  /**@brief Assignment operator */
+  BoundChemical& operator= (BoundChemical& other_chemical);
+ public:
 
   /**
    * @brief Destructor
    */
-  virtual ~BoundChemical ( void );
+  virtual ~BoundChemical (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -97,7 +96,8 @@ public:
   // ============================
   //
   /**
-   * @brief Returns the number of elements bound to a specific binding site family.
+   * @brief Returns the number of elements bound to a specific binding site
+   *  family.
    * @return Number of elements bound to the binding site family.
    * @param binding_site_family The binding site family to inspect.
    */
@@ -142,29 +142,6 @@ public:
    */
   double unbinding_rate_contribution (int binding_site_family) const;
 
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  virtual void print (std::ostream& output) const;
-
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // CLASSNAME& operator= (CLASSNAME& other_CLASSNAME);
-
  protected:
   // ============
   //  Attributes
@@ -195,8 +172,8 @@ public:
   // ============
   //  
   /**
-   * @brief A map that classifies all BoundChemical depending on the family of BindingSite they
-   * bound to.
+   * @brief A map that classifies all BoundChemical depending on the family of
+   *  BindingSite they bound to.
    */
   typedef std::map <int, BoundUnitList> UnitFamilyMap;
 
@@ -208,7 +185,11 @@ public:
   //  Private Methods
   // =================
   //
-
+  /**
+   * @brief Print class content.
+   * @param output Stream where output should be written.
+   */
+  virtual void print (std::ostream& output) const;
 };
 
 // ======================
