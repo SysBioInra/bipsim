@@ -21,8 +21,8 @@
 // ==================
 //
 #include "ratetree.h"
+#include "ratenode.h"
 #include "sumnode.h"
-#include "dummynode.h"
 
 // ==========================
 //  Constructors/Destructors

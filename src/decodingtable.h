@@ -46,22 +46,19 @@ class DecodingTable : public SimulatorInput
   // ==========================
   //
   /**
-   * @brief Default constructor
+   * @brief Constructor.
    * @param template_length Length of templates used for decoding.
    */
   DecodingTable (int template_length);
   
-
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // DecodingTable ( const DecodingTable& other_decoding_table );
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~DecodingTable (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // DecodingTable (const DecodingTable& other_decoding_table);
+  // /* @brief Assignment operator. */
+  // DecodingTable& operator= ( const DecodingTable& other_decoding_table );
+  // /* @brief Destructor. */
+  // ~DecodingTable (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -99,7 +96,6 @@ class DecodingTable : public SimulatorInput
    */
   int template_index (const std::string& template_) const;
 
-
   /**
    * @brief Get chemical to load ont the template.
    * @param template_index Template index.
@@ -127,7 +123,6 @@ class DecodingTable : public SimulatorInput
    */
   int template_length (void) const;
 
-
   /**
    * @brief Accessor to all loadable chemicals.
    * @return Set of all loadable chemicals.
@@ -139,30 +134,16 @@ class DecodingTable : public SimulatorInput
    * @return Set of all possible occupied polymerases.
    */
   const std::set<BoundChemical*> occupied_polymerases (void) const;
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // DecodingTable& operator= ( const DecodingTable& other_decoding_table );
   
   /**
    * @brief Standard output.
    * @return A reference to the stream containing the output.
    * @param output Stream where output should be written.
-   * @param decoding_table Reference to the table whose information should be written.
+   * @param decoding_table Reference to the table whose information should be
+   *  written.
    */
-  friend std::ostream& operator<< (std::ostream& output, const DecodingTable& decoding_table);
+  friend std::ostream& operator<< (std::ostream& output,
+				   const DecodingTable& decoding_table);
 
   
   // ==================
@@ -174,9 +155,7 @@ class DecodingTable : public SimulatorInput
    */
   static const int UNKNOWN_TEMPLATE = -1;
 
-  
 private:
-
   // ============
   //  Attributes
   // ============
@@ -216,14 +195,8 @@ private:
 inline int DecodingTable::template_index (const std::string& template_) const
 {
   std::map< std::string, int >::const_iterator it = _template_index.find (template_);
-  if (it != _template_index.end()) // Template  exists.
-    {
-      return it->second;
-    }
-  else
-    {
-      return DecodingTable::UNKNOWN_TEMPLATE;
-    }
+  if (it != _template_index.end()) { return it->second; }
+  else { return DecodingTable::UNKNOWN_TEMPLATE; }
 }
 
 inline Chemical& DecodingTable::chemical_to_load (int template_index) const

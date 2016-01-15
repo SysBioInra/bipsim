@@ -22,7 +22,7 @@
 
 #include "parserexception.h"
 #include "formatexception.h"
-#include "dependencyexception.h"
+#include "simulatorexception.h"
 
 #include "site.h"
 #include "bindingsite.h"

@@ -32,8 +32,9 @@
  * @brief A DependencyGraph stores dependencies between reactions.
  *
  * The aim of this class is to detect how a reaction can impact other reaction
- * rates. For example, given that reaction A occurred, which rates of other reactions
- * should I update ? Or, said differently, which rates can in afford to NOT update.
+ * rates. For example, given that reaction A occurred, which rates of other 
+ * reactions should I update ? Or, said differently, which rates can in afford
+ * to NOT update.
  */
 class DependencyGraph
 {
@@ -46,16 +47,17 @@ class DependencyGraph
   /**
    * @brief Constructor.
    * @param reactions Vector of reactions for which the dependencies are needed.
-   *
-   * Dependencies are built from the reaction vector once and for all during object
-   * construction.
    */
   DependencyGraph (const std::vector<Reaction*>& reactions);
 
-  /**
-   * @brief Destructor
-   */
-  ~DependencyGraph (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // DependencyGraph (const DependencyGraph& other_dependency_graph);
+  // /* @brief Assignment operator. */
+  // DependencyGraph& operator= (const DependencyGraph& other_dependency_graph);
+  // /* @brief Destructor */
+  // ~DependencyGraph (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -84,13 +86,6 @@ class DependencyGraph
   // ==========================
   //
 
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-
-
 private:
 
   // ============
@@ -108,22 +103,6 @@ private:
   //  Private Methods
   // =================
   //
-
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  /**
-   * @brief Assignment operator forbidden.
-   */
-  DependencyGraph& operator= (const DependencyGraph& other_dependency_graph);
-
-  /**
-   * @brief Copy constructor forbidden.
-   */
-  DependencyGraph (const DependencyGraph& other_dependency_graph);
-
-
 };
 
 // ======================

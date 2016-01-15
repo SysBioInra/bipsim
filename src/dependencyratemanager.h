@@ -57,27 +57,26 @@ class DependencyRateManager : public RateManager
   DependencyRateManager (const SimulationParams& params,
 			 const std::vector <Reaction*>& reactions);
 
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
   // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // DependencyRateManager ( const DependencyRateManager& other_dependency_rate_manager );
-
-  /**
-   * @brief Destructor.
-   */
-  virtual ~DependencyRateManager (void);
+  // /* @brief Copy constructor. */
+  // DependencyRateManager (const DependencyRateManager& other_manager);
+  // /* @brief Assignment operator. */
+  // DependencyRateManager& operator= (const DependencyRateManager& other_manager);
+  // /* @brief Destructor. */
+  // virtual ~DependencyRateManager (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
+  // redefined from RateManager
   /**
-   * @brief Update rates according to current chemical levels.
-   *
-   * This manager uses a dependency approach. Using an observer architecture, it receives
-   * updates about concentration changes and stores reactions whose rates may have changed.
-   * When prompted to update, it recomputes these rates.
+   * This manager uses a dependency approach. Using an observer architecture,
+   * it receives updates about concentration changes and stores reactions
+   * whose rates may have changed. When prompted to update, it recomputes 
+   * these rates.
    */
   virtual void update_rates (void);
 
@@ -86,25 +85,7 @@ class DependencyRateManager : public RateManager
   // ============================
   //
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // DependencyRateManager& operator= ( const DependencyRateManager& other_dependency_rate_manager );
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -122,12 +103,6 @@ private:
    * @brief Create dependency map from the list of reactions and subscribe for notfication by reactants.
    */
   void create_dependencies (void);
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

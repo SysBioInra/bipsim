@@ -27,7 +27,7 @@
 #include "cellstate.h"
 #include "inputdata.h"
 #include "parserexception.h"
-#include "dependencyexception.h"
+#include "simulatorexception.h"
 
 // ==========================
 //  Constructors/Destructors

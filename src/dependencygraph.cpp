@@ -84,33 +84,20 @@ DependencyGraph::DependencyGraph (const std::vector <Reaction*>& reactions)
 }
 
 
-DependencyGraph::~DependencyGraph (void)
-{
-}
+// Not needed for this class (use of compiler-generated versions)
+// DependencyGraph::DependencyGraph (const DependencyGraph& other_graph);
+// DependencyGraph& DependencyGraph::operator= (const DependencyGraph& other_graph);
+// DependencyGraph::~DependencyGraph (void) {}
 
 // ===========================
 //  Public Methods - Commands
 // ===========================
 //
 
-
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-
 
 // =================
 //  Private Methods

@@ -51,12 +51,14 @@ class DependencyException : public std::exception
     { 
     }
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // DependencyException (const DependencyException& other_dependency_exception);
-
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // DependencyException (const DependencyException& other_exception);
+  // /* @brief Assignment operator. */
+  // DependencyException& operator= (const DependencyException& other_exception);
+  // EXCEPTION: Destructor is empty so I should define none of the 3 methods,
+  //  but compiler forgets the `throw()` part of the definition...
   /**
    * @brief Destructor.
    */
@@ -66,7 +68,6 @@ class DependencyException : public std::exception
   //  Public Methods - Commands
   // ===========================
   //
-
 
   // ============================
   //  Public Methods - Accessors
@@ -82,34 +83,6 @@ class DependencyException : public std::exception
     return msg.c_str();
   }
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // DependencyException& operator= (const DependencyException& other_dependency_exception);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
   // ============
   //  Attributes
@@ -122,12 +95,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

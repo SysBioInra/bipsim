@@ -20,7 +20,7 @@
 //
 #include "reactionfactory.h"
 
-#include "dependencyexception.h"
+#include "simulatorexception.h"
 #include "formatexception.h"
 #include "parserexception.h"
 

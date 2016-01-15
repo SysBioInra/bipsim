@@ -37,12 +37,10 @@ DependencyRateManager::DependencyRateManager (const SimulationParams& params,
   create_dependencies();
 }
 
-// Not needed for this class (use of default copy constructor) !
-// DependencyRateManager::DependencyRateManager ( const DependencyRateManager& other_dependency_rate_manager );
-
-DependencyRateManager::~DependencyRateManager (void)
-{
-}
+// Not needed for this class (use of compiler-generated versions)
+// DependencyRateManager::DependencyRateManager (const DependencyRateManager& other_manager);
+// DependencyRateManager& DependencyRateManager::operator= (const DependencyRateManager& other_manager);
+// DependencyRateManager::~DependencyRateManager (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -63,20 +61,6 @@ void DependencyRateManager::update_rates (void)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// DependencyRateManager& DependencyRateManager::operator= ( const DependencyRateManager& other_dependency_rate_manager );
 
 
 // =================

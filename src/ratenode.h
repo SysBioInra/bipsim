@@ -2,7 +2,7 @@
 
 /**
  * @file ratenode.h
- * @brief Header for the ClassName class.
+ * @brief Header for the RateNode, DummyNode classes.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -49,19 +49,16 @@ class RateNode
     : _parent (0)
     , _invalidated (false)
     , _rate (0)
-    {
-    }
+    {}
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // RateNode (const RateNode& other_class_name);
-
-  /**
-   * @brief Destructor.
-   */
-  ~RateNode (void) {}
+  // /* @brief Assignment operator. */
+  // RateNode& operator= (const RateNode& other_class_name);
+  // /* @brief Destructor. */
+  // virtual ~RateNode (void) {}
 
   // ===========================
   //  Public Methods - Commands
@@ -95,6 +92,12 @@ class RateNode
    */
   void invalidate (void) { _invalidated = true; }
 
+  /**
+   * @brief Setter for parent.
+   * @param parent Pointer to new parent for the node.
+   */
+  void set_parent (RateNode* parent) { _parent = parent; }
+
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -117,32 +120,7 @@ class RateNode
    */
   bool is_invalidated (void) { return _invalidated; }
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-  /**
-   * @brief Setter for parent.
-   * @param parent Pointer to new parent for the node.
-   */
-  void set_parent (RateNode* parent) { _parent = parent; }
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // RateNode& operator= (const RateNode& other_class_name);
-
 protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
   // ===================
   //  Protected Methods
   // ===================
@@ -192,6 +170,72 @@ private:
   // ======================
   //
 
+};
+
+/**
+ * @brief Class for nodes with unique children in RateTree.
+ *
+ * DummyNode is a class that is used to manage the depth of the branches of the
+ * tree. Because it has a unique children, it breaks the binary tree pattern but
+ * it can be used to ensure that all leaves are at the same depth. It passes
+ * any order it receives over to its only child, hence its name.
+ * DummyNode inherits RateNode.
+ * @sa RateTree.
+ */
+class DummyNode : public RateNode
+{
+ public:
+
+  // ==========================
+  //  Constructors/Destructors
+  // ==========================
+  //
+  /**
+   * @brief Default constructor.
+   */
+  DummyNode (RateNode& child)
+    : _child (child)
+    { update(); }
+
+  
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // DummyNode (const DummyNode& other_class_name);
+  // /* @brief Assignment operator. */
+  // DummyNode& operator= (const DummyNode& other_class_name);
+  // /* @brief Destructor. */
+  // ~DummyNode (void);
+
+  // ===========================
+  //  Public Methods - Commands
+  // ===========================
+  //
+  // redefined from RateNode
+  int find (double value) { return _child.find (value); }
+
+
+  // ============================
+  //  Public Methods - Accessors
+  // ============================
+  //
+private:
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Unique child of the dummy node in the tree. */
+  RateNode& _child;
+
+  // =================
+  //  Private Methods
+  // =================
+  //
+  // redefined from RateNode
+  void perform_update (void)
+  {
+    _set_rate (_child.rate());
+  }  
 };
 
 // ======================

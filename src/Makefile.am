@@ -115,7 +115,7 @@ libsrc_a_SOURCES += \
 	ratecontainer.h ratevector.h updatedtotalratevector.h \
 	flyratevector.h \
 	ratetree.cpp ratetree.h \
-	ratenode.h sumnode.h dummynode.h reactionnode.h \
+	ratenode.h sumnode.h reactionnode.h \
 	hybridratecontainer.cpp hybridratecontainer.h  \
 	rategroup.h ratetoken.h
 
@@ -125,6 +125,6 @@ libsrc_a_SOURCES += \
 
 # exceptions
 libsrc_a_SOURCES += \
-	formatexception.h parserexception.h dependencyexception.h
+	formatexception.h parserexception.h simulatorexception.h
 
 ###############################################################################
