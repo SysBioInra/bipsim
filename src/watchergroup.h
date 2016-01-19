@@ -35,7 +35,6 @@
 class WatcherGroup
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -45,12 +44,14 @@ class WatcherGroup
    */
   WatcherGroup (void);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // WatcherGroup (const WatcherGroup& other_watcher_group);
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  WatcherGroup (const WatcherGroup& other_watcher_group);
+  /** @brief Assignment operator. */
+  WatcherGroup& operator= (const WatcherGroup& other_watcher_group);
 
+ public:
   /**
    * @brief Destructor.
    */
@@ -96,36 +97,7 @@ class WatcherGroup
    */
   int last (void) const;
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // WatcherGroup& operator= (const WatcherGroup& other_watcher_group);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -143,12 +115,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

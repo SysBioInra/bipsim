@@ -21,8 +21,6 @@
 #include "reactionfactory.h"
 
 #include "simulatorexception.h"
-#include "formatexception.h"
-#include "parserexception.h"
 
 #include "chemicalreaction.h"
 #include "complexation.h"
@@ -49,12 +47,10 @@ ReactionFactory::ReactionFactory (CellState& cell_state)
 {
 }
 
-// Not needed for this class (use of default copy constructor) !
+// Not needed for this class (use of compiler generated versions)
 // ReactionFactory::ReactionFactory (const ReactionFactory& other_factory);
-
-ReactionFactory::~ReactionFactory (void)
-{
-}
+// ReactionFactory& ReactionFactory::operator= (const ReactionFactory& other_factory);
+// ReactionFactory::~ReactionFactory (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -89,20 +85,6 @@ bool ReactionFactory::handle (const std::string& line)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// ReactionFactory& ReactionFactory::operator= (const ReactionFactory& other_factory);
 
 
 // =================

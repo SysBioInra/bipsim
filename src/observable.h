@@ -50,12 +50,14 @@ class Observable
    */
   Observable (void) {}
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // Observable ( const Observable& other_observable );
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  Observable (const Observable& other_observable);
+  /** @brief Assignment operator. */
+  Observable& operator= ( const Observable& other_observable );
 
+ public:
   /**
    * @brief Destructor.
    */
@@ -73,45 +75,21 @@ class Observable
   // ===========================
   //
   /**
-   * @brief Attach a DependencyRateManager for notification when concentration changes.
+   * @brief Attach an observer for notification when a chage occurs.
    * @param observer Observer to add to observer list.
    */
-  void attach (T& observer)
-  {
-    _observers.insert (&observer);
-  }
+  void attach (T& observer) { _observers.insert (&observer); }
 
   /**
-   * @brief Detach a previously added RateManager from observer list.
+   * @brief Detach a previously added observer from observer list.
    * @param observer Observer to remove from observer list.
    */
-  void detach (T& observer)
-  {
-    _observers.erase (&observer);
-  }
+  void detach (T& observer) { _observers.erase (&observer); }
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // Observable& operator= ( const Observable& other_observable );
-
 
  protected:
   // ===================
@@ -132,24 +110,18 @@ class Observable
 
 
  private:
-
   // ============
   //  Attributes
   // ============
   //
   /**
-   * @brief List of observers to notify when concentration changes.
+   * @brief Set of observers to notify when concentration changes.
    */
   std::set <T*> _observers;
 
   // =================
   //  Private Methods
   // =================
-  //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
   //
 
 #ifdef HAVE_BOOST_SERIALIZATION

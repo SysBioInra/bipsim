@@ -53,12 +53,14 @@ class RateValidity
     {
     }
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // RateValidity (const RateValidity& other_class_name);
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  RateValidity (const RateValidity& other_rate_validity);
+  /** @brief Assignment operator. */
+  RateValidity& operator= (const RateValidity& other_rate_validity);
 
+ public:
   /**
    * @brief Destructor.
    */
@@ -126,34 +128,6 @@ class RateValidity
    */
   bool empty (void) const { return _update_stack.empty(); }
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // RateValidity& operator= (const RateValidity& other_class_name);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
   // ============
   //  Attributes
@@ -172,12 +146,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================
@@ -185,6 +153,7 @@ private:
 // ======================
 //
 #include "concentrationobserver.h"
+
 inline void RateValidity::add_observer (Reactant& reactant, int identifier)
 {
   _observers.push_back (new ConcentrationObserver (*this, &reactant,

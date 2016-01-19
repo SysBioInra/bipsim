@@ -131,7 +131,8 @@ class HybridRateContainerFactory : public RateContainerFactory
 #include "hybridratecontainer.h"
 
 inline RateContainer* 
-RateVectorFactory::create (const SimulationParams& params, int number_rates) const
+RateVectorFactory::create (const SimulationParams& params, 
+			   int number_rates) const
 {
   return new RateVector (number_rates);
 }

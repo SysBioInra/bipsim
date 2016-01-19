@@ -49,7 +49,7 @@ class RateVector : public RateContainer
   // ==========================
   //
   /**
-   * @brief Default constructor.
+   * @brief Constructor.
    * @param size Initial size of the vector (0 by default).
    */
   RateVector (int size = 0)
@@ -59,25 +59,40 @@ class RateVector : public RateContainer
   {
   }
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // RateVector (const RateVector& other_rate_vector);
-
-  /**
-   * @brief Destructor.
-   */
-  ~RateVector (void) {}
+  // /* @brief Assignment operator. */
+  // RateVector& operator= (const RateVector& other_rate_vector);
+  // /* @brief Destructor. */
+  // ~RateVector (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  // inherited (virtual)
+  // Redefined from RateContainer
   void update_cumulates (void)
   {
     std::partial_sum (_rates.begin(), _rates.end(), _cumulated_rates.begin());
+  }
+
+  int random_index (void) const
+  {
+    /** Total rate must be strictly positive. */
+    ENSURE (total_rate() > 0);
+    return find (RandomHandler::instance().draw_uniform
+		 (1e-16*total_rate(), total_rate()));
+  }
+
+  void set_rate (int index, double value)
+  {
+    /** @pre index must be within vector bounds. */
+    REQUIRE ((index >= 0) && (index < size()));
+    /** @pre value must be positive. */
+    REQUIRE (value >= 0);
+    _rates [index] = value;
   }
 
   /**
@@ -93,15 +108,6 @@ class RateVector : public RateContainer
     /** @pre drawn value must be consistent with total rate. */
     REQUIRE ((value > 0) && (value <= _cumulated_rates.back()));
     return _biased_wheel.find_index (value);
-  }
-
-  // inherited (virtual)
-  int random_index (void) const
-  {
-    /** Total rate must be strictly positive. */
-    ENSURE (total_rate() > 0);
-    return find (RandomHandler::instance().draw_uniform
-		 (1e-16*total_rate(), total_rate()));
   }
 
   /**
@@ -124,7 +130,7 @@ class RateVector : public RateContainer
   //  Public Methods - Accessors
   // ============================
   //
-  // inherited (virtual)
+  // Redefined from RateContainer
   double total_rate (void) const
   { 
     /** @post total rate should be positive. */
@@ -145,46 +151,6 @@ class RateVector : public RateContainer
    */
   const double& operator[] (int index) const { return _rates [index]; }
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-  // inherited (virtual)
-  void set_rate (int index, double value)
-  {
-    /** @pre index must be within vector bounds. */
-    REQUIRE ((index >= 0) && (index < size()));
-    /** @pre value must be positive. */
-    REQUIRE (value >= 0);
-    _rates [index] = value;
-  }
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // RateVector& operator= (const RateVector& other_rate_vector);
-
-
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
 
   // ============
@@ -204,13 +170,6 @@ private:
   //  Private Methods
   // =================
   //
-
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

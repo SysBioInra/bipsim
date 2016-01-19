@@ -36,7 +36,6 @@
  * same element in its bound form and the type of binding sites it can bind
  * onto.
  * This class inherits class Reaction.
- * @sa Reaction
  */
 class SequenceBinding: public BidirectionalReaction
 {
@@ -48,92 +47,47 @@ public:
   //
   /**
    * @brief Constructor
-   * @param unit_to_bind
-   *  Chemical element that can potentially bind to a binding site.
-   * @param binding_result
-   *  A bound chemical element that corresponds to the original chemical in its
-   *  bound form.
-   * @param  binding_site_family
-   *  The family of binding sites the chemical can bind
-   *  onto.
-   * @param  binding_site_family_id
-   *  The family identfier of binding sites the chemical can bind
-   *  onto.
-   * @sa BindingSite
+   * @param unit_to_bind Chemical element that can potentially bind to a 
+   *  binding site.
+   * @param binding_result A bound chemical element that corresponds to the 
+   *  original chemical in its bound form.
+   * @param binding_site_family The family of binding sites the chemical 
+   *  can bind onto.
+   * @param binding_site_family_id The family identfier of binding sites 
+   *  the chemical can bind onto.
    */
   SequenceBinding (Chemical& unit_to_bind, BoundChemical& binding_result,
-	   BindingSiteFamily& binding_site_family, int binding_site_family_id);
+		   BindingSiteFamily& binding_site_family, 
+		   int binding_site_family_id);
     
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // SequenceBinding (SequenceBinding& other_sequence_binding);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~SequenceBinding (void);
+  // /* @brief Assignment operator. */
+  // SequenceBinding& operator= (SequenceBinding& other_sequence_binding);
+  // /* @brief Destructor. */
+  // ~SequenceBinding (void);
   
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
   //
-  /**
-   * @brief Update chemical quantities according to the forward reaction.
-   * @return Current forward rate.
-   */
-  virtual void perform_forward (void);
-  
-  /**
-   * @brief Update chemical quantities according to the backward reaction.
-   * @return Current backward rate.
-   */
-  virtual void perform_backward (void);
+  // Redefined from BidirectionReaction
+  void perform_forward (void);
+  void perform_backward (void);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  /**
-   * @brief Returns whether there are enough chemicals to perform forward reaction.
-   * @return True if there are enough reactant, false otherwise.
-   */
-  virtual bool is_forward_reaction_possible (void) const;
-
-  /**
-   * @brief Returns whether there are enough chemicals to perform backward reaction.
-   * @return True if there are enough reactant, false otherwise.
-   */
-  virtual bool is_backward_reaction_possible (void) const;
-
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // SequenceBinding& operator= (SequenceBinding& other_sequence_binding);
-
- protected:
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-  
+  // Redefined from BidirectionReaction
+  bool is_forward_reaction_possible (void) const;
+  bool is_backward_reaction_possible (void) const;
 
  private:
-
   // ============
   //  Attributes
   // ============
@@ -147,10 +101,7 @@ public:
    */
   BoundChemical& _binding_result;
   
-  /**
-   * @brief Binding sites the chemical can bind onto.
-   * @sa BindingSiteFamily
-   */
+  /** @brief Binding sites the chemical can bind onto. */
   BindingSiteFamily& _binding_site_family;
 
   /**
@@ -162,24 +113,10 @@ public:
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Compute current forward rate.
-   * @return Current forward rate.
-   */
-  virtual double compute_forward_rate (void) const;
-
-  /**
-   * @brief Compute current backward rate.
-   * @return Current backward rate.
-   */
-  virtual double compute_backward_rate (void) const;
-
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  virtual void print (std::ostream& output) const;
-
+  // Redefined from BidirectionReaction
+  double compute_forward_rate (void) const;
+  double compute_backward_rate (void) const;
+  void print (std::ostream& output) const;
 };
 
 // =====================

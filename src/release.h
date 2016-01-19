@@ -68,16 +68,14 @@ public:
 	   ProductTable* product_table = 0);
     
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // Release (Release& other_release);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~Release (void);
+  // /* @brief Assignment operator. */
+  // Release& operator= (Release& other_release);
+  // /* @brief Destructor */
+  // ~Release (void);
   
   // ===========================
   //  Public Methods - Commands
@@ -89,38 +87,10 @@ public:
   //  Public Methods - Accessors
   // ============================
   //
-  /**
-   * @brief Returns whether there are enough chemicals to perform reaction.
-   * @return True if there are enough reactant, false otherwise.
-   */
-  virtual bool is_reaction_possible (void) const;
+  // Redefined from Reaction
+  bool is_reaction_possible (void) const;
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // Release& operator= (Release& other_release);
-
-
- protected:
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
-private:
-
+ private:
   // ============
   //  Attributes
   // ============
@@ -128,7 +98,10 @@ private:
   /** @brief Chemical element to release. */
   BoundChemical& _unit_to_release;
 
-  /** @brief Side reaction representing other components that are involved in the release other than the unit to release. */
+  /**
+   * @brief Side reaction representing other components that are involved in 
+   *  the release other than the unit to release. 
+   */
   ChemicalReaction _side_reaction;
   
   /** @brief Table of molecules that the released chemical may have produced. */
@@ -138,22 +111,10 @@ private:
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Update chemical quantities according to the reaction.
-   */
-  virtual void do_reaction (void);
-  
-  /**
-   * @brief Compute current reaction rate.
-   * @return Current reaction rate.
-   */
-  virtual double compute_rate (void) const;
-
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  virtual void print (std::ostream& output) const;
+  // Redefined from Reaction.
+  void do_reaction (void);
+  double compute_rate (void) const;
+  void print (std::ostream& output) const;
 };
 
 // =====================

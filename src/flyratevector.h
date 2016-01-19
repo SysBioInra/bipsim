@@ -59,66 +59,22 @@ class FlyRateVector : public RateContainer
   {
   }
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // FlyRateVector (const FlyRateVector& other_fly_rate_vector);
-
-  /**
-   * @brief Destructor.
-   */
-  ~FlyRateVector (void) {}
+  // /* @brief Assignment operator. */
+  // FlyRateVector& operator= (const FlyRateVector& other_fly_rate_vector);
+  // /* @brief Destructor. */
+  // ~FlyRateVector (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  // inherited (virtual)
-  void update_cumulates (void) 
-  {
-  }
-
-  // inherited (virtual)
-  int random_index (void) const
-  {
-    /** Total rate must be strictly positive. */
-    ENSURE (total_rate() > 0);
-    double u = RandomHandler::instance().draw_uniform
-      (1e-16*total_rate(), total_rate());
-    if (_forward)
-      {
-	int index_drawn = 0;
-	while (index_drawn < _rates.size()) 
-	  {
-	    u -= _rates [index_drawn]; 
-	    if (u <= 0) { return index_drawn; }
-	    ++index_drawn;
-	  }
-	// problem: approximation of total rate was wrong
-	double approximation = total_rate();
-	_compute_total_rate();
-	u = _total_rate * (1 - u / approximation);
-	while (u >= 0) {--index_drawn; u -= _rates [index_drawn]; }	
-	return index_drawn;
-      }
-    else // search backward
-      {
-	int index_drawn = _rates.size() - 1;
-	while (index_drawn >= 0)
-	  { 
-	    u -= _rates [index_drawn];
-	    if (u <= 0) { return index_drawn; }
-	    --index_drawn;
-	  }
-	// problem: approximation of total rate was wrong
-	double approximation = total_rate();
-	_compute_total_rate();
-	u = _total_rate * (1 - u / approximation);
-	while (u >= 0) { ++index_drawn; u -= _rates [index_drawn]; }	
-	return index_drawn;
-      }
-  }
+  // redefined from RateContainer
+  void update_cumulates (void)  {}
+  int random_index (void) const;
 
   /**
    * @brief Resize the rate vector.
@@ -131,12 +87,11 @@ class FlyRateVector : public RateContainer
     _rates.resize (_rates.size() + number_values, 0);
   }
 
-
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  // inherited (virtual)
+  // redefined from RateContainer
   double total_rate (void) const
   { 
     /** @post total rate should be positive. */
@@ -175,33 +130,7 @@ class FlyRateVector : public RateContainer
     ENSURE (_total_rate >= 0);
   }
 
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // FlyRateVector& operator= (const FlyRateVector& other_fly_rate_vector);
-
-
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -219,22 +148,58 @@ private:
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Compute total rate from scratch.
+   */
   void _compute_total_rate (void) const
   {
     _total_rate = std::accumulate (_rates.begin(), _rates.end(), 0.0);
   }
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+inline int FlyRateVector::random_index (void) const
+{
+  /** Total rate must be strictly positive. */
+  ENSURE (total_rate() > 0);
+  double u = RandomHandler::instance().draw_uniform
+    (1e-16*total_rate(), total_rate());
+  if (_forward)
+    {
+      int index_drawn = 0;
+      while (index_drawn < _rates.size()) 
+	{
+	  u -= _rates [index_drawn]; 
+	  if (u <= 0) { return index_drawn; }
+	  ++index_drawn;
+	}
+      // problem: approximation of total rate was wrong
+      double approximation = total_rate();
+      _compute_total_rate();
+      u = _total_rate * (1 - u / approximation);
+      while (u >= 0) {--index_drawn; u -= _rates [index_drawn]; }	
+      return index_drawn;
+    }
+  else // search backward
+    {
+      int index_drawn = _rates.size() - 1;
+      while (index_drawn >= 0)
+	{ 
+	  u -= _rates [index_drawn];
+	  if (u <= 0) { return index_drawn; }
+	  --index_drawn;
+	}
+      // problem: approximation of total rate was wrong
+      double approximation = total_rate();
+      _compute_total_rate();
+      u = _total_rate * (1 - u / approximation);
+      while (u >= 0) { ++index_drawn; u -= _rates [index_drawn]; }	
+      return index_drawn;
+    }
+}
 
 
 #endif // FLY_RATE_VECTOR_H

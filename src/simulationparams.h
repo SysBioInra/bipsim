@@ -47,12 +47,14 @@ class SimulationParams
    */
   SimulationParams (const std::string& filename);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // SimulationParams (const SimulationParams& other_simulation_params);
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  SimulationParams (const SimulationParams& other_simulation_params);
+  /** @brief Assignment operator. */
+  SimulationParams& operator= (const SimulationParams& other_simulation_params);
 
+ public:
   /**
    * @brief Destructor.
    */
@@ -139,36 +141,7 @@ class SimulationParams
    */
   double hybrid_base_rate (void) const;
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // SimulationParams& operator= (const SimulationParams& other_simulation_params);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -305,12 +278,6 @@ private:
    * @brief Write relevant simulation parameters to a file for future reference.
    */
   void _write_params_out (void) const;
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

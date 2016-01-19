@@ -30,12 +30,10 @@ TransformationTable::TransformationTable (int input_motif_length)
 {
 }
 
-// Not needed for this class (use of default copy constructor) !
+// Not needed for this class (use of compiler generated versions)
 // TransformationTable::TransformationTable (const TransformationTable& other_transformation_table);
-
-TransformationTable::~TransformationTable (void)
-{
-}
+// TransformationTable& TransformationTable::operator= (const TransformationTable& other_transformation_table);
+// TransformationTable::~TransformationTable (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -58,25 +56,11 @@ std::string TransformationTable::transform (const std::string& sequence) const
     }
   return result;
 }
+
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// TransformationTable& TransformationTable::operator= (const TransformationTable& other_transformation_table);
-
 
 // =================
 //  Private Methods

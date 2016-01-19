@@ -51,12 +51,14 @@ class RateManager
   RateManager (const SimulationParams& params,
 	       const std::vector <Reaction*>& reactions);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // RateManager ( const RateManager& other_rate_manager );
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  RateManager (const RateManager& other_rate_manager);
+  /** @brief Assignment operator. */
+  RateManager& operator= (const RateManager& other_rate_manager);
 
+ public:
   /**
    * @brief Destructor.
    */
@@ -87,30 +89,15 @@ class RateManager
    */
   double total_rate (void) const;
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // RateManager& operator= ( const RateManager& other_rate_manager );
   /**
    * @brief Standard output.
    * @return A reference to the stream containing the output.
    * @param output Stream where output should be written.
-   * @param manager Reference to the manager whose information should be written.
+   * @param manager Reference to the manager whose information should be 
+   *  written.
    */
   friend std::ostream& operator<< (std::ostream& output,
 				   const RateManager& manager);
-
 
  protected:
   // ===================
@@ -152,17 +139,10 @@ class RateManager
   /** @brief Container storing reaction rates. */
   RateContainer* _rates;
 
-  // ===================
-  //  Protected Methods
-  // ===================
+  // =================
+  //  Private Methods
+  // =================
   //
-  
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ==================

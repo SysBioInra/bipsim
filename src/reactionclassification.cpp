@@ -29,12 +29,10 @@ ReactionClassification::ReactionClassification (void)
 {
 }
 
-// Not needed for this class (use of default copy constructor) !
-// ReactionClassification::ReactionClassification ( const ReactionClassification& other_reaction_classification );
-
-ReactionClassification::~ReactionClassification (void)
-{
-}
+// Not needed for this class (use of compiler generated versions)
+// ReactionClassification::ReactionClassification (const ReactionClassification& other_classification);
+// ReactionClassification& ReactionClassification::operator= (const ReactionClassification& other_classification);
+// ReactionClassification::~ReactionClassification;
 
 // ===========================
 //  Public Methods - Commands
@@ -59,26 +57,10 @@ int ReactionClassification::create_new_class (double time_step)
 }
 
 
-
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// ReactionClassification& ReactionClassification::operator= ( const ReactionClassification& other_reaction_classification );
 
 
 // =================

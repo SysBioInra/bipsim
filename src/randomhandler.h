@@ -43,11 +43,20 @@ class RandomHandler
   //  Constructors/Destructors
   // ==========================
   //
+ private:
+  // Forbidden (singleton pattern)
+  /** @brief Default constructor. */
+  RandomHandler (void);
+  /** @brief Copy constructor. */
+  RandomHandler (RandomHandler& other_handler);
+  /** @brief Assignment operator. */
+  RandomHandler& operator= (RandomHandler& other_handler);
 
-  /**
-   * @brief Destructor
-   */
-  virtual ~RandomHandler (void);
+ public:
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule does not apply)
+  // /* @brief Destructor */
+  // ~RandomHandler (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -84,18 +93,24 @@ class RandomHandler
   double draw_uniform (double a, double b);
 
   /**
-   * @brief Draw a real value from an exponential distribution with paramter lambda.
+   * @brief Draw a real value from an exponential distribution.
    * @return Random non-negative double.
    * @param lambda Parameter of the exponential distribution.
    */ 
-  double draw_exponential ( double lambda );
+  double draw_exponential (double lambda);
 
   /**
-   * @brief Draw an integer value from a Poisson distribution with parameter lambda.
+   * @brief Draw an integer value from a Poisson distribution.
    * @return Random non-negative integer.
    * @param lambda Parameter of the Poisson distribution.
    */ 
   int draw_poisson (double lambda);
+
+  /**
+   * @brief Change seed of the random generator.
+   * @param seed Integer used to seed the generator.
+   */
+  void set_seed (int seed);
 
   // ============================
   //  Public Methods - Accessors
@@ -106,68 +121,33 @@ class RandomHandler
    */  
   static RandomHandler& instance (void);
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-  /**
-   * @brief Change seed of the random generator.
-   * @param seed Integer used to seed the generator.
-   */
-  void set_seed ( int seed );
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-
-
 private:
 
   // ============
   //  Attributes
   // ============
   //
-  /** @brief Original pseudorandom number uniform sequence (Mersenne twister). */
+  /** 
+   * @brief Original pseudorandom number uniform sequence (Mersenne twister). 
+   */
   boost::mt19937 _generator;
 
-  /** @brief Original pseudorandom number uniform sequence (Mersenne twister). */
+  /** @brief Only instance of the RandomHandler (singleton pattern). */
   static RandomHandler _instance;
 
   // =================
   //  Private Methods
   // =================
-  //
-
-  // ======================
-  //  Forbidden operations
-  // ======================
-  //
-  /**
-   * @brief Default constructor
-   */
-  RandomHandler (void);
-
-  /**
-   * @brief Copy constructor
-   */
-  RandomHandler (RandomHandler& other_random_handler);
-  
-  /**
-   * @brief Assignment operator
-   */
-  RandomHandler& operator= (RandomHandler& other_random_handler);
-  
-
+  //  
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-inline void RandomHandler::set_seed ( int seed )
+inline void RandomHandler::set_seed (int seed)
 {
-  _generator.seed( seed );
+  _generator.seed (seed);
 }
 
 inline RandomHandler& RandomHandler::instance (void)

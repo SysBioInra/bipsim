@@ -43,8 +43,9 @@ HybridRateContainer::HybridRateContainer (int number_rates, double base_rate)
     }
 }
 
-// Not needed for this class (use of default copy constructor) !
-// ClassName::ClassName (const ClassName& other_class_name);
+// Forbidden
+// HybridRateContainer::HybridRateContainer (const HybridRateContainer& other_container);
+// HybridRateContainer& HybridRateContainer::operator= (const HybridRateContainer& other_container);
 
 HybridRateContainer::~HybridRateContainer (void)
 {
@@ -69,20 +70,6 @@ HybridRateContainer::~HybridRateContainer (void)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// ClassName& ClassName::operator= (const ClassName& other_class_name);
 
 
 // =================

@@ -49,16 +49,14 @@ class SiteLocation
     : _first (first)
     , _last (last) {}
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // SiteLocation (SiteLocation& other_site_location);
-
-  /**
-   * @brief Destructor.
-   */
-  virtual ~SiteLocation (void) {}
+  // /* @brief Assignment operator. */
+  // SiteLocation& operator= (SiteLocation& other_site_location);
+  // /* @brief Destructor. */
+  // ~SiteLocation (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -74,35 +72,15 @@ class SiteLocation
    * @brief Returns first position of site.
    * @return First position of site.
    */
-  int first (void) const;
-
+  int first (void) const { return _first; }
 
   /**
    * @brief Returns last position of site.
    * @return Last position of site.
    */
-  int last (void) const;
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-  
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // SiteLocation& operator= (SiteLocation& other_site_location);
-
-
+  int last (void) const { return _last; }
 
 private:
-
   // ============
   //  Attributes
   // ============
@@ -124,9 +102,6 @@ private:
 //  Inline declarations
 // ======================
 //
-inline int SiteLocation::first (void) const { return _first; }
-
-inline int SiteLocation::last (void) const { return _last; }
 
 
 #endif // SITELOCATION_H

@@ -20,7 +20,6 @@
 // ==================
 //
 #include "reactiongroup.h"
-#include "reaction.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -34,12 +33,11 @@ ReactionGroup::ReactionGroup (const std::vector<Reaction*>& reactions)
 {
 }
 
-// Not needed for this class (use of default copy constructor) !
-// ReactionGroup::ReactionGroup ( const ReactionGroup& other_reaction_group );
+// Not needed for this class (use of compiler generated versions)
+// ReactionGroup::ReactionGroup (const ReactionGroup& other_reaction_group);
+// ReactionGroup& ReactionGroup::operator= (const ReactionGroup& other_reaction_group);
+// ReactionGroup::~ReactionGroup (void);
 
-ReactionGroup::~ReactionGroup (void)
-{
-}
 
 // ===========================
 //  Public Methods - Commands
@@ -51,25 +49,6 @@ ReactionGroup::~ReactionGroup (void)
 // ============================
 //
 
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// ReactionGroup& ReactionGroup::operator= ( const ReactionGroup& other_reaction_group );
-
-
-// ===================
-//  Protected Methods
-// ===================
-//
 
 
 // =================

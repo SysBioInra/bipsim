@@ -20,8 +20,6 @@
 //
 #include "unitfactory.h"
 
-#include "parserexception.h"
-#include "formatexception.h"
 #include "simulatorexception.h"
 
 #include "site.h"
@@ -50,12 +48,11 @@ UnitFactory::UnitFactory (CellState& cell_state)
 {
 }
 
-// Not needed for this class (use of default copy constructor) !
+// Not needed for this class (use of compiler generated versions)
 // UnitFactory::UnitFactory (const UnitFactory& other_unit_factory);
+// UnitFactory& UnitFactory::operator= (const UnitFactory& other_unit_factory);
+// UnitFactory::~UnitFactory (void);
 
-UnitFactory::~UnitFactory (void)
-{
-}
 
 // ===========================
 //  Public Methods - Commands
@@ -93,20 +90,6 @@ bool UnitFactory::handle (const std::string& line)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// UnitFactory& UnitFactory::operator= (const UnitFactory& other_unit_factory);
 
 
 // =================
@@ -474,11 +457,7 @@ bool UnitFactory::create_bound_chemical ( const std::string& line )
   std::string name;
   if (not (line_stream >> name)) { throw FormatException(); }
 
-  int initial_quantity;
-  if (not (line_stream >> initial_quantity)) { initial_quantity = 0; }
-
   BoundChemical* chemical = new BoundChemical;
-  chemical->add (initial_quantity);
   _cell_state.store (chemical, name);
   return true;
 }

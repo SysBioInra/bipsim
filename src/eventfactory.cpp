@@ -20,8 +20,6 @@
 #include "eventfactory.h"
 
 #include "simulatorexception.h"
-#include "formatexception.h"
-#include "parserexception.h"
 
 #include "cellstate.h"
 #include "eventhandler.h"
@@ -38,12 +36,10 @@ EventFactory::EventFactory (CellState& cell_state, EventHandler& event_handler)
 }
 
 
-// Not needed for this class (use of default copy constructor) !
+// Not needed for this class (use of compiler-generated versions)
 // EventFactory::EventFactory (const EventFactory& other_event_factory);
-
-EventFactory::~EventFactory (void)
-{
-}
+// EventFactory& EventFactory::operator= (const EventFactory& other_factory);
+// EventFactory::~EventFactory (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -73,26 +69,10 @@ bool EventFactory::handle (const std::string& line)
   return true;
 }
 
-
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// EventFactory& EventFactory::operator= (const EventFactory& other_event_factory);
-
 
 // =================
 //  Private Methods

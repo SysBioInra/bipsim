@@ -73,8 +73,9 @@ Simulation::Simulation (const std::string& filename)
 
 }
 
-// Not needed for this class (use of default copy constructor) !
-// Simulation::Simulation ( const Simulation& other_simulation );
+// Forbidden
+// Simulation::Simulation (const Simulation& other_simulation);
+// Simulation& Simulation::operator= (const Simulation& other_simulation);
 
 Simulation::~Simulation (void)
 {
@@ -130,22 +131,6 @@ void Simulation::run (void)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// Simulation& Simulation::operator= ( const Simulation& other_simulation );
-
-
 
 // =================
 //  Private Methods

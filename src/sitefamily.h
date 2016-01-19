@@ -40,21 +40,16 @@ class SiteFamily : public SimulatorInput
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Default constructor.
-   */
-  SiteFamily (void) {}
-
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // /* @brief Default constructor. */
+  // SiteFamily (void);
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // SiteFamily (const SiteFamily& other_site_family);
-
-  /**
-   * @brief Destructor.
-   */
-  ~SiteFamily (void) {}
+  // /* @brief Assignment operator. */
+  // SiteFamily& operator= (const SiteFamily& other_site_family);
+  // /* @brief Destructor. */
+  // ~SiteFamily (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -64,47 +59,14 @@ class SiteFamily : public SimulatorInput
    * @brief Add a site to the family.
    * @param site Pointer to the site to add.
    */
-  void add (const Site* site)
-  {
-    _sites.push_back (site);
-  }
+  void add (const Site* site) { _sites.push_back (site); }
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // SiteFamily& operator= (const SiteFamily& other_site_family);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -115,12 +77,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

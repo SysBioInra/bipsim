@@ -43,7 +43,6 @@
 class RateTree : public RateContainer
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -53,12 +52,14 @@ class RateTree : public RateContainer
    */
   RateTree (int number_rates);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // RateTree (const RateTree& other_class_name);
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  RateTree (const RateTree& other_rate_tree);
+  /** @brief Assignment operator. */
+  RateTree& operator= (const RateTree& other_rate_tree);
 
+ public:
   /**
    * @brief Destructor.
    */
@@ -68,6 +69,11 @@ class RateTree : public RateContainer
   //  Public Methods - Commands
   // ===========================
   //
+  // Redefined from RateContainer
+  int random_index (void) const;
+  void update_cumulates (void);
+  void set_rate (int index, double value);
+
   /**
    * @brief Find reaction index corresponding to cumulated rate value.
    * @param value Cumulated rate value.
@@ -78,48 +84,12 @@ class RateTree : public RateContainer
    */
   int find (double value) const;
 
-  // inherited (virtual)
-  int random_index (void) const;
-
-  // inherited (virtual)
-  void update_cumulates (void);
-
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  // inherited (virtual)
+  // Redefined from RateContainer
   double total_rate (void) const;
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-  // inherited (virtual)
-  void set_rate (int index, double value);
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // RateTree& operator= (const RateTree& other_class_name);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
 
 private:
   // ============
@@ -142,22 +112,16 @@ private:
   //  Private Methods
   // =================
   //
+  // Redefined from RateContainer
+  std::ostream& _print (std::ostream& output) const;
+
   /**
    * @brief Compute sum of rates contained in leaves directly.
    * @return Sum of rates contained in leaves.
    *
    * This function is for verification purposes.
    */
-  double _sum_of_leaf_rates (void) const;
-  
-  // inherited
-  std::ostream& _print (std::ostream& output) const;
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
+  double _sum_of_leaf_rates (void) const;  
 };
 
 // ======================
@@ -165,7 +129,6 @@ private:
 // ======================
 //
 #include "ratenode.h"
-#include "reactionnode.h"
 #include "macros.h"
 
 inline int RateTree::find (double value) const

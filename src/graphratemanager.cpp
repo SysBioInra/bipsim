@@ -37,8 +37,9 @@ GraphRateManager::GraphRateManager (const SimulationParams& params,
   create_observers (dependency_graph);
 }
 
-// Not needed for this class (use of default copy constructor) !
-// GraphRateManager::GraphRateManager ( const GraphRateManager& other_graph_rate_manager );
+// Forbidden
+// GraphRateManager::GraphRateManager (const GraphRateManager& other_manager);
+// GraphRateManager& GraphRateManager::operator= (const GraphRateManager& other_graph_rate_manager);
 
 GraphRateManager::~GraphRateManager (void)
 {
@@ -79,20 +80,6 @@ void GraphRateManager::update (const std::list<int>& reactions_to_update)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// GraphRateManager& GraphRateManager::operator= ( const GraphRateManager& other_graph_rate_manager );
 
 
 // =================

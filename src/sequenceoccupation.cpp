@@ -34,13 +34,14 @@ SequenceOccupation::SequenceOccupation (int length, int number)
 {
 }
 
-// Not needed for this class (use of default copy constructor) !
+// Forbidden
 // SequenceOccupation::SequenceOccupation (const SequenceOccupation& other_sequence_occupation);
+// SequenceOccupation& SequenceOccupation::operator= (const SequenceOccupation& other_sequence_occupation);
 
 SequenceOccupation::~SequenceOccupation (void)
 {
-  for (int i = 0; i < _watcher_groups.size(); ++i)
-    {
+  for (int i = 0; i < _watcher_groups.size(); ++i) 
+    { 
       delete _watcher_groups[i];
     }
 }
@@ -130,21 +131,6 @@ void SequenceOccupation::add_watcher (int first, int last,
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// SequenceOccupation& SequenceOccupation::operator= (const SequenceOccupation& other_sequence_occupation);
-
 
 // =================
 //  Private Methods

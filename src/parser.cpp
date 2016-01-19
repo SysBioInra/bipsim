@@ -26,7 +26,6 @@
 #include "factory.h"
 #include "cellstate.h"
 #include "inputdata.h"
-#include "parserexception.h"
 #include "simulatorexception.h"
 
 // ==========================
@@ -40,12 +39,10 @@ Parser::Parser (CellState& cell_state, EventHandler& event_handler)
 {
 }
 
-// Not needed for this class (use of default copy constructor) !
-// Parser::Parser ( const Parser& other_parser );
-
-Parser::~Parser (void)
-{
-}
+// Not needed for this class (use of compiler generated versions)
+// Parser::Parser (const Parser& other_parser);
+// Parser& Parser::operator= (const Parser& other_parser);
+// Parser::~Parser (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -69,19 +66,6 @@ void Parser::parse (InputData& input_data)
 // ============================
 //
 
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// Parser& Parser::operator= ( const Parser& other_parser );
 
 // =================
 //  Private Methods

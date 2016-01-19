@@ -18,7 +18,6 @@
 // ==================
 //
 #include <vector> // std::vector
-#include <cmath> // frexp()
 
 // ==================
 //  Project Includes
@@ -26,7 +25,7 @@
 //
 #include "ratecontainer.h"
 #include "flyratevector.h"
-#include "ratevector.h"
+// #include "ratevector.h"
 
 // ======================
 //  Forward declarations
@@ -62,12 +61,14 @@ class HybridRateContainer : public RateContainer
    */
   HybridRateContainer (int number_rates, double base_rate);
 
-  // Not needed for this rate (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // HybridRateContainer (const HybridRateContainer& other_rate_container);
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  HybridRateContainer (const HybridRateContainer& other_container);
+  /** @brief Assignment operator. */
+  HybridRateContainer& operator= (const HybridRateContainer& other_container);
 
+ public:
   /**
    * @brief Destructor.
    */
@@ -77,17 +78,16 @@ class HybridRateContainer : public RateContainer
   //  Public Methods - Commands
   // ===========================
   //
-  // inherited
+  // redefined from RateContainer
   void update_cumulates (void);
-
-  // inherited
   int random_index (void) const;
+  void set_rate (int index, double value);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-  // inherited
+  // redefined from RateContainer
   double total_rate (void) const;
 
   /**
@@ -95,36 +95,6 @@ class HybridRateContainer : public RateContainer
    * @return Current number of groups managed by the container.
    */
   int number_groups (void) const;
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-  // inherited
-  void set_rate (int index, double value);
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this rate (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // HybridRateContainer& operator= (const HybridRateContainer& other_rate_container);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
 
 private:
   // ============
@@ -158,7 +128,10 @@ private:
   //  Private Methods
   // =================
   //
-  /** 
+  // redefined from RateContainer
+  std::ostream& _print (std::ostream& output) const; 
+
+  /**
    * @brief Compute which group a value is in.
    * @param value Rate value.
    * @return Index of the group the rates belongs to. If the rate is exactly a
@@ -171,21 +144,14 @@ private:
    * @param value Rate value that needs to be stored.
    */
   void _create_new_groups (double value);
-
-  // inherited
-  std::ostream& _print (std::ostream& output) const; 
-  
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+#include <cmath> // frexp()
+
 #include "macros.h"
 #include "rategroup.h"
 #include "ratevalidity.h"

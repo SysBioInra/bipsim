@@ -39,7 +39,6 @@
 class ReactionClassification
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -49,16 +48,15 @@ class ReactionClassification
    */
   ReactionClassification (void);
 
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
   // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // ReactionClassification ( const ReactionClassification& other_reaction_classification );
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~ReactionClassification (void);
+  // /* @brief Copy constructor. */
+  // ReactionClassification (const ReactionClassification& other_classification);
+  // /* @brief Assignment operator. */
+  // ReactionClassification& operator= (const ReactionClassification& other_classification);
+  // /* @brief Destructor */
+  // ~ReactionClassification (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -66,10 +64,11 @@ class ReactionClassification
   //
   /**
    * @brief Create a new class for reactions integrated at a specific time step.
-   * @param time_step Time step at which reactions belonging to this class should be integrated. Must
-   *  be a strictly positive value or ReactionClassification::ALWAYS_UPDATED.
-   * @return Identifier attributed to the class. Corresponds to the order of creations of classes,
-   *  starting with 0.
+   * @param time_step Time step at which reactions belonging to this class 
+   *  should be integrated. Must be a strictly positive value or 
+   *  ReactionClassification::ALWAYS_UPDATED.
+   * @return Identifier attributed to the class. Corresponds to the order of
+   *  creations of classes, starting with 0.
    */
   int create_new_class (double time_step);
 
@@ -85,7 +84,8 @@ class ReactionClassification
    * @param class_id Integer identifier of the class.
    * @param reactions List of reactions to add to the class.
    */
-  void add_reactions_to_class (int class_id, const std::vector<Reaction*>& reactions);
+  void add_reactions_to_class (int class_id, 
+			       const std::vector<Reaction*>& reactions);
 
   // ============================
   //  Public Methods - Accessors
@@ -93,7 +93,8 @@ class ReactionClassification
   //
   /**
    * @brief Return number of classes.
-   * @return Number of reaction classes currently created. Class identifiers can be deduced
+   * @return Number of reaction classes currently created. Class identifiers 
+   *  can be deduced
    *  from this value as attributed identifiers span 0 to number_classes()-1;
    */
   int number_classes (void) const;
@@ -101,7 +102,8 @@ class ReactionClassification
   /**
    * @brief Return integration time_step of given class.
    * @param class_id Integer identifier of the class.
-   * @return Positive integration time_step or ReactionClassification::ALWAYS_UPDATED for reactions
+   * @return Positive integration time_step or 
+   *  ReactionClassification::ALWAYS_UPDATED for reactions
    *  needing to be updated after every reaction.
    */
   double time_step (int class_id) const;
@@ -113,22 +115,6 @@ class ReactionClassification
    */
   const std::vector<Reaction*>& reactions (int class_id) const;
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // ReactionClassification& operator= ( const ReactionClassification& other_reaction_classification );
-
   // ==================
   //  Public Constants
   // ==================
@@ -136,14 +122,14 @@ class ReactionClassification
   /**
    * @brief Time step value for reactions whose rate should always be updated.
    *
-   * ReactionClassification::ALWAYS_UPDATED should be used to specify the time_step of
-   * classes containing reaction rates that need to be updated after evry reaction. The
-   * corresponding numerical value should never be used, as it could change over time.
+   * ReactionClassification::ALWAYS_UPDATED should be used to specify the 
+   * time_step of classes containing reaction rates that need to be updated 
+   * after evry reaction. The corresponding numerical value should never be 
+   * used, as it could change over time.
    */
   static const double ALWAYS_UPDATED = -1;
 
 private:
-
   // ============
   //  Attributes
   // ============
@@ -180,19 +166,14 @@ private:
    * @return Class vector associated with identifier.
    */
   std::vector<Reaction*>& get_class (int class_id);
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-inline const std::vector <Reaction*>& ReactionClassification::reactions (int class_id) const
+inline const std::vector <Reaction*>& 
+ReactionClassification::reactions (int class_id) const
 {
   /** @pre class_id must be within existing identifier range. */
   REQUIRE ((class_id >= 0) && (class_id < _current_size));
@@ -200,7 +181,8 @@ inline const std::vector <Reaction*>& ReactionClassification::reactions (int cla
   return get_class (class_id);
 }
 
-inline void ReactionClassification::add_reaction_to_class (int class_id, Reaction& reaction)
+inline void 
+ReactionClassification::add_reaction_to_class (int class_id, Reaction& reaction)
 {
   /** @pre class_id must be within existing identifier range. */
   REQUIRE ((class_id >= 0) && (class_id < _current_size));
@@ -208,7 +190,9 @@ inline void ReactionClassification::add_reaction_to_class (int class_id, Reactio
   get_class (class_id).push_back (&reaction);
 }
 
-inline void ReactionClassification::add_reactions_to_class (int class_id, const std::vector<Reaction*>& reactions)
+inline void 
+ReactionClassification::add_reactions_to_class (int class_id, 
+						const std::vector<Reaction*>& reactions)
 {
   /** @pre class_id must be within existing identifier range. */
   REQUIRE ((class_id >= 0) && (class_id < _current_size));

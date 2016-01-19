@@ -25,7 +25,8 @@
 //  Constructors/Destructors
 // ==========================
 //
-SiteAvailability::SiteAvailability (int first, int last, SiteObserver& site_observer)
+SiteAvailability::SiteAvailability (int first, int last, 
+				    SiteObserver& site_observer)
   : _first (first)
   , _last (last)
   , _observer (site_observer)
@@ -37,12 +38,10 @@ SiteAvailability::SiteAvailability (int first, int last, SiteObserver& site_obse
   REQUIRE (last >= first);
 }
 
-// Not needed for this class (use of default copy constructor) !
-// SiteAvailability::SiteAvailability ( const SiteAvailability& other_site_availability );
-
-SiteAvailability::~SiteAvailability (void)
-{
-}
+// Not needed for this class (use of compiler generated versions)
+// SiteAvailability::SiteAvailability (const SiteAvailability& other_site_availability);
+// SiteAvailability& SiteAvailability::operator= (const SiteAvailability& other_site_availability);
+// SiteAvailability::~SiteAvailability (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -80,21 +79,6 @@ void SiteAvailability::notify (int a, int b, int current_number_sequences,
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// SiteAvailability& SiteAvailability::operator= ( const SiteAvailability& other_site_availability );
-
 
 // =================
 //  Private Methods

@@ -25,15 +25,17 @@
 //  Constructors/Destructors
 // ==========================
 //
-const double EventHandler::NO_EVENT_LEFT = std::numeric_limits<double>::infinity();
+const double EventHandler::NO_EVENT_LEFT = 
+  std::numeric_limits<double>::infinity();
 
 EventHandler::EventHandler (void)
 {
   _current_event = _events.end();
 }
 
-// Not needed for this class (use of default copy constructor) !
-// EventHandler::EventHandler ( const EventHandler& other_event_handler );
+// Forbidden
+// EventHandler::EventHandler (const EventHandler& other_event_handler);
+// EventHandler& EventHandler::operator= (const EventHandler& other_event_handler);
 
 EventHandler::~EventHandler (void)
 {
@@ -54,21 +56,6 @@ EventHandler::~EventHandler (void)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// EventHandler& EventHandler::operator= ( const EventHandler& other_event_handler );
-
 
 
 // =================

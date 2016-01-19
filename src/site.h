@@ -51,16 +51,15 @@ public:
    */
   Site (int family_id, ChemicalSequence& location, int first, int last);
 
-  // Not needed for this class (use of default copy constructor) ! 
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // Site (Site& other_site);
+  // /* @brief Assignment operator. */
+  // CLASSNAME& operator= (CLASSNAME& other_site);
 
-  /**
-   * @brief Destructor
-   */
-  virtual ~Site (void);
+  // /* @brief Destructor. */
+  // ~Site (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -95,27 +94,9 @@ public:
    * @return Last position of site.
    */
   int last (void) const;
- 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-  
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // CLASSNAME& operator= (CLASSNAME& other_site);
-  
+   
 
  protected:
-
   // ============
   //  Attributes
   // ============
@@ -136,7 +117,6 @@ public:
   //  Private Methods
   // =================
   //
-
 };
 
 // ======================

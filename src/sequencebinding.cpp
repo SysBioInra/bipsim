@@ -45,11 +45,9 @@ SequenceBinding::SequenceBinding (Chemical& unit_to_bind,
 }
  
 // Not needed for this class (use of default copy constructor) !
-// SequenceBinding::SequenceBinding (SequenceBinding& other_SequenceBinding);
-
-SequenceBinding::~SequenceBinding (void)
-{
-}
+// SequenceBinding::SequenceBinding (SequenceBinding& other_binding);
+// SequenceBinding& SequenceBinding::operator= (SequenceBinding& other_binding);
+// SequenceBinding::~SequenceBinding (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -65,7 +63,8 @@ void SequenceBinding::perform_forward (void)
   
   // A binding site in the family is randomly chosen and occupied by a newly
   // created binding result
-  const BindingSite& binding_site = _binding_site_family.get_random_available_site();
+  const BindingSite& 
+    binding_site = _binding_site_family.get_random_available_site();
   _binding_result.add_unit_at_site (binding_site);
   binding_site.location().bind_unit (_binding_result);
 }
@@ -100,21 +99,6 @@ bool SequenceBinding::is_backward_reaction_possible (void) const
 {
   return (_binding_result.number() > 0);
 }
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// SequenceBinding& SequenceBinding::operator= (SequenceBinding& other_sequence_binding);
-
 
 // =================
 //  Private Methods

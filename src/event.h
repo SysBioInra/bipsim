@@ -55,13 +55,14 @@ class Event
     , _target (target)
   { REQUIRE (time>0); /** @pre time must be positive. */ }
 
-  // Not needed for this class (use of compiler-generated versions) !
+  // Not needed for this class (use of compiler-generated versions).
+  // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
   // Event (const Event& other_event);
   // /* @brief Assignment operator. */
   // Event& operator= (const Event& other_event);
-  // /* @brief Destructor. */
-  // ~Event (void);
+  /** @brief Destructor. */
+  virtual ~Event (void) {}
 
   // ===========================
   //  Public Methods - Commands
@@ -144,6 +145,7 @@ class AddEvent : public Event
 
 
   // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
   // AddEvent (const AddEvent& other_add_event);
   // /* @brief Assignment operator. */
@@ -155,6 +157,7 @@ class AddEvent : public Event
   //  Public Methods - Commands
   // ===========================
   //
+  // redefined from Event
   /** Perform event (add specified amount of chemical). */
   void perform (void);
 
@@ -205,6 +208,7 @@ class SetEvent : public Event
   { REQUIRE (quantity >= 0); /** @pre Quantity must be positive. */ }
 
   // Not needed for this class (use of compiler-generated version)
+  // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
   // SetEvent (const SetEvent& other_set_event);
   // /* @brief Assignment operator. */
@@ -216,6 +220,7 @@ class SetEvent : public Event
   //  Public Methods - Commands
   // ===========================
   //
+  // redefined from Event
   /** Perform event (set specified amount of chemical). */
   void perform (void);
 
@@ -264,6 +269,7 @@ class RemoveEvent : public Event
   { REQUIRE (quantity > 0); /** @pre Quantity must be strictly positive. */ }
 
   // Not needed for this class (use of compiler generated versions) !
+  // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
   // RemoveEvent (const RemoveEvent& other_remove_event);
   // /* @brief Assignment operator. */
@@ -275,6 +281,7 @@ class RemoveEvent : public Event
   //  Public Methods - Commands
   // ===========================
   //
+  // redefined from Event
   /** Remove specified amount of chemical. */
   void perform (void);
 

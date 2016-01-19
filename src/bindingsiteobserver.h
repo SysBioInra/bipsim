@@ -71,7 +71,13 @@ class BindingSiteObserver : public SiteObserver
   // ===========================
   //
   // redefined from SiteObserver
-  /** Notify BindingSiteFamily that the number of available site has changed. */
+  /**
+   * @brief Perform necessary actions when availability of the observed site 
+   *  has changed.
+   * @param number_available_sites Number of sites currently available.
+   *
+   * Notify BindingSiteFamily that the number of available site has changed. 
+   */
   void update (int number_available_sites);
 
   // ============================

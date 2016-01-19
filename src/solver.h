@@ -49,29 +49,29 @@ class Solver
    */
   Solver (const SimulationParams& params, CellState& cell_state);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // Solver ( const Solver& other_solver );
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~Solver (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // Solver (const Solver& other_solver);
+  // /* @brief Assignment operator. */
+  // Solver& operator= (const Solver& other_solver);
+  /** @brief Destructor. */
+  virtual ~Solver (void) {}
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
   /**
-   * @brief Update system according to the reaction system during given time step.
+   * @brief Update system according to the reaction system during given time 
+   *  step.
    * @param time_step Time during which the reactions should be integrated.
    */
   void solve (double time_step);
 
   /**
-   * @brief Update system according to the reaction system until a reaction happens.
+   * @brief Update system according to the reaction system until a reaction 
+   *  happens.
    */
   void go_to_next_reaction (void);
   
@@ -88,35 +88,12 @@ class Solver
 
   /**
    * @brief Accessor to the number of reactions that have occurred.
-   * @return Number of reactions that have occurred from the beginning of simulation.
+   * @return Number of reactions that have occurred from the beginning of 
+   *  simulation.
    */
   long long int number_reactions_performed (void) const;  
   
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // Solver& operator= ( const Solver& other_solver );
-
  protected:
-  
-  // ============
-  //  Attributes
-  // ============
-  //
-  /** @brief State of the cell. */
-  CellState& _cell_state;
-
   // ===================
   //  Protected Methods
   // ===================
@@ -131,24 +108,20 @@ class Solver
   virtual double compute_next_reaction (void) = 0;
 
   /**
-   * @brief Accessor to the dependency graph between reactions (for use of inheriting classes).
-   * 
-   * @return Dependency graph built during construction of the class
+   * @brief Accessor to the dependency graph between reactions.
+   * @return DependencyGraph built during construction of the class
    *  establishing which reaction should be updated.
-   * @sa DependencyGraph
    */
   const DependencyGraph& dependency_graph (void) const;
 
   /**
-   * @brief Accessor to the reactions (for use of inheriting classes).
-   * 
+   * @brief Accessor to the reactions.
    * @return Vector of reactions composing the system to integrate.
    */
   const std::vector<Reaction*>& reactions (void) const;
   
 
  private:
-
   // ============
   //  Attributes
   // ============
@@ -164,6 +137,9 @@ class Solver
 
   /** @brief Number of reactions that have been performed. */
   long long int _number_reactions_performed;
+
+  /** @brief State of the cell. */
+  CellState& _cell_state;
 
   // =================
   //  Private Methods

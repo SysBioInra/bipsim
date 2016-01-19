@@ -57,17 +57,14 @@ class ReactionGroupEvent
     , _event_type (event_type)
   {}
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // ReactionGroupEvent ( const ReactionGroupEvent& other_reaction_event );
-
-  /**
-   * @brief Destructor
-   */
-  ~ReactionGroupEvent (void)
-    {}
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // ReactionGroupEvent (const ReactionGroupEvent& other_event);
+  // /* @brief Assignment operator. */
+  // ReactionGroupEvent& operator= (const ReactionGroupEvent& other_event);
+  // /* @brief Destructor */
+  // ~ReactionGroupEvent (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -87,35 +84,19 @@ class ReactionGroupEvent
 
   /**
    * @brief Accessor to group index.
-   * @return Integer index to a reaction group as originally provided by the user.
+   * @return Integer index to a reaction group as originally provided by the 
+   *  user.
    */
   int group_index (void) const { return _group_index; }
 
   /**
    * @brief Accessor to event type.
-   * @return Event type: ReactionGroupEvent::PERFORM_REACTION or ReactionGroupEvent::UPDATE_GROUP.
+   * @return Event type: ReactionGroupEvent::PERFORM_REACTION or 
+   *  ReactionGroupEvent::UPDATE_GROUP.
    */
   double event_type (void) const { return _event_type; }
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // ReactionGroupEvent& operator= ( const ReactionGroupEvent& other_reaction_event );
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -133,12 +114,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

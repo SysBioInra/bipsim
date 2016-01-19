@@ -34,7 +34,6 @@
 class EventHandler
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -44,15 +43,15 @@ class EventHandler
    */
   EventHandler (void);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // EventHandler (const EventHandler& other_event_handler);
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  EventHandler (const EventHandler& other_event_handler);
+  /** @brief Assignment operator. */
+  EventHandler& operator= ( const EventHandler& other_event_handler );
+ public:
 
-  /**
-   * @brief Destructor.
-   */
+  /** @brief Destructor. */
   ~EventHandler (void);
 
   // ===========================
@@ -87,23 +86,6 @@ class EventHandler
    */
   double next_event_time (void);
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // EventHandler& operator= ( const EventHandler& other_event_handler );
-
-
   // ==================
   //  Public Constants
   // ==================
@@ -135,12 +117,6 @@ private:
    * @param event Pointer to event to insert.
    */
   void insert_event (Event* event);
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

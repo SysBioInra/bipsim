@@ -50,12 +50,14 @@ class SequenceOccupation
    */
   SequenceOccupation (int length, int number);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // SequenceOccupation (const SequenceOccupation& other_sequence_occupation);
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  SequenceOccupation (const SequenceOccupation& other_sequence_occupation);
+  /** @brief Assignment operator. */
+  SequenceOccupation& operator= (const SequenceOccupation& other_sequence_occupation);
 
+ public:
   /**
    * @brief Destructor.
    */
@@ -111,52 +113,18 @@ class SequenceOccupation
   // ============================
   //
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // SequenceOccupation& operator= (const SequenceOccupation& other_sequence_occupation);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
-
   // ============
   //  Attributes
   // ============
   //
-  /**
-   * @brief Number of sequences in the pool.
-   */
+  /** @brief Number of sequences in the pool. */
   int _number;
 
   /** @brief Tracks available positions along the sequence. */
   std::vector<int> _occupancy_map;
 
-  /**
-   * @brief A simple list of SiteLocation.
-   */
+  /** @brief A simple list of SiteLocation. */
   typedef std::list<SiteLocation> SiteLocationList;
   
   /**
@@ -223,12 +191,6 @@ private:
    *  that was just extended towards the end of the sequence.
    */
   void fuse_groups (int index);
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

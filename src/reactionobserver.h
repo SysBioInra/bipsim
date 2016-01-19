@@ -28,10 +28,10 @@
 /**
  * @brief Class observing reactions and noticing parents when a reaction occurs.
  *
- * ReactionObserver uses an observer pattern to receive notifications from reactions
- * when they are performed and sends an update() command to its RateManager parent, passing along
- * a user-defined message, i.e. identifiers of the reactions to update in the rate manager.
- * @sa Reaction
+ * ReactionObserver uses an observer pattern to receive notifications from 
+ * reactions when they are performed and sends an update() command to its 
+ * RateManager parent, passing along a user-defined message, i.e. identifiers
+ * of the reactions to update in the rate manager.
  */
 class ReactionObserver
 {
@@ -45,16 +45,20 @@ class ReactionObserver
    * @brief Default constructor.
    * @param parent Reference to the rate manager to warn when a change occurs.
    * @param reaction_to_observe Reference to the reaction to observe.
-   * @param message Identifiers used by the rate manager to determine what it needs to do.
+   * @param message Identifiers used by the rate manager to determine what it 
+   *  needs to do.
    */
-  ReactionObserver (GraphRateManager& parent, Reaction* reaction_to_observe, const std::list<int>& message);
+  ReactionObserver (GraphRateManager& parent, Reaction* reaction_to_observe, 
+		    const std::list<int>& message);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // ReactionObserver ( const ReactionObserver& other_reaction_observer );
+ private:
+  // Forbidden
+  // /* @brief Copy constructor. */
+  // ReactionObserver (const ReactionObserver& other_observer);
+  // /* @brief Assignment operator. */
+  // ReactionObserver& operator= (const ReactionObserver& other_observer);
 
+ public:
   /**
    * @brief Destructor.
    */
@@ -65,9 +69,7 @@ class ReactionObserver
   // ===========================
   //
   /**
-   * @brief Called to warn about reaction changed.
-   *
-   * The call is simply redirected to the parent along with a reference of the reaction that changed.
+   * @brief Called to warn about reaction changes.
    */
   void update (void);  
 
@@ -81,24 +83,6 @@ class ReactionObserver
   //  Public Methods - Accessors
   // ============================
   //
-
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // ReactionObserver& operator= (const ReactionObserver& other_reaction_observer);
-
 
 private:
 
@@ -119,18 +103,7 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
-
-// =================
-//  Inline Includes
-// =================
-//
 
 // ======================
 //  Inline declarations
@@ -140,5 +113,6 @@ inline void ReactionObserver::deregister (void)
 {
   _reaction = 0;
 }
+
 
 #endif // REACTION_OBSERVER_H

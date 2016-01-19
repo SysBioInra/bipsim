@@ -41,12 +41,10 @@ Loader::Loader (const DecodingTable& decoding_table)
     { _rate_validity.add_observer (_decoding_table.chemical_to_load(i), i); }
 }
 
-// Not needed for this class (use of default copy constructor) !
-// Loader::Loader ( const Loader& other_loader );
-
-Loader::~Loader (void)
-{
-}
+// Not needed for this class (use of compiler-generated versions)
+// Loader::Loader (const Loader& other_loader);
+// Loader& Loader::operator= (const Loader& other_loader);
+// Loader::~Loader (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -120,20 +118,6 @@ void Loader::update_rates (void)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// Loader& Loader::operator= ( const Loader& other_loader );
 
 
 // =================

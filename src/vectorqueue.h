@@ -55,16 +55,14 @@ class VectorQueue
     , _max_position (_v.begin())
     {}
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // VectorQueue (const VectorQueue& other_vector_queue);
-
-  /**
-   * @brief Destructor.
-   */
-  ~VectorQueue (void) {}
+  // /* @brief Assignment operator. */
+  // VectorQueue& operator= (const VectorQueue& other_vector_queue);
+  // /* @brief Destructor. */
+  // ~VectorQueue (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -121,35 +119,6 @@ class VectorQueue
    */
   bool end (void) const { return _current_position == _max_position; }
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // VectorQueue& operator= (const VectorQueue& other_vector_queue);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
   // ============
   //  Attributes
@@ -168,12 +137,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

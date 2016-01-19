@@ -48,12 +48,22 @@ class ManualDispatchSolver : public Solver
   /**
    * @brief Default constructor
    * @param params Simulation parameters.
-   * @param cell_state Reference to a cell state describing current state and reactions within the cell.
-   * @param reaction_classification Classification specifying how reactions should be integrated.
+   * @param cell_state Reference to a cell state describing current state and 
+   *  reactions within the cell.
+   * @param reaction_classification Classification specifying how reactions 
+   *  should be integrated.
    */
   ManualDispatchSolver (const SimulationParams& params, CellState& cell_state,
 			const ReactionClassification& reaction_classification);
 
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  ManualDispatchSolver (const ManualDispatchSolver& other_solver);
+  /** @brief Assignment operator. */
+  ManualDispatchSolver& operator= (const ManualDispatchSolver& other_solver);
+  
+ public:
   /**
    * @brief Destructor
    */
@@ -70,26 +80,14 @@ class ManualDispatchSolver : public Solver
   // ============================
   //
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-
 private:
-
   // ============
   //  Attributes
   // ============
   //
   /**
-   * @brief Vector of reaction groups that enables integration according to different time steps.
+   * @brief Vector of reaction groups that enables integration according to 
+   *  different time steps.
    * @sa ReactionGroup
    * @sa ConstantRateGroup
    * @sa UpdatedRateGroup
@@ -97,16 +95,19 @@ private:
   std::vector<ReactionGroup*> _reaction_groups;
 
   /**
-   * @brief List containing next scheduled event type for every group sorted by event time.
+   * @brief List containing next scheduled event type for every group sorted 
+   *  by event time.
    * 
-   * Event types is either performing a reaction or updating a group because it has expired.
+   * Event types is either performing a reaction or updating a group because 
+   * it has expired.
    * @sa ConstantRateGroup
    * @sa ReactionGroupEvent
    */
   std::list<ReactionGroupEvent> _event_list;
 
   /**
-   * @brief List containing indices of groups that should be updated after every reaction.
+   * @brief List containing indices of groups that should be updated after 
+   *  every reaction.
    */
   std::list<int> _updated_rate_group_indices;
 
@@ -132,23 +133,6 @@ private:
    * @param current_time Current simulation time.
    */
   void update_variable_rate_events (int already_updated, double current_time);
-
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-  /**
-   * @brief Assignment operator forbidden (declared private).
-   */
-  ManualDispatchSolver& operator= ( const ManualDispatchSolver& other_manual_dispatch_solver );
-
-  /**
-   * @brief Copy constructor forbidden (declared private).
-   */
-  ManualDispatchSolver ( const ManualDispatchSolver& other_manual_dispatch_solver );
-
-
 };
 
 // ======================

@@ -40,7 +40,6 @@
 class BidirectionalReaction : public SimulatorInput
 {
 public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -49,12 +48,12 @@ public:
   // /* @brief Default constructor. */
   // BidirectionalReaction (void);
   // (3-0 rule: either define all 3 following or none of them)
-  // /* @brief Copy constructor */
+  // /* @brief Copy constructor. */
   // BidirectionalReaction (BidirectionalReaction& other_reaction);
-  // /* @brief Assignment operator */
+  // /* @brief Assignment operator. */
   // BidirectionalReaction& operator= (BidirectionalReaction& other_reaction);
-  // /* @brief Destructor */
-  // ~BidirectionalReaction (void);
+  /** @brief Destructor (empty but virtual). */
+  virtual ~BidirectionalReaction (void) {}
 
   // ===========================
   //  Public Methods - Commands

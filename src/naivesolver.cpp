@@ -40,8 +40,9 @@ NaiveSolver::NaiveSolver (const SimulationParams& params, CellState& cell_state)
 							dependency_graph());
 }
 
-// Not needed for this class (use of default copy constructor) !
-// NaiveSolver::NaiveSolver ( const NaiveSolver& other_naive_solver );
+// Forbidden
+// NaiveSolver::NaiveSolver (const NaiveSolver& other_solver);
+// NaiveSolver& NaiveSolver::operator= (const NaiveSolver& other_solver);
 
 NaiveSolver::~NaiveSolver (void)
 {
@@ -57,20 +58,6 @@ NaiveSolver::~NaiveSolver (void)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// NaiveSolver& NaiveSolver::operator= (const NaiveSolver& other_naive_solver);
 
 
 // =================

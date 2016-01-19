@@ -16,9 +16,8 @@
 #include <boost/random/uniform_int.hpp> // boost::uniform_int
 #include <boost/random/uniform_real.hpp> // boost::uniform_real
 #include <boost/random/uniform_01.hpp> // boost::uniform_01
-#include <boost/random/exponential_distribution.hpp> // boost::exponential_distribution
-#include <numeric> //std::partial_sum
-
+#include <numeric> // std::partial_sum
+#include <cmath> // log
 
 // ==================
 //  Project Includes
@@ -39,10 +38,10 @@ RandomHandler::RandomHandler (void)
   _generator.seed (0);
 }
 
-
-RandomHandler::~RandomHandler (void)
-{
-}
+// Not needed for this class (use of compiler-generated versions)
+// RandomHandler::RandomHandler (const RandomHandler& other_handler);
+// RandomHandler& RandomHandler::operator= (RandomHandler& other_handler);
+// RandomHandler::~RandomHandler (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -143,20 +142,6 @@ int RandomHandler::draw_poisson ( double lambda )
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// RandomHandler& RandomHandler::operator= (RandomHandler& other_random_handler);
 
 
 // =================

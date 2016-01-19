@@ -46,61 +46,27 @@ class ReactionFactory : public Factory
    */
   ReactionFactory (CellState& cell_state);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // ReactionFactory (const ReactionFactory& other_reaction_factory);
-
-  /**
-   * @brief Destructor.
-   */
-  ~ReactionFactory (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // ReactionFactory (const ReactionFactory& other_factory);
+  // Not needed for this class (use of default overloading) !
+  // /* @brief Assignment operator. */
+  // ReactionFactory& operator= (const ReactionFactory& other_factory);
+  // /* @brief Destructor. */
+  // ~ReactionFactory (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Create reaction from line.
-   * @param line Text line to create entity from.
-   * @return True if an entity was successfully created.
-   */
+  // Redefined from Factory.
   bool handle (const std::string& line);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // ReactionFactory& operator= (const ReactionFactory& other_reaction_factory);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
 
 private:
 
@@ -163,12 +129,6 @@ private:
    * @return True if entity was successfully created.
    */
   bool create_degradation (const std::string& line);
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

@@ -97,8 +97,10 @@ SimulationParams::SimulationParams (const std::string& filename)
   _write_params_out();
 }
 
-// Not needed for this class (use of default copy constructor) !
+// Forbidden
 // SimulationParams::SimulationParams (const SimulationParams& other_simulation_params);
+// SimulationParams& SimulationParams::operator= (const SimulationParams& other_simulation_params);
+
 
 SimulationParams::~SimulationParams (void)
 {
@@ -117,21 +119,6 @@ SimulationParams::~SimulationParams (void)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// SimulationParams& SimulationParams::operator= (const SimulationParams& other_simulation_params);
-
 
 // =================
 //  Private Methods

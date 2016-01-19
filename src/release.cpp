@@ -52,12 +52,10 @@ Release::Release (BoundChemical& unit_to_release,
   // TODO add products from the product table
 }
 
-// Not needed for this class (use of default copy constructor) !
-// Release::Release ( const Release& other_release );
-
-Release::~Release (void)
-{
-}
+// Not needed for this class (use of compiler generated versions)
+// Release::Release (const Release& other_release);
+// Release& Release::operator= (const Release& other_release);
+// Release::~Release (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -74,20 +72,6 @@ bool Release::is_reaction_possible (void) const
 	  && (_unit_to_release.number() > 0));
 }
 
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// Release& Release::operator= ( const Release& other_release );
-
 // ===================
 //  Protected Methods
 // ===================
@@ -101,10 +85,11 @@ void Release::do_reaction (void)
   _unit_to_release.focused_unit_location().unbind_unit (_unit_to_release);
   if (_product_table != 0)
     {
-      ChemicalSequence* product =
-	_product_table->product (_unit_to_release.focused_unit_binding_site().location(),
-				 _unit_to_release.focused_unit_binding_site().reading_frame(),
-				 _unit_to_release.focused_unit_reading_frame()-1);
+      ChemicalSequence* product = _product_table->product 
+	(_unit_to_release.focused_unit_binding_site().location(),
+	 _unit_to_release.focused_unit_binding_site().reading_frame(),
+	 _unit_to_release.focused_unit_reading_frame()-1);
+
       if (product !=0) { product->add(1); }
       else
 	{

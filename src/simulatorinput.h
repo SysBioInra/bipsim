@@ -44,12 +44,14 @@ class SimulatorInput
    */
   SimulatorInput (void) {}
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // SimulatorInput (const SimulatorInput& other_simulator_input);
-
+  // /* @brief Assignment operator. */
+  // SimulatorInput& operator= (const SimulatorInput& other_simulator_input);
+  // Note that destructor is empty (0 part of the rule applies).
+  // Making the destructor pure virtual ensures the class is abstract.
   /**
    * @brief Destructor.
    */
@@ -66,37 +68,7 @@ class SimulatorInput
   // ============================
   //
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // SimulatorInput& operator= (const SimulatorInput& other_simulator_input);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -107,12 +79,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

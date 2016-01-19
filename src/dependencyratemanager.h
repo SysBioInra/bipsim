@@ -73,12 +73,13 @@ class DependencyRateManager : public RateManager
   //
   // redefined from RateManager
   /**
-   * This manager uses a dependency approach. Using an observer architecture,
-   * it receives updates about concentration changes and stores reactions
-   * whose rates may have changed. When prompted to update, it recomputes 
-   * these rates.
+   * @brief Update rates according to current chemical levels.
+   * @details This manager uses a dependency approach. Using an observer
+   *  architecture, it receives updates about concentration changes and stores
+   *  reactions whose rates may have changed. When prompted to update, it 
+   *  recomputes these rates.
    */
-  virtual void update_rates (void);
+  void update_rates (void);
 
   // ============================
   //  Public Methods - Accessors

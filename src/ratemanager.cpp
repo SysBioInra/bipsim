@@ -36,8 +36,9 @@ RateManager::RateManager (const SimulationParams& params,
   cumulate_rates();
 }
 
-// Not needed for this class (use of default copy constructor) !
-// RateManager::RateManager ( const RateManager& other_rate_manager );
+// Forbidden
+// RateManager::RateManager (const RateManager& other_rate_manager);
+// RateManager& RateManager::operator= (const RateManager& other_rate_manager);
 
 RateManager::~RateManager (void)
 {
@@ -54,21 +55,6 @@ RateManager::~RateManager (void)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// RateManager& RateManager::operator= ( const RateManager& other_rate_manager );
-
 
 // =================
 //  Private Methods

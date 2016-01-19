@@ -48,16 +48,14 @@ class ReactionGroup
    */
   ReactionGroup (const std::vector<Reaction*>& reactions);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // ReactionGroup ( const ReactionGroup& other_reaction_group );
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~ReactionGroup (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // ReactionGroup (const ReactionGroup& other_reaction_group);
+  // /* @brief Assignment operator. */
+  // ReactionGroup& operator= (const ReactionGroup& other_reaction_group);
+  /** @brief Destructor. */
+  virtual ~ReactionGroup (void) {}
 
   // ===========================
   //  Public Methods - Commands
@@ -65,10 +63,8 @@ class ReactionGroup
   //
   /**
    * @brief Perform next scheduled reaction and schedule following reaction.
-   * @return true if reaction was actually performed, false if there were not enough reactants.
-   *
-   * This function is pure virtual, schedule is in fact specified
-   * by classes inheriting from ReactionGroup.
+   * @return true if reaction was actually performed, false if there were not 
+   *  enough reactants.
    */
   virtual bool perform_next_reaction (void) = 0;
    
@@ -88,36 +84,20 @@ class ReactionGroup
    */
   double next_reaction_time (void) const;
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // ReactionGroup& operator= ( const ReactionGroup& other_reaction_group );
-
   // ==================
   //  Public Constants
   // ==================
   //
   /**
-   * @brief Constant used to indicate that the next reaction is outside simulated time step.
+   * @brief Constant used to indicate that the next reaction is outside 
+   *  simulated time step.
    */
   static const double OVERTIME; 
 
 protected:
-
-  // ============
-  //  Attributes
-  // ============
+  // ======================
+  //  Protected Attributes
+  // ======================
   //
   /** @brief Next scheduled reaction time. */
   double _next_reaction_time;
@@ -140,7 +120,6 @@ protected:
   bool is_reaction_possible (int index);
 
 private:
-
   // ============
   //  Attributes
   // ============
@@ -151,11 +130,6 @@ private:
   // =================
   //  Private Methods
   // =================
-  //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
   //
 };
 

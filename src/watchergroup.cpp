@@ -32,8 +32,9 @@ WatcherGroup::WatcherGroup (void)
 {
 }
 
-// Not needed for this class (use of default copy constructor) !
+// Forbidden
 // WatcherGroup::WatcherGroup (const WatcherGroup& other_watcher_group);
+// WatcherGroup& WatcherGroup::operator= (const WatcherGroup& other_watcher_group);
 
 WatcherGroup::~WatcherGroup (void)
 {
@@ -91,20 +92,6 @@ void WatcherGroup::absorb (WatcherGroup& other_group)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// WatcherGroup& WatcherGroup::operator= (const WatcherGroup& other_watcher_group);
 
 
 // =================

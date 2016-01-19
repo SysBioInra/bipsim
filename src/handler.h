@@ -51,15 +51,15 @@ class Handler
    */
   Handler (void) {}
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // Handler (const Handler& other_handler);
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  Handler (const Handler& other_handler);
+  /** @brief Assignment operator. */
+  Handler& operator= (const Handler& other_handler);
+ public:
 
-  /**
-   * @brief Destructor.
-   */
+  /** @brief Destructor. */
   ~Handler (void)
     {
       for (typename std::vector <T*>::iterator ref_it = _references.begin();
@@ -184,23 +184,6 @@ class Handler
       return _references;
     }
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // Handler& operator= (const Handler& other_handler);
-
   // ==================
   //  Public Constants
   // ==================
@@ -208,19 +191,7 @@ class Handler
   /** @brief Constant returned if an identifier was not found. */
   static const int NOT_FOUND = -1;
 
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -235,12 +206,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

@@ -50,33 +50,29 @@ class UpdatedRateGroup : public ReactionGroup
   /**
    * @brief Constructor
    * @param params Simulation parameters.
-   * @param reactions A vector of reactions simulated under constant rate hypothesis.
+   * @param reactions A vector of reactions simulated under constant rate 
+   *  hypothesis.
    * @param initial_time Time at the beginning of simulation.
    */
   UpdatedRateGroup (const SimulationParams& params,
 		    const std::vector<Reaction*>& reactions,
 		    double initial_time);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // UpdatedRateGroup ( const UpdatedRateGroup& other_update_rate_group );
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~UpdatedRateGroup (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // UpdatedRateGroup (const UpdatedRateGroup& other_update_rate_group);
+  // /* @brief Assignment operator. */
+  // UpdatedRateGroup& operator= (const UpdatedRateGroup& other_update_rate_group);
+  // /* @brief Destructor. */
+  // ~UpdatedRateGroup (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Perform next scheduled reaction and schedule following reaction.
-   * @return true if reaction was actually performed, false if there were not enough reactants.
-   */
-  virtual bool perform_next_reaction (void);
+  // Redefined from ReactionGroup
+  bool perform_next_reaction (void);
 
   /**
    * @brief Recompute rates and reschedule next reaction.
@@ -93,32 +89,12 @@ class UpdatedRateGroup : public ReactionGroup
    */
   void reschedule_next_reaction (double current_time);
 
-
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // UpdatedRateGroup& operator= ( const UpdatedRateGroup& other_update_rate_group );
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -130,13 +106,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

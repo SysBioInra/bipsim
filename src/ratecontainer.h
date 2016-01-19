@@ -44,20 +44,16 @@ class RateContainer
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Default constructor.
-   */
-  RateContainer (void) {}
 
-  // Not needed for this rate (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // /* @brief Default constructor. */
+  // RateContainer (void);
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // RateContainer (const RateContainer& other_rate_container);
-
-  /**
-   * @brief Destructor.
-   */
+  // /* @brief Assignment operator. */
+  // RateContainer& operator= (const RateContainer& other_rate_container);
+  /** @brief Destructor. */
   virtual ~RateContainer (void) {}
 
   // ===========================
@@ -75,6 +71,14 @@ class RateContainer
    */
   virtual int random_index (void) const = 0;
 
+  /**
+   * @brief Set reaction rate for a specific index.
+   * @param index Index of the rate to modify.
+   * @param value New reaction rate.
+   */
+  virtual void set_rate (int index, double value) = 0;
+
+
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -85,48 +89,15 @@ class RateContainer
    */
   virtual double total_rate (void) const = 0;
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-  /**
-   * @brief Set reaction rate for a specific index.
-   * @param index Index of the rate to modify.
-   * @param value New reaction rate.
-   */
-  virtual void set_rate (int index, double value) = 0;
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this rate (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // RateContainer& operator= (const RateContainer& other_rate_container);
-
   /**
    * @brief Standard output.
    * @return A reference to the stream containing the output.
    * @param output Stream where output should be written.
-   * @param container Reference to the container whose information should be written.
+   * @param container Reference to the container whose information should be 
+   *  written.
    */
   friend std::ostream& operator<< (std::ostream& output,
 				   const RateContainer& container);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
 
 private:
   // ============
@@ -144,12 +115,6 @@ private:
    * @param output Stream where output should be written.
    */
   virtual std::ostream& _print (std::ostream& output) const { return output; }
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

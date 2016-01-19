@@ -37,11 +37,9 @@ UpdatedRateGroup::UpdatedRateGroup (const SimulationParams& params,
 }
 
 // Not needed for this class (use of default copy constructor) !
-// UpdatedRateGroup::UpdatedRateGroup ( const UpdatedRateGroup& other_update_rate_group );
-
-UpdatedRateGroup::~UpdatedRateGroup (void)
-{
-}
+// UpdatedRateGroup::UpdatedRateGroup (const UpdatedRateGroup& other_update_rate_group);
+// UpdatedRateGroup& UpdatedRateGroup::operator= (const UpdatedRateGroup& other_update_rate_group);
+// UpdatedRateGroup::~UpdatedRateGroup (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -75,20 +73,6 @@ void UpdatedRateGroup::reschedule_next_reaction (double current_time)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// UpdatedRateGroup& UpdatedRateGroup::operator= ( const UpdatedRateGroup& other_update_rate_group );
 
 
 // =================

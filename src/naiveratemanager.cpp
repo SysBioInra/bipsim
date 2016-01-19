@@ -30,12 +30,10 @@ NaiveRateManager::NaiveRateManager (const SimulationParams& params,
 {
 }
 
-// Not needed for this class (use of default copy constructor) !
-// NaiveRateManager::NaiveRateManager ( const NaiveRateManager& other_naive_rate_manager );
-
-NaiveRateManager::~NaiveRateManager (void)
-{
-}
+// Not needed for this class (use of compiler generated versions)
+// NaiveRateManager::NaiveRateManager (const NaiveRateManager& other_manager);
+// NaiveRateManager& NaiveRateManager::operator= (const NaiveRateManager& other_manager);
+// NaiveRateManager::~NaiveRateManager (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -51,20 +49,6 @@ void NaiveRateManager::update_rates (void)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// NaiveRateManager& NaiveRateManager::operator= ( const NaiveRateManager& other_naive_rate_manager );
 
 
 // =================

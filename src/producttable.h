@@ -36,26 +36,23 @@
 class ProductTable : public SimulatorInput
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
   //
   /**
-   * @brief Constructor from TransformationTable.
+   * @brief Constructor.
    */
   ProductTable (const TransformationTable& transformation_table);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // ProductTable (const ProductTable& other_product_table);
-
-  /**
-   * @brief Destructor.
-   */
-  ~ProductTable (void);
+  // /* @brief Assignment operator. */
+  // ProductTable& operator= (const ProductTable& other_product_table);
+  // /* @brief Destructor. */
+  // ~ProductTable (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -97,36 +94,7 @@ class ProductTable : public SimulatorInput
   ChemicalSequence* product (const ChemicalSequence& parent,
 			     int first, int last) const;
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // ProductTable& operator= (const ProductTable& other_product_table);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
-private:
-
+ private:
   // ============
   //  Attributes
   // ============
@@ -135,23 +103,20 @@ private:
   const TransformationTable& _transformation_table;
 
 
-  typedef std::map<int, ChemicalSequence*> EndMap;
-  typedef std::map<int, EndMap> StartMap;
-  typedef std::map<const ChemicalSequence*, StartMap> ParentMap;  
+  typedef std::map <int, ChemicalSequence*> EndMap;
+  typedef std::map <int, EndMap> StartMap;
+  typedef std::map <const ChemicalSequence*, StartMap> ParentMap;  
 
-  /** @brief Map storing the products given parent, starting and ending positions. */
+  /** 
+   * @brief Map storing the products given parent, starting and ending 
+   * positions. 
+   */
   ParentMap _products;
 
   // =================
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================
@@ -160,6 +125,12 @@ private:
 //
 #include "transformationtable.h"
 #include "chemicalsequence.h"
+
+inline 
+ProductTable::ProductTable (const TransformationTable& transformation_table)
+	     : _transformation_table (transformation_table)
+{
+}
 
 inline void ProductTable::add (const ChemicalSequence& parent,
 			       int first, int last, ChemicalSequence& product)
@@ -174,5 +145,20 @@ ProductTable::generate_child_sequence (ChemicalSequence& parent,
   return _transformation_table.transform (parent.sequence (first, last));
 }
 
+inline
+ChemicalSequence* ProductTable::product (const ChemicalSequence& parent,
+					 int first, int last) const
+{
+  ParentMap::const_iterator p_it = _products.find (&parent);
+  if (p_it == _products.end()) return 0;
+
+  StartMap::const_iterator s_it = (p_it->second).find (first);
+  if (s_it == (p_it->second).end()) return 0;
+
+  EndMap::const_iterator e_it = (s_it->second).find (last);
+  if (e_it == (s_it->second).end()) return 0;
+
+  return e_it->second;
+}
 
 #endif // PRODUCT_TABLE_H

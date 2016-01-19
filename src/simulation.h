@@ -36,7 +36,6 @@
 class Simulation
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -47,12 +46,14 @@ class Simulation
    */
   Simulation (const std::string& filename);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // Simulation ( const Simulation& other_simulation );
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  Simulation (const Simulation& other_simulation);
+  /** @brief Assignment operator. */
+  Simulation& operator= ( const Simulation& other_simulation );
 
+ public:
   /**
    * @brief Destructor.
    */
@@ -71,25 +72,6 @@ class Simulation
   //  Public Methods - Accessors
   // ============================
   //
-
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // Simulation& operator= ( const Simulation& other_simulation );
-
-
 private:
 
   // ============
@@ -115,12 +97,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

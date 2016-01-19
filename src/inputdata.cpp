@@ -61,15 +61,14 @@ InputData::InputData (const std::list <std::string>& input_file_names)
   go_next();
 }
 
-// Not needed for this class (use of default copy constructor) !
+// Forbidden
 // InputData::InputData (const InputData& other_input_data);
+// InputData& InputData::operator= (const InputData& other_input_data);
 
 InputData::~InputData (void)
 {
-  for (_file = _files.begin(); _file != _files.end(); ++_file)
-    {
-      delete *_file;
-    }
+  for (_file = _files.begin(); _file != _files.end(); ++_file) 
+    { delete *_file; }
 }
 
 // ===========================
@@ -131,21 +130,6 @@ void InputData::write_warnings (std::ostream& output)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// InputData& InputData::operator= (const InputData& other_input_data);
-
 
 // =================
 //  Private Methods

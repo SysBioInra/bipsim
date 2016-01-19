@@ -46,26 +46,20 @@ class UnitFactory : public Factory
    */
   UnitFactory (CellState& cell_state);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // UnitFactory (const UnitFactory& other_unit_factory);
-
-  /**
-   * @brief Destructor.
-   */
-  ~UnitFactory (void);
+  // /* @brief Assignment operator. */
+  // UnitFactory& operator= (const UnitFactory& other_unit_factory);
+  // /* @brief Destructor. */
+  // ~UnitFactory (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Create unit from line.
-   * @param line Text line to create entity from.
-   * @return True if an entity was successfully created.
-   */
+  // Redefined from Factory
   bool handle (const std::string& line);
 
   // ============================
@@ -73,37 +67,7 @@ class UnitFactory : public Factory
   // ============================
   //
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // UnitFactory& operator= (const UnitFactory& other_unit_factory);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -191,12 +155,6 @@ private:
    * @return True if entity was successfully created.
    */
   bool create_processive_chemical (const std::string& line);
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

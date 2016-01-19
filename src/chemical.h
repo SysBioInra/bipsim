@@ -52,8 +52,8 @@ public:
   // Chemical (Chemical& other_chemical);
   // /* @brief Assignment operator */
   // Chemical& operator= (Chemical& other_chemical);
-  // /* @brief Destructor */
-  // virtual ~Chemical (void);
+  /** @brief Destructor (empty but virtual). */
+  virtual ~Chemical (void) {}
 
   // ===========================
   //  Public Methods - Commands

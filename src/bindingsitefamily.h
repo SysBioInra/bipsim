@@ -49,9 +49,9 @@ class BindingSiteFamily : public Reactant, public SimulatorInput
 
  private:
   // Forbidden
-  /* @brief Copy constructor */
+  /** @brief Copy constructor */
   BindingSiteFamily (const BindingSiteFamily& other_family);
-  /* @brief Assignment operator */
+  /** @brief Assignment operator */
   BindingSiteFamily& operator= (const BindingSiteFamily& other_family);
 
  public:

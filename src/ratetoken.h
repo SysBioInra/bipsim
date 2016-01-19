@@ -31,7 +31,6 @@
 //
 #include "forwarddeclarations.h"
 
-
 /**
  * @brief Class enabling restrited access to RateToken.
  *
@@ -41,6 +40,7 @@
  */
 class GroupKey
 {
+ private:
   friend class HybridRateContainer;
   /**
    * @brief Default constructor (can only be created by friends).
@@ -57,6 +57,7 @@ class GroupKey
  */
 class RateKey
 {
+ private:
   friend class RateGroup;
   /**
    * @brief Default constructor (can only be created by friends).
@@ -77,7 +78,6 @@ class RateKey
 class RateToken
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -86,29 +86,46 @@ class RateToken
    * @brief Constructor.
    * @param index Unique index associated with the reaction rate.
    */
-  RateToken (int index)
-    : _index (index)
-    , _group (0)
-    , _position (0)
-    , _rate (0)
+  RateToken (int index): _index (index), _group (0), _position (0), _rate (0)
   {}
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // RateToken (const RateToken& other_class_name);
-
-  /**
-   * @brief Destructor.
-   */
-  ~RateToken (void) {}
+  // /* @brief Assignment operator. */
+  // RateToken& operator= (const RateToken& other_rate_token);
+  // /* @brief Destructor. */
+  // ~RateToken (void);
 
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
+  /**
+   * @brief Group index setter.
+   * @param key Key restraining access to this method (only the friends of 
+   *  GroupKey can access this setter).
+   * @param group Group index where the token currently is.
+   */
+  void set_group (const GroupKey& key, int group) { _group = group; }
+  
+  /**
+   * @brief Position setter.
+   * @param key Key restraining access to this method (only the friends of 
+   *  RateKey can access this setter).
+   * @param position Current position of token within the group.
+   */
+  void set_position (const RateKey& key, int position) { _position = position; }
+  
+  /**
+   * @brief Rate value setter.
+   * @param key Key restraining access to this method (only the friends of 
+   *  RateKey can access this setter).
+   * @param rate Current rate value.
+   */
+  void set_rate (const RateKey& key, double rate) { _rate = rate; }
 
 
   // ============================
@@ -135,37 +152,6 @@ class RateToken
    */
   double rate (void) const { return _rate; }
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-  /**
-   * @brief Group index setter.
-   * @param key Key restraining access to this method (only the friends of GroupKey can access this setter).
-   * @param group Group index where the token currently is.
-   */
-  void set_group (const GroupKey& key, int group) { _group = group; }
-  
-  /**
-   * @brief Position setter.
-   * @param key Key restraining access to this method (only the friends of RateKey can access this setter).
-   * @param position Current position of token within the group.
-   */
-  void set_position (const RateKey& key, int position) { _position = position; }
-  
-  /**
-   * @brief Rate value setter.
-   * @param key Key restraining access to this method (only the friends of RateKey can access this setter).
-   * @param rate Current rate value.
-   */
-  void set_rate (const RateKey& key, double rate) { _rate = rate; }
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-
-
 private:
   // ============
   //  Attributes
@@ -183,17 +169,10 @@ private:
   /** @brief Current rate value. */
   double _rate;
   
-
   // =================
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

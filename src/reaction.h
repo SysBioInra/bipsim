@@ -18,6 +18,7 @@
 // ==================
 //
 #include <vector> // std::vector
+#include <iostream> // std::ostream
 
 // ==================
 //  Project Includes
@@ -26,7 +27,6 @@
 #include "forwarddeclarations.h"
 #include "observable.h"
 #include "simulatorinput.h"
-#include "reactionobserver.h"
 
 /**
  * @brief Abstract class that represent all reactions happening in the cell. 
@@ -49,16 +49,15 @@ public:
    */
   Reaction (void);
 
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
   // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // /* @brief Copy constructor. */
   // Reaction (Reaction& other_reaction);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~Reaction (void);
+  // /* @brief Assignment operator. */
+  // Reaction& operator= (Reaction& other_reaction);
+  /** @brief Destructor (empty but virtual). */
+  virtual ~Reaction (void) {}
 
   // ===========================
   //  Public Methods - Commands
@@ -103,22 +102,6 @@ public:
    * @return True if there are enough reactants, false otherwise.
    */
   virtual bool is_reaction_possible (void) const = 0;
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // Reaction& operator= (Reaction& other_reaction);
   
   /**
    * @brief Standard output.
@@ -147,9 +130,9 @@ public:
   /** @brief Reaction rate value computed at last update. */
   double _rate;
 
-  // ===================
+  // =================
   //  Private Methods
-  // ===================
+  // =================
   //
   /**
    * @brief Print class content.
@@ -174,6 +157,12 @@ public:
 // ======================
 //
 #include "macros.h" // ENSURE ()
+#include "reactionobserver.h"
+
+inline Reaction::Reaction (void)
+  : _rate (0)
+{
+}
 
 inline void Reaction::update_rate (void)
 {
@@ -201,6 +190,12 @@ inline void Reaction::perform (void)
 {
   do_reaction();
   notify_change();
+}
+
+inline std::ostream& operator<< (std::ostream& output, const Reaction& reaction)
+{
+  reaction.print (output);
+  return output;
 }
 
 #endif // REACTION_H

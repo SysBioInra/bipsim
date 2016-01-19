@@ -51,16 +51,14 @@ public:
    */
   ProcessiveChemical (BoundChemical& stalled_form);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // ProcessiveChemical (ProcessiveChemical& other_processive_chemical);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~ProcessiveChemical (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor */
+  // ProcessiveChemical (ProcessiveChemical& other_chemical);
+  // /* @brief Assignment operator. */
+  // ProcessiveChemical& operator= (ProcessiveChemical& other_chemical);
+  // /* @brief Destructor */
+  // ~ProcessiveChemical (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -80,7 +78,6 @@ public:
    */  
   void step_forward (int step_size);
 
-  
 
   // ============================
   //  Public Methods - Accessors
@@ -98,34 +95,16 @@ public:
    */
   BoundChemical& stalled_form (void);
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // ProcessiveChemical& operator= (ProcessiveChemical& other_processive_chemical);
-
-
 private:
-
   // ============
   //  Attributes
   // ============
   //
   /** @brief The list of termination sites the chemical recognizes. */
-  std::list< int > _termination_site_families;
+  std::list <int> _termination_site_families;
 
-  /** 
-   * BoundChemical that results when the processive chemical encounters
+  /**
+   * @brief BoundChemical that results when the processive chemical encounters
    * a termination site (for example).
    */
   BoundChemical& _stalled_form;
@@ -134,16 +113,15 @@ private:
   //  Private Methods
   // =================
   //
-
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-inline void ProcessiveChemical::add_recognized_termination_site ( int termination_site_family )
+inline void ProcessiveChemical::add_recognized_termination_site (int termination_site_family)
 {
-  _termination_site_families.push_back ( termination_site_family );
+  _termination_site_families.push_back (termination_site_family);
 }
 
 inline BoundChemical& ProcessiveChemical::stalled_form ( void )

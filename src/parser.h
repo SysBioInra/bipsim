@@ -38,28 +38,25 @@
 class Parser
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
   //
   /**
-   * @brief Default constructor
+   * @brief Constructor
    * @param cell_state Object used to store existing units and reactions.
    * @param event_handler Object used to store existing events.
    */
   Parser (CellState& cell_state, EventHandler& event_handler);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // Parser ( const Parser& other_parser );
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~Parser (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // Parser (const Parser& other_parser);
+  // /* @brief Assignment operator. */
+  // Parser& operator= (const Parser& other_parser);
+  // /* @brief Destructor */
+  // ~Parser (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -76,25 +73,7 @@ class Parser
   // ============================
   //
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // Parser& operator= ( const Parser& other_parser );
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -119,6 +98,10 @@ private:
    */
   bool loop_through_data (InputData& input_data);
 
+  /**
+   * @brief Display dependencies that could not be resolved.
+   * @param input_data Data to parse.
+   */
   bool display_dependency_errors (InputData& input_data);
 };
 

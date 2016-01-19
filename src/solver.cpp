@@ -38,12 +38,10 @@ Solver::Solver (const SimulationParams& params, CellState& cell_state)
 {
 }
 
-// Not needed for this class (use of default copy constructor) !
-// Solver::Solver ( const Solver& other_solver );
-
-Solver::~Solver (void)
-{
-}
+// Not needed for this class (use of compiler generated versions)
+// Solver::Solver (const Solver& other_solver);
+// Solver& Solver::operator= (const Solver& other_solver);
+// Solver::~Solver (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -71,26 +69,10 @@ void Solver::go_to_next_reaction (void)
   ++_number_reactions_performed;
 }
 
-
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// Solver& Solver::operator= ( const Solver& other_solver );
-
 
 // =================
 //  Private Methods

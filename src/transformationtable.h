@@ -50,16 +50,14 @@ class TransformationTable : public SimulatorInput
    */
   TransformationTable (int input_motif_length);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // TransformationTable (const TransformationTable& other_transformation_table);
-
-  /**
-   * @brief Destructor.
-   */
-  ~TransformationTable (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // TransformationTable (const TransformationTable& other_table);
+  // /* @brief Assignment operator. */
+  // TransformationTable& operator= (const TransformationTable& other_table);
+  // /* @brief Destructor. */
+  // ~TransformationTable (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -88,38 +86,9 @@ class TransformationTable : public SimulatorInput
    * @brief Accessor to input motif length.
    * @return Input motif length as defined at construction.
    */
-  int input_motif_length (void);
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // TransformationTable& operator= (const TransformationTable& other_transformation_table);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
+  int input_motif_length (void) const;
 
 private:
-
   // ============
   //  Attributes
   // ============
@@ -134,12 +103,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================
@@ -155,7 +118,7 @@ inline void TransformationTable::add_rule (const std::string& input,
   _rules [input] = output;
 }
 
-inline int TransformationTable::input_motif_length (void)
+inline int TransformationTable::input_motif_length (void) const
 {
   return _motif_length;
 }

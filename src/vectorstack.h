@@ -49,19 +49,16 @@ class VectorStack
   VectorStack (int max_size)
     : _v (max_size)
     , _position (_v.end())
-    {
-    }
+    {}
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // VectorStack (const VectorStack& other_vector_stack);
-
-  /**
-   * @brief Destructor.
-   */
-  ~VectorStack (void) {}
+  // /* @brief Assignment operator. */
+  // VectorStack& operator= (const VectorStack& other_vector_stack);
+  // /* @brief Destructor. */
+  // ~VectorStack (void) {}
 
   // ===========================
   //  Public Methods - Commands
@@ -105,35 +102,6 @@ class VectorStack
    */
   bool empty (void) const { return _position == _v.end(); }
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // VectorStack& operator= (const VectorStack& other_vector_stack);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
   // ============
   //  Attributes
@@ -149,12 +117,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

@@ -53,27 +53,28 @@ class SiteAvailability
    */
   SiteAvailability (int first, int last, SiteObserver& observer_to_notify);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // SiteAvailability ( const SiteAvailability& other_site_availability );
-
-  /**
-   * @brief Destructor.
-   */
-  virtual ~SiteAvailability (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // SiteAvailability (const SiteAvailability& other_site_availability);
+  // /* @brief Assignment operator. */
+  // SiteAvailability& operator= (const SiteAvailability& other_site_availability);
+  // /* @brief Destructor. */
+  // ~SiteAvailability (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
   /**
-   * @brief Check current number available sites and notify observer if a change occurred since last check.
+   * @brief Check current number available sites and notify observer if a 
+   *  change occurred since last check.
    * @param a First position affected by change.
    * @param b Last position affected by change.
-   * @param current_number_sequences Current number of identical sequences in the pool.
-   * @param current_occupancy Number of bases occupied for each base of the sequence along the pool.
+   * @param current_number_sequences Current number of identical sequences 
+   *  in the pool.
+   * @param current_occupancy Number of bases occupied for each base of the 
+   *  sequence along the pool.
    */
   void notify (int a, int b, int current_number_sequences,
 	       const std::vector<int>& current_occupancy);
@@ -83,26 +84,7 @@ class SiteAvailability
   // ============================
   //
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // SiteAvailability& operator= ( const SiteAvailability& other_site_availability );
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -123,12 +105,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

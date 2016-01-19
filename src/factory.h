@@ -40,20 +40,16 @@ class Factory
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Constructor.
-   */
-  Factory (void) {}
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // /* @brief Default constructor. */
+  // Factory (void)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // Factory (const Factory& other_factory);
-
-  /**
-   * @brief Destructor.
-   */
+  // /* @brief Assignment operator. */
+  // Factory& operator= (const Factory& other_factory);
+  /** @brief Destructor. */
   virtual ~Factory (void) {}
 
   // ===========================
@@ -72,29 +68,7 @@ class Factory
   // ============================
   //
 
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // Factory& operator= (const Factory& other_factory);
-
 protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
   // ===================
   //  Protected Methods
   // ===================
@@ -114,7 +88,6 @@ protected:
 
 
 private:
-
   // ============
   //  Attributes
   // ============
@@ -125,12 +98,6 @@ private:
   //  Private Methods
   // =================
   //
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

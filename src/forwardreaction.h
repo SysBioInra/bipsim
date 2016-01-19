@@ -57,17 +57,15 @@ public:
     _products = _reaction.backward_reactants();
   }
     
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // ForwardReaction (const ForwardReaction& other_reaction);
+  // /* @brief Assignment operator. */
+  // ForwardReaction& operator= (const ForwardReaction& other_reaction);
+  // /* @brief Destructor. */
+  // ~ForwardReaction (void);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // ForwardReaction (ForwardReaction& other_base_loading);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~ForwardReaction (void) {}
   
   // ===========================
   //  Public Methods - Commands
@@ -79,40 +77,13 @@ public:
   //  Public Methods - Accessors
   // ============================
   //
-  /**
-   * @brief Returns whether there are enough chemicals to perform reaction.
-   * @return True if there are enough reactant, false otherwise.
-   */
-  virtual bool is_reaction_possible (void) const
+  // Redefined from Reaction
+  bool is_reaction_possible (void) const
   {
     return _reaction.is_forward_reaction_possible();
   }
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // ForwardReaction& operator= (ForwardReaction& other_base_loading);
-
-
- protected:
-  // ===================
-  //  Protected Methods
-  // ===================
-  //  
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -124,22 +95,10 @@ private:
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Update chemical quantities according to the reaction.
-   */
-  virtual void do_reaction (void) { _reaction.perform_forward(); }
-
-  /**
-   * @brief Compute current reaction rates.
-   * @return Current reaction rate.
-   */
-  virtual double compute_rate (void) const { return _reaction.forward_rate(); }
-
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  virtual void print (std::ostream& output) const { output << _reaction; }
+  // Redefined from Reaction
+  void do_reaction (void) { _reaction.perform_forward(); }
+  double compute_rate (void) const { return _reaction.forward_rate(); }
+  void print (std::ostream& output) const { output << _reaction; }
 };
 
 // =====================

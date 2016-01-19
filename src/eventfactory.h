@@ -44,31 +44,26 @@ class EventFactory : public Factory
   //
   /**
    * @brief Constructor.
-   * @param cell_state Object to read/write information about units and reactions.
+   * @param cell_state Object to read/write information about units and
+   *  reactions.
    * @param event_handler Handler used to store event information.
    */
   EventFactory (CellState& cell_state, EventHandler& event_handler);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // EventFactory (const EventFactory& other_event_factory);
-
-  /**
-   * @brief Destructor.
-   */
-  ~EventFactory (void);
+  // /* @brief Assignment operator. */
+  // EventFactory& operator= (const EventFactory& other_event_factory);
+  // /* @brief Destructor. */
+  // ~EventFactory (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Create entity from line.
-   * @param line Text line to create entity from.
-   * @return True if an entity was successfully created.
-   */
+  // redefined from Factory
   bool handle (const std::string& line);
 
   // ============================
@@ -76,36 +71,7 @@ class EventFactory : public Factory
   // ============================
   //
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // EventFactory& operator= (const EventFactory& other_event_factory);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -128,13 +94,8 @@ private:
    * @param quantity Quantity indicating how chemical is affected by event.
    * @return True if event was successfully created and stored.
    */
-  void create_event (double time, const std::string& event_tag, Chemical& target, int quantity);
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
+  void create_event (double time, const std::string& event_tag, 
+		     Chemical& target, int quantity);
 };
 
 // ======================

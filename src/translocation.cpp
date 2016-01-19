@@ -45,12 +45,10 @@ Translocation::Translocation (ProcessiveChemical& processive_chemical,
   _products.push_back (&_processive_chemical.stalled_form());
 }
  
-// Not needed for this class (use of default copy constructor) !
+// Not needed for this class (use of compiler generated versions)
 // Translocation::Translocation (Translocation& other_translocation);
-
-Translocation::~Translocation( void )
-{
-}
+// Translocation& Translocation::operator= (Translocation& other_translocation);
+// Translocation::~Translocation (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -61,24 +59,6 @@ Translocation::~Translocation( void )
 //  Public Methods - Accessors
 // ============================
 //
-bool Translocation::is_reaction_possible (void) const
-{
-  return (_processive_chemical.number() > 0);
-}
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// Translocation& Translocation::operator= (Translocation& other_translocation);
-
 
 // =================
 //  Private Methods

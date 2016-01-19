@@ -17,10 +17,6 @@
 //  General Includes
 // ==================
 //
-#include <vector> // std::vector
-#include <list> // std::list
-#include <map> // std::map
-#include <set> // std::set
 
 // ==================
 //  Project Includes
@@ -31,14 +27,13 @@
 
 /**
  * @brief NaiveSolver class for integrating reactions according to a brute
- * force Gillespie algorithm.
+ *  force Gillespie algorithm.
  *
  * The NaiveSolver class stores a list of reactions, computes their rate
  * and performs them in a random order according to their rate. Solving is
  * done in a stochastic way based on exponential distributions (Gillespie
  * algorithm).
  * This class inherits class Solver.
- * @sa Solver
  */
 class NaiveSolver : public Solver
 {
@@ -55,12 +50,14 @@ class NaiveSolver : public Solver
    */
   NaiveSolver (const SimulationParams& params, CellState& cell_state);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
-  // NaiveSolver ( const NaiveSolver& other_naive_solver );
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  NaiveSolver (const NaiveSolver& other_naive_solver);
+  /** @brief Assignment operator. */
+  NaiveSolver& operator= (const NaiveSolver& other_naive_solver);
 
+ public:
   /**
    * @brief Destructor
    */
@@ -76,22 +73,6 @@ class NaiveSolver : public Solver
   // ============================
   //  
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // NaiveSolver& operator= ( const NaiveSolver& other_naive_solver );
-
-
 private:
 
   // ============
@@ -105,11 +86,8 @@ private:
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Compute next reaction based on current _rates.
-   * @return Time at which the reaction occurred.
-   */
-  virtual double compute_next_reaction (void);
+  // Redefined from Solver
+  double compute_next_reaction (void);
 };
 
 // ======================

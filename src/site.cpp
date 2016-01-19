@@ -12,7 +12,6 @@
 //  General Includes
 // ==================
 //
-#include <iostream>
 
 // ==================
 //  Project Includes
@@ -39,12 +38,11 @@ Site::Site (int family_id, ChemicalSequence& location, int first, int last)
   REQUIRE (location.is_out_of_bounds (first, last) == false);
 }
 
-// Not needed for this class (use of default copy constructor) !
+// Not needed for this class (use of compiler generated versions)
 // Site::Site (Site& other_site);
+// Site& Site::operator= (Site& other_site);
+// Site::~Site (void);
 
-Site::~Site (void)
-{
-}
 
 // ===========================
 //  Public Methods - Commands
@@ -55,19 +53,6 @@ Site::~Site (void)
 //  Public Methods - Accessors
 // ============================
 //
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// Site& Site::operator= (Site& other_site);
-
 
 // =================
 //  Private Methods

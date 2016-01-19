@@ -36,7 +36,7 @@ libsrc_a_SOURCES += \
 	complexation.cpp complexation.h \
 	forwardreaction.h \
 	loading.cpp loading.h \
-	reaction.cpp reaction.h \
+	reaction.h \
 	release.cpp release.h \
 	sequencebinding.cpp sequencebinding.h \
 	translocation.cpp translocation.h
@@ -70,7 +70,7 @@ libsrc_a_SOURCES += \
 libsrc_a_SOURCES += \
 	compositiontable.cpp compositiontable.h \
 	decodingtable.cpp decodingtable.h \
-	producttable.cpp producttable.h \
+	producttable.h \
 	transformationtable.cpp transformationtable.h
 
 # parser, handler and factory sources
@@ -114,8 +114,7 @@ libsrc_a_SOURCES += \
 libsrc_a_SOURCES += \
 	ratecontainer.h ratevector.h updatedtotalratevector.h \
 	flyratevector.h \
-	ratetree.cpp ratetree.h \
-	ratenode.h sumnode.h reactionnode.h \
+	ratetree.cpp ratetree.h ratenode.h \
 	hybridratecontainer.cpp hybridratecontainer.h  \
 	rategroup.h ratetoken.h
 
@@ -124,7 +123,6 @@ libsrc_a_SOURCES += \
 	vectorqueue.h vectorstack.h
 
 # exceptions
-libsrc_a_SOURCES += \
-	formatexception.h parserexception.h simulatorexception.h
+libsrc_a_SOURCES += simulatorexception.h
 
 ###############################################################################

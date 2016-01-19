@@ -2,7 +2,7 @@
 
 /**
  * @file ratenode.h
- * @brief Header for the RateNode, DummyNode classes.
+ * @brief Header for the RateNode, DummyNode, ReactionNode, SumNode classes.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -45,11 +45,7 @@ class RateNode
   /**
    * @brief Default constructor.
    */
-  RateNode (void)
-    : _parent (0)
-    , _invalidated (false)
-    , _rate (0)
-    {}
+  RateNode (void) : _parent (0), _invalidated (false), _rate (0)  {}
 
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
@@ -57,8 +53,8 @@ class RateNode
   // RateNode (const RateNode& other_class_name);
   // /* @brief Assignment operator. */
   // RateNode& operator= (const RateNode& other_class_name);
-  // /* @brief Destructor. */
-  // virtual ~RateNode (void) {}
+  /** @brief Destructor. */
+  virtual ~RateNode (void) {}
 
   // ===========================
   //  Public Methods - Commands
@@ -164,12 +160,6 @@ private:
    * @brief Update rate (without worrying about propagation to parent).
    */
   virtual void perform_update (void) = 0;
-  
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 /**
@@ -193,12 +183,9 @@ class DummyNode : public RateNode
   /**
    * @brief Default constructor.
    */
-  DummyNode (RateNode& child)
-    : _child (child)
-    { update(); }
+  DummyNode (RateNode& child) : _child (child) { update(); }
 
-  
-  // Not needed for this class (use of compiler-generated versions)
+    // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
   // DummyNode (const DummyNode& other_class_name);
@@ -232,10 +219,140 @@ private:
   // =================
   //
   // redefined from RateNode
-  void perform_update (void)
+  void perform_update (void) { _set_rate (_child.rate()); }  
+};
+
+/**
+ * @brief Class for leaf nodes in a tree storing reaction rates.
+ *
+ * ReactionNode stores a rate associated to a reaction. It is a leaf node: it
+ * has no children. It can only be updated by changing the rate it stores.
+ * ReactionNode inherits RateNode.
+ * @sa RateTree.
+ */
+class ReactionNode : public RateNode
+{
+ public:
+  // ==========================
+  //  Constructors/Destructors
+  // ==========================
+  //
+  /**
+   * @brief Default constructor.
+   */
+  ReactionNode (int rate_index) : _rate_index (rate_index) {}
+
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // ReactionNode (const ReactionNode& other_node);
+  // /* @brief Assignment operator. */
+  // ReactionNode& operator= (const ReactionNode& other_node);
+  // /* @brief Destructor. */
+  // ~ReactionNode (void);
+
+  // ===========================
+  //  Public Methods - Commands
+  // ===========================
+  //
+  // Redefined from RateNode
+  int find (double value) { return _rate_index; }
+
+  /**
+   * @brief Change rate associated to reaction represented by the node.
+   */
+  RateNode* set_rate (double rate)
+  { 
+    _set_rate (rate);
+    return invalidate_parent();
+  }
+
+  // ============================
+  //  Public Methods - Accessors
+  // ============================
+  //
+
+private:
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Index of the reaction rate stored by node. */
+  int _rate_index;
+
+  // =================
+  //  Private Methods
+  // =================
+  //
+  // Redefined from RateNode
+  void perform_update (void) {}
+};
+
+/**
+ * @brief Class used to store a rate as the sum of two nodes' rates.
+ *
+ * SumNode inherits RateNode. SumNode can be used to cumulate rates within a
+ * binary tree, the leaves typically representing atomic rates. The sum is only
+ * computed when prompted by user.
+ * @sa RateTree.
+ */
+class SumNode : public RateNode
+{
+ public:
+
+  // ==========================
+  //  Constructors/Destructors
+  // ==========================
+  //
+  /**
+   * @brief Default constructor.
+   */
+  SumNode (RateNode& left_child, RateNode& right_child)
+    : _left (left_child)
+    , _right (right_child)
   {
-    _set_rate (_child.rate());
-  }  
+    update();
+  }
+
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // SumNode (const SumNode& other_node);
+  // /* @brief Assignment operator. */
+  // ReactionNode& operator= (const ReactionNode& other_node);
+  // /* @brief Destructor. */
+  // ~SumNode (void);
+
+  // ===========================
+  //  Public Methods - Commands
+  // ===========================
+  //
+  // Redefined from RateNode
+  int find (double value)
+    { 
+      if (_left.rate() >= value) return _left.find (value);
+      else return _right.find (value - _left.rate());
+    }
+
+  // ============================
+  //  Public Methods - Accessors
+  // ============================
+  //
+
+private:
+  // ============
+  //  Attributes
+  // ============
+  //
+  RateNode& _left;
+  RateNode& _right;
+
+  // =================
+  //  Private Methods
+  // =================
+  //
+  // Redefined from RateNode
+  void perform_update (void) { _set_rate (_left.rate() + _right.rate()); }
 };
 
 // ======================

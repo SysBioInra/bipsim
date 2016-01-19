@@ -50,12 +50,14 @@ class InputData
    */
   InputData (const std::list <std::string>& input_file_names);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // InputData (const InputData& other_input_data);
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  InputData (const InputData& other_input_data);
+  /** @brief Assignment operator. */
+  InputData& operator= (const InputData& other_input_data);
 
+ public:
   /**
    * @brief Destructor.
    */
@@ -114,36 +116,7 @@ class InputData
    */
   int line_number (void);
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // InputData& operator= (const InputData& other_input_data);
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -195,11 +168,6 @@ private:
    * @brief Move to the next file line (possibly in the next file).
    */
   void go_to_next_line (void);
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

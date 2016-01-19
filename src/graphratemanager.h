@@ -30,13 +30,16 @@
 #include "ratemanager.h"
 
 /**
- * @brief Class handling updates of reaction rates by using dependencies between reactions and reactants.
+ * @brief Class handling updates of reaction rates by using dependencies 
+ *  between reactions and reactants.
  *
- * GraphRateManager inherits and implements the interface provided by RateManager.
- * It handles its updating task by a graph approach: it stores a map that links a reactant to all
- * reactions that depend on it, enabling to update only those reactions which rate might have been changed.
- * It acts as an observer: it attaches itself to all reactants it knows and receives updates when concentrations
- * change. All rates that may have changed are stored in a set until user asks to update rates.
+ * GraphRateManager inherits and implements the interface provided by
+ * RateManager. It handles its updating task by a graph approach: 
+ * it stores a map that links a reactant to all reactions that depend on it, 
+ * enabling to update only those reactions which rate might have been changed.
+ * It acts as an observer: it attaches itself to all reactants it knows and 
+ * receives updates when concentrations change. All rates that may have 
+ * changed are stored in a set until user asks to update rates.
  * @sa RateManager
  */
 class GraphRateManager : public RateManager
@@ -57,34 +60,38 @@ class GraphRateManager : public RateManager
 		    const std::vector <Reaction*>& reactions,
 		    const DependencyGraph& dependency_graph);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
-  // GraphRateManager ( const GraphRateManager& other_graph_rate_manager );
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  GraphRateManager (const GraphRateManager& other_manager);
+  /** @brief Assignment operator.*/
+  GraphRateManager& operator= (const GraphRateManager& other_manager);
+ public:
 
   /**
    * @brief Destructor.
    */
-  virtual ~GraphRateManager (void);
+  ~GraphRateManager (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
+  // redefined from RateManager
   /**
    * @brief Update rates according to current chemical levels.
    *
-   * This manager uses a graph approach. Using an observer architecture, it receives
-   * updates about reaction occuring and stores reactions whose rates may have changed.
-   * When prompted to update, it recomputes these rates.
+   * This manager uses a graph approach. Using an observer architecture, it 
+   * receives updates about reaction occuring and stores reactions whose rates 
+   * may have changed. When prompted to update, it recomputes these rates.
    */
-  virtual void update_rates (void);
+  void update_rates (void);
 
   /**
-   * @brief Notify a change in concentration levels and update list of rates to recompute.
-   * @param reactions_to_update Indices of the reactions that need to be updated. This function
-   *  is intended to be called by a ReactionObserver.
+   * @brief Notify a change in concentration levels and update list of rates to
+   *  recompute.
+   * @param reactions_to_update Indices of the reactions that need to be
+   *  updated. This function is intended to be called by a ReactionObserver.
    */
   void update (const std::list<int>& reactions_to_update);
 
@@ -92,24 +99,6 @@ class GraphRateManager : public RateManager
   //  Public Methods - Accessors
   // ============================
   //
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // GraphRateManager& operator= ( const GraphRateManager& other_graph_rate_manager );
-
-
 private:
 
   // ============
@@ -131,7 +120,8 @@ private:
   // =================
   //
   /**
-   * @brief Create reaction observers to receive notifications about reaction occuring.
+   * @brief Create reaction observers to receive notifications about reaction 
+   *  occuring.
    * @param dependency_graph Global dependencies between reactions.
    */
   void create_observers (const DependencyGraph& dependency_graph);
@@ -143,20 +133,15 @@ private:
 
   /**
    * @brief Convert list of reaction pointers to list of integers.
-   * @return List of integers corresponding to reactions found in the map. If reactions
-   *  are not found in the map, they are ignored, so that the list returned can be 
-   *  shorter than the initial list of reaction pointers.
-   * @param reaction_to_index Map enabling to convert reaction pointers to integers.
+   * @return List of integers corresponding to reactions found in the map. 
+   *  If reactions are not found in the map, they are ignored, so that the 
+   *  list returned can be shorter than the initial list of reaction pointers.
+   * @param reaction_to_index Map enabling to convert reaction pointers to 
+   *  integers.
    * @param reactions Set of reactions to convert to integers.
    */
-  std::list<int> convert_to_indices (const std::map <Reaction*, int>& reaction_to_index, const std::set <Reaction*>& reactions);
-  
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
+  std::list<int> convert_to_indices (const std::map <Reaction*, int>& reaction_to_index, 
+				     const std::set <Reaction*>& reactions);
 };
 
 // ======================

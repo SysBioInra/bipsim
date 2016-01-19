@@ -35,15 +35,14 @@ Loading::Loading (Loader& loader)
   _reactants.insert (_reactants.end(), bases.begin(), bases.end());
   const std::set<BoundChemical*> 
     occupied_states = loader.occupied_states();
-  _products.insert (_products.end(), occupied_states.begin(), occupied_states.end());
+  _products.insert (_products.end(), occupied_states.begin(), 
+		    occupied_states.end());
 }
  
-// Not needed for this class (use of default copy constructor) !
+// Not needed for this class (use of compiler generated versions)
 // Loading::Loading (Loading& other_loading);
-
-Loading::~Loading (void)
-{
-}
+// Loading& Loading::operator= (Loading& other_loading);
+// Loading::~Loading (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -59,21 +58,6 @@ bool Loading::is_reaction_possible (void) const
 {
   return (_loader.loading_rate() > 0);
 }
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// Loading& Loading::operator= (Loading& other_loading);
-
 
 // ===================
 //  Protected Methods

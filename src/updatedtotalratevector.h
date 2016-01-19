@@ -55,16 +55,14 @@ class UpdatedTotalRateVector : public RateVector
   {
   }
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor.
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
   // UpdatedTotalRateVector (const UpdatedTotalRateVector& other_rate_vector);
-
-  /**
-   * @brief Destructor.
-   */
-  ~UpdatedTotalRateVector (void) {}
+  // /* @brief Assignment operator. */
+  // UpdatedTotalRateVector& operator= (const UpdatedTotalRateVector& other_rate_vector);
+  // /* @brief Destructor. */
+  // ~UpdatedTotalRateVector (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -106,32 +104,7 @@ class UpdatedTotalRateVector : public RateVector
     ENSURE (_total_approximation >= 0);
   }
 
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator.
-  //  */
-  // UpdatedTotalRateVector& operator= (const UpdatedTotalRateVector& other_rate_vector);
-
-
-protected:
-  // ======================
-  //  Protected Attributes
-  // ======================
-  //
-
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -142,13 +115,6 @@ private:
   //  Private Methods
   // =================
   //
-
-
-  // ======================
-  //  Forbidden Operations
-  // ======================
-  //
-
 };
 
 // ======================

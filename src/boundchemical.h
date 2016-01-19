@@ -40,7 +40,6 @@
 class BoundChemical : public Chemical
 {
 public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -51,7 +50,7 @@ public:
   // Forbidden
   /** @brief Copy constructor */
   BoundChemical (BoundChemical& other_bound_chemical);
-  /**@brief Assignment operator */
+  /** @brief Assignment operator */
   BoundChemical& operator= (BoundChemical& other_chemical);
  public:
 
@@ -65,9 +64,18 @@ public:
   // ===========================
   //
   // redefined from Chemical
-  /** Cannot be called directly, will be ignored. */
+  /**
+   * @brief Adds a given quantity of chemical to the existing pool.
+   * @param quantity The amount to add
+   * @details Cannot be called directly, will be ignored. 
+   */
   void add (int quantity);
-  /** Cannot be called directly, will be ignored. */
+
+  /**
+   * @brief Remove a given quantity of chemical to the existing pool.
+   * @param quantity The amount to remove.
+   * @details Cannot be called directly, will be ignored. 
+   */
   void remove (int quantity);
 
   /**

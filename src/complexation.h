@@ -48,7 +48,8 @@ public:
    * @param k_on Association constant.
    * @param k_off Dissociation constant.
    */
-  Complexation (Chemical& component_a, Chemical& component_b, Chemical& complex, double k_on, double k_off);
+  Complexation (Chemical& component_a, Chemical& component_b, 
+		Chemical& complex, double k_on, double k_off);
 
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
@@ -66,7 +67,6 @@ public:
   // redefined from Reaction
   void perform_forward (void);
   void perform_backward (void);
-
 
   // ============================
   //  Public Methods - Accessors

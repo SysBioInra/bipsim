@@ -22,7 +22,6 @@
 //
 #include "ratetree.h"
 #include "ratenode.h"
-#include "sumnode.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -78,8 +77,9 @@ RateTree::RateTree (int number_rates)
   _root = _nodes.back();
 }
 
-// Not needed for this class (use of default copy constructor) !
-// RateTree::RateTree (const RateTree& other_class_name);
+// Forbidden
+// RateTree::RateTree (const RateTree& other_tree);
+// RateTree& RateTree::operator= (const RateTree& other_tree);
 
 RateTree::~RateTree (void)
 {
@@ -110,21 +110,6 @@ void RateTree::update_cumulates (void)
 //  Public Methods - Accessors
 // ============================
 //
-
-
-// ==========================
-//  Public Methods - Setters
-// ==========================
-//
-
-
-// =======================================
-//  Public Methods - Operator overloading
-// =======================================
-//
-// Not needed for this class (use of default overloading) !
-// RateTree& RateTree::operator= (const RateTree& other_class_name);
-
 
 // =================
 //  Private Methods

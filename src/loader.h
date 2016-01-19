@@ -56,36 +56,23 @@ public:
    */
   Loader (const DecodingTable& decoding_table);
 
-  // Not needed for this class (use of default copy constructor) !
-  // /*
-  //  * @brief Copy constructor
-  //  */
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor */
   // Loader (Loader& other_loader);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~Loader (void);
+  // /* @brief Assignment operator */
+  // Loader& operator= (Loader& other_loader);
+  // /* @brief Destructor */
+  // ~Loader (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
-  // 
-  /**
-   * @brief Remove focused unit.
-   */
-  virtual void remove_focused_unit (void);
-
-  /**
-   * @brief Focus a unit randomly.
-   */
-  virtual void focus_random_unit (void);
-
-  /**
-   * @brief Focus a unit that bound to a specific binding site family.
-   * @param binding_site_family The binding site family to inspect.
-   */
-  virtual void focus_random_unit (int binding_site_family);
+  //
+  // Redefined from BoundChemical
+  void remove_focused_unit (void);
+  void focus_random_unit (void);
+  void focus_random_unit (int binding_site_family);
 
   /**
    * @brief Focus random unit based on their loading_rates.
@@ -126,24 +113,7 @@ public:
    */
   const std::set<BoundChemical*> occupied_states (void) const;
 
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
-
-
-  // =======================================
-  //  Public Methods - Operator overloading
-  // =======================================
-  //
-  // Not needed for this class (use of default overloading) !
-  // /*
-  //  * @brief Assignment operator
-  //  */
-  // Loader& operator= (Loader& other_loader);
-
 private:
-
   // ============
   //  Attributes
   // ============
@@ -175,7 +145,7 @@ private:
   void update_focused_template (void);
 
   /**
-   *
+   * @brief Update loading rates.
    */
   void update_rates (void);
 
