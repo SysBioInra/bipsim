@@ -1,7 +1,7 @@
 
 
 /**
- * @file FILE.h
+ * @file freechemical.h
  * @brief Header for the ClassName class.
  * 
  * @authors Marc Dinh, Stephan Fischer
@@ -10,8 +10,8 @@
 
 // Multiple include protection
 //
-#ifndef CLASS_NAME_H
-#define CLASS_NAME_H
+#ifndef FREE_CHEMICAL_H
+#define FREE_CHEMICAL_H
 
 // ==================
 //  General Includes
@@ -23,7 +23,7 @@
 //  Project Includes
 // ==================
 //
-
+#include "chemical.h"
 
 // ======================
 //  Forward declarations
@@ -32,11 +32,11 @@
 #include "forwarddeclarations.h"
 
 /**
- * @brief BRIEF DESCRIPTION OF CLASS
+ * @brief Class for chemicals diffusing freely in the cytosol.
  *
- * DETAILED DESCRIPTION OF CLASS
+ *
  */
-class ClassName
+class FreeChemical : public Chemical
 {
  public:
   // ==========================
@@ -45,14 +45,14 @@ class ClassName
   //
   // Not needed for this class (use of compiler-generated versions)
   // /* @brief Default constructor. */
-  // ClassName (void);
+  // FreeChemical (void);
   // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
-  // ClassName (const ClassName& other_class_name);
+  // FreeChemical (const FreeChemical& other_chemical);
   // /* @brief Assignment operator. */
-  // ClassName& operator= (const ClassName& other_class_name);
+  // FreeChemical& operator= (const FreeChemical& other_chemical);
   // /* @brief Destructor. */
-  // ~ClassName (void);
+  // ~FreeChemical (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -84,4 +84,4 @@ private:
 // ======================
 //
 
-#endif // CLASS_NAME_H
+#endif // FREE_CHEMICAL_H

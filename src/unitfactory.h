@@ -122,11 +122,11 @@ private:
   bool create_transformation_table (const std::string& line);
 
   /**
-   * @brief Create chemical from line and store it in cell state.
+   * @brief Create free chemical from line and store it in cell state.
    * @param line Line to read creation information from.
    * @return True if entity was successfully created.
    */
-  bool create_chemical (const std::string& line);
+  bool create_free_chemical (const std::string& line);
 
   /**
    * @brief Create bound chemical from line and store it in cell state.

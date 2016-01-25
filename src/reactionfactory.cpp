@@ -32,6 +32,7 @@
 #include "backwardreaction.h"
 
 #include "boundchemical.h"
+#include "freechemical.h"
 #include "processivechemical.h"
 #include "loader.h"
 #include "chemicalsequence.h"
@@ -220,7 +221,8 @@ bool ReactionFactory::create_sequence_binding (const std::string& line)
     { throw FormatException(); }
 
   // check that the data is valid
-  Chemical* unit_to_bind_ptr = _cell_state.find <Chemical> (unit_to_bind);
+  FreeChemical* 
+    unit_to_bind_ptr = _cell_state.find <FreeChemical> (unit_to_bind);
   if (unit_to_bind_ptr == 0)  { throw DependencyException (unit_to_bind); }
   BoundChemical*
     binding_result_ptr = _cell_state.find <BoundChemical> (binding_result);
@@ -260,7 +262,7 @@ bool ReactionFactory::create_release (const std::string& line)
   // get other components of the reaction
   while ((line_stream >> chemical) && (chemical != std::string ("rate")))
     {
-      Chemical* chemical_ptr = _cell_state.find <Chemical> (chemical);
+      FreeChemical* chemical_ptr = _cell_state.find <FreeChemical> (chemical);
       if (chemical_ptr == 0)  { throw DependencyException (chemical); }
 
       if (not (line_stream >> stoichiometry)) { throw FormatException(); }

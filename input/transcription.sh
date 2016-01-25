@@ -2,15 +2,15 @@
 FILE=transcription.in
 rm $FILE
 
-printf "\nunit Chemical RNAP 1000" >> $FILE
+printf "\nunit FreeChemical RNAP 1000" >> $FILE
 
 # initiation
 printf "\n\n# initiation\n" >> $FILE
 sigma=("SigA" "SigB")
 for factor in ${sigma[@]}
 do
-    printf "\nunit Chemical %s 1000" $factor >> $FILE
-    printf "\nunit Chemical RNAP_%s" $factor >> $FILE
+    printf "\nunit FreeChemical %s 1000" $factor >> $FILE
+    printf "\nunit FreeChemical RNAP_%s" $factor >> $FILE
     printf "\nunit BoundChemical bound_RNAP_%s" $factor >> $FILE
     printf "\nunit BoundChemical stable_RNAP_%s" $factor >> $FILE
 done
@@ -41,7 +41,7 @@ done
 
 # elongation
 printf "\n\n# elongation\n" >> $FILE
-printf "\nunit Chemical Mg2+ 1000" >> $FILE
+printf "\nunit FreeChemical Mg2+ 1000" >> $FILE
 printf "\nunit BoundChemical loaded_RNAP" >> $FILE
 printf "\nunit DecodingTable NTP_loading" >> $FILE
 printf " A ATP loaded_RNAP 1" >> $FILE
@@ -59,6 +59,6 @@ printf "\nreaction Translocation translocating_RNAP stable_RNAP 1 6" >> $FILE
 
 #termination
 printf "\n\n# termination\n" >> $FILE
-printf "\nunit Chemical NutA 100" >> $FILE
-printf "\nunit Chemical rna" >> $FILE
+printf "\nunit FreeChemical NutA 100" >> $FILE
+printf "\nunit FreeChemical rna" >> $FILE
 printf "\nreaction Release stalled_RNAP NutA -1 NutA 1 RNAP 1 rna 1 rate 1 produces rnas" >> $FILE

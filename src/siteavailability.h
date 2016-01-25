@@ -67,22 +67,26 @@ class SiteAvailability
   // ===========================
   //
   /**
-   * @brief Check current number available sites and notify observer if a 
-   *  change occurred since last check.
-   * @param a First position affected by change.
-   * @param b Last position affected by change.
-   * @param current_number_sequences Current number of identical sequences 
-   *  in the pool.
-   * @param current_occupancy Number of bases occupied for each base of the 
-   *  sequence along the pool.
+   * @brief Notify observer if a change occurred since last notification.
+   * @param number_sites Number of sites currently available.
    */
-  void notify (int a, int b, int current_number_sequences,
-	       const std::vector<int>& current_occupancy);
+  void notify (int number_sites);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
+  /**
+   * @brief Accessor to first base to watch.
+   * @return Position of first base to watch.
+   */
+  int first (void) const;
+
+  /**
+   * @brief Accessor to last base to watch.
+   * @return Position of last base to watch.
+   */
+  int last (void) const;
 
 private:
   // ============
@@ -111,6 +115,15 @@ private:
 //  Inline declarations
 // ======================
 //
+inline int SiteAvailability::first (void) const
+{
+  return _first;
+}
+
+inline int SiteAvailability::last (void) const
+{
+  return _first;
+}
 
 
 #endif // SITE_AVAILABILITY_H

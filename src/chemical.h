@@ -29,11 +29,7 @@
 #include "simulatorinput.h"
 
 /**
- * @brief Global class that contains all chemicals.
- *
- * If an entity has no particular characteristics for the simulation, it belongs
- * directly to the class Chemical, else it belongs to a class inheriting
- * Chemical.
+ * @brief Abstract class that contains all chemicals.
  */
 class Chemical : public Reactant, public SimulatorInput
 {
@@ -53,7 +49,7 @@ public:
   // /* @brief Assignment operator */
   // Chemical& operator= (Chemical& other_chemical);
   /** @brief Destructor (empty but virtual). */
-  virtual ~Chemical (void) {}
+  virtual ~Chemical (void) = 0;
 
   // ===========================
   //  Public Methods - Commands
@@ -119,6 +115,8 @@ private:
 
 inline Chemical::Chemical (void) : _number (0) {}
 
+inline Chemical::~Chemical (void) {}
+
 inline int Chemical::number (void) const { return _number; }
 
 inline void Chemical::add (int quantity)
@@ -129,7 +127,7 @@ inline void Chemical::add (int quantity)
   notify_change();
 }
 
-inline void Chemical::remove(int quantity)
+inline void Chemical::remove (int quantity)
 { 
   /** @pre Quantity does not exceed current number. */
   REQUIRE( quantity <= _number );

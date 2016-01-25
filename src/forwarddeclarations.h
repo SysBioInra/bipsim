@@ -54,6 +54,7 @@ class BoundChemical;
 class BoundUnit;
 class BoundUnitList;
 class Chemical;
+class FreeChemical;
 class ProcessiveChemical;
 
 // site classes
@@ -66,6 +67,7 @@ class SiteObserver;
 
 // sequence related classes
 class ChemicalSequence;
+class Segment;
 class SequenceOccupation;
 class SiteAvailability;
 class SiteLocation;

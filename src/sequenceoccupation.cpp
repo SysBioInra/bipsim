@@ -23,14 +23,15 @@
 #include "sitelocation.h"
 #include "siteobserver.h"
 #include "watchergroup.h"
+#include "segment.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
 SequenceOccupation::SequenceOccupation (int length, int number)
-  : _number (number)
-  , _occupancy_map (length, number)
+  : _number_sequences (number)
+  , _occupancy (length, 0)
 {
 }
 
@@ -53,11 +54,8 @@ SequenceOccupation::~SequenceOccupation (void)
 void SequenceOccupation::add_element (const BoundChemical& element,
 				      int first, int last)
 {
-  // add the reference and position to the chemicals map
-  // _chemical_map [&element].push_back (SiteLocation(first, last));
-  
   // update occupancy status
-  for (int i = first; i <= last; i++) { _occupancy_map [i] += 1; }
+  for (int i = first; i <= last; i++) { _occupancy [i] += 1; }
 
   // notify change
   notify_change (first, last);
@@ -66,11 +64,8 @@ void SequenceOccupation::add_element (const BoundChemical& element,
 void SequenceOccupation::remove_element (const BoundChemical& element,
 				    int first, int last)
 {
-  // remove the reference and position from the chemicals map
-  // remove_reference_from_map (element, first, last);
-
   // update occupancy status
-  for (int i = first; i <= last; i++) { _occupancy_map [i] -= 1; }  
+  for (int i = first; i <= last; i++) { _occupancy [i] -= 1; }  
 
   // notify change
   notify_change (first, last);
@@ -78,7 +73,7 @@ void SequenceOccupation::remove_element (const BoundChemical& element,
 
 void SequenceOccupation::add_sequence (int quantity)
 {
-  _number += quantity;
+  _number_sequences += quantity;
 
   // notify change
   notify_all_sites();
@@ -86,10 +81,57 @@ void SequenceOccupation::add_sequence (int quantity)
 
 void SequenceOccupation::remove_sequence (int quantity)
 {
-  _number -= quantity;
+  /** @pre quantity must be smaller than the current number of sequences. */
+  REQUIRE (quantity <= _number_sequences);
+
+  _number_sequences -= quantity;
 
   // notify change
   notify_all_sites();
+}
+
+void SequenceOccupation::start_new_segment (int position)
+{
+  /** @pre position must be within sequence bound. */
+  REQUIRE ((position >= 0) && (position < _occupancy.size()));
+
+  _occupancy [position] -= 1;
+  _segments.push_front (Segment (position, position));
+}
+
+void SequenceOccupation::extend_segment (int position)
+{
+  /** @pre position must be within sequence bound. */
+  REQUIRE ((position >= 0) && (position < _occupancy.size()));
+
+  _occupancy [position] -= 1;
+  
+  // we look for the segment to be extended
+  int previous = (position == 0) ? (_occupancy.size()-1) : (position-1);
+  std::list <Segment>::iterator segment_it = _segments.begin();
+  while (segment_it != _segments.end())
+    {
+      if (segment_it->last == previous)
+	{
+	  segment_it->last = position;
+	  break;
+	}
+      ++segment_it;
+    }
+
+  // check whether segment has been completed
+  // caution: segment can be circular
+  int segment_length = segment_it->last - segment_it->first + 1;
+  if ((segment_length == 0) || (segment_length == _occupancy.size()))
+    {
+      _segments.erase (segment_it);
+      ++_number_sequences;
+    }
+  else
+    {
+      // we place the modified segment at the beginning of list
+      _segments.splice (_segments.begin(), _segments, segment_it);
+    }
 }
 
 void SequenceOccupation::add_watcher (int first, int last,
@@ -124,7 +166,7 @@ void SequenceOccupation::add_watcher (int first, int last,
     }
 
   // send first notification about site availability
-  new_watcher->notify (first, last, _number, _occupancy_map);
+  notify_site (new_watcher);
 }
 
 // ============================
@@ -156,8 +198,8 @@ int SequenceOccupation::position_to_group (int position)
   while (i_min < i_max)
     {
       i = (i_min + i_max + 1)/2;
-      if (_watcher_groups[i]->last() >= position) i_max = i-1;
-      else i_min = i;
+      if (_watcher_groups[i]->last() >= position) { i_max = i-1; }
+      else { i_min = i; }
     }
 
   // we return the next group that may contain position, i.e. i+1
@@ -176,7 +218,8 @@ void SequenceOccupation::notify_change (int a, int b)
 	     watcher_it = watchers.begin();
 	   watcher_it != watchers.end(); ++watcher_it)
 	{
-	  (*watcher_it)->notify (a, b, _number, _occupancy_map);
+	  if (is_site_affected (*watcher_it, a, b)) 
+	    { notify_site (*watcher_it); }
 	}
     }
 }
@@ -191,53 +234,25 @@ void SequenceOccupation::notify_all_sites (void)
 	     watcher_it = watchers.begin();
 	   watcher_it != watchers.end(); ++watcher_it)
 	{
-	  (*watcher_it)->notify (0, _occupancy_map.size()-1,
-				 _number, _occupancy_map);
+	  notify_site (*watcher_it);
 	}
     }
 }
 
-void 
-SequenceOccupation::remove_reference_from_map (const BoundChemical& chemical,
-					       int first, int last)
+void SequenceOccupation::notify_site (SiteAvailability* watcher)
 {
-  SiteLocationList& location_list = _chemical_map [&chemical];
-  /** @pre There must be a chemical of this type in the map. */
-  REQUIRE (location_list.size() > 0); 
+  int first = watcher->first();
+  int last = watcher->last();
 
-  if (location_list.size() == 1) // there is only one element in the list
+  // check current occupancy
+  int max_occupied = 0;
+  for (int i = first; i < last; i++)
     {
-      // the list will be empty, we can remove it from the map
-      // (no more chemical of the same type is bound to the sequence)
-      _chemical_map.erase (&chemical);
+      if (_occupancy [i] > max_occupied) { max_occupied = _occupancy [i]; }
     }
-  else // at least one chemical of same type will be left on the sequence
-    {
-      // we erase a chemical at the right location
-      SiteLocationList::iterator site_location = location_list.begin();
-      while ( (( site_location->first() != first )
-	       || ( site_location->last() != last ))
-	      && (site_location != location_list.end()) )
-	{ 
-	  site_location++;
-	}
 
-      if (site_location != location_list.end())
-	{
-	  location_list.erase (site_location);
-	}
-      else 
-	{
-	  std::cerr << "ERROR: trying to delete bound chemical " << &chemical
-		    << " that does not exist at position [" << first
-		    << " , " << last << "]" << std::endl;
-	  site_location = location_list.begin();
-	  while (site_location != location_list.end())
-	    { 
-	      std::cout << site_location->first() << " "
-			<< site_location->last() << std::endl;
-	      site_location++;
-	    }
-	}
-    }
+  // notify changes
+  int number_sites_available = _number_sequences - max_occupied;
+  if (number_sites_available < 0) { number_sites_available = 0; }
+  watcher->notify (number_sites_available);
 }

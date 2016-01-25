@@ -1,90 +1,90 @@
 #########
 # tRNAs #
 #########
-unit Chemical fMet2a 300
-unit Chemical fMet2d
-unit Chemical fMet2p
+unit FreeChemical fMet2a 300
+unit FreeChemical fMet2d
+unit FreeChemical fMet2p
 
-unit Chemical tRNA_A 
-unit Chemical tRNA_C 
-unit Chemical tRNA_D 
-unit Chemical tRNA_E 
-unit Chemical tRNA_F 
-unit Chemical tRNA_G 
-unit Chemical tRNA_H 
-unit Chemical tRNA_I 
-unit Chemical tRNA_K 
-unit Chemical tRNA_L 
-unit Chemical tRNA_M 
-unit Chemical tRNA_fM 
-unit Chemical tRNA_N 
-unit Chemical tRNA_P 
-unit Chemical tRNA_Q 
-unit Chemical tRNA_R 
-unit Chemical tRNA_S 
-unit Chemical tRNA_T 
-unit Chemical tRNA_V 
-unit Chemical tRNA_W 
-unit Chemical tRNA_Y 
+unit FreeChemical tRNA_A 
+unit FreeChemical tRNA_C 
+unit FreeChemical tRNA_D 
+unit FreeChemical tRNA_E 
+unit FreeChemical tRNA_F 
+unit FreeChemical tRNA_G 
+unit FreeChemical tRNA_H 
+unit FreeChemical tRNA_I 
+unit FreeChemical tRNA_K 
+unit FreeChemical tRNA_L 
+unit FreeChemical tRNA_M 
+unit FreeChemical tRNA_fM 
+unit FreeChemical tRNA_N 
+unit FreeChemical tRNA_P 
+unit FreeChemical tRNA_Q 
+unit FreeChemical tRNA_R 
+unit FreeChemical tRNA_S 
+unit FreeChemical tRNA_T 
+unit FreeChemical tRNA_V 
+unit FreeChemical tRNA_W 
+unit FreeChemical tRNA_Y 
 
-unit Chemical tRNA_A_c 
-unit Chemical tRNA_C_c 
-unit Chemical tRNA_D_c 
-unit Chemical tRNA_E_c 
-unit Chemical tRNA_F_c 
-unit Chemical tRNA_G_c 
-unit Chemical tRNA_H_c 
-unit Chemical tRNA_I_c 
-unit Chemical tRNA_K_c 
-unit Chemical tRNA_L_c 
-unit Chemical tRNA_M_c 
-unit Chemical tRNA_fM_c
-unit Chemical tRNA_N_c 
-unit Chemical tRNA_P_c 
-unit Chemical tRNA_Q_c 
-unit Chemical tRNA_R_c 
-unit Chemical tRNA_S_c 
-unit Chemical tRNA_T_c 
-unit Chemical tRNA_V_c 
-unit Chemical tRNA_W_c 
-unit Chemical tRNA_Y_c 
+unit FreeChemical tRNA_A_c 
+unit FreeChemical tRNA_C_c 
+unit FreeChemical tRNA_D_c 
+unit FreeChemical tRNA_E_c 
+unit FreeChemical tRNA_F_c 
+unit FreeChemical tRNA_G_c 
+unit FreeChemical tRNA_H_c 
+unit FreeChemical tRNA_I_c 
+unit FreeChemical tRNA_K_c 
+unit FreeChemical tRNA_L_c 
+unit FreeChemical tRNA_M_c 
+unit FreeChemical tRNA_fM_c
+unit FreeChemical tRNA_N_c 
+unit FreeChemical tRNA_P_c 
+unit FreeChemical tRNA_Q_c 
+unit FreeChemical tRNA_R_c 
+unit FreeChemical tRNA_S_c 
+unit FreeChemical tRNA_T_c 
+unit FreeChemical tRNA_V_c 
+unit FreeChemical tRNA_W_c 
+unit FreeChemical tRNA_Y_c 
 
-unit Chemical EtRNA_A_ca 4000
-unit Chemical EtRNA_C_ca 2000
-unit Chemical EtRNA_D_ca 2000
-unit Chemical EtRNA_E_ca 2000
-unit Chemical EtRNA_F_ca 4000
-unit Chemical EtRNA_G_ca 4000
-unit Chemical EtRNA_H_ca 2000
-unit Chemical EtRNA_I_ca 3000
-unit Chemical EtRNA_K_ca 4000
-unit Chemical EtRNA_L_ca 4000
-unit Chemical EtRNA_M_ca 1000
-unit Chemical EtRNA_N_ca 2000
-unit Chemical EtRNA_P_ca 4000
-unit Chemical EtRNA_Q_ca 2000
-unit Chemical EtRNA_R_ca 6000
-unit Chemical EtRNA_S_ca 6000
-unit Chemical EtRNA_T_ca 4000
-unit Chemical EtRNA_V_ca 4000
-unit Chemical EtRNA_W_ca 1000
-unit Chemical EtRNA_Y_ca 2000
+unit FreeChemical EtRNA_A_ca 4000
+unit FreeChemical EtRNA_C_ca 2000
+unit FreeChemical EtRNA_D_ca 2000
+unit FreeChemical EtRNA_E_ca 2000
+unit FreeChemical EtRNA_F_ca 4000
+unit FreeChemical EtRNA_G_ca 4000
+unit FreeChemical EtRNA_H_ca 2000
+unit FreeChemical EtRNA_I_ca 3000
+unit FreeChemical EtRNA_K_ca 4000
+unit FreeChemical EtRNA_L_ca 4000
+unit FreeChemical EtRNA_M_ca 1000
+unit FreeChemical EtRNA_N_ca 2000
+unit FreeChemical EtRNA_P_ca 4000
+unit FreeChemical EtRNA_Q_ca 2000
+unit FreeChemical EtRNA_R_ca 6000
+unit FreeChemical EtRNA_S_ca 6000
+unit FreeChemical EtRNA_T_ca 4000
+unit FreeChemical EtRNA_V_ca 4000
+unit FreeChemical EtRNA_W_ca 1000
+unit FreeChemical EtRNA_Y_ca 2000
 
 ############
 # Proteins #
 ############
-unit Chemical protein
+unit FreeChemical protein
 
 
 ############
 # Ribosome #
 ############
 # Ribosome subunits
-unit Chemical 30S 1000
-unit Chemical 50S 1000
-unit Chemical 30S1 
-unit Chemical 30S3 
-unit Chemical 30S31
+unit FreeChemical 30S 1000
+unit FreeChemical 50S 1000
+unit FreeChemical 30S1 
+unit FreeChemical 30S3 
+unit FreeChemical 30S31
 
 # Bound 30S variants
 unit BoundChemical m30S31
@@ -163,27 +163,27 @@ unit BoundChemical t70S_Y_cp
 ##################################
 # Translation initiation Factors #
 ##################################
-unit Chemical IF1 100
-unit Chemical IF2 100
-unit Chemical IF2a
-unit Chemical IF2d
-unit Chemical IF2p
-unit Chemical IF3 100
+unit FreeChemical IF1 100
+unit FreeChemical IF2 100
+unit FreeChemical IF2a
+unit FreeChemical IF2d
+unit FreeChemical IF2p
+unit FreeChemical IF3 100
 
 ##################################
 # Translation elongation Factors #
 ##################################
-unit Chemical EFTua 0
-unit Chemical EFTud 
-unit Chemical EFP 100
-unit Chemical EFPa 
-unit Chemical EFPd 
+unit FreeChemical EFTua 0
+unit FreeChemical EFTud 
+unit FreeChemical EFP 100
+unit FreeChemical EFPa 
+unit FreeChemical EFPd 
 
 ##################################
 #  Translation Release Factors   #
 ##################################
 
-unit Chemical RF 1000
+unit FreeChemical RF 1000
 
 ##################
 # Decoding table #
@@ -212,7 +212,7 @@ reaction Complexation fMet2d m30S31 m30S312d 1 10
 reaction Complexation IF3 m30S12a m30S312a 0 1
 
 # ribosome formation
-unit Chemical ribosome
+unit FreeChemical ribosome
 reaction ChemicalReaction m30S12a -1 50S -1 EFt70S 1 IF1 1 IF2d 1 Pi 1 H2O 1 tRNA_fM 1 rates 1 0
 
 # tRNA activation

@@ -19,7 +19,6 @@
 //
 #include <vector> // std::vector
 #include <list> // std::list
-#include <map> // std::map
 
 // ======================
 //  Forward declarations
@@ -38,7 +37,6 @@
 class SequenceOccupation
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -74,7 +72,7 @@ class SequenceOccupation
    * @param last Last base occupied by element.
    */
   void add_element (const BoundChemical& element, int first, int last);
-
+  
   /**
    * @brief Register element removed from sequence.
    * @param element Element that was removed from the sequence.
@@ -94,6 +92,22 @@ class SequenceOccupation
    * @param quantity Number of instances of sequence added to pool.
    */
   void remove_sequence (int quantity);
+
+  /**
+   * @brief Start new segment of sequence.
+   * @param position Position where to start the segment.
+   */
+  void start_new_segment (int position);
+
+  /**
+   * @brief Extend a segment.
+   * @param position Position where extension should happen.
+   *
+   * Extension can only take place if a segment has already been started that
+   * extends until position-1. If there are several segments meeting this
+   * requirement, the last segment accessed will be extended.
+   */
+  void extend_segment (int position);
 
   /**
    * @brief Attach site watcher to a specific site.
@@ -119,43 +133,22 @@ private:
   // ============
   //
   /** @brief Number of sequences in the pool. */
-  int _number;
+  int _number_sequences;
 
-  /** @brief Tracks available positions along the sequence. */
-  std::vector<int> _occupancy_map;
+  /** @brief Tracks occupied positions along the sequence. */
+  std::vector<int> _occupancy;
 
-  /** @brief A simple list of SiteLocation. */
-  typedef std::list<SiteLocation> SiteLocationList;
-  
-  /**
-   * @brief A map that stores the location of all BoundChemical.
-   *
-   * Keys of the map are references to all BoundChemical currently located on
-   * the chemical sequence, data is a SiteLocationList that stores the location
-   * of all chemicals designated by the key.
-   */
-  typedef std::map< const BoundChemical*, SiteLocationList > ChemicalMap;
-
-  /** @brief Map of bound chemicals. */
-  ChemicalMap _chemical_map;
-
-  /** @brief List of sites whose availability needs to be checked. */
+  /** @brief Vector of sites whose availability needs to be checked. */
   std::vector <WatcherGroup*> _watcher_groups;
+
+  /** @brief Vector of sequence segments. */
+  std::list <Segment> _segments;
   
 
   // =================
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Remove a specific reference from the bound chemical map.
-   * @param chemical The type of chemical to remove.
-   * @param first First position occupied by element.
-   * @param last Last position occupied by element.
-   */
-  void remove_reference_from_map (const BoundChemical& chemical,
-				  int first, int last);
-
   /**
    * @brief Convert a position along the sequence to a wtcher group index.
    * @param position Position along the sequence.
@@ -181,6 +174,20 @@ private:
   void notify_all_sites (void);
 
   /**
+   * @brief Send notification to observer of a specific site.
+   * @param watcher
+   */
+  void notify_site (SiteAvailability* watcher);
+
+  /**
+   * @brief Check whether a site is affected by a change on a specific segment.
+   * @param watcher
+   * @param a First position of segment that changed.
+   * @param b Last position of segment that changed.
+   */
+  bool is_site_affected (SiteAvailability* watcher, int a, int b);
+
+  /**
    * @brief Fuse overlapping watcher groups starting from a specific index.
    *
    *  This function should be called whenever a group is extended. It tries to
@@ -197,5 +204,13 @@ private:
 //  Inline declarations
 // ======================
 //
+#include "siteavailability.h"
+
+inline bool SequenceOccupation::is_site_affected (SiteAvailability* watcher,
+						  int a, int b)
+{
+  return (((watcher->first() < a) && (watcher->last() < a)) 
+	  || ((watcher->first() > b) && (watcher->last() > b)));
+}
 
 #endif // SEQUENCE_OCCUPATION_H

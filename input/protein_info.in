@@ -1,24 +1,24 @@
 
-unit Chemical aa_A 
-unit Chemical aa_C 
-unit Chemical aa_D 
-unit Chemical aa_E 
-unit Chemical aa_F 
-unit Chemical aa_G 
-unit Chemical aa_H 
-unit Chemical aa_I 
-unit Chemical aa_K 
-unit Chemical aa_L 
-unit Chemical aa_M 
-unit Chemical aa_N 
-unit Chemical aa_P 
-unit Chemical aa_Q 
-unit Chemical aa_R 
-unit Chemical aa_S 
-unit Chemical aa_T 
-unit Chemical aa_V 
-unit Chemical aa_W 
-unit Chemical aa_Y 
+unit FreeChemical aa_A 
+unit FreeChemical aa_C 
+unit FreeChemical aa_D 
+unit FreeChemical aa_E 
+unit FreeChemical aa_F 
+unit FreeChemical aa_G 
+unit FreeChemical aa_H 
+unit FreeChemical aa_I 
+unit FreeChemical aa_K 
+unit FreeChemical aa_L 
+unit FreeChemical aa_M 
+unit FreeChemical aa_N 
+unit FreeChemical aa_P 
+unit FreeChemical aa_Q 
+unit FreeChemical aa_R 
+unit FreeChemical aa_S 
+unit FreeChemical aa_T 
+unit FreeChemical aa_V 
+unit FreeChemical aa_W 
+unit FreeChemical aa_Y 
 
 unit CompositionTable protein_composition A aa_A 
 unit CompositionTable protein_composition C aa_C 

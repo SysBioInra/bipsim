@@ -26,7 +26,7 @@
 #include "bindingsite.h"
 #include "bindingsitefamily.h"
 
-#include "chemical.h"
+#include "freechemical.h"
 #include "boundchemical.h"
 #include "processivechemical.h"
 #include "loader.h"
@@ -72,7 +72,7 @@ bool UnitFactory::handle (const std::string& line)
   std::string remaining;
   std::getline (line_stream, remaining);
   bool creation_succeeded = (create_binding_site (remaining)
-			     || create_chemical (remaining)
+			     || create_free_chemical (remaining)
 			     || create_termination_site (remaining)
 			     || create_bound_chemical (remaining)
 			     || create_chemical_sequence (remaining)
@@ -208,7 +208,7 @@ bool UnitFactory::create_composition_table (const std::string& line)
     }
   do  
     {
-      Chemical* chemical = _cell_state.find <Chemical> (chemical_name);
+      FreeChemical* chemical = _cell_state.find <FreeChemical> (chemical_name);
       // check whether chemical is already defined
       if (chemical == 0) { throw DependencyException (chemical_name); }
       chemicals.push_back (chemical);
@@ -245,7 +245,7 @@ bool UnitFactory::create_decoding_table (const std::string& line)
   while (line_stream >> template_ >> base >> polymerase >> rate)
     {
       // we check whether the base and polymerase are already known
-      Chemical* base_ptr = _cell_state.find <Chemical> (base);
+      FreeChemical* base_ptr = _cell_state.find <FreeChemical> (base);
       if (base_ptr == 0) { throw DependencyException (base); }
       BoundChemical* polymerase_ptr = _cell_state.find <BoundChemical> (polymerase);
       if (polymerase_ptr == 0) { throw DependencyException (polymerase); }
@@ -339,10 +339,10 @@ bool UnitFactory::create_transformation_table (const std::string& line)
 }
 
 
-bool UnitFactory::create_chemical ( const std::string& line )
+bool UnitFactory::create_free_chemical ( const std::string& line )
 {
   std::istringstream line_stream (line);  
-  if (check_tag (line_stream, "Chemical") == false) { return false; }
+  if (check_tag (line_stream, "FreeChemical") == false) { return false; }
 
   // read base data
   std::string name;
@@ -352,7 +352,7 @@ bool UnitFactory::create_chemical ( const std::string& line )
   if (not (line_stream >> initial_quantity)) { initial_quantity = 0; }
 
   // create and store
-  Chemical* chemical = new Chemical;
+  FreeChemical* chemical = new FreeChemical;
   chemical->add (initial_quantity);
   _cell_state.store (chemical, name);
   return true;

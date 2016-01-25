@@ -1,8 +1,8 @@
 
-unit Chemical dAMP
-unit Chemical dCMP
-unit Chemical dGMP
-unit Chemical dTMP
+unit FreeChemical dAMP
+unit FreeChemical dCMP
+unit FreeChemical dGMP
+unit FreeChemical dTMP
 
 unit CompositionTable dna_composition A dAMP
 unit CompositionTable dna_composition C dCMP

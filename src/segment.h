@@ -1,8 +1,8 @@
 
 
 /**
- * @file FILE.h
- * @brief Header for the ClassName class.
+ * @file segment.h
+ * @brief Header for the Segment class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -10,8 +10,8 @@
 
 // Multiple include protection
 //
-#ifndef CLASS_NAME_H
-#define CLASS_NAME_H
+#ifndef SEGMENT_H
+#define SEGMENT_H
 
 // ==================
 //  General Includes
@@ -32,27 +32,28 @@
 #include "forwarddeclarations.h"
 
 /**
- * @brief BRIEF DESCRIPTION OF CLASS
+ * @brief Class representing a segment of sequence.
  *
- * DETAILED DESCRIPTION OF CLASS
+ * 
  */
-class ClassName
+class Segment
 {
  public:
   // ==========================
   //  Constructors/Destructors
   // ==========================
   //
+  /** @brief Constructor. */
+  Segment (int first, int last) : first (first), last (last) {}
+
   // Not needed for this class (use of compiler-generated versions)
-  // /* @brief Default constructor. */
-  // ClassName (void);
   // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
-  // ClassName (const ClassName& other_class_name);
+  // Segment (const Segment& other_segment);
   // /* @brief Assignment operator. */
-  // ClassName& operator= (const ClassName& other_class_name);
+  // Segment& operator= (const Segment& other_segment);
   // /* @brief Destructor. */
-  // ~ClassName (void);
+  // ~Segment (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -65,13 +66,21 @@ class ClassName
   // ============================
   //
 
+  // ===================
+  //  Public Attributes
+  // ===================
+  //
+  /** @brief First base spanned by the segment. */
+  int first;
 
-private:
+  /** @brief Last base spanned by the segment. */
+  int last;
+
+ private:
   // ============
   //  Attributes
   // ============
   //
-  
 
   // =================
   //  Private Methods
@@ -84,4 +93,4 @@ private:
 // ======================
 //
 
-#endif // CLASS_NAME_H
+#endif // SEGMENT_H

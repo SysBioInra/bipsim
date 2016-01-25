@@ -169,20 +169,21 @@ bool SimulationParams::read_drawing_algorithm (void)
   std::string algorithm_tag;
   if (!read_or_error (line_stream, algorithm_tag, _drawing_algorithm_tag))
     { return false; }
+
   if (algorithm_tag == "vector")
     { 
       delete _rate_container_factory;
-      _rate_container_factory = new RateVectorFactory;
+      _rate_container_factory = new RateVectorFactory; 
     }
   else if (algorithm_tag == "tree")
     { 
       delete _rate_container_factory;
-      _rate_container_factory = new RateTreeFactory;
+      _rate_container_factory = new RateTreeFactory; 
     }
   else if (algorithm_tag == "hybrid")
     { 
       delete _rate_container_factory;
-      _rate_container_factory = new HybridRateContainerFactory;
+      _rate_container_factory = new HybridRateContainerFactory; 
     }
   else
     {

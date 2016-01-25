@@ -1,17 +1,17 @@
 
-unit Chemical GTP 1000000
-unit Chemical GDP 
-unit Chemical GMP
+unit FreeChemical GTP 1000000
+unit FreeChemical GDP 
+unit FreeChemical GMP
 
-unit Chemical ATP 1000000
-unit Chemical ADP
-unit Chemical AMP 
+unit FreeChemical ATP 1000000
+unit FreeChemical ADP
+unit FreeChemical AMP 
 
-unit Chemical CTP 1000000
-unit Chemical CMP
+unit FreeChemical CTP 1000000
+unit FreeChemical CMP
 
-unit Chemical UTP 1000000
-unit Chemical UMP
+unit FreeChemical UTP 1000000
+unit FreeChemical UMP
 
 unit CompositionTable rna_composition A AMP 
 unit CompositionTable rna_composition C CMP 

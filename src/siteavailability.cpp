@@ -47,31 +47,15 @@ SiteAvailability::SiteAvailability (int first, int last,
 //  Public Methods - Commands
 // ===========================
 //
-void SiteAvailability::notify (int a, int b, int current_number_sequences,
-			       const std::vector<int>& current_occupancy)
+void SiteAvailability::notify (int number_sites)
 {
-  /** @pre Occupancy vector must be larger than last base to investigate. */
-  REQUIRE (current_occupancy.size() >= _last);
+  /** @pre Number of sites must be positive. */
+  REQUIRE (number_sites >= 0);
 
-  // check if site was affected by change
-  if (((_first < a) && (_last < a))
-       || ((_first > b) && (_last > b))) return; // site not affected by change
-
-  // check current occupancy
-  int max_occupied = 0;
-  for ( int i = _first; i < _last; i++ )
+  if (number_sites != _last_value_notified)
     {
-      if ( current_occupancy [i] > max_occupied )
-	{ max_occupied = current_occupancy [i]; }
-    }
-
-  // notify changes
-  int number_sites_available = current_number_sequences - max_occupied;
-  if (number_sites_available < 0) number_sites_available = 0;
-  if (number_sites_available != _last_value_notified)
-    {
-      _observer.update (number_sites_available);
-      _last_value_notified = number_sites_available;
+      _observer.update (number_sites);
+      _last_value_notified = number_sites;
     }
 }
 

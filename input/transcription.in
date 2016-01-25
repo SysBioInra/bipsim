@@ -1,14 +1,14 @@
 
-unit Chemical RNAP 1000
+unit FreeChemical RNAP 1000
 
 # initiation
 
-unit Chemical SigA 1000
-unit Chemical RNAP_SigA
+unit FreeChemical SigA 1000
+unit FreeChemical RNAP_SigA
 unit BoundChemical bound_RNAP_SigA
 unit BoundChemical stable_RNAP_SigA
-unit Chemical SigB 1000
-unit Chemical RNAP_SigB
+unit FreeChemical SigB 1000
+unit FreeChemical RNAP_SigB
 unit BoundChemical bound_RNAP_SigB
 unit BoundChemical stable_RNAP_SigB
 
@@ -26,7 +26,7 @@ reaction Complexation stable_RNAP SigB stable_RNAP_SigB 0 1
 
 # elongation
 
-unit Chemical Mg2+ 1000
+unit FreeChemical Mg2+ 1000
 unit BoundChemical loaded_RNAP
 unit DecodingTable NTP_loading A ATP loaded_RNAP 1 C CTP loaded_RNAP 1 G GTP loaded_RNAP 1 T UTP loaded_RNAP 1
 unit Loader stable_RNAP NTP_loading
@@ -39,6 +39,6 @@ reaction Translocation translocating_RNAP stable_RNAP 1 6
 
 # termination
 
-unit Chemical NutA 100
-unit Chemical rna
+unit FreeChemical NutA 100
+unit FreeChemical rna
 reaction Release stalled_RNAP NutA -1 NutA 1 RNAP 1 rna 1 rate 1 produces rnas

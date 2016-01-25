@@ -14,7 +14,7 @@
 #include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
 
 #include "../src/compositiontable.h"
-#include "../src/chemical.h"
+#include "../src/freechemical.h"
 
 // ==================
 //  Project Includes
@@ -33,7 +33,7 @@ bool map_compare (Map const &lhs, Map const &rhs) {
 int main (int argc, char *argv[])
 { 
   // test with random composition
-  Chemical A1, A2, B1, B2, C1, C2, D1;
+  FreeChemical A1, A2, B1, B2, C1, C2, D1;
   CompositionTable test_table;
   std::list <Chemical*> A_comp; A_comp.push_back(&A1); A_comp.push_back(&A2);
   test_table.add_rule ('A', A_comp);
