@@ -51,14 +51,17 @@ public:
   Complexation (Chemical& component_a, Chemical& component_b, 
 		Chemical& complex, double k_on, double k_off);
 
-  // Not needed for this class (use of compiler-generated versions)
-  // (3-0 rule: either define all 3 following or none of them)
-  // /* @brief Copy constructor */
-  // Complexation (Complexation& other_complexation);
-  // /* @brief Assignment operator */
-  // Complexation& operator= (Complexation& other_complexation);
-  // /* @brief Destructor */
-  // virtual ~Complexation (void);
+
+ private:
+  // Forbidden
+  /** @brief Copy constructor */
+  Complexation (Complexation& other_complexation);
+  /** @brief Assignment operator */
+  Complexation& operator= (Complexation& other_complexation);
+ public:
+  
+  /** @brief Destructor */
+  ~Complexation (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -81,17 +84,8 @@ public:
   //  Attributes
   // ============
   //
-  /** @brief Reference to first component of the complex. */
-  Chemical& _component_a;
-
-  /** @brief Reference to second component of the complex. */
-  Chemical& _component_b;
-
-  /** @brief Reference to the complex. */
-  Chemical& _complex;
-
-  /** @brief Indicates which component is bound (0 if none, 1 if a, 2 if b). */
-  int _bound_component;
+  /** @brief Implementation depending on presence of bound elements. */
+  ComplexationImp* _imp;
   
   /** @brief on-rate of complexation reaction. */
   double _k_on;
@@ -107,15 +101,6 @@ public:
   double compute_forward_rate (void) const;
   double compute_backward_rate (void) const;
   void print (std::ostream& output) const;
-
-  /**
-   * @brief Update the _bound_component index and performs a number of checks.
-   *
-   * Checks include the fact that both components cannot be bound and if one of 
-   * the components is bound, then the complex also needs to be bound.
-   */
-  void look_for_bound_components (void);
-
 };
 
 // ======================

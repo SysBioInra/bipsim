@@ -171,7 +171,8 @@ bool ReactionFactory::create_complexation (const std::string& line)
   if (complex_ptr == 0)  { throw DependencyException (complex); }
   
   // create and store
-  Complexation* reaction = new Complexation (*component_a_ptr, *component_b_ptr,
+  Complexation* reaction = new Complexation (*component_a_ptr, 
+					     *component_b_ptr,
 					     *complex_ptr, k_on, k_off);
   _cell_state.store (reaction);
   if (k_on > 0) { _cell_state.store (new ForwardReaction (*reaction)); }

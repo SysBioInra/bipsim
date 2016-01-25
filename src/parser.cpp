@@ -92,10 +92,12 @@ bool Parser::loop_through_data (InputData& input_data)
 	}
       catch (const ParserException& error)
 	{
-	  std::cerr << "PARSING ERROR (file " << input_data.file_name()
-		    << ", line " << input_data.line_number() << "): "
-		    << error.what() << "." << std::endl;
+	  std::ostringstream msg;
+	  msg << "PARSING ERROR (file " << input_data.file_name()
+	      << ", line " << input_data.line_number() << "): "
+	      << error.what();
 	  input_data.mark_line_as_treated();
+	  throw ParserException (msg.str());
 	}
       catch (const DependencyException& error)
 	{

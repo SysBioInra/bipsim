@@ -12,7 +12,7 @@
 //  General Includes
 // ==================
 //
-#include <iostream> // std::cerr
+#include <iostream> 
 
 // ==================
 //  Project Includes
@@ -22,6 +22,7 @@
 #include "chemicalreaction.h"
 #include "chemical.h"
 #include "boundchemical.h"
+#include "simulatorexception.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -108,7 +109,8 @@ void ChemicalReaction::perform_forward (void)
     {
       _bound_reactant->focus_random_unit();
       _bound_product->add_unit_in_place_of (*_bound_reactant);
-      _bound_reactant->focused_unit_location().replace_bound_unit (*_bound_reactant, *_bound_product);      
+      _bound_reactant->focused_unit_location().
+	replace_bound_unit (*_bound_reactant, *_bound_product);      
       _bound_reactant->remove_focused_unit();
     }
 }
@@ -130,7 +132,8 @@ void ChemicalReaction::perform_backward (void)
     {
       _bound_product->focus_random_unit ();
       _bound_reactant->add_unit_in_place_of (*_bound_product);
-      _bound_product->focused_unit_location().replace_bound_unit (*_bound_product, *_bound_reactant);      
+      _bound_product->focused_unit_location().
+	replace_bound_unit (*_bound_product, *_bound_reactant);      
       _bound_product->remove_focused_unit();
     }
 }
@@ -220,10 +223,9 @@ void ChemicalReaction::isolate_bound_components (void)
 	    }
 	  else
 	    {
-	      std::cerr << "ERROR: reaction contains 2 or more bound reactants."
-			<< " Class can only handle one at the moment."
-			<< std::endl;
-	      REQUIRE (false); // TODO throw error
+	      throw ParserException ("Reaction contains 2 or more bound"
+				     " reactants. Class can only handle one"
+				     " at the moment");
 	    }
 	}
     }
@@ -245,10 +247,9 @@ void ChemicalReaction::isolate_bound_components (void)
 	    }
 	  else
 	    {
-	      std::cerr << "ERROR: reaction contains 2 or more bound products."
-			<< " Class can only handle one at the moment."
-			<< std::endl;
-	      REQUIRE (false); // TODO throw error
+	      throw ParserException ("Reaction contains 2 or more"
+				     " bound products. Class can only handle"
+				     " one at the moment");
 	    }
 	}
     }
@@ -257,36 +258,26 @@ void ChemicalReaction::isolate_bound_components (void)
  if (((_bound_reactant == 0) && (_bound_product != 0))
      || ((_bound_reactant != 0) && (_bound_product == 0)))
    {
-     std::cerr << "ERROR: reaction contains a bound reactant/product without"
-	       << " its corresponding bound product/reactant counterpart (a"
-	       << " chemical reaction cannot imply binding)."
-	       << std::endl;
-     REQUIRE (false); // TODO throw error
+     throw ParserException ("Reaction contains a bound reactant/product without"
+			    " its corresponding bound product/reactant"
+			    " counterpart (a chemical reaction cannot imply"
+			    " binding)");
    }
 
  // check that the stoichiometry is 1
- if ((_bound_reactant != 0)
-     && (_forward_stoichiometry [bound_reactant_index] != 1))
+ if (((_bound_reactant != 0)
+      && (_forward_stoichiometry [bound_reactant_index] != 1))
+     || ((_bound_product != 0)
+	 && (_backward_stoichiometry [bound_product_index] != 1)))
     {
-      std::cerr << "ERROR: trying to define a chemical reaction in which the"
-		<< " stoichiometry of a bound reactant is not equal to 1 ("
-		<< _forward_stoichiometry [bound_reactant_index] << ")."
-		<< std::endl;
-    }
- if ((_bound_product != 0)
-     && (_backward_stoichiometry [bound_product_index] != 1))
-    {
-      std::cerr << "ERROR: trying to define a chemical reaction in which the"
-		<< " stoichiometry of a bound product is not equal to 1 ("
-		<< _backward_stoichiometry [bound_product_index] << ")."
-		<< std::endl;
+      throw ParserException ("Trying to define a chemical reaction in which the"
+			     " stoichiometry of a bound element is not equal" 
+			     " to 1");
     }
 
  // move bound reactant at the end of reactants if applicable
  if (_bound_reactant == 0)
-   {
-     _free_reactant_number = _forward_reactants.size();
-   }
+   { _free_reactant_number = _forward_reactants.size(); }
  else
    {
      int s = _forward_reactants.size();
@@ -300,9 +291,7 @@ void ChemicalReaction::isolate_bound_components (void)
 
  // move bound product at the end of products if applicable
  if (_bound_product == 0)
-   {
-     _free_product_number = _backward_reactants.size();
-   }
+   { _free_product_number = _backward_reactants.size(); }
  else
    {
      int s = _backward_reactants.size();

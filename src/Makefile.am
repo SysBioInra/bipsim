@@ -33,7 +33,7 @@ libsrc_a_SOURCES += \
 libsrc_a_SOURCES += \
 	backwardreaction.h bidirectionalreaction.h \
 	chemicalreaction.cpp chemicalreaction.h \
-	complexation.cpp complexation.h \
+	complexation.cpp complexation.h complexationimp.h \
 	forwardreaction.h \
 	loading.cpp loading.h \
 	reaction.h \
