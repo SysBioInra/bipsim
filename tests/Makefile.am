@@ -8,7 +8,7 @@
 check_PROGRAMS = biasedwheel_test inputdata_test randomhandler_test \
 	transformationtable_test producttable_test cellstate_test \
 	compositiontable_test ratetree_test boundunitlist_test \
-	rategroup_test hybridratecontainer_test
+	rategroup_test hybridratecontainer_test partialstrand_test
 
 # declare programs to be part of `make check`
 TESTS = $(check_PROGRAMS)
@@ -46,5 +46,8 @@ rategroup_test_LDADD = ../src/libsrc.a
 
 hybridratecontainer_test_SOURCES = hybridratecontainer_test.cpp
 hybridratecontainer_test_LDADD = ../src/libsrc.a
+
+partialstrand_test_SOURCES = partialstrand_test.cpp
+partialstrand_test_LDADD = ../src/libsrc.a
 
 ###############################################################################

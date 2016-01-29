@@ -10,19 +10,24 @@
 //  General Includes
 // ==================
 //
-#include <iostream> // std::cerr
+#include <iostream>
 #include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
 
-#include "../src/classname.h"
+#include "unittest.h"
 
 // ==================
 //  Project Includes
 // ==================
 //
-#define FAILURE(msg) {std::cerr << "TEST FAILED: " << msg << std::endl; return EXIT_FAILURE;}
+#include "../src/classname.h"
+
+class ClassNameTest : public UnitTest
+{
+};
 
 int main (int argc, char *argv[])
 { 
+
   return EXIT_SUCCESS;
 }
 

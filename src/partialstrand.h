@@ -155,7 +155,8 @@ inline bool move_postcondition (std::list <Segment>::iterator result,
 				int position)
 {
   std::list <Segment>::iterator next = result; ++next;
-  return ((result->first <= position) && (next->first > position));
+  return ((result->first <= position) 
+	  && ((result->last < position) || (next->first > position)));
 }
 
 inline void PartialStrand::_move_to_segment (int position)
@@ -165,7 +166,14 @@ inline void PartialStrand::_move_to_segment (int position)
 
   // this algorithm works thanks to the dummy segments
   if (_segment_it->first <= position)
-    { while (_segment_it->last < position) { ++_segment_it; } }
+    { 
+      if (_segment_it->last < position)
+	{
+	  ++_segment_it;
+	  while (_segment_it->first <= position) { ++_segment_it; } 
+	  --_segment_it;
+	}
+    }
   else
     { while (_segment_it->first > position) { --_segment_it; } }
 
@@ -191,8 +199,10 @@ inline void PartialStrand::_check_ligation (void)
 
       // strand is complete when our two dummy segments finally meet <3
       if ((_segment_it->first == -1) && (_segment_it->last == _length)) 
-	{ _complete == true; }
+	{ _complete = true; }
     }  
+
+  ENSURE ((_complete == true) || (_segments.size() > 1));
 }
 
 
