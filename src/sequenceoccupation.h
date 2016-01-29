@@ -31,7 +31,7 @@
  *
  * SequenceOccupation has two roles: it stores occupation levels at every
  * base of the sequence and the chemicals bound to every position. It also
- * handles SiteAvailability objects that warn SiteObserver about change in
+ * handles SiteAvailability objects that warn BindingSite about change in
  * availability at specific sites.
  */
 class SequenceOccupation
@@ -111,21 +111,33 @@ class SequenceOccupation
 
   /**
    * @brief Attach site watcher to a specific site.
-   *
-   *  This member creates an object of type SiteAvailability that will send out
-   *  notifications every time a change occurs along the sequence (i.e. every
-   *  time another member of this class is called).
-   *
-   * @param first First base of the site to watch.
-   * @param last Last base of the site to watch.
-   * @param observer SiteObserver to notify when a change happens on the site.
+   * @param site BindingSite to notify when a change happens on the site.
    */
-  void add_watcher (int first, int last, SiteObserver& observer);
+  void watch_site (BindingSite& site);
+
+  /**
+   * @brief Attach site watcher to a specific site moving over time.
+   * @param site BindingSite to notify when a change happens on the site.
+   */
+  void watch_moving_site (BindingSite& site);
+
+  /**
+   * @brief Remove watcher for a specific site moving over time.
+   * @param site BindingSite to stop watching.
+   */
+  void unwatch_moving_site (const BindingSite& site);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
+  /**
+   * @brief Compute the number of available sites.
+   * @param first Starting position of the site.
+   * @param last Ending position of the site.
+   * @return Number of unoccupied sites.
+   */
+  int number_available_sites (int first, int last) const;
 
 private:
   // ============
@@ -136,14 +148,16 @@ private:
   int _number_sequences;
 
   /** @brief Tracks occupied positions along the sequence. */
-  std::vector<int> _occupancy;
+  std::vector <int> _occupancy;
 
-  /** @brief Vector of sites whose availability needs to be checked. */
+  /** @brief Groups of static sites whose availability needs to be checked. */
   std::vector <WatcherGroup*> _watcher_groups;
 
-  /** @brief Vector of sequence segments. */
-  std::list <Segment> _segments;
-  
+  /** @brief List of moving sites whose availability needs to be checked. */
+  std::list <SiteAvailability*> _moving_sites;
+
+  /** @brief List of partial strands. */
+  std::list <PartialStrand> _partials;  
 
   // =================
   //  Private Methods
@@ -158,7 +172,7 @@ private:
    *  sequence or the number of groups if there are no groups between the 
    *  position and the end of the sequence.
    */
-  int position_to_group (int position);
+  int position_to_group (int position) const;
 
   /**
    * @brief Send notifications knowing that a change occurred between two
@@ -166,26 +180,12 @@ private:
    * @param a First position affected by change.
    * @param b Last position affected by change.
    */
-  void notify_change (int a, int b);
+  void notify_change (int a, int b) const;
 
   /**
-   * @brief Send notifications to all observers due to a global change.
+   * @brief Send notifications to all sites due to a global change.
    */
-  void notify_all_sites (void);
-
-  /**
-   * @brief Send notification to observer of a specific site.
-   * @param watcher
-   */
-  void notify_site (SiteAvailability* watcher);
-
-  /**
-   * @brief Check whether a site is affected by a change on a specific segment.
-   * @param watcher
-   * @param a First position of segment that changed.
-   * @param b Last position of segment that changed.
-   */
-  bool is_site_affected (SiteAvailability* watcher, int a, int b);
+  void notify_all_sites (void) const;
 
   /**
    * @brief Fuse overlapping watcher groups starting from a specific index.
@@ -198,19 +198,17 @@ private:
    *  that was just extended towards the end of the sequence.
    */
   void fuse_groups (int index);
+
+  /**
+   * @brief Check if partial strand is complete and add it to full sequences.
+   * @param strand_it Partial strand to check.
+   */
+  void _check_completion (std::list <PartialStrand>::iterator& strand_it);
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-#include "siteavailability.h"
-
-inline bool SequenceOccupation::is_site_affected (SiteAvailability* watcher,
-						  int a, int b)
-{
-  return (((watcher->first() < a) && (watcher->last() < a)) 
-	  || ((watcher->first() > b) && (watcher->last() > b)));
-}
 
 #endif // SEQUENCE_OCCUPATION_H

@@ -27,10 +27,9 @@
 #include "simulatorinput.h"
 
 /**
- * @brief Class storing sites belonging to same family.
+ * @brief Abstract class representing site families.
  *
- * SiteFamily simply acts as a list but inherits the SimulatorInput
- * type.
+ * SiteFamily inherits SimulatorInput.
  */
 class SiteFamily : public SimulatorInput
 {
@@ -48,18 +47,13 @@ class SiteFamily : public SimulatorInput
   // SiteFamily (const SiteFamily& other_site_family);
   // /* @brief Assignment operator. */
   // SiteFamily& operator= (const SiteFamily& other_site_family);
-  // /* @brief Destructor. */
-  // ~SiteFamily (void);
+  /** @brief Destructor. */
+  virtual ~SiteFamily (void) {}
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Add a site to the family.
-   * @param site Pointer to the site to add.
-   */
-  void add (const Site* site) { _sites.push_back (site); }
 
   // ============================
   //  Public Methods - Accessors
@@ -71,7 +65,6 @@ private:
   //  Attributes
   // ============
   //
-  std::list <const Site*> _sites;
 
   // =================
   //  Private Methods

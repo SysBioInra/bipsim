@@ -63,13 +63,12 @@ class ProcessiveChemical;
 // site classes
 class BindingSite;
 class BindingSiteFamily;
-class BindingSiteObserver;
 class Site;
 class SiteFamily;
-class SiteObserver;
 
 // sequence related classes
 class ChemicalSequence;
+class PartialStrand;
 class Segment;
 class SequenceOccupation;
 class SiteAvailability;

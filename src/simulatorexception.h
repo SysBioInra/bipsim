@@ -1,7 +1,7 @@
 
 
 /**
- * @file dependencyexception.h
+ * @file simulatorexception.h
  * @brief Header for the DependencyException class.
  * 
  * @authors Marc Dinh, Stephan Fischer

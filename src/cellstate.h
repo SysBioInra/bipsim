@@ -78,13 +78,6 @@ class CellState
    */
   template <class T>
     T* find (const std::string& name) const;
-
-  /**
-   * @brief Acess identifier attributed to element by name.
-   * @param name Name of element.
-   * @return Element identifier or CellState::NOT_FOUND if name not found.
-   */
-  int find_id (const std::string& name) const;
   
   /**
    * @brief Return the list of reactions.
@@ -103,9 +96,6 @@ class CellState
   //  Public Constants
   // ==================
   //
-  /** @brief Value returned if an element's id  was not found. */
-  static const int NOT_FOUND = Handler <Chemical>::NOT_FOUND;
-
 private:
 
   // ============
@@ -115,10 +105,7 @@ private:
   /** @brief Handler containing site information. */
   Handler <Site> _site_handler;
 
-  /** @brief Handler containing binding site family information. */
-  Handler <BindingSiteFamily> _binding_site_family_handler;
-
-  /** @brief Handler containing other site family information. */
+  /** @brief Handler containing site family information. */
   Handler <SiteFamily> _site_family_handler;
 
   /** @brief Handler containing chemical information. */
@@ -155,7 +142,6 @@ private:
 #include <typeinfo>
 
 #include "site.h"
-#include "bindingsitefamily.h"
 #include "sitefamily.h"
 
 #include "chemical.h"
@@ -184,9 +170,6 @@ inline T* CellState::find (const std::string& name) const
 {
   Site* s = _site_handler.find (name);
   if (s != 0) { return dynamic_cast <T*> (s); }
-
-  BindingSiteFamily* bsf = _binding_site_family_handler.find (name);
-  if (bsf != 0) { return dynamic_cast <T*> (bsf); }
 
   SiteFamily* sf = _site_family_handler.find (name);
   if (sf != 0) { return dynamic_cast <T*> (sf); }

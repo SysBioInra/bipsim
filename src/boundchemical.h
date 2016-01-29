@@ -101,9 +101,9 @@ public:
 
   /**
    * @brief Focus a unit that bound to a specific binding site family.
-   * @param binding_site_family The binding site family to inspect.
+   * @param family The binding site family to inspect.
    */
-  virtual void focus_random_unit (int binding_site_family);
+  virtual void focus_random_unit (const BindingSiteFamily& family);
 
   // ============================
   //  Public Methods - Accessors
@@ -113,9 +113,9 @@ public:
    * @brief Returns the number of elements bound to a specific binding site
    *  family.
    * @return Number of elements bound to the binding site family.
-   * @param binding_site_family The binding site family to inspect.
+   * @param family The binding site family to inspect.
    */
-  int number_bound_to_family (int binding_site_family) const;
+  int number_bound_to_family (const BindingSiteFamily& family) const;
 
   /**
    * @brief Returns the binding site of focused unit.
@@ -149,12 +149,11 @@ public:
 
   /**
    * @brief Returns the total unbinding rate for a subset of chemicals.
-   * @param binding_site_family
-   *   Binding site identifier to which the chemicals of interest must be
-   *   bound.
+   * @param family Binding site family to which the chemicals of interest must 
+   *  be bound.
    * @return Total unbinding rate for chemicals bound to given family.
    */
-  double unbinding_rate_contribution (int binding_site_family) const;
+  double unbinding_rate_contribution (const BindingSiteFamily& family) const;
 
  protected:
   // ============
@@ -189,9 +188,12 @@ public:
    * @brief A map that classifies all BoundChemical depending on the family of
    *  BindingSite they bound to.
    */
-  typedef std::map <int, BoundUnitList> UnitFamilyMap;
+  typedef std::map <const BindingSiteFamily*, BoundUnitList> UnitFamilyMap;
 
-  /** @brief Binding sites to which chemicals bound and current position (sorted by family). */
+  /**
+   * @brief Binding sites to which chemicals bound and current position 
+   *   (sorted by family). 
+   */
   UnitFamilyMap _family_map;
 
     

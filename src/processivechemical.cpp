@@ -56,7 +56,7 @@ void ProcessiveChemical::step_forward (int step_size)
 bool ProcessiveChemical::is_terminating (void)
 {
   return focused_unit_location().is_termination_site
-    (focused_unit_reading_frame(), _termination_site_families);
+    (focused_unit_reading_frame(), _termination_sites);
 }
 
 

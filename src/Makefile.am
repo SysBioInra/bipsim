@@ -53,14 +53,14 @@ libsrc_a_SOURCES += \
 libsrc_a_SOURCES += \
 	bindingsite.h \
 	bindingsitefamily.cpp bindingsitefamily.h \
-	bindingsiteobserver.h \
 	site.cpp site.h \
-	sitefamily.h \
-	siteobserver.h
+	sitefamily.h
 
 # sequence related sources
 libsrc_a_SOURCES += \
 	chemicalsequence.cpp chemicalsequence.h \
+	partialstrand.cpp partialstrand.h \
+	segment.h \
 	sequenceoccupation.cpp sequenceoccupation.h \
 	sitelocation.h \
 	siteavailability.cpp siteavailability.h \

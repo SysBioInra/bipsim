@@ -136,7 +136,8 @@ class Handler
    */
   T& reference (int id) const
     {
-      REQUIRE ((id >= 0) && (id < _references.size())); /** @pre id must exist. */
+      /** @pre id must exist. */
+      REQUIRE ((id >= 0) && (id < _references.size())); 
       return _references [id];
     }
 

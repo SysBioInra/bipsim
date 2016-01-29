@@ -228,15 +228,13 @@ bool ReactionFactory::create_sequence_binding (const std::string& line)
   BoundChemical*
     binding_result_ptr = _cell_state.find <BoundChemical> (binding_result);
   if (binding_result_ptr == 0)  { throw DependencyException (binding_result); }
-  int binding_site_family = _cell_state.find_id (binding_site);
-  if (binding_site_family == CellState::NOT_FOUND)
-     { throw DependencyException (binding_site); }
+  BindingSiteFamily* family_ptr = 
+    _cell_state.find <BindingSiteFamily> (binding_site);
+  if (family_ptr == 0) { throw DependencyException (binding_site); }
 
   // create and store
   SequenceBinding* reaction = 
-    new SequenceBinding (*unit_to_bind_ptr, *binding_result_ptr,
-			 *(_cell_state.find <BindingSiteFamily> (binding_site)),
-			 binding_site_family);
+    new SequenceBinding (*unit_to_bind_ptr, *binding_result_ptr, *family_ptr);
   _cell_state.store (reaction);
   _cell_state.store (new ForwardReaction (*reaction));
   _cell_state.store (new BackwardReaction (*reaction)); 

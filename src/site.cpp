@@ -18,6 +18,7 @@
 // ==================
 //
 #include "site.h"
+#include "sitefamily.h"
 #include "chemicalsequence.h"
 #include "macros.h"
 
@@ -25,11 +26,13 @@
 //  Constructors/Destructors
 // ==========================
 //
-Site::Site (int family_id, ChemicalSequence& location, int first, int last)
-  : _family (family_id)
+Site::Site (SiteFamily& family, ChemicalSequence& location, int first, int last)
+  : _family (family)
   , _location (location)
   , _first (first)
   , _last (last)
+  , _relative_first (_location.relative (first))
+  , _relative_last (_location.relative (last))
 {
   /** @pre First must be smaller than last.*/
   REQUIRE (first <= last);

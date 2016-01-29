@@ -67,10 +67,9 @@ public:
   /**
    * @brief Adds a termination site family that is recognized by the
    *  chemical.
-   * @param termination_site_family
-   *  Integer identifier for the family recognized by the chemical.
+   * @param family SiteFamily recognized by the chemical.
    */
-  void add_recognized_termination_site (int termination_site_family);
+  void add_recognized_termination_site (const SiteFamily& family);
   
   /**
    * @brief Move focused unit by a step of a given size.
@@ -101,7 +100,7 @@ private:
   // ============
   //
   /** @brief The list of termination sites the chemical recognizes. */
-  std::list <int> _termination_site_families;
+  std::list <const SiteFamily*> _termination_sites;
 
   /**
    * @brief BoundChemical that results when the processive chemical encounters
@@ -119,9 +118,9 @@ private:
 //  Inline declarations
 // ======================
 //
-inline void ProcessiveChemical::add_recognized_termination_site (int termination_site_family)
+inline void ProcessiveChemical::add_recognized_termination_site (const SiteFamily& family)
 {
-  _termination_site_families.push_back (termination_site_family);
+  _termination_sites.push_back (&family);
 }
 
 inline BoundChemical& ProcessiveChemical::stalled_form ( void )

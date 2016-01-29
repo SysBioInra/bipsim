@@ -53,12 +53,9 @@ public:
    *  original chemical in its bound form.
    * @param binding_site_family The family of binding sites the chemical 
    *  can bind onto.
-   * @param binding_site_family_id The family identfier of binding sites 
-   *  the chemical can bind onto.
    */
   SequenceBinding (Chemical& unit_to_bind, BoundChemical& binding_result,
-		   BindingSiteFamily& binding_site_family, 
-		   int binding_site_family_id);
+		   BindingSiteFamily& binding_site_family);
     
 
   // Not needed for this class (use of compiler-generated versions)
@@ -103,11 +100,6 @@ public:
   
   /** @brief Binding sites the chemical can bind onto. */
   BindingSiteFamily& _binding_site_family;
-
-  /**
-   * @brief Identifier of the binding site family the chemical can bind onto.
-   */
-  int _binding_site_family_id;
 
   // =================
   //  Private Methods

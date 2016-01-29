@@ -31,12 +31,10 @@
 //
 SequenceBinding::SequenceBinding (Chemical& unit_to_bind,
 				  BoundChemical& binding_result,
-				  BindingSiteFamily& binding_site_family,
-				  int binding_site_family_id)
+				  BindingSiteFamily& binding_site_family)
   : _unit_to_bind (unit_to_bind)
   , _binding_result (binding_result)
   , _binding_site_family (binding_site_family)
-  , _binding_site_family_id (binding_site_family_id)
 {
   _forward_reactants.push_back (&unit_to_bind);
   _forward_reactants.push_back (&binding_site_family);
@@ -78,7 +76,7 @@ void SequenceBinding::perform_backward (void)
   _unit_to_bind.add (1);
 
   // A unit bound through a site in the family is randomly chosen
-   _binding_result.focus_random_unit (_binding_site_family_id);
+  _binding_result.focus_random_unit (_binding_site_family);
 
   // remove unit
   _binding_result.focused_unit_location().unbind_unit (_binding_result);
@@ -128,7 +126,7 @@ double SequenceBinding::compute_backward_rate (void) const
    * Which is also the dot product between the vector of concentrations of binding_result bound
    * to every single binding sites and the vector of corresponding unbinding rates.
    */
-  return _binding_result.unbinding_rate_contribution (_binding_site_family_id);
+  return _binding_result.unbinding_rate_contribution (_binding_site_family);
 }
 
 

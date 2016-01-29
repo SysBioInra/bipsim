@@ -44,7 +44,7 @@ public:
   // ==========================
   //
   /**
-   * @brief Default constructor
+   * @brief Constructor
    * @param sequence Sequence of the chemical
    * @param starting_position Starting position (allows absolute positionning).
    */
@@ -102,13 +102,11 @@ public:
   void move_bound_unit (ProcessiveChemical& chemical_to_move, int number_steps);
 
   /**
-   * @brief Watch availability of a specific site and notify an observer when it changes.
-   * @param first First absolute position of the site.
-   * @param last Last absolute position of the site.
-   * @param site_observer SiteObserver to update with the current number of available sites.
+   * @brief Notify binding site when its availability changes. 
+   * @param site BindingSite to update with the current number of 
+   *  available sites.
    */
-  void watch_site_availability (int first, int last,
-				SiteObserver& site_observer);
+  void notify_site_availability (BindingSite& site);
 
   /**
    * @brief Add termination site on element.
@@ -139,7 +137,8 @@ public:
    * @return True if a requested termination site is present at requested
    *  position.
    */
-  bool is_termination_site (int position, const std::list<int>& termination_site_families) const;
+  bool is_termination_site (int position, 
+			    const std::list <const SiteFamily*>& termination_site_families) const;
 
   /**
    * @brief Returns length of sequence.
@@ -163,6 +162,14 @@ public:
    */
   const std::string sequence (int first, int last) const;
 
+  /**
+   * @brief Transform absolute positions to relative [0,length) positions.
+   * @param absolute_position Absolute position to transform.
+   * @return Relative position along the sequence, 0 being the starting
+   *  position.
+   */
+  int relative (int absolute_position) const;
+
 private:
   // ============
   //  Attributes
@@ -175,7 +182,7 @@ private:
   int _length;
 
   /** @brief Termination sites on the sequence. */
-  std::map< int, std::list<int> > _termination_sites;
+  std::map <int, std::list <const SiteFamily*> > _termination_sites;
 
   /** @brief Sequence of the chemical. */
   std::string _sequence;  
@@ -192,14 +199,6 @@ private:
    * @param output Stream where output should be written.
    */
   void print (std::ostream& output) const;
-
-  /**
-   * @brief Transform absolute positions to relative [0,length) positions.
-   * @param absolute_position Absolute position to transform.
-   * @return Relative position along the sequence, 0 being the starting
-   *  position.
-   */
-  int relative (int absolute_position) const;
 };
 
 // ======================

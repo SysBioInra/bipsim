@@ -43,23 +43,22 @@ public:
   //
   /**
    * @brief Default constructor
-   * @param family_id Integer family identifier.
+   * @param family Family the site belongs to.
    * @param location Chemical sequence containing the site.
    * @param first Position of first base.
    * @param last Position of last base.
-   * @sa SiteHandler
    */
-  Site (int family_id, ChemicalSequence& location, int first, int last);
+  Site (SiteFamily& family, ChemicalSequence& location, int first, int last);
 
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
   // Site (Site& other_site);
   // /* @brief Assignment operator. */
-  // CLASSNAME& operator= (CLASSNAME& other_site);
+  // Site& operator= (Site& other_site);
 
-  // /* @brief Destructor. */
-  // ~Site (void);
+  /** @brief Destructor. */
+  virtual ~Site (void) {}
 
   // ===========================
   //  Public Methods - Commands
@@ -72,10 +71,9 @@ public:
   //  
   /**
    * @brief Family accessor.
-   * @return Integer family identifier.
-   * @sa SiteList
+   * @return Reference to family the site belongs to.
    */
-  int family (void) const;
+  const SiteFamily& family (void) const;
  
   /**
    * @brief Site location.
@@ -94,6 +92,18 @@ public:
    * @return Last position of site.
    */
   int last (void) const;
+
+  /**
+   * @brief Accessor to starting position on sequence.
+   * @return First position of site on sequence.
+   */
+  int relative_first (void) const;
+ 
+  /**
+   * @brief Accessor to ending position on sequence.
+   * @return Last position of site on sequence.
+   */
+  int relative_last (void) const;
    
 
  protected:
@@ -102,16 +112,22 @@ public:
   // ============
   //
   /** @brief Family to which the site belongs */
-  int _family;
+  SiteFamily& _family;
 
   /** @brief Chemical on which the site is located. */
   ChemicalSequence& _location;
 
-  /** @brief First position of the site along the sequence. */
+  /** @brief First absolute position of the site. */
   int _first;
   
-  /** @brief Last position of site. */
+  /** @brief Last absolute position of site. */
   int _last;
+
+  /** @brief First position of the site along the sequence. */
+  int _relative_first;
+  
+  /** @brief Last position of site along the sequence. */
+  int _relative_last;
 
   // =================
   //  Private Methods
@@ -123,7 +139,7 @@ public:
 //  Inline declarations
 // ======================
 //
-inline int Site::family ( void ) const
+inline const SiteFamily& Site::family (void) const
 {
   return _family;
 }
@@ -138,10 +154,21 @@ inline int Site::last (void) const
   return _last;
 }
 
-inline ChemicalSequence& Site::location ( void ) const
+inline int Site::relative_first (void) const
+{
+  return _relative_first;
+}
+
+inline int Site::relative_last (void) const
+{
+  return _relative_last;
+}
+
+inline ChemicalSequence& Site::location (void) const
 {
   return _location;
 }
+
 
 
 

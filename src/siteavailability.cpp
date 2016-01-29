@@ -19,23 +19,20 @@
 // ==================
 //
 #include "siteavailability.h"
-#include "siteobserver.h"
+#include "bindingsite.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-SiteAvailability::SiteAvailability (int first, int last, 
-				    SiteObserver& site_observer)
-  : _first (first)
-  , _last (last)
-  , _observer (site_observer)
+SiteAvailability::SiteAvailability (BindingSite& site)
+  : _site (site)
   , _last_value_notified (-1)
 {
-  /** @pre First position must be positive. */
-  REQUIRE (first >= 0);
+  /** @pre First position of site must be positive. */
+  REQUIRE (site.relative_first() >= 0);
   /** @pre Last position must be greater than first. */
-  REQUIRE (last >= first);
+  REQUIRE (site.relative_last() >= site.relative_first());
 }
 
 // Not needed for this class (use of compiler generated versions)
@@ -54,7 +51,7 @@ void SiteAvailability::notify (int number_sites)
 
   if (number_sites != _last_value_notified)
     {
-      _observer.update (number_sites);
+      _site.update (number_sites);
       _last_value_notified = number_sites;
     }
 }

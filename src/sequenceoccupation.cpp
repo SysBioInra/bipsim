@@ -20,10 +20,9 @@
 //
 #include "sequenceoccupation.h"
 #include "siteavailability.h"
-#include "sitelocation.h"
-#include "siteobserver.h"
+#include "bindingsite.h"
 #include "watchergroup.h"
-#include "segment.h"
+#include "partialstrand.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -44,6 +43,12 @@ SequenceOccupation::~SequenceOccupation (void)
   for (int i = 0; i < _watcher_groups.size(); ++i) 
     { 
       delete _watcher_groups[i];
+    }
+  for (std::list <SiteAvailability*>::iterator 
+	 watcher_it = _moving_sites.begin();
+       watcher_it != _moving_sites.end(); ++watcher_it) 
+    { 
+      delete *watcher_it;
     }
 }
 
@@ -96,7 +101,18 @@ void SequenceOccupation::start_new_segment (int position)
   REQUIRE ((position >= 0) && (position < _occupancy.size()));
 
   _occupancy [position] -= 1;
-  _segments.push_front (Segment (position, position));
+  std::list <PartialStrand>::iterator strand_it = _partials.begin();
+  while (strand_it != _partials.end())
+    {
+      if (strand_it->start_new_segment (position)) { break; }
+      ++strand_it;
+    }
+  if (strand_it == _partials.end()) 
+    { 
+      _partials.push_back (_occupancy.size()); --strand_it;
+      strand_it->start_new_segment (position);
+    }
+  _check_completion (strand_it);
 }
 
 void SequenceOccupation::extend_segment (int position)
@@ -105,39 +121,22 @@ void SequenceOccupation::extend_segment (int position)
   REQUIRE ((position >= 0) && (position < _occupancy.size()));
 
   _occupancy [position] -= 1;
-  
-  // we look for the segment to be extended
-  int previous = (position == 0) ? (_occupancy.size()-1) : (position-1);
-  std::list <Segment>::iterator segment_it = _segments.begin();
-  while (segment_it != _segments.end())
+  std::list <PartialStrand>::iterator strand_it = _partials.begin();
+  while (strand_it != _partials.end())
     {
-      if (segment_it->last == previous)
-	{
-	  segment_it->last = position;
-	  break;
-	}
-      ++segment_it;
+      if (strand_it->extend_segment (position)) { break; }
+      ++strand_it;
     }
-
-  // check whether segment has been completed
-  // caution: segment can be circular
-  int segment_length = segment_it->last - segment_it->first + 1;
-  if ((segment_length == 0) || (segment_length == _occupancy.size()))
-    {
-      _segments.erase (segment_it);
-      ++_number_sequences;
-    }
-  else
-    {
-      // we place the modified segment at the beginning of list
-      _segments.splice (_segments.begin(), _segments, segment_it);
-    }
+  /** @pre There must be a segment to extend. */
+  REQUIRE (strand_it != _partials.end()); 
+  _check_completion (strand_it);
 }
 
-void SequenceOccupation::add_watcher (int first, int last,
-				      SiteObserver& observer)
+void SequenceOccupation::watch_site (BindingSite& site)
 {
   SiteAvailability* new_watcher;
+  int first = site.relative_first();
+  int last = site.relative_last();
 
   // look if watcher should be added to an existing group
   bool new_group = true;
@@ -149,7 +148,7 @@ void SequenceOccupation::add_watcher (int first, int last,
 	  || ((first <= g->first()) && (last >= g->last())))
 	{
 	  // add to group and look whether it overlaps with the following groups
-	  new_watcher = g->add_watcher (first, last, observer);
+	  new_watcher = g->add_watcher (site);
 	  fuse_groups (ind_g);
 	  new_group = false;
 	}
@@ -158,7 +157,7 @@ void SequenceOccupation::add_watcher (int first, int last,
     {
       // create and insert new group
       WatcherGroup* g = new WatcherGroup;
-      new_watcher = g->add_watcher (first, last, observer);
+      new_watcher = g->add_watcher (site);
       if (ind_g < _watcher_groups.size())
 	_watcher_groups.insert (_watcher_groups.begin()+ind_g, g);
       else
@@ -166,13 +165,53 @@ void SequenceOccupation::add_watcher (int first, int last,
     }
 
   // send first notification about site availability
-  notify_site (new_watcher);
+  new_watcher->notify (number_available_sites 
+		       (new_watcher->site().relative_first(),
+			new_watcher->site().relative_last()));
+}
+
+void SequenceOccupation::watch_moving_site (BindingSite& site)
+{
+  _moving_sites.push_back (new SiteAvailability (site));
+}
+
+void SequenceOccupation::unwatch_moving_site (const BindingSite& site)
+{
+  std::list <SiteAvailability*>::iterator watcher_it = _moving_sites.begin();
+  while (watcher_it != _moving_sites.end()) 
+    { 
+      if (&((*watcher_it)->site()) == &site) { delete *watcher_it; break; }
+      ++watcher_it;
+    }
 }
 
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
+int SequenceOccupation::number_available_sites (int first, int last) const
+{
+  int max_occupied = 0;
+  for (int i = first; i < last; ++i)
+    {
+      if (_occupancy [i] > max_occupied) { max_occupied = _occupancy [i]; }
+    }
+  int result = _number_sequences - max_occupied;
+  if (result < 0) { return 0; }
+  return result;
+}
+
+int free_ends_left (void)
+{
+}
+
+int free_ends_right (void)
+{
+}
+
+int gaps (void)
+{
+}
 
 // =================
 //  Private Methods
@@ -189,7 +228,7 @@ void SequenceOccupation::fuse_groups (int index)
   fuse_groups (index);
 }
 
-int SequenceOccupation::position_to_group (int position)
+int SequenceOccupation::position_to_group (int position) const
 {
   // we look for the largest i such that
   //  _watcher_groups[i].last() < position
@@ -206,7 +245,7 @@ int SequenceOccupation::position_to_group (int position)
   return i_min+1;
 }
 
-void SequenceOccupation::notify_change (int a, int b)
+void SequenceOccupation::notify_change (int a, int b) const
 {
   int last_group = position_to_group (b);
   if (last_group == _watcher_groups.size()) { --last_group; }
@@ -218,13 +257,29 @@ void SequenceOccupation::notify_change (int a, int b)
 	     watcher_it = watchers.begin();
 	   watcher_it != watchers.end(); ++watcher_it)
 	{
-	  if (is_site_affected (*watcher_it, a, b)) 
-	    { notify_site (*watcher_it); }
+	  if ((*watcher_it)->is_affected (a, b)) 
+	    {
+	      (*watcher_it)->notify (number_available_sites 
+				     ((*watcher_it)->site().relative_first(),
+				      (*watcher_it)->site().relative_last()));
+	    }
+
+	}
+    }
+  for (std::list <SiteAvailability*>::const_iterator
+	 watcher_it = _moving_sites.begin();
+       watcher_it != _moving_sites.end(); ++watcher_it) 
+    {
+      if ((*watcher_it)->is_affected (a, b))
+	{
+	  (*watcher_it)->notify (number_available_sites 
+				 ((*watcher_it)->site().relative_first(),
+				  (*watcher_it)->site().relative_last()));
 	}
     }
 }
 
-void SequenceOccupation::notify_all_sites (void)
+void SequenceOccupation::notify_all_sites (void) const
 {
   for (int i = 0; i < _watcher_groups.size(); ++i)
     {
@@ -234,25 +289,28 @@ void SequenceOccupation::notify_all_sites (void)
 	     watcher_it = watchers.begin();
 	   watcher_it != watchers.end(); ++watcher_it)
 	{
-	  notify_site (*watcher_it);
+	  (*watcher_it)->notify (number_available_sites 
+				 ((*watcher_it)->site().relative_first(),
+				  (*watcher_it)->site().relative_last()));
 	}
+    }
+  for (std::list <SiteAvailability*>::const_iterator 
+	 watcher_it = _moving_sites.begin();
+       watcher_it != _moving_sites.end(); ++watcher_it) 
+    {
+      (*watcher_it)->notify (number_available_sites 
+			     ((*watcher_it)->site().relative_first(),
+			      (*watcher_it)->site().relative_last()));
     }
 }
 
-void SequenceOccupation::notify_site (SiteAvailability* watcher)
+void SequenceOccupation::
+_check_completion (std::list <PartialStrand>::iterator& strand_it)
 {
-  int first = watcher->first();
-  int last = watcher->last();
-
-  // check current occupancy
-  int max_occupied = 0;
-  for (int i = first; i < last; i++)
+  if (strand_it->completed()) 
     {
-      if (_occupancy [i] > max_occupied) { max_occupied = _occupancy [i]; }
+      _partials.erase (strand_it);
+      ++_number_sequences;
+      for (int i = 0; i < _occupancy.size(); ++i) { --_occupancy [i]; }
     }
-
-  // notify changes
-  int number_sites_available = _number_sequences - max_occupied;
-  if (number_sites_available < 0) { number_sites_available = 0; }
-  watcher->notify (number_sites_available);
 }

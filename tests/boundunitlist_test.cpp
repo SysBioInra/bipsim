@@ -16,6 +16,7 @@
 
 #include "../src/chemicalsequence.h"
 #include "../src/bindingsite.h"
+#include "../src/bindingsitefamily.h"
 #include "../src/boundunitlist.h"
 #include "../src/boundunit.h"
 
@@ -31,7 +32,8 @@ bool check_content (const BoundUnitList& ulist,
 int main (int argc, char *argv[])
 { 
   ChemicalSequence cs ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-  BindingSite bs (0, cs, 1, 1, 1, 1);
+  BindingSiteFamily dummy_family;
+  BindingSite bs (dummy_family, cs, 1, 1, 1, 1);
   BoundUnitList ulist;
   std::list <BoundUnit*> ref;
 

@@ -63,11 +63,9 @@ class WatcherGroup
   //
   /**
    * @brief Create and add a watcher for a specific site.
-   * @param first First base of the site to watch.
-   * @param last Last base of the site to watch.
-   * @param observer SiteObserver to notify when site changes.
+   * @param site BindingSite to notify when site changes.
    */
-  SiteAvailability* add_watcher (int first, int last, SiteObserver& observer);
+  SiteAvailability* add_watcher (BindingSite& site);
   
   /**
    * @brief Absorb another group, leaving it empty.

@@ -72,7 +72,7 @@ public:
   // Redefined from BoundChemical
   void remove_focused_unit (void);
   void focus_random_unit (void);
-  void focus_random_unit (int binding_site_family);
+  void focus_random_unit (const BindingSiteFamily& family);
 
   /**
    * @brief Focus random unit based on their loading_rates.

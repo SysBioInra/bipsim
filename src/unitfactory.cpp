@@ -131,7 +131,7 @@ bool UnitFactory::create_binding_site (const std::string& line)
       throw ParserException (message.str());
     }
 
-  // get family ref/id (create family if necessary)
+  // get family ref (create family if necessary)
   BindingSiteFamily* family =
     _cell_state.find <BindingSiteFamily> (family_name);
   if (family == 0)
@@ -139,20 +139,18 @@ bool UnitFactory::create_binding_site (const std::string& line)
       family = new BindingSiteFamily;
       _cell_state.store (family, family_name);
     }
-  int family_id = _cell_state.find_id (family_name);
-
+  
   // read reading frame (optional)
   int reading_frame = 0;
   BindingSite* binding_site;
   if (not (line_stream >> reading_frame)) // no reading frame
-    { binding_site = new BindingSite (family_id, *sequence, start, end,
+    { binding_site = new BindingSite (*family, *sequence, start, end,
 				      k_on, k_off); }
   else
-    { binding_site = new BindingSite (family_id, *sequence, start, end,
+    { binding_site = new BindingSite (*family, *sequence, start, end,
 				      k_on, k_off, reading_frame); }
 
-  // add created unit to family and cell state
-  family->add (binding_site);
+  // add created unit to cell state
   _cell_state.store (binding_site);
   return true;
 }
@@ -172,18 +170,16 @@ bool UnitFactory::create_termination_site (const std::string& line)
   ChemicalSequence* sequence = _cell_state.find <ChemicalSequence> (location);
   if (sequence == 0) { throw DependencyException (location); }
 
-  // get family ref/id (create family if necessary)
+  // get family ref (create family if necessary)
   SiteFamily* family = _cell_state.find <SiteFamily> (family_name);
   if (family == 0)
     {
       family = new SiteFamily;
       _cell_state.store (family, family_name);
     }
-  int family_id = _cell_state.find_id (family_name);
 
   // create and store entity
-  Site* site = new Site (family_id, *sequence, start, end);
-  family->add (site);
+  Site* site = new Site (*family, *sequence, start, end);
   sequence->add_termination_site (*site);
   _cell_state.store (site);
   return true;
@@ -495,20 +491,20 @@ bool UnitFactory::create_processive_chemical ( const std::string& line )
 
   // parse termination sites
   std::string site_name;
-  std::list <int> site_ids;
+  std::list <SiteFamily*> families;
   while (line_stream >> site_name)
     {
       // check whether termination site is already known
-      int site_id = _cell_state.find_id (site_name);
-      if (site_id != CellState::NOT_FOUND) { site_ids.push_back (site_id);}
+      SiteFamily* family_ptr = _cell_state.find <SiteFamily> (site_name);
+      if (family_ptr != 0) { families.push_back (family_ptr);}
       else { throw DependencyException (site_name); }
     }
   
   // create and store
   ProcessiveChemical* proc_chemical = new ProcessiveChemical (*stalled);
-  for (std::list <int>::iterator site_it = site_ids.begin();
-       site_it != site_ids.end(); ++site_it)
-    { proc_chemical->add_recognized_termination_site (*site_it); }
+  for (std::list <SiteFamily*>::iterator family_it = families.begin();
+       family_it != families.end(); ++family_it)
+    { proc_chemical->add_recognized_termination_site (**family_it); }
   _cell_state.store (proc_chemical, name);
   return true;
 }

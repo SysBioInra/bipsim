@@ -109,7 +109,8 @@ public:
    * @param output Stream where output should be written.
    * @param reaction Reference to the reaction whose information should be written.
    */
-  friend std::ostream& operator<< (std::ostream& output, const Reaction& reaction);
+  friend std::ostream& operator<< (std::ostream& output, 
+				   const Reaction& reaction);
   
  protected:
   // ============

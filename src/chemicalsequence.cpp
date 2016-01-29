@@ -20,7 +20,7 @@
 // ==================
 //
 #include "chemicalsequence.h"
-#include "siteobserver.h"
+#include "bindingsite.h"
 #include "boundchemical.h"
 #include "processivechemical.h"
 
@@ -119,14 +119,13 @@ void ChemicalSequence::remove (int quantity)
   _sequence_occupation.remove_sequence (quantity);
 }
 
-void ChemicalSequence::watch_site_availability (int first, int last,
-						SiteObserver& site_observer)
+void ChemicalSequence::notify_site_availability (BindingSite& site)
 {
   /** @pre Site must be on sequence. */
-  REQUIRE (is_out_of_bounds (first, last) == false); 
+  REQUIRE (&site.location() == this);
+  REQUIRE (is_out_of_bounds (site.first(), site.last()) == false); 
   
-  _sequence_occupation.add_watcher (relative (first), relative (last),
-				    site_observer);
+  _sequence_occupation.watch_site (site);
  }
 
 
@@ -137,9 +136,7 @@ void ChemicalSequence::add_termination_site (const Site& termination_site)
   int first = termination_site.first();
   int last = termination_site.last();
   for (int i = first; i <= last; i++)
-    {
-      _termination_sites [i].push_back (termination_site.family());
-    }
+    { _termination_sites [i].push_back (&termination_site.family()); }
 }
 
 
@@ -147,8 +144,9 @@ void ChemicalSequence::add_termination_site (const Site& termination_site)
 //  Public Methods - Accessors
 // ============================
 //
-bool ChemicalSequence::is_termination_site (int position,
-					    const std::list<int>& termination_site_families ) const
+bool ChemicalSequence::is_termination_site 
+(int position,
+ const std::list <const SiteFamily*>& termination_site_families) const
 {
   /** @pre Relative Position must be positive. */
   REQUIRE (relative (position) >= 0 );
@@ -156,35 +154,33 @@ bool ChemicalSequence::is_termination_site (int position,
   REQUIRE (relative (position) < _length ); 
 
   // if there is no site to check or no termination site at the position to enquire
-  const std::map< int, std::list<int> >::const_iterator 
+  const std::map <int, std::list <const SiteFamily*> >::const_iterator 
     local_sites = _termination_sites.find (position);
   if ((termination_site_families.size() == 0)
-      || (local_sites == _termination_sites.end()))
-    {
-      return false;
-    }
+      || (local_sites == _termination_sites.end())) { return false; }
   
   // we loop through the list of termination sites to inspect
   // we place ourselves at the beginnig of the list
-  std::list<int>::const_iterator
-    termination_site_family = termination_site_families.begin();
+  std::list <const SiteFamily*>::const_iterator
+    family_it = termination_site_families.begin();
   // we get start and end iterator to the list of sites at the current position
   // on the sequence
-  std::list<int>::const_iterator
-    local_sites_begin_iterator = local_sites->second.begin();
-  std::list<int>::const_iterator
-    local_sites_end_iterator = local_sites->second.end();
+  std::list <const SiteFamily*>::const_iterator
+    local_sites_begin_it = local_sites->second.begin();
+  std::list <const SiteFamily*>::const_iterator
+    local_sites_end_it = local_sites->second.end();
   // we check whether one of the local sites corresponds to one of the sites to 
   // inspect
-  while ( termination_site_family != termination_site_families.end() )
+  while (family_it != termination_site_families.end())
     {
-      std::list<int>::const_iterator local_site = local_sites_begin_iterator;
-      while ( local_site != local_sites_end_iterator )
+      std::list <const SiteFamily*>::const_iterator 
+	local_site = local_sites_begin_it;
+      while (local_site != local_sites_end_it)
 	{
-	  if ( *termination_site_family == *local_site ) { return true; }
-	  local_site++;
+	  if (*family_it == *local_site) { return true; }
+	  ++local_site;
 	}
-      termination_site_family++;
+      ++family_it;
     }
 
   // if we arrive here, all the tests were non conclusive

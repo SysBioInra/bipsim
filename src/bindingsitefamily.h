@@ -25,7 +25,7 @@
 //
 #include "forwarddeclarations.h"
 #include "reactant.h"
-#include "simulatorinput.h"
+#include "sitefamily.h"
 #include "updatedtotalratevector.h"
 
 /**
@@ -36,7 +36,7 @@
  * the contribution to binding rates of each site depending on their
  * occupation and affinity.
  */
-class BindingSiteFamily : public Reactant, public SimulatorInput
+class BindingSiteFamily : public Reactant, public SiteFamily
 {
  public:
   // ==========================
@@ -47,18 +47,14 @@ class BindingSiteFamily : public Reactant, public SimulatorInput
   /** @brief Default constructor */
   BindingSiteFamily (void);
 
- private:
-  // Forbidden
-  /** @brief Copy constructor */
-  BindingSiteFamily (const BindingSiteFamily& other_family);
-  /** @brief Assignment operator */
-  BindingSiteFamily& operator= (const BindingSiteFamily& other_family);
-
- public:
-  /**
-   * @brief Destructor
-   */
-  ~BindingSiteFamily (void);
+  // Not needed for this class (use of compiler-generated versions)
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor */
+  // BindingSiteFamily (const BindingSiteFamily& other_family);
+  // /* @brief Assignment operator */
+  // BindingSiteFamily& operator= (const BindingSiteFamily& other_family);
+  // /* @brief Destructor */
+  // ~BindingSiteFamily (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -68,7 +64,7 @@ class BindingSiteFamily : public Reactant, public SimulatorInput
    * @brief Add a binding site to the family.
    * @param binding_site Pointer to the site to add.
    */
-  void add (const BindingSite* binding_site);
+  void add (BindingSite* binding_site);
 
   /**
    * @brief Update contributions given that a binding site availability has
@@ -121,13 +117,7 @@ private:
   /**
    * @brief Contribution of each binding site to the binding rate.
    */
-  mutable UpdatedTotalRateVector _rate_contributions;
-  
-  /**
-   * @brief Observers monitoring availability of all the sites.
-   */
-  std::list<BindingSiteObserver*> _binding_site_observers;
-  
+  mutable UpdatedTotalRateVector _rate_contributions;  
 
   // =================
   //  Private Methods

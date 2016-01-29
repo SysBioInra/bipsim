@@ -41,7 +41,6 @@ void CellState::store (SimulatorInput* element,
 {
   // try to store element
   if (not (_site_handler.store (element, name)
-	   || _binding_site_family_handler.store (element, name)
 	   || _site_family_handler.store (element, name)
 	   || _chemical_handler.store (element, name)
 	   || _reaction_handler.store (element, name)
@@ -61,40 +60,6 @@ void CellState::store (SimulatorInput* element,
 //  Public Methods - Accessors
 // ============================
 //
-int CellState::find_id (const std::string& name) const
-{
-  int result = _site_handler.find_id (name);
-  if (result != NOT_FOUND) { return result; }
-
-  result = _binding_site_family_handler.find_id (name);
-  if (result != NOT_FOUND) { return result; }
-
-  result = _site_family_handler.find_id (name);
-  if (result != NOT_FOUND) { return result; }
-
-  result = _chemical_handler.find_id (name);
-  if (result != NOT_FOUND) { return result; }
-
-  result = _reaction_handler.find_id (name);
-  if (result != NOT_FOUND) { return result; }
-
-  result = _bireaction_handler.find_id (name);
-  if (result != NOT_FOUND) { return result; }
-
-  result = _composition_table_handler.find_id (name);
-  if (result != NOT_FOUND) { return result; }
-
-  result = _decoding_table_handler.find_id (name);
-  if (result != NOT_FOUND) { return result; }
-
-  result = _product_table_handler.find_id (name);
-  if (result != NOT_FOUND) { return result; }
-
-  result = _transformation_table_handler.find_id (name);
-  if (result != NOT_FOUND) { return result; }
-
-  return NOT_FOUND;
-}  
 
 // =================
 //  Private Methods

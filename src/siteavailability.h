@@ -46,12 +46,10 @@ class SiteAvailability
   //
   /**
    * @brief Default constructor.
-   * @param first Position of the first base of the site to monitor.
-   * @param last Position of the last base of the site to monitor.
-   * @param observer_to_notify Observer to notify when the number of available
-   *  sites changes.
+   * @param site_to_notify BindingSite to notify when the number of 
+   * available sites changes.
    */
-  SiteAvailability (int first, int last, SiteObserver& observer_to_notify);
+  SiteAvailability (BindingSite& site_to_notify);
 
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
@@ -67,7 +65,7 @@ class SiteAvailability
   // ===========================
   //
   /**
-   * @brief Notify observer if a change occurred since last notification.
+   * @brief Notify site if a change occurred since last notification.
    * @param number_sites Number of sites currently available.
    */
   void notify (int number_sites);
@@ -77,32 +75,27 @@ class SiteAvailability
   // ============================
   //
   /**
-   * @brief Accessor to first base to watch.
-   * @return Position of first base to watch.
+   * @brief Accessor to site being watched.
+   * @return BindingSite being watched.
    */
-  int first (void) const;
+  const BindingSite& site (void) const;
 
   /**
-   * @brief Accessor to last base to watch.
-   * @return Position of last base to watch.
+   * @brief Check whether site is affected by a change on a specific segment.
+   * @param a First position of segment that changed.
+   * @param b Last position of segment that changed.
    */
-  int last (void) const;
+  bool is_affected (int a, int b) const;
 
 private:
   // ============
   //  Attributes
   // ============
   //
-  /** @brief Postion of the first base of the site to monitor. */
-  int _first;
+  /** @brief Site to modify when changes occur. */
+  BindingSite& _site;
 
-  /** @brief Postion of the last base of the site to monitor. */
-  int _last;
-
-  /** @brief Observer to modify when changes occur. */
-  SiteObserver& _observer;
-
-  /** @brief Last value sent to observer. */
+  /** @brief Last value sent to site. */
   int _last_value_notified;
 
   // =================
@@ -115,14 +108,17 @@ private:
 //  Inline declarations
 // ======================
 //
-inline int SiteAvailability::first (void) const
+#include "bindingsite.h"
+
+inline const BindingSite& SiteAvailability::site (void) const
 {
-  return _first;
+  return _site;
 }
 
-inline int SiteAvailability::last (void) const
+inline bool SiteAvailability::is_affected (int a, int b) const
 {
-  return _first;
+  return (((_site.relative_first() < a) && (_site.relative_last() < a)) 
+	  || ((_site.relative_first() > b) && (_site.relative_last() > b)));
 }
 
 

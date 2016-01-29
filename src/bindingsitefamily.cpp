@@ -20,7 +20,6 @@
 //
 #include "bindingsitefamily.h"
 #include "bindingsite.h"
-#include "bindingsiteobserver.h"
 #include "randomhandler.h"
 #include "macros.h"
 
@@ -33,21 +32,13 @@ BindingSiteFamily::BindingSiteFamily (void) {}
 // Forbidden
 // BindingSiteFamily::BindingSiteFamily (const BindingSiteFamily& other_family);
 // BindingSiteFamily& BindingSiteFamily::operator= ( const BindingSiteFamily& other_family );
-
-BindingSiteFamily::~BindingSiteFamily (void)
-{
-  for (std::list<BindingSiteObserver*>::iterator bso_it = _binding_site_observers.begin();
-       bso_it != _binding_site_observers.end(); bso_it++)
-    {
-      delete *bso_it;
-    }
-}
+// BindingSiteFamily::~BindingSiteFamily (void);
 
 // ===========================
 //  Public Methods - Commands
 // ===========================
 //
-void BindingSiteFamily::add (const BindingSite* binding_site)
+void BindingSiteFamily::add (BindingSite* binding_site)
 {
   // store binding site
   _binding_sites.push_back (binding_site);
@@ -55,17 +46,13 @@ void BindingSiteFamily::add (const BindingSite* binding_site)
   // extend contribution vector
   _rate_contributions.extend (1);
 
-  // create binding site observer
-  int site_index = _rate_contributions.size()-1;
-  _binding_site_observers.push_back 
-    (new BindingSiteObserver(*binding_site, *this, site_index));
+  // configure update message to be index in the rate vector
+  binding_site->set_update_message (_rate_contributions.size()-1);
 }
 
-void BindingSiteFamily::update (int site_index, int number_available_sites)
+void BindingSiteFamily::update (int site_index, int rate_contribution)
 {  
-  _rate_contributions.set_rate
-    (site_index,
-     _binding_sites [site_index]->k_on() * number_available_sites);
+  _rate_contributions.set_rate (site_index, rate_contribution);
       
   // notify change to rate managers
   notify_change();

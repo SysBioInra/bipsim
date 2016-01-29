@@ -21,6 +21,7 @@
 //
 #include "watchergroup.h"
 #include "siteavailability.h"
+#include "bindingsite.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -50,13 +51,12 @@ WatcherGroup::~WatcherGroup (void)
 //  Public Methods - Commands
 // ===========================
 //
-SiteAvailability* WatcherGroup::add_watcher (int first, int last,
-					     SiteObserver& observer)
+SiteAvailability* WatcherGroup::add_watcher (BindingSite& site)
 {
-  SiteAvailability* new_watcher = new SiteAvailability (first, last, observer);
+  SiteAvailability* new_watcher = new SiteAvailability (site);
   _watchers.push_back (new_watcher);
-  if (first < _first) _first = first;
-  if (last > _last) _last = last;
+  if (site.relative_first() < _first) _first = site.relative_first();
+  if (site.relative_last() > _last) _last = site.relative_last();
 
   if (_watchers.size() > 5)
     {
