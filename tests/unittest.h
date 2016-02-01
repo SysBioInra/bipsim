@@ -52,7 +52,7 @@ class UnitTest
   //
 
  protected:
-  void test (bool condition, const std::string& msg)
+  void test (bool condition, const std::string& msg) const
   {
     if (condition == false) { throw std::runtime_error (msg); }
   }

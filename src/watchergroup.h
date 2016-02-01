@@ -64,6 +64,7 @@ class WatcherGroup
   /**
    * @brief Create and add a watcher for a specific site.
    * @param site BindingSite to notify when site changes.
+   * @return SiteAvailability object created.
    */
   SiteAvailability* add_watcher (BindingSite& site);
   
@@ -85,13 +86,14 @@ class WatcherGroup
 
   /**
    * @brief Accessor to first base occupied by a watcher in the group.
-   * @return Position of first base spanned by the group.
+   * @return Position of first base spanned by the group 
+   *   (std::numeric_limits <int>::max() if group is empty).
    */
   int first (void) const;
   
   /**
    * @brief Accessor to last base occupied by a watcher in the group.
-   * @return Position of last base spanned by the group.
+   * @return Position of last base spanned by the group (-1 if group is empty).
    */
   int last (void) const;
 
