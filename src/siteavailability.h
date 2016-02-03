@@ -117,8 +117,8 @@ inline const BindingSite& SiteAvailability::site (void) const
 
 inline bool SiteAvailability::is_affected (int a, int b) const
 {
-  return (((_site.relative_first() < a) && (_site.relative_last() < a)) 
-	  || ((_site.relative_first() > b) && (_site.relative_last() > b)));
+  return !(((_site.relative_first() < a) && (_site.relative_last() < a)) 
+	   || ((_site.relative_first() > b) && (_site.relative_last() > b)));
 }
 
 

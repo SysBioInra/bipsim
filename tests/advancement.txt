@@ -48,8 +48,8 @@ Sequence
  * ChemicalSequence TODO <--
  * PartialStrand Done!
  * Segment N/A.
- * SequenceOccupation TODO <--
- * SiteAvailability TODO <--
+ * SequenceOccupation Done!
+ * SiteAvailability Done!
  * SiteLocation N/A.
  * WatcherGroup Done!
 
