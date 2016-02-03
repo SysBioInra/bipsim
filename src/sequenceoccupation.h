@@ -139,6 +139,18 @@ class SequenceOccupation
    */
   int number_available_sites (int first, int last) const;
 
+  /**
+   * @brief Get the list of left ends.
+   * @return List of positions of left ends.
+   */
+  std::list <int> left_ends (void) const;
+
+  /**
+   * @brief Get the list of right ends.
+   * @param List of positions of right ends.
+   */
+  std::list <int> right_ends (void) const;
+
 private:
   // ============
   //  Attributes

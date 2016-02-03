@@ -40,10 +40,19 @@ PartialStrand::PartialStrand (int length)
   _segment_it = _segments.begin();
 }
 
-// Not needed for this class (use of compiler-generated versions)
-// PartialStrand::PartialStrand (void);
-// PartialStrand::PartialStrand (const PartialStrand& other_strand);
-// PartialStrand& PartialStrand::operator= (const PartialStrand& other_strand);
+PartialStrand::PartialStrand (const PartialStrand& other)
+  : _length (other._length)
+  , _complete (other._complete)
+  , _segments (other._segments)
+{
+  _segment_it = _segments.begin();
+}
+
+PartialStrand& PartialStrand::operator= (const PartialStrand& other)
+{
+  _length = other._length; _complete = other._complete; 
+  _segments = other._segments; _segment_it = _segments.begin();
+}
 // PartialStrand::~PartialStrand (void);
 
 // ===========================
@@ -77,6 +86,39 @@ bool PartialStrand::start_new_segment (int position)
 //  Public Methods - Accessors
 // ============================
 //
+std::list <int> PartialStrand::left_ends (void) const
+{
+  std::list <int> result;
+  if (_complete) { return result; }
+
+ // we ignore the first segment that starts at -1
+  std::list <Segment>::const_iterator segment_it =_segments.begin(); 
+  std::list <Segment>::const_iterator last_it = --_segments.end();
+  ++segment_it;
+  while (segment_it != last_it) 
+    { result.push_back (segment_it->first); ++segment_it; }
+  // keep last segment if it is not dummy
+  if (segment_it->first != _length) { result.push_back (segment_it->first); }
+  return result;
+}
+
+std::list <int> PartialStrand::right_ends (void) const
+{
+  std::list <int> result;
+  if (_complete) { return result; }
+
+  std::list <Segment>::const_iterator segment_it =_segments.begin();
+  std::list <Segment>::const_iterator last_it = --_segments.end();
+  // skip first segment if it's the dummy segment
+  bool first_is_dummy = (segment_it->last == 0);
+  if (first_is_dummy) { ++segment_it; }
+  while (segment_it != last_it) 
+    { result.push_back (segment_it->last - 1); ++segment_it; }
+  // keep last segment if it is not dummy AND first is dummy (no circularity)
+  if ((segment_it->first != _length) && (first_is_dummy))
+    { result.push_back (_length - 1); }
+  return result;
+}
 
 
 // =================

@@ -44,13 +44,12 @@ class PartialStrand
   /** @brief Constructor. */
   PartialStrand (int length);
 
-  // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
-  // /* @brief Copy constructor. */
-  // PartialStrand (const PartialStrand& other_strand);
-  // /* @brief Assignment operator. */
-  // PartialStrand& operator= (const PartialStrand& other_strand);
-  // /* @brief Destructor. */
+  /** @brief Copy constructor. */
+  PartialStrand (const PartialStrand& other);
+  /** @brief Assignment operator. */
+  PartialStrand& operator= (const PartialStrand& other);
+  // /* @brief Destructor. */ really not needed here.
   // ~PartialStrand (void);
 
   // ===========================
@@ -81,7 +80,19 @@ class PartialStrand
    * @brief Check whether strand has been completed.
    * @return True if strand has been completed.
    */
-  bool completed (void);
+  bool completed (void) const;
+
+  /**
+   * @brief Accessor to left free ends.
+   * @return List of positions of free ends on the left side of segments.
+   */
+  std::list <int> left_ends (void) const;
+
+  /**
+   * @brief Accessor to right free ends.
+   * @return List of positions of free ends on the right side of segments.
+   */
+  std::list <int> right_ends (void) const;
 
 private:
   // ============
@@ -146,7 +157,7 @@ inline bool PartialStrand::extend_segment (int position)
   return true;
 }
 
-inline bool PartialStrand::completed (void)
+inline bool PartialStrand::completed (void) const
 {
   return _complete;
 }

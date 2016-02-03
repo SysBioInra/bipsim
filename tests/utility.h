@@ -2,6 +2,7 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
+#include <iostream>
 #include <list>
 
 template <typename T>
@@ -20,6 +21,15 @@ bool compare_lists (const std::list <T>& list1, const std::list <T>& list2)
       my_list2.erase (list2_it); ++list1_it;
     }
   return true;
+}
+
+template <typename T>
+inline void display_list (const std::list <T>& list)
+{
+  std::cout << "List content:";
+  for (typename std::list<T>::const_iterator list_it = list.begin();  
+       list_it != list.end(); ++list_it) { std::cout << " " << *list_it; }
+  std::cout << "\n";
 }
 
 #endif // UTILITY_H

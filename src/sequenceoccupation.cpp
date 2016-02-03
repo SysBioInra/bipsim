@@ -59,6 +59,13 @@ SequenceOccupation::~SequenceOccupation (void)
 void SequenceOccupation::add_element (const BoundChemical& element,
 				      int first, int last)
 {
+  /** @pre first must be within sequence bound. */
+  REQUIRE ((first >= 0) && (first < _occupancy.size()));
+  /** @pre last must be within sequence bound. */
+  REQUIRE ((last >= 0) && (last < _occupancy.size()));
+  /** @pre first must be smaller or equal to last. */
+  REQUIRE (first <= last);
+
   // update occupancy status
   for (int i = first; i <= last; i++) { _occupancy [i] += 1; }
 
@@ -67,8 +74,15 @@ void SequenceOccupation::add_element (const BoundChemical& element,
 }
 
 void SequenceOccupation::remove_element (const BoundChemical& element,
-				    int first, int last)
+					 int first, int last)
 {
+  /** @pre first must be within sequence bound. */
+  REQUIRE ((first >= 0) && (first < _occupancy.size()));
+  /** @pre last must be within sequence bound. */
+  REQUIRE ((last >= 0) && (last < _occupancy.size()));
+  /** @pre first must be smaller or equal to last. */
+  REQUIRE (first <= last);
+
   // update occupancy status
   for (int i = first; i <= last; i++) { _occupancy [i] -= 1; }  
 
@@ -78,6 +92,9 @@ void SequenceOccupation::remove_element (const BoundChemical& element,
 
 void SequenceOccupation::add_sequence (int quantity)
 {
+  /** @pre quantity must be positive. */
+  REQUIRE (quantity >= 0);
+
   _number_sequences += quantity;
 
   // notify change
@@ -191,8 +208,15 @@ void SequenceOccupation::unwatch_moving_site (const BindingSite& site)
 //
 int SequenceOccupation::number_available_sites (int first, int last) const
 {
-  int max_occupied = 0;
-  for (int i = first; i < last; ++i)
+  /** @pre first must be within sequence bound. */
+  REQUIRE ((first >= 0) && (first < _occupancy.size()));
+  /** @pre last must be within sequence bound. */
+  REQUIRE ((last >= 0) && (last < _occupancy.size()));
+  /** @pre first must be smaller or equal to last. */
+  REQUIRE (first <= last);
+
+  int max_occupied = _occupancy [first];
+  for (int i = first+1; i <= last; ++i)
     {
       if (_occupancy [i] > max_occupied) { max_occupied = _occupancy [i]; }
     }
@@ -201,16 +225,28 @@ int SequenceOccupation::number_available_sites (int first, int last) const
   return result;
 }
 
-int free_ends_left (void)
+std::list <int> SequenceOccupation::left_ends (void) const
 {
+  std::list <int> result;
+  for (std::list <PartialStrand>::const_iterator strand_it = _partials.begin();
+       strand_it != _partials.end (); ++strand_it)
+    {
+      std::list <int> tmp = strand_it->left_ends();
+      result.insert (result.end(), tmp.begin(), tmp.end());
+    }
+  return result;
 }
 
-int free_ends_right (void)
+std::list <int> SequenceOccupation::right_ends (void) const
 {
-}
-
-int gaps (void)
-{
+  std::list <int> result;
+  for (std::list <PartialStrand>::const_iterator strand_it = _partials.begin();
+       strand_it != _partials.end (); ++strand_it)
+    {
+      std::list <int> tmp = strand_it->right_ends();
+      result.insert (result.end(), tmp.begin(), tmp.end());
+    }
+  return result;
 }
 
 // =================
@@ -247,6 +283,7 @@ int SequenceOccupation::position_to_group (int position) const
 
 void SequenceOccupation::notify_change (int a, int b) const
 {
+  if (_watcher_groups.size() == 0) return;
   int last_group = position_to_group (b);
   if (last_group == _watcher_groups.size()) { --last_group; }
   for (int i = position_to_group (a); i <= last_group; ++i)
@@ -311,6 +348,6 @@ _check_completion (std::list <PartialStrand>::iterator& strand_it)
     {
       _partials.erase (strand_it);
       ++_number_sequences;
-      for (int i = 0; i < _occupancy.size(); ++i) { --_occupancy [i]; }
+      for (int i = 0; i < _occupancy.size(); ++i) { ++_occupancy [i]; }
     }
 }

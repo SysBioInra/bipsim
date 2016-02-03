@@ -48,9 +48,9 @@ class ClassName
   // ClassName (void);
   // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
-  // ClassName (const ClassName& other_class_name);
+  // ClassName (const ClassName& other);
   // /* @brief Assignment operator. */
-  // ClassName& operator= (const ClassName& other_class_name);
+  // ClassName& operator= (const ClassName& other);
   // /* @brief Destructor. */
   // ~ClassName (void);
 

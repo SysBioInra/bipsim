@@ -26,8 +26,8 @@
 //
 // Not needed for this class (use of compiler-generated versions)
 // ClassName::ClassName (void);
-// ClassName::ClassName (const ClassName& other_class_name);
-// ClassName& ClassName::operator= (const ClassName& other_class_name);
+// ClassName::ClassName (const ClassName& other);
+// ClassName& ClassName::operator= (const ClassName& other);
 // ClassName::~ClassName (void);
 
 // ===========================
