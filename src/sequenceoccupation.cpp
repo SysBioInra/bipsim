@@ -130,6 +130,7 @@ void SequenceOccupation::start_new_segment (int position)
       strand_it->start_new_segment (position);
     }
   _check_completion (strand_it);
+  notify_change (position, position);
 }
 
 void SequenceOccupation::extend_segment (int position)
@@ -147,6 +148,7 @@ void SequenceOccupation::extend_segment (int position)
   /** @pre There must be a segment to extend. */
   REQUIRE (strand_it != _partials.end()); 
   _check_completion (strand_it);
+  notify_change (position, position);
 }
 
 void SequenceOccupation::watch_site (BindingSite& site)
@@ -162,7 +164,7 @@ void SequenceOccupation::watch_site (BindingSite& site)
     {
       WatcherGroup* g = _watcher_groups [ind_g];
       if (((first <= g->first()) && (last >= g->first()))
-	  || ((first <= g->first()) && (last >= g->last())))
+	  || ((first <= g->last()) && (last >= g->last())))
 	{
 	  // add to group and look whether it overlaps with the following groups
 	  new_watcher = g->add_watcher (site);
@@ -266,6 +268,9 @@ void SequenceOccupation::fuse_groups (int index)
 
 int SequenceOccupation::position_to_group (int position) const
 {
+  if (_watcher_groups.size() == 0) { return 1; }
+  if (_watcher_groups[0]->last() >= position) { return 0; }
+
   // we look for the largest i such that
   //  _watcher_groups[i].last() < position
   int i_min = 0; int i_max = _watcher_groups.size()-1;

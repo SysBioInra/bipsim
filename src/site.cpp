@@ -36,7 +36,7 @@ Site::Site (SiteFamily& family, ChemicalSequence& location, int first, int last)
 {
   /** @pre First must be smaller than last.*/
   REQUIRE (first <= last);
-
+  
   /** @pre Site must be within location.*/
   REQUIRE (location.is_out_of_bounds (first, last) == false);
 }

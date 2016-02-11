@@ -12,6 +12,7 @@
 //
 #include <iostream>
 #include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
+#include <cmath>
 
 #include "unittest.h"
 #include "utility.h"
@@ -22,16 +23,62 @@
 //
 #include "../src/sequenceoccupation.h"
 #include "../src/boundchemical.h"
+#include "../src/bindingsitefamily.h"
+#include "../src/bindingsite.h"
+#include "../src/chemicalsequence.h"
+
+class DummyBSF : public BindingSiteFamily
+{
+public:
+  DummyBSF (int length) : _cs (std::string (length, 'a'), 0), _k_on (1) {}
+
+  BindingSite* add_site (int first, int last) 
+  {
+    BindingSite* bs = new BindingSite (*this, _cs, first, last, _k_on, 1);
+    _k_on *= _lvl;
+    return bs;
+  }
+
+  int site_availability (int site_index)
+  {
+    int result = floor (total_binding_rate_contribution() + 0.5);
+    for (int i = 0; i < site_index; ++i) { result /= _lvl; }
+    return result % _lvl;
+  }
+
+private:
+  ChemicalSequence _cs;
+  int _k_on;
+  static const int _lvl = 10;
+};
 
 class SequenceOccupationTest : public UnitTest
 {
 public:
-  SequenceOccupationTest (int length) : _so (length, 0) {}
+  SequenceOccupationTest (int length) : _so (length, 0), _bsf (length) {}
+
+  void test_watch_site (int first, int last)
+  {
+    BindingSite* bs = _bsf.add_site (first, last);
+    _so.watch_site (*bs);
+  }
+
+  void test_unwatch_moving_site (const BindingSite& bs)
+  {
+    _so.unwatch_moving_site (bs);
+  }
+  
 
   void test_site_availability (int first, int last, int expected) 
-  {
+  {    
     test (_so.number_available_sites (first, last) == expected,
 	  "Number of available sites is incorrect.");
+  }
+
+  void test_site_update (int site_index, int expected)
+  {
+    test (_bsf.site_availability (site_index) == expected,
+	  "Observer has not been updated correctly");
   }
 
   void test_left_ends (const std::list <int>& expected)
@@ -50,6 +97,7 @@ public:
 
 private:
   SequenceOccupation _so;
+  DummyBSF _bsf;
 };
 
 int main (int argc, char *argv[])
@@ -245,6 +293,93 @@ int main (int argc, char *argv[])
     for (int i = 16; i < 25; ++i) { test().extend_segment (i); }
     left_ends.back() = 5; right_ends.remove (15); right_ends.push_back (24);
     test.test_left_ends (left_ends); test.test_right_ends (right_ends);
+  }
+
+  // test site watching
+  {
+    SequenceOccupationTest test (100);
+    BoundChemical dummy;
+    
+    test.test_watch_site (10, 15);
+    test.test_site_availability (10, 15, 0); test.test_site_update (0, 0);
+    test().add_sequence (1);
+    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
+    test().add_sequence (4);
+    test.test_site_availability (10, 15, 5); test.test_site_update (0, 5);
+    test().remove_sequence (3);
+    test.test_site_availability (10, 15, 2); test.test_site_update (0, 2);
+
+    test.test_watch_site (14, 20);
+    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
+
+    test.test_watch_site (80, 90);
+    test.test_site_availability (80, 90, 2); test.test_site_update (2, 2);
+
+    test().start_new_segment (9);
+    for (int i = 10; i < 16; ++i) { test().extend_segment (i); }
+    test.test_site_availability (10, 15, 3); test.test_site_update (0, 3);
+    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
+    test.test_site_availability (80, 90, 2); test.test_site_update (2, 2);
+
+    test().add_element (dummy, 12, 17);
+    test.test_site_availability (10, 15, 2); test.test_site_update (0, 2);
+    test.test_site_availability (14, 20, 1); test.test_site_update (1, 1);
+    test.test_site_availability (80, 90, 2); test.test_site_update (2, 2);
+
+    test().add_element (dummy, 5, 12);
+    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
+    test.test_site_availability (14, 20, 1); test.test_site_update (1, 1);
+    test.test_site_availability (80, 90, 2); test.test_site_update (2, 2);
+
+    for (int i = 16; i < 82; ++i) { test().extend_segment (i); }
+    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
+    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
+    test.test_site_availability (80, 90, 2); test.test_site_update (2, 2);
+    
+    test().start_new_segment (13);
+    for (int i = 14; i < 25; ++i) { test().extend_segment (i); }
+    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
+    test.test_site_availability (14, 20, 3); test.test_site_update (1, 3);
+    test.test_site_availability (80, 90, 2); test.test_site_update (2, 2);
+
+    test().add_element (dummy, 17, 82);
+    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
+    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
+    test.test_site_availability (80, 90, 1); test.test_site_update (2, 1);
+
+    test().add_element (dummy, 85, 92);
+    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
+    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
+    test.test_site_availability (80, 90, 1); test.test_site_update (2, 1);
+
+    test().add_element (dummy, 85, 92);
+    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
+    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
+    test.test_site_availability (80, 90, 0); test.test_site_update (2, 0);
+
+    test().add_element (dummy, 85, 92);
+    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
+    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
+    test.test_site_availability (80, 90, 0); test.test_site_update (2, 0);
+
+    for (int i = 82; i < 100; ++i) { test().extend_segment (i); }
+    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
+    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
+    test.test_site_availability (80, 90, 0); test.test_site_update (2, 0);    
+
+    test().remove_element (dummy, 5, 12);
+    test().remove_element (dummy, 12, 17);
+    test().remove_element (dummy, 17, 82);
+    test().remove_element (dummy, 85, 92);
+    test().remove_element (dummy, 85, 92);
+    test().remove_element (dummy, 85, 92);
+    test.test_site_availability (10, 15, 3); test.test_site_update (0, 3);
+    test.test_site_availability (14, 20, 4); test.test_site_update (1, 4);
+    test.test_site_availability (80, 90, 3); test.test_site_update (2, 3);    
+  }
+
+  // TODO: test watching moving sites
+  {
   }
 
   return EXIT_SUCCESS;

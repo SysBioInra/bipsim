@@ -92,10 +92,10 @@ void Translocation::do_reaction (void)
     }
 
   // check whether the unit has reached a termination site
-  if ( _processive_chemical.is_terminating() == true ) { stall = true; }
+  if (_processive_chemical.is_terminating() == true) { stall = true; }
 
   // replace the chemical with its stalled form or its form after step
-  if ( stall == true ) // stalled
+  if (stall == true) // stalled
     {
       // create a stalled form of the chemical
       BoundChemical& stalled_form = _processive_chemical.stalled_form();
@@ -108,8 +108,10 @@ void Translocation::do_reaction (void)
   else // stepped
     {
       // transform the processive chemical in its form after stepping
-      _chemical_after_step.add_unit_in_place_of (_processive_chemical); // first create _chemical_after_step
-      _processive_chemical.focused_unit_location().replace_bound_unit (_processive_chemical, _chemical_after_step);      
+      // first create _chemical_after_step
+      _chemical_after_step.add_unit_in_place_of (_processive_chemical); 
+      _processive_chemical.focused_unit_location().
+	replace_bound_unit (_processive_chemical, _chemical_after_step);      
       _processive_chemical.remove_focused_unit();
     }
 }

@@ -52,10 +52,8 @@ public:
    * @param k_off Off rate of unbinding on the site.
    * @param reading_frame Position of the reading frame (if applicable).
    */
-  BindingSite (BindingSiteFamily& family, 
-	       ChemicalSequence& location, 
-	       int first, int last, 
-	       double k_on, double k_off,
+  BindingSite (BindingSiteFamily& family, ChemicalSequence& location, 
+	       int first, int last, double k_on, double k_off,
 	       int reading_frame = NO_READING_FRAME );
 
   // Not needed for this class (use of compiler-generated versions)
