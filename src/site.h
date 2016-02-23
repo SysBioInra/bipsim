@@ -45,8 +45,8 @@ public:
    * @brief Default constructor
    * @param family Family the site belongs to.
    * @param location Chemical sequence containing the site.
-   * @param first Position of first base.
-   * @param last Position of last base.
+   * @param first Relative position of first base.
+   * @param last Relative position of last base.
    */
   Site (SiteFamily& family, ChemicalSequence& location, int first, int last);
 
@@ -82,29 +82,29 @@ public:
   ChemicalSequence& location (void) const;
 
   /**
-   * @brief First position accessor.
-   * @return First position of site.
-   */
-  int first (void) const;
- 
-  /**
-   * @brief Last position accessor.
-   * @return Last position of site.
-   */
-  int last (void) const;
-
-  /**
    * @brief Accessor to starting position on sequence.
    * @return First position of site on sequence.
    */
-  int relative_first (void) const;
+  int first (void) const;
  
   /**
    * @brief Accessor to ending position on sequence.
    * @return Last position of site on sequence.
    */
-  int relative_last (void) const;
-   
+  int last (void) const;   
+
+  /**
+   * @brief Check whether site overlaps with a given segment.
+   * @param a Start of the segment to check against.
+   * @param b End of the segment to check against.
+   */
+  bool overlaps (int a, int b) const;   
+
+  /**
+   * @brief Move site along the sequence.
+   * @param step_size Step by which to move the binding site.
+   */
+  virtual void move (int step_size);
 
  protected:
   // ============
@@ -117,17 +117,11 @@ public:
   /** @brief Chemical on which the site is located. */
   ChemicalSequence& _location;
 
-  /** @brief First absolute position of the site. */
+  /** @brief First position of the site along the sequence. */
   int _first;
   
-  /** @brief Last absolute position of site. */
-  int _last;
-
-  /** @brief First position of the site along the sequence. */
-  int _relative_first;
-  
   /** @brief Last position of site along the sequence. */
-  int _relative_last;
+  int _last;
 
   // =================
   //  Private Methods
@@ -154,22 +148,16 @@ inline int Site::last (void) const
   return _last;
 }
 
-inline int Site::relative_first (void) const
-{
-  return _relative_first;
-}
-
-inline int Site::relative_last (void) const
-{
-  return _relative_last;
-}
-
 inline ChemicalSequence& Site::location (void) const
 {
   return _location;
 }
 
-
-
+inline bool Site::overlaps (int a, int b) const
+{
+  /** @pre a must be smaller or equal to b. */
+  REQUIRE (a <= b);
+  return (((_first <= a) && (_last >= a)) || ((_first >= a) && (b >= _first)));
+}
 
 #endif // SITE_H

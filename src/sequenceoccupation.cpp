@@ -1,5 +1,4 @@
 
-
 /**
  * @file sequenceoccupation.cpp
  * @brief Implementation of the SequenceOccupation class.
@@ -13,15 +12,15 @@
 // ==================
 //
 #include <iostream> // std::cout
+#include <algorithm> // std::find
 
 // ==================
 //  Project Includes
 // ==================
 //
 #include "sequenceoccupation.h"
-#include "siteavailability.h"
 #include "bindingsite.h"
-#include "watchergroup.h"
+#include "sitegroup.h"
 #include "partialstrand.h"
 
 // ==========================
@@ -31,25 +30,20 @@
 SequenceOccupation::SequenceOccupation (int length, int number)
   : _number_sequences (number)
   , _occupancy (length, 0)
+  , _free_end_factory (0)
 {
 }
 
 // Forbidden
-// SequenceOccupation::SequenceOccupation (const SequenceOccupation& other_sequence_occupation);
-// SequenceOccupation& SequenceOccupation::operator= (const SequenceOccupation& other_sequence_occupation);
+// SequenceOccupation::SequenceOccupation (const SequenceOccupation& other);
+// SequenceOccupation& SequenceOccupation::operator= (const SequenceOccupation& other);
 
 SequenceOccupation::~SequenceOccupation (void)
 {
-  for (int i = 0; i < _watcher_groups.size(); ++i) 
-    { 
-      delete _watcher_groups[i];
-    }
-  for (std::list <SiteAvailability*>::iterator 
-	 watcher_it = _moving_sites.begin();
-       watcher_it != _moving_sites.end(); ++watcher_it) 
-    { 
-      delete *watcher_it;
-    }
+  for (int i = 0; i < _site_groups.size(); ++i)  { delete _site_groups[i]; }
+  for (std::list <PartialStrand*>::iterator strand_it = _partials.begin();
+       strand_it != _partials.end(); ++strand_it)
+    { delete *strand_it; }
 }
 
 // ===========================
@@ -112,22 +106,26 @@ void SequenceOccupation::remove_sequence (int quantity)
   notify_all_sites();
 }
 
-void SequenceOccupation::start_new_segment (int position)
+void SequenceOccupation::start_segment (int position)
 {
   /** @pre position must be within sequence bound. */
   REQUIRE ((position >= 0) && (position < _occupancy.size()));
+  /** @pre Free end factory must have been defined. */
+  REQUIRE (_free_end_factory != 0);
 
   _occupancy [position] -= 1;
-  std::list <PartialStrand>::iterator strand_it = _partials.begin();
+  std::list <PartialStrand*>::iterator strand_it = _partials.begin();
   while (strand_it != _partials.end())
     {
-      if (strand_it->start_new_segment (position)) { break; }
+      if ((*strand_it)->start_segment (position)) { break; }
       ++strand_it;
     }
   if (strand_it == _partials.end()) 
     { 
-      _partials.push_back (_occupancy.size()); --strand_it;
-      strand_it->start_new_segment (position);
+      _partials.push_back 
+	(new PartialStrand (_occupancy.size(), *_free_end_factory)); 
+      --strand_it;
+      (*strand_it)->start_segment (position);
     }
   _check_completion (strand_it);
   notify_change (position, position);
@@ -137,12 +135,14 @@ void SequenceOccupation::extend_segment (int position)
 {
   /** @pre position must be within sequence bound. */
   REQUIRE ((position >= 0) && (position < _occupancy.size()));
+  /** @pre Free end factory must have been defined. */
+  REQUIRE (_free_end_factory != 0);
 
   _occupancy [position] -= 1;
-  std::list <PartialStrand>::iterator strand_it = _partials.begin();
+  std::list <PartialStrand*>::iterator strand_it = _partials.begin();
   while (strand_it != _partials.end())
     {
-      if (strand_it->extend_segment (position)) { break; }
+      if ((*strand_it)->extend_segment (position)) { break; }
       ++strand_it;
     }
   /** @pre There must be a segment to extend. */
@@ -151,23 +151,18 @@ void SequenceOccupation::extend_segment (int position)
   notify_change (position, position);
 }
 
-void SequenceOccupation::watch_site (BindingSite& site)
+void SequenceOccupation::register_site (BindingSite& site)
 {
-  SiteAvailability* new_watcher;
-  int first = site.relative_first();
-  int last = site.relative_last();
-
-  // look if watcher should be added to an existing group
+  // look if site should be added to an existing group
   bool new_group = true;
-  int ind_g = position_to_group (first);
-  if (ind_g < _watcher_groups.size())
+  int ind_g = position_to_group (site.first());
+  if (ind_g < _site_groups.size())
     {
-      WatcherGroup* g = _watcher_groups [ind_g];
-      if (((first <= g->first()) && (last >= g->first()))
-	  || ((first <= g->last()) && (last >= g->last())))
+      SiteGroup* g = _site_groups [ind_g];
+      if (site.overlaps (g->first(), g->last()))
 	{
 	  // add to group and look whether it overlaps with the following groups
-	  new_watcher = g->add_watcher (site);
+	  g->add_site (site);
 	  fuse_groups (ind_g);
 	  new_group = false;
 	}
@@ -175,33 +170,27 @@ void SequenceOccupation::watch_site (BindingSite& site)
   if (new_group == true)
     {
       // create and insert new group
-      WatcherGroup* g = new WatcherGroup;
-      new_watcher = g->add_watcher (site);
-      if (ind_g < _watcher_groups.size())
-	_watcher_groups.insert (_watcher_groups.begin()+ind_g, g);
+      SiteGroup* g = new SiteGroup;
+      g->add_site (site);
+      if (ind_g < _site_groups.size())
+	{ _site_groups.insert (_site_groups.begin()+ind_g, g); }
       else
-	_watcher_groups.push_back (g);
+	{ _site_groups.push_back (g); }
     }
 
   // send first notification about site availability
-  new_watcher->notify (number_available_sites 
-		       (new_watcher->site().relative_first(),
-			new_watcher->site().relative_last()));
+  site.update();
 }
 
-void SequenceOccupation::watch_moving_site (BindingSite& site)
+void SequenceOccupation::register_moving_site (BindingSite& site)
 {
-  _moving_sites.push_back (new SiteAvailability (site));
+  _moving_sites.push_back (&site);
+  site.update();
 }
 
-void SequenceOccupation::unwatch_moving_site (const BindingSite& site)
+void SequenceOccupation::deregister_moving_site (BindingSite& site)
 {
-  std::list <SiteAvailability*>::iterator watcher_it = _moving_sites.begin();
-  while (watcher_it != _moving_sites.end()) 
-    { 
-      if (&((*watcher_it)->site()) == &site) { delete *watcher_it; break; }
-      ++watcher_it;
-    }
+  _moving_sites.remove (&site);
 }
 
 // ============================
@@ -227,58 +216,37 @@ int SequenceOccupation::number_available_sites (int first, int last) const
   return result;
 }
 
-std::list <int> SequenceOccupation::left_ends (void) const
-{
-  std::list <int> result;
-  for (std::list <PartialStrand>::const_iterator strand_it = _partials.begin();
-       strand_it != _partials.end (); ++strand_it)
-    {
-      std::list <int> tmp = strand_it->left_ends();
-      result.insert (result.end(), tmp.begin(), tmp.end());
-    }
-  return result;
-}
-
-std::list <int> SequenceOccupation::right_ends (void) const
-{
-  std::list <int> result;
-  for (std::list <PartialStrand>::const_iterator strand_it = _partials.begin();
-       strand_it != _partials.end (); ++strand_it)
-    {
-      std::list <int> tmp = strand_it->right_ends();
-      result.insert (result.end(), tmp.begin(), tmp.end());
-    }
-  return result;
-}
-
 // =================
 //  Private Methods
 // =================
 //
 void SequenceOccupation::fuse_groups (int index)
 {
-  if (index >= _watcher_groups.size()-1) return;
-  if (_watcher_groups[index]->last() < _watcher_groups[index+1]->first())
-    return;
-  _watcher_groups[index]->absorb (*_watcher_groups[index+1]);
-  delete _watcher_groups[index+1];
-  _watcher_groups.erase (_watcher_groups.begin() + index+1);
+  // if group is last in vector no fusion with a follower is possible
+  if (index >= _site_groups.size()-1) return;
+
+  // fuse if group overlaps with the following one
+  if (_site_groups [index]->last() < _site_groups [index+1]->first())
+    { return; }
+  _site_groups [index]->absorb (*_site_groups [index+1]);
+  delete _site_groups [index+1];
+  _site_groups.erase (_site_groups.begin() + index+1);
   fuse_groups (index);
 }
 
 int SequenceOccupation::position_to_group (int position) const
 {
-  if (_watcher_groups.size() == 0) { return 1; }
-  if (_watcher_groups[0]->last() >= position) { return 0; }
+  if (_site_groups.size() == 0) { return 1; }
+  if (_site_groups[0]->last() >= position) { return 0; }
 
   // we look for the largest i such that
-  //  _watcher_groups[i].last() < position
-  int i_min = 0; int i_max = _watcher_groups.size()-1;
+  //  _site_groups[i].last() < position
+  int i_min = 0; int i_max = _site_groups.size()-1;
   int i;
   while (i_min < i_max)
     {
       i = (i_min + i_max + 1)/2;
-      if (_watcher_groups[i]->last() >= position) { i_max = i-1; }
+      if (_site_groups[i]->last() >= position) { i_max = i-1; }
       else { i_min = i; }
     }
 
@@ -288,69 +256,41 @@ int SequenceOccupation::position_to_group (int position) const
 
 void SequenceOccupation::notify_change (int a, int b) const
 {
-  if (_watcher_groups.size() == 0) return;
-  int last_group = position_to_group (b);
-  if (last_group == _watcher_groups.size()) { --last_group; }
-  for (int i = position_to_group (a); i <= last_group; ++i)
+  // update static sites
+  if (_site_groups.size() > 0)
     {
-      const std::list <SiteAvailability*>&
-	watchers = _watcher_groups[i]->watchers();
-      for (std::list <SiteAvailability*>::const_iterator
-	     watcher_it = watchers.begin();
-	   watcher_it != watchers.end(); ++watcher_it)
-	{
-	  if ((*watcher_it)->is_affected (a, b)) 
-	    {
-	      (*watcher_it)->notify (number_available_sites 
-				     ((*watcher_it)->site().relative_first(),
-				      (*watcher_it)->site().relative_last()));
-	    }
-
-	}
+      int last_group = position_to_group (b);
+      if (last_group == _site_groups.size()) { --last_group; }
+      for (int i = position_to_group (a); i <= last_group; ++i)
+	{ _site_groups [i]->update (a, b); }
     }
-  for (std::list <SiteAvailability*>::const_iterator
-	 watcher_it = _moving_sites.begin();
-       watcher_it != _moving_sites.end(); ++watcher_it) 
+
+  // update moving sites
+  for (std::list <BindingSite*>::const_iterator site_it = _moving_sites.begin();
+       site_it != _moving_sites.end(); ++site_it) 
     {
-      if ((*watcher_it)->is_affected (a, b))
-	{
-	  (*watcher_it)->notify (number_available_sites 
-				 ((*watcher_it)->site().relative_first(),
-				  (*watcher_it)->site().relative_last()));
-	}
+      if ((*site_it)->overlaps (a, b)) { (*site_it)->update(); }
     }
 }
 
 void SequenceOccupation::notify_all_sites (void) const
 {
-  for (int i = 0; i < _watcher_groups.size(); ++i)
-    {
-      const std::list <SiteAvailability*>&
-	watchers = _watcher_groups[i]->watchers();
-      for (std::list <SiteAvailability*>::const_iterator
-	     watcher_it = watchers.begin();
-	   watcher_it != watchers.end(); ++watcher_it)
-	{
-	  (*watcher_it)->notify (number_available_sites 
-				 ((*watcher_it)->site().relative_first(),
-				  (*watcher_it)->site().relative_last()));
-	}
-    }
-  for (std::list <SiteAvailability*>::const_iterator 
-	 watcher_it = _moving_sites.begin();
-       watcher_it != _moving_sites.end(); ++watcher_it) 
-    {
-      (*watcher_it)->notify (number_available_sites 
-			     ((*watcher_it)->site().relative_first(),
-			      (*watcher_it)->site().relative_last()));
-    }
+  // update static sites
+  for (int i = 0; i < _site_groups.size(); ++i)
+    { _site_groups [i]->update_all(); }
+
+  // update moving sites
+  for (std::list <BindingSite*>::const_iterator site_it = _moving_sites.begin();
+       site_it != _moving_sites.end(); ++site_it) 
+    { (*site_it)->update(); }
 }
 
 void SequenceOccupation::
-_check_completion (std::list <PartialStrand>::iterator& strand_it)
+_check_completion (std::list <PartialStrand*>::iterator& strand_it)
 {
-  if (strand_it->completed()) 
+  if ((*strand_it)->completed()) 
     {
+      delete *strand_it;
       _partials.erase (strand_it);
       ++_number_sequences;
       for (int i = 0; i < _occupancy.size(); ++i) { ++_occupancy [i]; }

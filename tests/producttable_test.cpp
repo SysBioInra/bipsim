@@ -51,13 +51,13 @@ int main (int argc, char *argv[])
   table.add (parent, 1, 10, c);
   if (table.product (parent, 1, 10) != &c) { FAILURE ("rewrite failed."); }  
 
-  if (table.generate_child_sequence (a, 1, 1) != "a")
+  if (table.generate_child_sequence (a, 0, 0) != "a")
     { FAILURE ("Conversion to child failed."); }  
-  if (table.generate_child_sequence (b, 1, 1) != "b")
+  if (table.generate_child_sequence (b, 0, 0) != "b")
     { FAILURE ("Conversion to child failed."); }  
-  if (table.generate_child_sequence (c, 1, 1) != "c")
+  if (table.generate_child_sequence (c, 0, 0) != "c")
     { FAILURE ("Conversion to child failed."); }  
-  if (table.generate_child_sequence (parent, 1, 6) != "xoxoxo")
+  if (table.generate_child_sequence (parent, 0, 5) != "xoxoxo")
     { FAILURE ("Conversion to child failed."); }  
 
   return EXIT_SUCCESS;

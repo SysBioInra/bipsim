@@ -27,7 +27,7 @@
 #include "simulatorinput.h"
 
 /**
- * @brief Abstract class representing site families.
+ * @brief Class representing site families.
  *
  * SiteFamily inherits SimulatorInput.
  */

@@ -51,7 +51,7 @@ libsrc_a_SOURCES += \
 
 # site sources
 libsrc_a_SOURCES += \
-	bindingsite.h \
+	bindingsite.cpp bindingsite.h \
 	bindingsitefamily.cpp bindingsitefamily.h \
 	site.cpp site.h \
 	sitefamily.h
@@ -59,12 +59,13 @@ libsrc_a_SOURCES += \
 # sequence related sources
 libsrc_a_SOURCES += \
 	chemicalsequence.cpp chemicalsequence.h \
+	doublestrand.cpp doublestrand.h \
+	freeendfactory.cpp freeendfactory.h \
 	partialstrand.cpp partialstrand.h \
-	segment.h \
+	segment.cpp segment.h \
 	sequenceoccupation.cpp sequenceoccupation.h \
-	sitelocation.h \
-	siteavailability.cpp siteavailability.h \
-	watchergroup.cpp watchergroup.h
+	sitegroup.cpp sitegroup.h \
+	sitelocation.h
 
 # table sources
 libsrc_a_SOURCES += \

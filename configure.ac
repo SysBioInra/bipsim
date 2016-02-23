@@ -28,6 +28,7 @@ AM_COND_IF([HAVE_BOOST],
 	   [AX_BOOST_BASE([1.41],[],[AC_MSG_ERROR([Boost was not found in your system, consider configuring without boost functionalities.])])])
 
 AM_COND_IF([HAVE_BOOST],[AX_BOOST_SERIALIZATION])
+AM_COND_IF([HAVE_BOOST],[AX_BOOST_UNIT_TEST_FRAMEWORK])
 
 # Checks for header files.
 AC_HEADER_STDC

@@ -133,8 +133,7 @@ void Loader::add_unit (const BindingSite& binding_site, int position,
   // retrieve template read by added unit
   ChemicalSequence& target_sequence = binding_site.location();
   std::string focused_template = target_sequence.sequence().
-    substr (target_sequence.relative (reading_frame), 
-	    _decoding_table.template_length());
+    substr (reading_frame, _decoding_table.template_length());
 
   // decode the template
   _focused_template_index = _decoding_table.template_index (focused_template);
@@ -159,7 +158,7 @@ void Loader::update_focused_template (void)
   // retrieve template read by focused unit
   ChemicalSequence& target_sequence = _focused_unit->binding_site().location();
   std::string focused_template = target_sequence.sequence().
-    substr (target_sequence.relative (_focused_unit->reading_frame()),
+    substr (_focused_unit->reading_frame(),
 	    _decoding_table.template_length());
   
   // decode the template

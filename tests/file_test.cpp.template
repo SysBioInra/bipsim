@@ -10,10 +10,11 @@
 //  General Includes
 // ==================
 //
-#include <iostream>
-#include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE ClassName
+#include <boost/test/unit_test.hpp>
 
-#include "unittest.h"
+#include <iostream>
 
 // ==================
 //  Project Includes
@@ -21,13 +22,11 @@
 //
 #include "../src/classname.h"
 
-class ClassNameTest : public UnitTest
+BOOST_FIXTURE_TEST_SUITE ()
+ 
+BOOST_AUTO_TEST_CASE ()
 {
-};
-
-int main (int argc, char *argv[])
-{ 
-
-  return EXIT_SUCCESS;
 }
+ 
+BOOST_AUTO_TEST_SUITE_END()
 

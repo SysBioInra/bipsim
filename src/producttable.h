@@ -143,7 +143,7 @@ ProductTable::generate_child_sequence (ChemicalSequence& parent,
 				       int first, int last) const
 {
   return _transformation_table.transform 
-    (parent.sequence().substr (parent.relative (first), last-first+1));
+    (parent.sequence().substr (first, last-first+1));
 }
 
 inline

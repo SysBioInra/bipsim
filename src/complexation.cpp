@@ -23,6 +23,7 @@
 #include "complexationimp.h"
 #include "chemical.h"
 #include "boundchemical.h"
+#include "chemicalsequence.h"
 #include "simulatorexception.h"
 
 // ==========================

@@ -24,59 +24,72 @@
 //  Constructors/Destructors
 // ==========================
 //
-PartialStrand::PartialStrand (int length)
+PartialStrand::PartialStrand (int length, const FreeEndFactory& factory)
 : _length (length)
 , _complete (false)
+, _free_end_factory (factory)
 {
-  // We place two dummy segments to mark beginning and end of the sequence
-  // Last base of a segment is considered as unoccupied.
-  // We start with {[-1 0],[L L]} so nothing is occupied at beginning.
+  // We place two dummy segments to mark beginning and end of the sequence.
+  // We start with {[S S],[E E]} so nothing is occupied at beginning.
   // Dummy segments can be extended and ligated so when
-  // the strand is completed we will be reduced to {[-1 L]}.
-  // Using dummy segments *greatly* simplifies algorithms used in the class
+  // the strand is completed we will be reduced to {[S E]}.
+  // Using dummy segments simplifies algorithms used in the class
   // (because a lot of potential border effects are removed).
-  _segments.push_back (Segment (-1, 0));
-  _segments.push_back (Segment (_length, _length));
+  _segments.push_back (new Segment (Segment::START, Segment::START,
+				    _free_end_factory));
+  _segments.push_back (new Segment (Segment::END, Segment::END,
+				    _free_end_factory));
   _segment_it = _segments.begin();
 }
 
-PartialStrand::PartialStrand (const PartialStrand& other)
-  : _length (other._length)
-  , _complete (other._complete)
-  , _segments (other._segments)
-{
-  _segment_it = _segments.begin();
-}
 
-PartialStrand& PartialStrand::operator= (const PartialStrand& other)
+// Forbidden
+// PartialStrand::PartialStrand (const PartialStrand& other)
+// PartialStrand& PartialStrand::operator= (const PartialStrand& other)
+
+PartialStrand::~PartialStrand (void)
 {
-  _length = other._length; _complete = other._complete; 
-  _segments = other._segments; _segment_it = _segments.begin();
+  // delete segments
+  for (std::list <Segment*>::iterator segment_it = _segments.begin();
+       segment_it != _segments.end(); ++segment_it)
+    { delete *segment_it; }
 }
-// PartialStrand::~PartialStrand (void);
 
 // ===========================
 //  Public Methods - Commands
 // ===========================
 //
-bool PartialStrand::start_new_segment (int position)
+bool PartialStrand::start_segment (int position)
 {
   /** @pre position must be consistent with length provided at construction. */
   REQUIRE ((position >= 0) && (position < _length));
 
-  _move_to_segment (position);
+  std::list <Segment*>::iterator result = _find (position);
   // if previous segment spans position, no new segment can be created
-  if (_segment_it->last > position) { return false; }
+  if ((*result)->last() > position) { return false; }
+  _segment_it = result;
 
   // if the new segment starts right next to an existing segment, we elongate
   // the existing segment, else we create a new one
-  if (_segment_it->last < position)
+  if ((*_segment_it)->last() < position)
     {
-      ++_segment_it;
-      _segment_it = _segments.insert (_segment_it, 
-				      Segment (position, position+1));
+      if (position != 0)
+	{
+	  ++_segment_it;
+	  int last_position = (position+1 < _length)? position+1 : Segment::END;
+	  _segment_it = _segments.
+	    insert (_segment_it, 
+		    new Segment (position-1, last_position, _free_end_factory));
+	}
+      else
+	{
+	  (*_segment_it)->set_last (1, _free_end_factory);
+	  // put a free end on the last segment if necessary...
+	  if (_segments.back()->first() == Segment::END)
+	    { _segments.back()->set_first (_length-1, _free_end_factory); }
+	}
     }
-  else { ++(_segment_it->last); }
+  else { extend_segment (position); }
   _check_ligation();
   return true;
 }
@@ -86,39 +99,6 @@ bool PartialStrand::start_new_segment (int position)
 //  Public Methods - Accessors
 // ============================
 //
-std::list <int> PartialStrand::left_ends (void) const
-{
-  std::list <int> result;
-  if (_complete) { return result; }
-
- // we ignore the first segment that starts at -1
-  std::list <Segment>::const_iterator segment_it =_segments.begin(); 
-  std::list <Segment>::const_iterator last_it = --_segments.end();
-  ++segment_it;
-  while (segment_it != last_it) 
-    { result.push_back (segment_it->first); ++segment_it; }
-  // keep last segment if it is not dummy
-  if (segment_it->first != _length) { result.push_back (segment_it->first); }
-  return result;
-}
-
-std::list <int> PartialStrand::right_ends (void) const
-{
-  std::list <int> result;
-  if (_complete) { return result; }
-
-  std::list <Segment>::const_iterator segment_it =_segments.begin();
-  std::list <Segment>::const_iterator last_it = --_segments.end();
-  // skip first segment if it's the dummy segment
-  bool first_is_dummy = (segment_it->last == 0);
-  if (first_is_dummy) { ++segment_it; }
-  while (segment_it != last_it) 
-    { result.push_back (segment_it->last - 1); ++segment_it; }
-  // keep last segment if it is not dummy AND first is dummy (no circularity)
-  if ((segment_it->first != _length) && (first_is_dummy))
-    { result.push_back (_length - 1); }
-  return result;
-}
 
 
 // =================

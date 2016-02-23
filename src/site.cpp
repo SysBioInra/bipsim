@@ -31,8 +31,6 @@ Site::Site (SiteFamily& family, ChemicalSequence& location, int first, int last)
   , _location (location)
   , _first (first)
   , _last (last)
-  , _relative_first (_location.relative (first))
-  , _relative_last (_location.relative (last))
 {
   /** @pre First must be smaller than last.*/
   REQUIRE (first <= last);
@@ -51,6 +49,12 @@ Site::Site (SiteFamily& family, ChemicalSequence& location, int first, int last)
 //  Public Methods - Commands
 // ===========================
 //
+void Site::move (int step_size)
+{
+  /** @pre Site must stay within location bound. */
+  REQUIRE (!_location.is_out_of_bounds (_first + step_size, _last + step_size));
+  _first += step_size; _last += step_size;
+}
 
 // ============================
 //  Public Methods - Accessors

@@ -24,6 +24,7 @@
 #include "bindingsitefamily.h"
 #include "boundchemical.h"
 #include "chemical.h"
+#include "chemicalsequence.h"
 
 // ==========================
 //  Constructors/Destructors

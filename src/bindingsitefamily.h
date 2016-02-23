@@ -62,9 +62,15 @@ class BindingSiteFamily : public Reactant, public SiteFamily
   //
   /**
    * @brief Add a binding site to the family.
-   * @param binding_site Pointer to the site to add.
+   * @param site Pointer to the site to add.
    */
-  void add (BindingSite* binding_site);
+  void add (BindingSite* site);
+
+  /**
+   * @brief Remove binding site from family.
+   * @param site Pointer to the site to remove.
+   */
+  void remove (BindingSite* site);
 
   /**
    * @brief Update contributions given that a binding site availability has
@@ -105,6 +111,13 @@ class BindingSiteFamily : public Reactant, public SiteFamily
    */
   bool is_site_available (void) const;
 
+  /**
+   * @brief Checks whether a given site is contained in the family.
+   * @param site Pointer to the site to look for.
+   * @return True if site is handled by the binding site family.
+   */
+  bool contains (const BindingSite* site) const;
+
 private:
   // ============
   //  Attributes
@@ -112,7 +125,7 @@ private:
   /**
    * @brief Binding sites belonging to the family.
    */
-  std::vector<const BindingSite*> _binding_sites;
+  std::vector <BindingSite*> _binding_sites;
 
   /**
    * @brief Contribution of each binding site to the binding rate.
@@ -135,7 +148,8 @@ inline double BindingSiteFamily::total_binding_rate_contribution (void) const
   return _rate_contributions.total_rate();
 }
 
-inline const BindingSite& BindingSiteFamily::get_random_available_site (void) const
+inline 
+const BindingSite& BindingSiteFamily::get_random_available_site (void) const
 {
   _rate_contributions.update_cumulates();
   return *(_binding_sites [_rate_contributions.random_index()]);

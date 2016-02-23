@@ -125,6 +125,16 @@ class RateVector : public RateContainer
     _cumulated_rates.resize (new_size, fill_value);
   }
 
+  /**
+   * @brief Reduce vector size by one, removing last value.
+   */
+  virtual void pop_back (void)
+  {
+    /** @pre Vector must not be empty. */
+    REQUIRE (_rates.size() > 0);
+    _rates.pop_back();
+    _cumulated_rates.pop_back();
+  }
 
   // ============================
   //  Public Methods - Accessors

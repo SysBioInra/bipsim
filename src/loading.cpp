@@ -20,6 +20,7 @@
 //
 #include "macros.h" // REQUIRE()
 #include "boundchemical.h"
+#include "chemicalsequence.h"
 #include "loading.h"
 #include "loader.h"
 

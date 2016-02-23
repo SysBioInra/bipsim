@@ -25,7 +25,6 @@
 #include "forwarddeclarations.h"
 #include "macros.h"
 #include "site.h"
-#include "bindingsitefamily.h"
 
 /**
  * @brief Class that represents binding sites on chemical sequences.
@@ -46,29 +45,38 @@ public:
    * @brief Default constructor
    * @param family Family the site belongs to.
    * @param location Chemical sequence containing the site.
-   * @param first First position of site.
-   * @param last Last position of site.
+   * @param first Relative first position of site.
+   * @param last Relative last position of site.
    * @param k_on On rate of binding on the site.
    * @param k_off Off rate of unbinding on the site.
-   * @param reading_frame Position of the reading frame (if applicable).
+   * @param reading_frame Absolute position of the reading frame 
+   *  (if applicable, NO_READING_FRAME by default).
+   * @param is_static Parameter specifying if the site remains at the same
+   *  position on the sequence over time (true by default).
    */
   BindingSite (BindingSiteFamily& family, ChemicalSequence& location, 
 	       int first, int last, double k_on, double k_off,
-	       int reading_frame = NO_READING_FRAME );
+	       int reading_frame = NO_READING_FRAME,
+	       bool is_static = true);
 
-  // Not needed for this class (use of compiler-generated versions)
-  // (3-0 rule: either define all 3 following or none of them)
-  // /* @brief Copy constructor */
-  // BindingSite (BindingSite& other_binding_site);
-  // /* @brief Assignment operator */
-  // BindingSite& operator= (BindingSite other_binding_site);
-  // /* @brief Destructor */
-  // ~BindingSite (void);
+  
+ private:
+  /** @brief Copy constructor (forbidden). */
+  BindingSite (BindingSite& other);
+  /** @brief Assignment operator (forbidden). */
+  BindingSite& operator= (BindingSite other);
+ public:
+  
+  /** @brief Destructor */
+  ~BindingSite (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
+  // redefined from Site
+  void move (int step_size);
+
   /**
    * @brief Bind a chemical at the binding site.
    * @param unit_to_bind Chemical to bind.
@@ -84,15 +92,14 @@ public:
   /**
    * @brief Perform necessary actions when availability of the observed site 
    *  has changed.
-   * @param number_available_sites Number of sites currently available.
    */
-  void update (int number_available_sites);
+  virtual void update (void);
 
   /**
-   * @brief Change message to pass along when update occurs.
-   * @param new_message Positive integer representing new message to pass along.
+   * @brief Change update_id to pass along when update occurs.
+   * @param new_id Positive integer representing new id to pass along.
    */
-  void set_update_message (int new_message);
+  void set_update_id (int new_id);
 
   // ============================
   //  Public Methods - Accessors
@@ -115,7 +122,8 @@ public:
 
   /**
    * @brief Reading frame accessor.
-   * @return Reading frame on the binding site, BindingSite::NO_READING_FRAME if there is none.
+   * @return Reading frame on the binding site, BindingSite::NO_READING_FRAME 
+   *  if there is none.
    */
   int reading_frame (void) const;
   
@@ -127,25 +135,31 @@ public:
    *   associated with the binding site. */
   static const int NO_READING_FRAME = -1;
 
-  /** @brief Default message sent when an update occurs. */
-  static const int DEFAULT_MESSAGE = -1;
+  /** @brief Default update identifier sent when an update occurs. */
+  static const int DEFAULT_ID = -1;
 
  private:
   // ============
   //  Attributes
   // ============
   //
-  /** @brief on-rate constant of the motif. */
+  /** @brief On-rate constant of the motif. */
   double _k_on;
   
-  /** @brief off-rate constant of the motif. */
+  /** @brief Off-rate constant of the motif. */
   double _k_off;
 
   /** @brief Reading frame position (NO_READING_FRAME if there is none). */
   int _reading_frame;
 
-  /** @brief Message to send when an update occurs. */
-  int _message;
+  /** @brief Identifier to send when an update occurs. */
+  int _update_id;
+
+  /** @brief Last availability value notified. */
+  int _last_availability;
+
+  /** @brief Attribute storing whether site is static or not. */
+  bool _static;
 
   // =================
   //  Private Methods
@@ -158,44 +172,28 @@ public:
 // ======================
 //
 #include "macros.h"
-#include "chemicalsequence.h"
+#include "bindingsitefamily.h"
 
-inline BindingSite::BindingSite (BindingSiteFamily& family, 
-				 ChemicalSequence& location, 
-				 int first, int last, 
-				 double k_on, double k_off,
-				 int reading_frame /*= NO_READING_FRAME*/)
-  : Site (family, location, first, last)
-  , _k_on (k_on)
-  , _k_off (k_off)
-  , _reading_frame (reading_frame)
+inline void BindingSite::move (int step_size)
 {
-  /** @pre If defined, reading frame must be within site. */
-  REQUIRE ((reading_frame == NO_READING_FRAME)
-	   || ((reading_frame >= first) && (reading_frame <= last)));
+  /** @pre Instance must have been declared as non static. */
+  REQUIRE (_static == false);
 
-  // add binding site to family
-  static_cast <BindingSiteFamily&> (_family).add (this);
+  Site::move (step_size);
+  if (_reading_frame != NO_READING_FRAME) { _reading_frame += step_size; }
+  update(); // availability may have changed
 
-  // demand availability notifications
-  location.notify_site_availability (*this);
-}
+  /** @post Reading frame must stay within site limits. */
+  ENSURE ((_reading_frame == NO_READING_FRAME) ||
+	  ((_reading_frame >= first()) && (_reading_frame <= last())));
+}		     
 
-inline void BindingSite::update (int number_of_available_sites)
+inline void BindingSite::set_update_id (int new_id)
 {
-  /** @pre Number of available sites must be positive); */
-  REQUIRE (number_of_available_sites >= 0);
-  
-  static_cast <BindingSiteFamily&> (_family).
-    update (_message, _k_on * number_of_available_sites);
-}
+  /** @pre new_id must be positive. */
+  REQUIRE (new_id >= 0);
 
-inline void BindingSite::set_update_message (int new_message)
-{
-  /** @pre new_message must be positive. */
-  REQUIRE (new_message >= 0);
-
-  _message = new_message;
+  _update_id = new_id;
 }
 
 inline const BindingSiteFamily& BindingSite::family (void) const

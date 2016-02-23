@@ -10,12 +10,11 @@
 //  General Includes
 // ==================
 //
-#include <iostream>
-#include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
-#include <cmath>
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE SequenceOccupation
+#include <boost/test/unit_test.hpp>
 
-#include "unittest.h"
-#include "utility.h"
+#include <iostream>
 
 // ==================
 //  Project Includes
@@ -23,364 +22,381 @@
 //
 #include "../src/sequenceoccupation.h"
 #include "../src/boundchemical.h"
-#include "../src/bindingsitefamily.h"
-#include "../src/bindingsite.h"
-#include "../src/chemicalsequence.h"
+#include "../src/doublestrand.h"
+#include "../src/freeendfactory.h"
+#include "sitedispenser.h"
 
-class DummyBSF : public BindingSiteFamily
+class SOSingleStrandL100
 {
 public:
-  DummyBSF (int length) : _cs (std::string (length, 'a'), 0), _k_on (1) {}
+  SOSingleStrandL100 (void) 
+    : site_dispenser (100)
+    , empty_occupation (100, 0)
+  {}
 
-  BindingSite* add_site (int first, int last) 
-  {
-    BindingSite* bs = new BindingSite (*this, _cs, first, last, _k_on, 1);
-    _k_on *= _lvl;
-    return bs;
-  }
-
-  int site_availability (int site_index)
-  {
-    int result = floor (total_binding_rate_contribution() + 0.5);
-    for (int i = 0; i < site_index; ++i) { result /= _lvl; }
-    return result % _lvl;
-  }
-
-private:
-  ChemicalSequence _cs;
-  int _k_on;
-  static const int _lvl = 10;
-};
-
-class SequenceOccupationTest : public UnitTest
-{
 public:
-  SequenceOccupationTest (int length) : _so (length, 0), _bsf (length) {}
-
-  void test_watch_site (int first, int last)
-  {
-    BindingSite* bs = _bsf.add_site (first, last);
-    _so.watch_site (*bs);
-  }
-
-  void test_unwatch_moving_site (const BindingSite& bs)
-  {
-    _so.unwatch_moving_site (bs);
-  }
-  
-
-  void test_site_availability (int first, int last, int expected) 
-  {    
-    test (_so.number_available_sites (first, last) == expected,
-	  "Number of available sites is incorrect.");
-  }
-
-  void test_site_update (int site_index, int expected)
-  {
-    test (_bsf.site_availability (site_index) == expected,
-	  "Observer has not been updated correctly");
-  }
-
-  void test_left_ends (const std::list <int>& expected)
-  {
-    test (compare_lists (_so.left_ends(), expected),
-	  "Left ends incorrectly inferred.");
-  }
-
-  void test_right_ends (const std::list <int>& expected)
-  {
-    test (compare_lists (_so.right_ends(), expected),
-	  "Right ends incorrectly inferred.");
-  }
-
-  SequenceOccupation& operator() (void) { return _so; }
-
-private:
-  SequenceOccupation _so;
-  DummyBSF _bsf;
+  SequenceOccupation empty_occupation;
+  BoundChemical bound_element;
+  SiteDispenser site_dispenser;
 };
 
-int main (int argc, char *argv[])
-{ 
-  // test on whole sequences
-  {
-    SequenceOccupationTest test (100);
-    test.test_site_availability (0, 99, 0);
-    for (int i = 0; i < 100; ++ i) { test.test_site_availability (i, i, 0); }
-    test().add_sequence (3);
-    test.test_site_availability (0, 99, 3);
-    for (int i = 0; i < 100; ++ i) { test.test_site_availability (i, i, 3); }
-    test().remove_sequence (2);
-    test.test_site_availability (0, 99, 1);
-    for (int i = 0; i < 100; ++ i) { test.test_site_availability (i, i, 1); }
-    test().add_sequence (1);
-    test().remove_sequence (2);
-    test.test_site_availability (0, 99, 0);
-    for (int i = 0; i < 100; ++ i) { test.test_site_availability (i, i, 0); }
-  }
-
-  // test on whole sequences + bound elements
-  {
-    SequenceOccupationTest test (100);
-    BoundChemical dummy;
-    test().add_sequence (1);
-    test().add_element (dummy, 50, 53);
-    test.test_site_availability (0, 99, 0);
-    for (int i = 0; i < 50; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 50; i < 54; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 54; i < 100; ++ i) { test.test_site_availability (i, i, 1); }
-    test.test_site_availability (50, 53, 0);
-    test.test_site_availability (0, 50, 0);
-    test.test_site_availability (53, 99, 0);
-
-    test().add_element (dummy, 52, 63);
-    test.test_site_availability (52, 63, 0);
-    for (int i = 0; i < 50; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 50; i < 64; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 64; i < 100; ++ i) { test.test_site_availability (i, i, 1); }
-
-    test().add_sequence (1);
-    test.test_site_availability (50, 53, 0);
-    test.test_site_availability (52, 63, 0);
-    for (int i = 0; i < 50; ++ i) { test.test_site_availability (i, i, 2); }
-    for (int i = 50; i < 52; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 52; i < 54; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 54; i < 64; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 64; i < 100; ++ i) { test.test_site_availability (i, i, 2); }
-
-    test().remove_element (dummy, 50, 53);
-    test.test_site_availability (50, 53, 1);
-    test.test_site_availability (52, 63, 1);
-    for (int i = 0; i < 52; ++ i) { test.test_site_availability (i, i, 2); }
-    for (int i = 52; i < 64; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 64; i < 100; ++ i) { test.test_site_availability (i, i, 2); }
-
-    test().remove_element (dummy, 52, 63);
-    test.test_site_availability (50, 53, 2);
-    test.test_site_availability (52, 63, 2);
-    for (int i = 0; i < 100; ++ i) { test.test_site_availability (i, i, 2); }
-  }
-
-  // test with segments
-  {
-    SequenceOccupationTest test (100);
-    for (int i = 0; i < 100; ++ i) { test.test_site_availability (i, i, 0); }
-
-    test().add_sequence (1);
-    for (int i = 0; i < 100; ++ i) { test.test_site_availability (i, i, 1); }
-
-    test().start_new_segment (15);
-    for (int i = 0; i < 15; ++ i) { test.test_site_availability (i, i, 1); }
-    test.test_site_availability (15, 15, 2);
-    for (int i = 16; i < 100; ++ i) { test.test_site_availability (i, i, 1); }
-
-    test().start_new_segment (15);
-    for (int i = 0; i < 15; ++ i) { test.test_site_availability (i, i, 1); }
-    test.test_site_availability (15, 15, 3);
-    for (int i = 16; i < 100; ++ i) { test.test_site_availability (i, i, 1); }
-
-    for (int i = 16; i < 35; ++ i) { test().extend_segment (i); }
-    for (int i = 0; i < 15; ++ i) { test.test_site_availability (i, i, 1); }
-    test.test_site_availability (15, 15, 3);
-    for (int i = 16; i < 35; ++ i) { test.test_site_availability (i, i, 2); }  
-    for (int i = 35; i < 100; ++ i) { test.test_site_availability (i, i, 1); }  
-
-    test().start_new_segment (85);
-    for (int i = 86; i < 100; ++ i) { test().extend_segment (i); }
-    for (int i = 0; i < 10; ++ i) { test().extend_segment (i); }
-    for (int i = 0; i < 10; ++ i) { test.test_site_availability (i, i, 2); }
-    for (int i = 10; i < 15; ++ i) { test.test_site_availability (i, i, 1); }
-    test.test_site_availability (15, 15, 3);
-    for (int i = 16; i < 35; ++ i) { test.test_site_availability (i, i, 2); }  
-    for (int i = 35; i < 85; ++ i) { test.test_site_availability (i, i, 1); }  
-    for (int i = 85; i < 100; ++ i) { test.test_site_availability (i, i, 2); }  
-
-    for (int i = 10; i < 15; ++ i) { test().extend_segment (i); }
-    for (int i = 0; i < 15; ++ i) { test.test_site_availability (i, i, 2); }
-    test.test_site_availability (15, 15, 3);
-    for (int i = 16; i < 35; ++ i) { test.test_site_availability (i, i, 2); }  
-    for (int i = 35; i < 85; ++ i) { test.test_site_availability (i, i, 1); }  
-    for (int i = 85; i < 100; ++ i) { test.test_site_availability (i, i, 2); }  
-    
-    for (int i = 35; i < 85; ++ i) { test().extend_segment (i); }
-    for (int i = 0; i < 15; ++ i) { test.test_site_availability (i, i, 2); }
-    test.test_site_availability (15, 15, 3);
-    for (int i = 16; i < 100; ++ i) { test.test_site_availability (i, i, 2); } 
-
-    test().remove_sequence (2);
-    for (int i = 0; i < 15; ++ i) { test.test_site_availability (i, i, 0); }
-    test.test_site_availability (15, 15, 1);
-    for (int i = 16; i < 100; ++ i) { test.test_site_availability (i, i, 0); } 
-  }
-
-  // test with segments and bound elements
-  {
-    SequenceOccupationTest test (100);
-    BoundChemical dummy;
-    test().start_new_segment (15);
-    for (int i = 16; i < 60; ++i) { test().extend_segment (i); }
-    test().add_element (dummy, 50, 53);
-    for (int i = 0; i < 15; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 15; i < 50; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 50; i < 54; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 54; i < 60; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 60; i < 100; ++ i) { test.test_site_availability (i, i, 0); }
-
-    test().add_element (dummy, 10, 20);
-    for (int i = 0; i < 21; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 21; i < 50; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 50; i < 54; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 54; i < 60; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 60; i < 100; ++ i) { test.test_site_availability (i, i, 0); }
-
-    test().add_element (dummy, 40, 52);
-    for (int i = 0; i < 21; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 21; i < 40; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 40; i < 54; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 54; i < 60; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 60; i < 100; ++ i) { test.test_site_availability (i, i, 0); }
-
-    test().remove_element (dummy, 50, 53);
-    for (int i = 0; i < 21; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 21; i < 40; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 40; i < 53; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 53; i < 60; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 60; i < 100; ++ i) { test.test_site_availability (i, i, 0); }
-
-    test().start_new_segment (45);
-    for (int i = 46; i < 70; ++i) { test().extend_segment (i); }
-    for (int i = 0; i < 21; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 21; i < 40; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 40; i < 45; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 45; i < 53; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 53; i < 60; ++ i) { test.test_site_availability (i, i, 2); }
-    for (int i = 60; i < 70; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 70; i < 100; ++ i) { test.test_site_availability (i, i, 0); }
-
-    test().remove_element (dummy, 10, 20);
-    test().remove_element (dummy, 40, 52);
-    for (int i = 0; i < 15; ++ i) { test.test_site_availability (i, i, 0); }
-    for (int i = 15; i < 45; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 45; i < 60; ++ i) { test.test_site_availability (i, i, 2); }
-    for (int i = 60; i < 70; ++ i) { test.test_site_availability (i, i, 1); }
-    for (int i = 70; i < 100; ++ i) { test.test_site_availability (i, i, 0); }
-  }
-
-  // test left and right ends
-  {
-    SequenceOccupationTest test (100);
-    BoundChemical dummy;
-    std::list <int> left_ends, right_ends;
-    test.test_left_ends (left_ends); test.test_right_ends (right_ends);
-
-    test().add_sequence (1);
-    test.test_left_ends (left_ends); test.test_right_ends (right_ends);
-
-    test().start_new_segment (15);
-    left_ends.push_back (15); right_ends.push_back (15);
-    test.test_left_ends (left_ends); test.test_right_ends (right_ends);
-
-    test().start_new_segment (15);
-    left_ends.push_back (15); right_ends.push_back (15);
-    test.test_left_ends (left_ends); test.test_right_ends (right_ends);
-    
-    for (int i = 16; i < 31; ++i) { test().extend_segment (i); }
-    right_ends.back() = 30;
-    test.test_left_ends (left_ends); test.test_right_ends (right_ends);
-    
-    test().start_new_segment (5);
-    for (int i = 6; i < 15; ++i) { test().extend_segment (i); }
-    for (int i = 16; i < 25; ++i) { test().extend_segment (i); }
-    left_ends.back() = 5; right_ends.remove (15); right_ends.push_back (24);
-    test.test_left_ends (left_ends); test.test_right_ends (right_ends);
-  }
-
-  // test site watching
-  {
-    SequenceOccupationTest test (100);
-    BoundChemical dummy;
-    
-    test.test_watch_site (10, 15);
-    test.test_site_availability (10, 15, 0); test.test_site_update (0, 0);
-    test().add_sequence (1);
-    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
-    test().add_sequence (4);
-    test.test_site_availability (10, 15, 5); test.test_site_update (0, 5);
-    test().remove_sequence (3);
-    test.test_site_availability (10, 15, 2); test.test_site_update (0, 2);
-
-    test.test_watch_site (14, 20);
-    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
-
-    test.test_watch_site (80, 90);
-    test.test_site_availability (80, 90, 2); test.test_site_update (2, 2);
-
-    test().start_new_segment (9);
-    for (int i = 10; i < 16; ++i) { test().extend_segment (i); }
-    test.test_site_availability (10, 15, 3); test.test_site_update (0, 3);
-    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
-    test.test_site_availability (80, 90, 2); test.test_site_update (2, 2);
-
-    test().add_element (dummy, 12, 17);
-    test.test_site_availability (10, 15, 2); test.test_site_update (0, 2);
-    test.test_site_availability (14, 20, 1); test.test_site_update (1, 1);
-    test.test_site_availability (80, 90, 2); test.test_site_update (2, 2);
-
-    test().add_element (dummy, 5, 12);
-    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
-    test.test_site_availability (14, 20, 1); test.test_site_update (1, 1);
-    test.test_site_availability (80, 90, 2); test.test_site_update (2, 2);
-
-    for (int i = 16; i < 82; ++i) { test().extend_segment (i); }
-    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
-    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
-    test.test_site_availability (80, 90, 2); test.test_site_update (2, 2);
-    
-    test().start_new_segment (13);
-    for (int i = 14; i < 25; ++i) { test().extend_segment (i); }
-    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
-    test.test_site_availability (14, 20, 3); test.test_site_update (1, 3);
-    test.test_site_availability (80, 90, 2); test.test_site_update (2, 2);
-
-    test().add_element (dummy, 17, 82);
-    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
-    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
-    test.test_site_availability (80, 90, 1); test.test_site_update (2, 1);
-
-    test().add_element (dummy, 85, 92);
-    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
-    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
-    test.test_site_availability (80, 90, 1); test.test_site_update (2, 1);
-
-    test().add_element (dummy, 85, 92);
-    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
-    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
-    test.test_site_availability (80, 90, 0); test.test_site_update (2, 0);
-
-    test().add_element (dummy, 85, 92);
-    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
-    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
-    test.test_site_availability (80, 90, 0); test.test_site_update (2, 0);
-
-    for (int i = 82; i < 100; ++i) { test().extend_segment (i); }
-    test.test_site_availability (10, 15, 1); test.test_site_update (0, 1);
-    test.test_site_availability (14, 20, 2); test.test_site_update (1, 2);
-    test.test_site_availability (80, 90, 0); test.test_site_update (2, 0);    
-
-    test().remove_element (dummy, 5, 12);
-    test().remove_element (dummy, 12, 17);
-    test().remove_element (dummy, 17, 82);
-    test().remove_element (dummy, 85, 92);
-    test().remove_element (dummy, 85, 92);
-    test().remove_element (dummy, 85, 92);
-    test.test_site_availability (10, 15, 3); test.test_site_update (0, 3);
-    test.test_site_availability (14, 20, 4); test.test_site_update (1, 4);
-    test.test_site_availability (80, 90, 3); test.test_site_update (2, 3);    
-  }
-
-  // TODO: test watching moving sites
-  {
-  }
-
-  return EXIT_SUCCESS;
+BOOST_FIXTURE_TEST_SUITE (WholeSequences, SOSingleStrandL100)
+ 
+BOOST_AUTO_TEST_CASE (number_sites_emptyOccupation_returnsZero)
+{
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, 99), 0);
+  for (int i = 0; i < 100; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 0); }
 }
+
+BOOST_AUTO_TEST_CASE (number_sites_threeSequencesAdded_returnsThree)
+{
+  empty_occupation.add_sequence (3);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, 99), 3);
+  for (int i = 0; i < 100; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 3); }
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_threeSequencesAddedTwoRemoved_returnsOne)
+{
+  empty_occupation.add_sequence (3); empty_occupation.remove_sequence (2);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, 99), 1);
+  for (int i = 0; i < 100; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 1); }
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE (WholeSequencesAndBoundElements, SOSingleStrandL100)
+
+BOOST_AUTO_TEST_CASE (number_sites_oneBoundElement_reflectsBoundElement)
+{
+  empty_occupation.add_sequence (1); 
+  empty_occupation.add_element (bound_element, 50, 60);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, 99), 0);
+  for (int i = 0; i < 50; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 1); }
+  for (int i = 50; i < 61; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 0); }
+  for (int i = 61; i < 100; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 1); }
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, 49), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, 50), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (60, 99), 0);
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_twoBoundElements_reflectsBoundElement)
+{
+  empty_occupation.add_sequence (1); 
+  empty_occupation.add_element (bound_element, 50, 60);
+  empty_occupation.add_element (bound_element, 55, 65);
+  for (int i = 0; i < 50; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 1); }
+  for (int i = 50; i < 66; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 0); }
+  for (int i = 66; i < 100; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 1); }
+  empty_occupation.add_sequence (1);
+  for (int i = 0; i < 50; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 2); }
+  for (int i = 50; i < 55; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 1); }
+  for (int i = 55; i < 61; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 0); }
+  for (int i = 61; i < 66; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 1); }
+  for (int i = 66; i < 100; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 2); }
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_twoBoundElementsAddedRemoved_reflectsBoundElement)
+{
+  empty_occupation.add_sequence (2); 
+  empty_occupation.add_element (bound_element, 50, 60);
+  empty_occupation.add_element (bound_element, 55, 65);
+  empty_occupation.remove_element (bound_element, 50, 60);
+  for (int i = 0; i < 55; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 2); }
+  for (int i = 55; i < 66; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 1); }
+  for (int i = 66; i < 100; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 2); }
+  empty_occupation.remove_element (bound_element, 55, 65);
+  for (int i = 0; i < 100; ++ i) 
+    { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 2); }
+}
+
+BOOST_AUTO_TEST_CASE (register_site_registerOneSite_siteUpdated)
+{
+  MockBindingSite& bs = site_dispenser.new_site (10, 20);
+  BOOST_REQUIRE (bs.was_updated() == false);
+  empty_occupation.register_site (bs);
+  BOOST_CHECK_EQUAL (bs.was_updated(), true);
+}
+
+BOOST_AUTO_TEST_CASE (add_sequence_addTwoSequences_siteUpdated)
+{
+  MockBindingSite& bs = site_dispenser.new_site (10, 20);
+  empty_occupation.register_site (bs);
+  bs.reset_update(); BOOST_REQUIRE (bs.was_updated() == false);
+  empty_occupation.add_sequence (2);
+  BOOST_CHECK_EQUAL (bs.was_updated(), true);
+}
+
+BOOST_AUTO_TEST_CASE (remove_sequence_removeOneSequence_siteUpdated)
+{
+  MockBindingSite& bs = site_dispenser.new_site (10, 20);
+  empty_occupation.register_site (bs);
+  empty_occupation.add_sequence (2);
+  bs.reset_update(); BOOST_REQUIRE (bs.was_updated() == false);
+  empty_occupation.remove_sequence (1);
+  BOOST_CHECK_EQUAL (bs.was_updated(), true);
+}
+
+BOOST_AUTO_TEST_CASE (add_sequence_addOneSequenceThreeSites_sitesUpdated)
+{
+  MockBindingSite& bs = site_dispenser.new_site (10, 20);
+  empty_occupation.register_site (bs);
+  MockBindingSite& bs2 = site_dispenser.new_site (15, 25);
+  empty_occupation.register_site (bs2);
+  MockBindingSite& bs3 = site_dispenser.new_site (30, 40);
+  empty_occupation.register_site (bs3);
+  bs.reset_update(); BOOST_REQUIRE (bs.was_updated() == false);
+  bs2.reset_update(); BOOST_REQUIRE (bs2.was_updated() == false);
+  bs3.reset_update(); BOOST_REQUIRE (bs3.was_updated() == false);
+  empty_occupation.add_sequence (1);
+  BOOST_CHECK_EQUAL (bs.was_updated(), true);
+  BOOST_CHECK_EQUAL (bs2.was_updated(), true);
+  BOOST_CHECK_EQUAL (bs3.was_updated(), true);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+class SODoubleStrandL100
+{
+public:
+  SODoubleStrandL100 (void) 
+    : _sense (std::string (100, 'a'))
+    , _antisense (std::string (100, 't'))
+    , _ds (_sense, _antisense)
+    , _fef (_sense, _antisense, _left, _right)
+    , site_dispenser (100)
+    , empty_occupation (100, 0)
+  {
+    empty_occupation.set_free_end_factory (_fef);
+  }
+
+  void extend_segment (int start, int end)
+  {
+    for (int i = start; i <= end; ++i) { empty_occupation.extend_segment (i); }
+  }
+
+private:
+  ChemicalSequence _sense;
+  ChemicalSequence _antisense;
+  DoubleStrand _ds;
+  BindingSiteFamily _left;
+  BindingSiteFamily _right;
+  FreeEndFactory _fef;
+
+public:
+  SequenceOccupation empty_occupation;
+  SiteDispenser site_dispenser;
+  BoundChemical bound_element;
+  static const int L = 100;
+};
+
+BOOST_FIXTURE_TEST_SUITE (Segments, SODoubleStrandL100)
+
+BOOST_AUTO_TEST_CASE (number_sites_SegmentSizeOne_reflectsSegmentOverlap)
+{
+  empty_occupation.start_segment (10);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, 0), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (9, 9), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (10, 10), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (11, 11), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (L-1, L-1), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, L-1), 0);
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_SegmentZeroZero_reflectsSegmentOverlap)
+{
+  empty_occupation.start_segment (0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, 0), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (1, 1), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (L-1, L-1), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, L-1), 0);
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_SegmentLastBase_reflectsSegmentOverlap)
+{
+  empty_occupation.start_segment (L-1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, 0), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (L-2, L-2), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (L-1, L-1), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, L-1), 0);
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_SegmentSizeEleven_reflectsSegmentOverlap)
+{
+  empty_occupation.start_segment (10); extend_segment (11, 20);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (9, 9), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (10, 10), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (11, 11), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (20, 20), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (10, 20), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (9, 20), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (10, 21), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, L-1), 0);
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_oneSegmentOneSequence_reflectsOccupation)
+{
+  empty_occupation.start_segment (10); extend_segment (11, 20);
+  empty_occupation.add_sequence (1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (9, 9), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (10, 10), 2);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (20, 20), 2);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (21, 21), 1);
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_twoOverlappingSegments_reflectsSegmentOverlap)
+{
+  empty_occupation.start_segment (10); extend_segment (11, 30);
+  empty_occupation.start_segment (20); extend_segment (21, 40);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (9, 9), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (10, 10), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (19, 19), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (20, 20), 2);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (30, 30), 2);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (31, 31), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (40, 40), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (41, 41), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (20, 30), 2);
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_oneSegmentOneBoundElement_reflectsOccupation)
+{
+  empty_occupation.start_segment (10); extend_segment (11, 30);
+  empty_occupation.add_element (bound_element, 20, 25);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (19, 19), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (20, 20), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (25, 25), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (26, 26), 1);
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_oneSegmentTwoBoundElements_reflectsOccupation)
+{
+  empty_occupation.start_segment (10); extend_segment (11, 35);
+  empty_occupation.add_element (bound_element, 15, 25);
+  empty_occupation.add_element (bound_element, 20, 30);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (14, 14), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (15, 15), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (20, 20), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (25, 25), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (30, 30), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (31, 31), 1);
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_twoSegmentsTwoBoundElements_reflectsOccupation)
+{
+  empty_occupation.start_segment (10); extend_segment (11, 60);
+  empty_occupation.start_segment (30); extend_segment (31, 80);
+  empty_occupation.add_element (bound_element, 20, 50);
+  empty_occupation.add_element (bound_element, 40, 70);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (19, 19), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (20, 20), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (29, 29), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (30, 30), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (39, 39), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (40, 40), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (50, 50), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (51, 51), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (60, 60), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (61, 61), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (70, 70), 0);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (71, 71), 1);
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_oneSegmentTwoBoundElementsAddedAndRemoved_reflectsSegment)
+{
+  empty_occupation.start_segment (10); extend_segment (11, 35);
+  empty_occupation.add_element (bound_element, 15, 25);
+  empty_occupation.add_element (bound_element, 20, 30);
+  empty_occupation.remove_element (bound_element, 15, 25);
+  empty_occupation.remove_element (bound_element, 20, 30); 
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (15, 15), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (20, 20), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (25, 25), 1);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (35, 35), 1);
+}
+
+BOOST_AUTO_TEST_CASE (number_sites_segmentsCoveringWholeSequence_returnsOne)
+{
+  empty_occupation.start_segment (10); extend_segment (11, 50);
+  empty_occupation.start_segment (90); extend_segment (91, L-1);
+  extend_segment (0, 9); extend_segment (51, 89);
+  BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, L-1), 1);
+}
+
+BOOST_AUTO_TEST_CASE (register_moving_site_registerOneSite_updatesSite)
+{
+  MockBindingSite& bs = site_dispenser.new_site (10, 20);
+  empty_occupation.register_moving_site (bs);
+  BOOST_CHECK_EQUAL (bs.was_updated(), true);
+}
+
+BOOST_AUTO_TEST_CASE (start_segment_startOnSite_updatesSite)
+{
+  MockBindingSite& bs = site_dispenser.new_site (10, 20);
+  MockBindingSite& bs2 = site_dispenser.new_site (10, 20);
+  MockBindingSite& bs3 = site_dispenser.new_site (21, 30);
+  empty_occupation.register_site (bs);
+  empty_occupation.register_moving_site (bs2);
+  empty_occupation.register_site (bs3);
+  bs.reset_update(); bs2.reset_update(); bs3.reset_update();
+  empty_occupation.start_segment (10);
+  BOOST_CHECK_EQUAL (bs.was_updated(), true);
+  BOOST_CHECK_EQUAL (bs2.was_updated(), true);
+  BOOST_CHECK_EQUAL (bs3.was_updated(), false);
+}
+
+BOOST_AUTO_TEST_CASE (start_segment_startOnSite_updatesSite2)
+{
+  MockBindingSite& bs = site_dispenser.new_site (10, 20);
+  MockBindingSite& bs2 = site_dispenser.new_site (10, 20);
+  MockBindingSite& bs3 = site_dispenser.new_site (21, 30);
+  empty_occupation.register_site (bs);
+  empty_occupation.register_moving_site (bs2);
+  empty_occupation.register_site (bs3);
+  bs.reset_update(); bs2.reset_update(); bs3.reset_update();
+  empty_occupation.start_segment (20);
+  BOOST_CHECK_EQUAL (bs.was_updated(), true);
+  BOOST_CHECK_EQUAL (bs2.was_updated(), true);
+  BOOST_CHECK_EQUAL (bs3.was_updated(), false);
+}
+
+BOOST_AUTO_TEST_CASE (extend_segment_extendOnSite_updatesSite)
+{
+  MockBindingSite& bs = site_dispenser.new_site (10, 20);
+  MockBindingSite& bs2 = site_dispenser.new_site (15, 25);
+  empty_occupation.register_site (bs);
+  empty_occupation.register_moving_site (bs2);
+  bs.reset_update(); bs2.reset_update();
+  empty_occupation.start_segment (9);
+  empty_occupation.extend_segment (10);
+  BOOST_CHECK_EQUAL (bs.was_updated(), true); 
+  BOOST_CHECK_EQUAL (bs2.was_updated(), false);
+  extend_segment (11, 14);
+  BOOST_CHECK_EQUAL (bs2.was_updated(), false);
+  bs.reset_update();
+  empty_occupation.extend_segment (15);
+  BOOST_CHECK_EQUAL (bs.was_updated(), true); 
+  BOOST_CHECK_EQUAL (bs2.was_updated(), true);
+  extend_segment (16, 20); bs.reset_update(); bs2.reset_update();
+  empty_occupation.extend_segment (21);
+  BOOST_CHECK_EQUAL (bs.was_updated(), false); 
+  BOOST_CHECK_EQUAL (bs2.was_updated(), true);
+}
+
+BOOST_AUTO_TEST_SUITE_END() 

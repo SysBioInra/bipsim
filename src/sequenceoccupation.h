@@ -51,9 +51,9 @@ class SequenceOccupation
  private:
   // Forbidden
   /** @brief Copy constructor. */
-  SequenceOccupation (const SequenceOccupation& other_sequence_occupation);
+  SequenceOccupation (const SequenceOccupation& other);
   /** @brief Assignment operator. */
-  SequenceOccupation& operator= (const SequenceOccupation& other_sequence_occupation);
+  SequenceOccupation& operator= (const SequenceOccupation& other);
 
  public:
   /**
@@ -94,10 +94,10 @@ class SequenceOccupation
   void remove_sequence (int quantity);
 
   /**
-   * @brief Start new segment of sequence.
+   * @brief Start segment of sequence.
    * @param position Position where to start the segment.
    */
-  void start_new_segment (int position);
+  void start_segment (int position);
 
   /**
    * @brief Extend a segment.
@@ -110,22 +110,28 @@ class SequenceOccupation
   void extend_segment (int position);
 
   /**
-   * @brief Attach site watcher to a specific site.
+   * @brief Register static site.
    * @param site BindingSite to notify when a change happens on the site.
    */
-  void watch_site (BindingSite& site);
+  void register_site (BindingSite& site);
 
   /**
-   * @brief Attach site watcher to a specific site moving over time.
+   * @brief Register moving site.
    * @param site BindingSite to notify when a change happens on the site.
    */
-  void watch_moving_site (BindingSite& site);
+  void register_moving_site (BindingSite& site);
 
   /**
-   * @brief Remove watcher for a specific site moving over time.
+   * @brief Deregister moving site.
    * @param site BindingSite to stop watching.
    */
-  void unwatch_moving_site (const BindingSite& site);
+  void deregister_moving_site (BindingSite& site);
+
+  /**
+   * @brief Define a free end factory for partial strands.
+   * @param factory Factory used to generate free ends of partial strands.
+   */
+  void set_free_end_factory (const FreeEndFactory& factory);
 
   // ============================
   //  Public Methods - Accessors
@@ -139,18 +145,6 @@ class SequenceOccupation
    */
   int number_available_sites (int first, int last) const;
 
-  /**
-   * @brief Get the list of left ends.
-   * @return List of positions of left ends.
-   */
-  std::list <int> left_ends (void) const;
-
-  /**
-   * @brief Get the list of right ends.
-   * @param List of positions of right ends.
-   */
-  std::list <int> right_ends (void) const;
-
 private:
   // ============
   //  Attributes
@@ -163,13 +157,16 @@ private:
   std::vector <int> _occupancy;
 
   /** @brief Groups of static sites whose availability needs to be checked. */
-  std::vector <WatcherGroup*> _watcher_groups;
+  std::vector <SiteGroup*> _site_groups;
 
   /** @brief List of moving sites whose availability needs to be checked. */
-  std::list <SiteAvailability*> _moving_sites;
+  std::list <BindingSite*> _moving_sites;
 
   /** @brief List of partial strands. */
-  std::list <PartialStrand> _partials;  
+  std::list <PartialStrand*> _partials;  
+
+  /** @brief Free end factory. */
+  const FreeEndFactory* _free_end_factory; 
 
   // =================
   //  Private Methods
@@ -178,7 +175,7 @@ private:
   /**
    * @brief Convert a position along the sequence to a wtcher group index.
    * @param position Position along the sequence.
-   * @return Index of the WatcherGroup that contains this position (as watcher
+   * @return Index of the SiteGroup that contains this position (as site
    *  groups are non-overlapping, it is necessarily unique). If no group
    *  contains the position, returns the index of the next group along the
    *  sequence or the number of groups if there are no groups between the 
@@ -200,7 +197,7 @@ private:
   void notify_all_sites (void) const;
 
   /**
-   * @brief Fuse overlapping watcher groups starting from a specific index.
+   * @brief Fuse overlapping site groups starting from a specific index.
    *
    *  This function should be called whenever a group is extended. It tries to
    *  fuse the group recursively with following groups, as it assumes that the
@@ -215,12 +212,17 @@ private:
    * @brief Check if partial strand is complete and add it to full sequences.
    * @param strand_it Partial strand to check.
    */
-  void _check_completion (std::list <PartialStrand>::iterator& strand_it);
+  void _check_completion (std::list <PartialStrand*>::iterator& strand_it);
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+inline 
+void SequenceOccupation::set_free_end_factory (const FreeEndFactory& factory)
+{
+  _free_end_factory = &factory;
+}
 
 #endif // SEQUENCE_OCCUPATION_H

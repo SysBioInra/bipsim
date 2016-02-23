@@ -38,20 +38,43 @@ BindingSiteFamily::BindingSiteFamily (void) {}
 //  Public Methods - Commands
 // ===========================
 //
-void BindingSiteFamily::add (BindingSite* binding_site)
+void BindingSiteFamily::add (BindingSite* site)
 {
   // store binding site
-  _binding_sites.push_back (binding_site);
+  _binding_sites.push_back (site);
 
   // extend contribution vector
   _rate_contributions.extend (1);
 
-  // configure update message to be index in the rate vector
-  binding_site->set_update_message (_rate_contributions.size()-1);
+  // configure update identifier to be index in the rate vector
+  site->set_update_id (_rate_contributions.size()-1);
+}
+
+void BindingSiteFamily::remove (BindingSite* site)
+{
+  /** @pre binding_site must be contained in the family. */
+  REQUIRE (contains (site));
+
+  // find binding site
+  int site_index = 0;
+  while (_binding_sites [site_index] != site) { ++site_index; }
+
+  // swap with last binding site and remove it
+  _rate_contributions.set_rate (site_index,
+				_rate_contributions [_rate_contributions.size()-1]);
+  _binding_sites [site_index] = _binding_sites.back();
+  _binding_sites [site_index]->set_update_id (site_index);
+  _rate_contributions.pop_back();
+  _binding_sites.pop_back();
 }
 
 void BindingSiteFamily::update (int site_index, int rate_contribution)
 {  
+  /** @pre site_index must be within family range. */
+  REQUIRE ((site_index >= 0) && (site_index < _rate_contributions.size()));
+  /** @pre rate_contribution must be positive. */
+  REQUIRE (rate_contribution >= 0);
+
   _rate_contributions.set_rate (site_index, rate_contribution);
       
   // notify change to rate managers
@@ -76,6 +99,13 @@ bool BindingSiteFamily::is_site_available (void) const
   return false;
 }
 
+bool BindingSiteFamily::contains (const BindingSite* site) const
+{
+  for (std::vector<BindingSite*>::const_iterator bs_it = _binding_sites.begin();
+       bs_it != _binding_sites.end(); ++bs_it)
+    { if (*bs_it == site) { return true; } }
+  return false;
+}
 
 // =================
 //  Private Methods

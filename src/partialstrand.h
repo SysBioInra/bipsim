@@ -42,15 +42,19 @@ class PartialStrand
   // ==========================
   //
   /** @brief Constructor. */
-  PartialStrand (int length);
+  PartialStrand (int length, const FreeEndFactory& factory);
 
-  // (3-0 rule: either define all 3 following or none of them)
+
+ private:
+  // Forbidden
   /** @brief Copy constructor. */
   PartialStrand (const PartialStrand& other);
   /** @brief Assignment operator. */
   PartialStrand& operator= (const PartialStrand& other);
-  // /* @brief Destructor. */ really not needed here.
-  // ~PartialStrand (void);
+ public:
+  
+  /** @brief Destructor. */
+  ~PartialStrand (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -61,7 +65,7 @@ class PartialStrand
    * @param position Position where segment should be started.
    * @return True if segment was created, false if position was occupied.
    */
-  bool start_new_segment (int position);
+  bool start_segment (int position);
 
   /**
    * @brief Extend existing segment at given position.
@@ -82,18 +86,6 @@ class PartialStrand
    */
   bool completed (void) const;
 
-  /**
-   * @brief Accessor to left free ends.
-   * @return List of positions of free ends on the left side of segments.
-   */
-  std::list <int> left_ends (void) const;
-
-  /**
-   * @brief Accessor to right free ends.
-   * @return List of positions of free ends on the right side of segments.
-   */
-  std::list <int> right_ends (void) const;
-
 private:
   // ============
   //  Attributes
@@ -104,23 +96,27 @@ private:
 
   /** @brief True if strand has been completed. */
   bool _complete;
+  
+  /** @brief Factory used to create free ends. */
+  const FreeEndFactory& _free_end_factory;
 
   /** @brief List of sequence segments. */
-  std::list <Segment> _segments;
+  std::list <Segment*> _segments;
 
   /** @brief Last segment used. */
-  std::list <Segment>::iterator _segment_it;
+  std::list <Segment*>::iterator _segment_it;
 
   // =================
   //  Private Methods
   // =================
   //
   /**
-   * @brief Move _segment_it to segment immediately starting before position.
+   * @brief Find segment immediately starting before position.
    * @param position Position used to select segment.
+   * @return Segment immediately starting before position.
    */
-  void _move_to_segment (int position);
-
+  std::list <Segment*>::iterator _find (int position);
+  
   /**
    * @brief Check whether last segment manipulated should be ligated to 
    *  segment that directly follows.
@@ -140,19 +136,14 @@ inline bool PartialStrand::extend_segment (int position)
   /** @pre position must be consistent with length provided at construction. */
   REQUIRE ((position >= 0) && (position < _length));
 
-  // A segment can be extended:
-  //  (i) if the previous segment spans exactly until the given position
-  //  (ii) if position = 0, the last segment must span until the last base 
-  //       (note that condition (i) holds because of the [-1 0] dummy segment).
-  // Condition (ii) is fullfilled iff a segment has been fused to the dummy
-  // [L L] segment placed at construction. In this case, the last segment
-  // is no longer [L L] but some [a L] where a ≠ L.
-  _move_to_segment (position);
-  if ((_segment_it->last != position)
-      || ((position == 0) && (_segments.back().first == _length))) 
-    { return false; }
+  // A segment can be extended previous segment spans exactly until the given
+  // position
+  std::list <Segment*>::iterator result = _find (position);
+  if (((*result)->last() != position)) { return false; }
   
-  ++(_segment_it->last);
+  _segment_it = result;
+  if (position < _length-1) { (*_segment_it)->extend_left(); }
+  else { (*_segment_it)->set_last (Segment::END, _free_end_factory); }
   _check_ligation();
   return true;
 }
@@ -162,31 +153,33 @@ inline bool PartialStrand::completed (void) const
   return _complete;
 }
 
-inline bool move_postcondition (std::list <Segment>::iterator result, 
+inline bool find_postcondition (std::list <Segment*>::iterator result, 
 				int position)
 {
-  std::list <Segment>::iterator next = result; ++next;
-  return ((result->first <= position) 
-	  && ((result->last < position) || (next->first > position)));
+  std::list <Segment*>::iterator next = result; ++next;
+  return (((*result)->first() < position) 
+	  && 
+	  (((*result)->last() < position) || ((*next)->first() >= position)));
 }
 
-inline void PartialStrand::_move_to_segment (int position)
+inline std::list <Segment*>::iterator PartialStrand::_find (int position)
 {
   /** @pre position must be consistent with length provided at construction. */
   REQUIRE ((position >= 0) && (position < _length));
 
+  std::list <Segment*>::iterator result = _segment_it;
   // this algorithm works thanks to the dummy segments
-  if (_segment_it->first <= position)
+  if ((*result)->first() < position)
     { 
-      if (_segment_it->last < position)
+      if ((*result)->last() < position)
 	{
-	  ++_segment_it;
-	  while (_segment_it->first <= position) { ++_segment_it; } 
-	  --_segment_it;
+	  ++result;
+	  while ((*result)->first() < position) { ++result; } 
+	  --result;
 	}
     }
   else
-    { while (_segment_it->first > position) { --_segment_it; } }
+    { while ((*result)->first() >= position) { --result; } }
 
   /**
    * @post The selected segment must meet two conditions. (i) starting position
@@ -194,22 +187,33 @@ inline void PartialStrand::_move_to_segment (int position)
    *  position of the following segment must be strictly greater than position.
    *  This is always true thanks to the dummy segments inserted at construction.
    */
-  ENSURE (move_postcondition (_segment_it, position));
+  ENSURE (find_postcondition (result, position));
+  return result;
 }
 
 inline void PartialStrand::_check_ligation (void)
 {
-  std::list <Segment>::iterator next_it = _segment_it; ++next_it;
+  std::list <Segment*>::iterator next_it = _segment_it; ++next_it;
 
-  // ligation occurs if end of last manipulated segments meets its follower
-  if ((next_it != _segments.end())
-      && (_segment_it->last == next_it->first))
+  // ligation occurs if end of last manipulated segments overlaps its follower
+  if ((next_it != _segments.end()) 
+      && (((*_segment_it)->last() > (*next_it)->first()) 
+	  || ((*_segment_it)->last() == Segment::END)))
     { 
-      _segment_it->last = next_it->last; 
+      (*_segment_it)->absorb_left (**next_it); 
+      delete *next_it;
       _segments.erase (next_it); 
 
+      // special case for circular strands
+      // if we reached the last base of sequence, a free end appears at
+      // the start (or it is implicitly ligated if there was a segment there).
+      if ((_segment_it == (--_segments.end()))
+	  && (_segments.front()->last() == Segment::START))
+	{ _segments.front()->set_last (0, _free_end_factory); }
+
       // strand is complete when our two dummy segments finally meet <3
-      if ((_segment_it->first == -1) && (_segment_it->last == _length)) 
+      if (((*_segment_it)->first() == Segment::START) 
+	  && ((*_segment_it)->last() == Segment::END)) 
 	{ _complete = true; }
     }  
 

@@ -34,6 +34,7 @@ ChemicalSequence::ChemicalSequence (const std::string& sequence,
   , _length (sequence.size())
   , _starting_position (starting_position)
   , _sequence_occupation (sequence.size(), 0)
+  , _appariated_strand (0)
 {
 }
 
@@ -53,8 +54,8 @@ void ChemicalSequence::bind_unit (const BoundChemical& chemical_to_bind)
 			     chemical_to_bind.focused_unit_last()) == false); 
 
   _sequence_occupation.add_element
-    (chemical_to_bind, relative (chemical_to_bind.focused_unit_first()),
-     relative (chemical_to_bind.focused_unit_last()));
+    (chemical_to_bind, chemical_to_bind.focused_unit_first(),
+     chemical_to_bind.focused_unit_last());
 }
 
 
@@ -65,8 +66,8 @@ void ChemicalSequence::unbind_unit ( const BoundChemical& chemical_to_unbind )
 			     chemical_to_unbind.focused_unit_last()) == false); 
   
   _sequence_occupation.remove_element
-    (chemical_to_unbind, relative (chemical_to_unbind.focused_unit_first()),
-     relative (chemical_to_unbind.focused_unit_last()));
+    (chemical_to_unbind, chemical_to_unbind.focused_unit_first(),
+     chemical_to_unbind.focused_unit_last());
 }
 
 void ChemicalSequence::replace_bound_unit (const BoundChemical& old_chemical,
@@ -79,11 +80,11 @@ void ChemicalSequence::replace_bound_unit (const BoundChemical& old_chemical,
 			     new_chemical.focused_unit_last()) == false); 
 
   _sequence_occupation.remove_element
-    (old_chemical, relative (old_chemical.focused_unit_first()),
-     relative (old_chemical.focused_unit_last()));
+    (old_chemical, old_chemical.focused_unit_first(),
+     old_chemical.focused_unit_last());
   _sequence_occupation.add_element
-    (new_chemical, relative (new_chemical.focused_unit_first()),
-     relative (new_chemical.focused_unit_last()));
+    (new_chemical, new_chemical.focused_unit_first(),
+     new_chemical.focused_unit_last());
 }
 
 void ChemicalSequence::move_bound_unit (ProcessiveChemical& chemical_to_move,
@@ -94,8 +95,8 @@ void ChemicalSequence::move_bound_unit (ProcessiveChemical& chemical_to_move,
 			     chemical_to_move.focused_unit_last()) == false); 
 
   // update occupancy status
-  int first = relative (chemical_to_move.focused_unit_first());
-  int last = relative (chemical_to_move.focused_unit_last());
+  int first = chemical_to_move.focused_unit_first();
+  int last = chemical_to_move.focused_unit_last();
   _sequence_occupation.remove_element (chemical_to_move, first, last);
   _sequence_occupation.add_element (chemical_to_move, first+number_steps,
 				    last+number_steps);
@@ -119,16 +120,6 @@ void ChemicalSequence::remove (int quantity)
   _sequence_occupation.remove_sequence (quantity);
 }
 
-void ChemicalSequence::notify_site_availability (BindingSite& site)
-{
-  /** @pre Site must be on sequence. */
-  REQUIRE (&site.location() == this);
-  REQUIRE (is_out_of_bounds (site.first(), site.last()) == false); 
-  
-  _sequence_occupation.watch_site (site);
- }
-
-
 void ChemicalSequence::add_termination_site (const Site& termination_site)
 {
   // as a first approximation, we consider that reaching any base of the
@@ -139,6 +130,43 @@ void ChemicalSequence::add_termination_site (const Site& termination_site)
     { _termination_sites [i].push_back (&termination_site.family()); }
 }
 
+void ChemicalSequence::register_static_site (BindingSite& site)
+{
+  /** @pre Site must be on sequence. */
+  REQUIRE (&site.location() == this);
+  REQUIRE (is_out_of_bounds (site.first(), site.last()) == false); 
+  
+  _sequence_occupation.register_site (site);
+}
+
+void ChemicalSequence::register_dynamic_site (BindingSite& site)
+{
+  /** @pre Site must be on sequence. */
+  REQUIRE (&site.location() == this);
+  REQUIRE (is_out_of_bounds (site.first(), site.last()) == false); 
+  
+  _sequence_occupation.register_moving_site (site);
+}
+
+void ChemicalSequence::deregister_dynamic_site (BindingSite& site)
+{
+  /** @pre Site must be on sequence. */
+  REQUIRE (&site.location() == this);
+  REQUIRE (is_out_of_bounds (site.first(), site.last()) == false); 
+  
+  _sequence_occupation.deregister_moving_site (site);
+}
+
+void ChemicalSequence::set_appariated_strand (ChemicalSequence& strand,
+					      const FreeEndFactory& factory)
+{
+  /** @pre Strands must have equal length. */
+  REQUIRE (strand._length == _length);
+  /** @pre Appariated strand cannot be reset. */
+  REQUIRE (_appariated_strand == 0);
+  _appariated_strand = &strand;
+  _sequence_occupation.set_free_end_factory (factory);
+}
 
 // ============================
 //  Public Methods - Accessors
@@ -148,12 +176,11 @@ bool ChemicalSequence::is_termination_site
 (int position,
  const std::list <const SiteFamily*>& termination_site_families) const
 {
-  /** @pre Relative Position must be positive. */
-  REQUIRE (relative (position) >= 0 );
-  /** @pre Relative position must be smaller than sequence length. */
-  REQUIRE (relative (position) < _length ); 
+  /** @pre Position must be within sequence. */
+  REQUIRE (is_out_of_bounds (position, position) == false); 
 
-  // if there is no site to check or no termination site at the position to enquire
+  // if there is no site to check or no termination site at the position 
+  // to enquire
   const std::map <int, std::list <const SiteFamily*> >::const_iterator 
     local_sites = _termination_sites.find (position);
   if ((termination_site_families.size() == 0)

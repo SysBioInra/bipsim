@@ -102,11 +102,24 @@ public:
   void move_bound_unit (ProcessiveChemical& chemical_to_move, int number_steps);
 
   /**
-   * @brief Notify binding site when its availability changes. 
-   * @param site BindingSite to update with the current number of 
-   *  available sites.
+   * @brief Register binding site to update when its availability changes. 
+   * @param site BindingSite to update when availability changes. Its position
+   *  is supposed to not change over time.
    */
-  void notify_site_availability (BindingSite& site);
+  void register_static_site (BindingSite& site);
+
+  /**
+   * @brief Register binding site to update when its availability changes. 
+   * @param site BindingSite to update when availability changes. Its position
+   *  may change over time.
+   */
+  void register_dynamic_site (BindingSite& site);
+
+  /**
+   * @brief Stop updating a previously registered dynamic site. 
+   * @param site BindingSite to stop updating.
+   */
+  void deregister_dynamic_site (BindingSite& site);
 
   /**
    * @brief Add termination site on element.
@@ -115,15 +128,32 @@ public:
    */
   void add_termination_site (const Site& termination_site);
 
+  /**
+   * @brief Declare a strand to which the sequence is appariated.
+   * @param strand Antisense strand to which the sequence is appariated.
+   * @param factory Factory used to generate binding sites due to free ends
+   *  in the pairing of sense/antisense strands.
+   */
+  void set_appariated_strand (ChemicalSequence& strand, 
+			      const FreeEndFactory& factory);
+
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
   /**
+   * @brief Compute the number of available sites.
+   * @param first Starting position of the site.
+   * @param last Ending position of the site.
+   * @return Number of unoccupied sites.
+   */
+  int number_available_sites (int first, int last) const;
+
+  /**
    * @brief Returns whether the given site can be logically found on the
    *  sequence.
-   * @param first Absolute position of first base of site.
-   * @param last Asolute position of last base of site.
+   * @param first Relative position of first base of site.
+   * @param last Relative position of last base of site.
    * @return True if site is within sequence.
    */
   bool is_out_of_bounds (int first, int last) const;
@@ -131,7 +161,7 @@ public:
   /**
    * @brief Returns whether a specific termination site can be found at a given 
    *  position.
-   * @param position Absolute position to look at.
+   * @param position Relative position to look at.
    * @param termination_site_families 
    *  List of termination sites to look for.
    * @return True if a requested termination site is present at requested
@@ -156,9 +186,9 @@ public:
    * @brief Returns the sequence between two specific positions.
    * @return String sequence between two positions.
    * @param first
-   *  Absolute position of the first base of the sequence to return (included).
+   *  Relative position of the first base of the sequence to return (included).
    * @param last
-   *  Absolute position of the last base of the sequence to return (included).
+   *  Relative position of the last base of the sequence to return (included).
    */
   const std::string sequence (int first, int last) const;
 
@@ -169,6 +199,13 @@ public:
    *  position.
    */
   int relative (int absolute_position) const;
+
+  /**
+   * @brief Get corresponding position on antisense strand.
+   * @param position Position on sense strand.
+   * @return Position of corresponding base on antisense strand.
+   */
+  int complementary (int position) const;
 
 private:
   // ============
@@ -190,6 +227,9 @@ private:
   /** @brief Sequence occupation of the chemical. */
   SequenceOccupation _sequence_occupation;
 
+  /** @brief Appariated strand (if applicable). */
+  ChemicalSequence* _appariated_strand;
+
   // =================
   //  Private Methods
   // =================
@@ -206,17 +246,26 @@ private:
 // ======================
 //
 #include "macros.h"
+inline 
+int ChemicalSequence::number_available_sites (int first, int last) const
+{
+  /** @pre first must be smaller than last. */
+  REQUIRE (first <= last);
+  /** @pre first and last must be within sequence bound. */
+  REQUIRE (!is_out_of_bounds (first, last));
+  return _sequence_occupation.number_available_sites (first, last);
+}
 
 inline int ChemicalSequence::length (void) const
 { 
   return _length;
 }
 
-inline bool ChemicalSequence::is_out_of_bounds (int first, int last ) const
+inline bool ChemicalSequence::is_out_of_bounds (int first, int last) const
 {
   /** @pre first must be smaller than last. */
   REQUIRE (first <= last);
-  return ((relative (first) < 0) || (relative (last) >= _length));
+  return ((first < 0) || (last >= _length));
 }
 
 inline const std::string& ChemicalSequence::sequence (void) const
@@ -224,20 +273,32 @@ inline const std::string& ChemicalSequence::sequence (void) const
   return _sequence;
 }
 
-inline const std::string ChemicalSequence::sequence (int first,
-						     int last) const
+inline 
+const std::string ChemicalSequence::sequence (int first, int last) const
 {
   /** @pre first must be smaller than last. */
   REQUIRE (first <= last);
   /** @pre Requested sequence must be within sequence bounds. */
   REQUIRE (is_out_of_bounds (first, last) == false);
 
-  return _sequence.substr (relative (first), last-first+1);
+  return _sequence.substr (first, last-first+1);
 }
 
 inline int ChemicalSequence::relative (int absolute_position) const
 { 
   return absolute_position - _starting_position;
+}
+
+inline int ChemicalSequence::complementary (int position) const
+{
+  /** @pre position must be within sequence bounds. */
+  REQUIRE (!is_out_of_bounds (position, position));
+  /** @pre A pairing must have been defined. */
+  REQUIRE (_appariated_strand != 0);
+  /** @post Returned value must be within bounds of appariated strand. */
+  ENSURE (!_appariated_strand->is_out_of_bounds (_length-position-1,
+						 _length-position-1));
+  return _length-position-1;
 }
 
 

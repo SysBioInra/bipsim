@@ -63,17 +63,18 @@ class ProcessiveChemical;
 // site classes
 class BindingSite;
 class BindingSiteFamily;
+class FreeEndFactory;
 class Site;
 class SiteFamily;
 
 // sequence related classes
 class ChemicalSequence;
+class DoubleStrand;
 class PartialStrand;
 class Segment;
 class SequenceOccupation;
-class SiteAvailability;
+class SiteGroup;
 class SiteLocation;
-class WatcherGroup;
 
 // tables
 class CompositionTable;

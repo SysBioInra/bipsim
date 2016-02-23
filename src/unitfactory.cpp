@@ -122,7 +122,8 @@ bool UnitFactory::create_binding_site (const std::string& line)
 	      << "starting position is smaller than end...";
       throw ParserException (message.str());
     }
-  if (sequence->is_out_of_bounds (start, end))
+  if (sequence->is_out_of_bounds (sequence->relative (start), 
+				  sequence->relative (end)))
     {
       std::ostringstream message;
       message << "Site of family " << family_name 
@@ -144,11 +145,16 @@ bool UnitFactory::create_binding_site (const std::string& line)
   int reading_frame = 0;
   BindingSite* binding_site;
   if (not (line_stream >> reading_frame)) // no reading frame
-    { binding_site = new BindingSite (*family, *sequence, start, end,
+    { binding_site = new BindingSite (*family, *sequence, 
+				      sequence->relative (start), 
+				      sequence->relative (end),
 				      k_on, k_off); }
   else
-    { binding_site = new BindingSite (*family, *sequence, start, end,
-				      k_on, k_off, reading_frame); }
+    { binding_site = new BindingSite (*family, *sequence, 
+				      sequence->relative (start), 
+				      sequence->relative (end),
+				      k_on, k_off, 
+				      sequence->relative (reading_frame)); }
 
   // add created unit to cell state
   _cell_state.store (binding_site);
@@ -179,7 +185,8 @@ bool UnitFactory::create_termination_site (const std::string& line)
     }
 
   // create and store entity
-  Site* site = new Site (*family, *sequence, start, end);
+  Site* site = new Site (*family, *sequence, sequence->relative (start), 
+			 sequence->relative (end));
   sequence->add_termination_site (*site);
   _cell_state.store (site);
   return true;
@@ -389,7 +396,8 @@ bool UnitFactory::create_chemical_sequence ( const std::string& line )
       if (table == 0) { throw DependencyException (table_name); }
 
       // check position consistency
-        if (parent->is_out_of_bounds (pos1, pos2))
+      if (parent->is_out_of_bounds (parent->relative (pos1), 
+				    parent->relative (pos2)))
 	  {
 	    std::ostringstream message;
 	    message << "Product " << name 
@@ -404,7 +412,9 @@ bool UnitFactory::create_chemical_sequence ( const std::string& line )
 	{
 	  // if it is we simply need to signal that it is also
 	  // the product of another parent
-	  sequence = table->generate_child_sequence (*parent, pos1, pos2);
+	  sequence = table->generate_child_sequence (*parent, 
+						     parent->relative (pos1), 
+						     parent->relative (pos2));
 	  if (sequence != chemical->sequence())
 	    {
 	      std::ostringstream message;
@@ -414,11 +424,14 @@ bool UnitFactory::create_chemical_sequence ( const std::string& line )
 		      << chemical->sequence();
 	      throw ParserException (message.str());
 	    }
-	  table->add (*parent, pos1, pos2, *chemical);
+	  table->add (*parent, parent->relative (pos1), 
+		      parent->relative (pos2), *chemical);
 	  return true;
 	}
       
-      sequence = table->generate_child_sequence (*parent, pos1, pos2);
+      sequence = table->generate_child_sequence (*parent, 
+						 parent->relative (pos1), 
+						 parent->relative (pos2));
       if (sequence == "")
 	{ 
 	  std::ostringstream message;
@@ -429,7 +442,8 @@ bool UnitFactory::create_chemical_sequence ( const std::string& line )
 	  throw ParserException (message.str()); 
 	}
       chemical = new ChemicalSequence (sequence, pos1);
-      table->add (*parent, pos1, pos2, *chemical);
+      table->add (*parent, parent->relative (pos1), 
+		  parent->relative (pos2), *chemical);
     }
   else { throw FormatException(); }
 

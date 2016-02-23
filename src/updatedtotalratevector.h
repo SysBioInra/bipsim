@@ -68,28 +68,14 @@ class UpdatedTotalRateVector : public RateVector
   //  Public Methods - Commands
   // ===========================
   //
+  // redefined from RateVector
   void update_cumulates (void)
   {
     RateVector::update_cumulates();
     _total_approximation = RateVector::total_rate();
   }
 
-
-  // ============================
-  //  Public Methods - Accessors
-  // ============================
-  //
-  double total_rate (void) const
-  { 
-    /** @post total rate should be positive. */
-    ENSURE (_total_approximation >= 0);
-    return _total_approximation;
-  }
-
-  // ==========================
-  //  Public Methods - Setters
-  // ==========================
-  //
+  // redefined from RateVector
   void set_rate (int index, double value)
   {
     /** @pre index must be within vector bounds. */
@@ -102,6 +88,27 @@ class UpdatedTotalRateVector : public RateVector
     if (_total_approximation < 0) { update_cumulates(); }
     /** @post Total rate approximation should stay positive (invariant). */
     ENSURE (_total_approximation >= 0);
+  }
+
+  // redefined from RateVector
+  void pop_back (void)
+  {
+    _total_approximation -= RateVector::operator[] (size()-1);
+    RateVector::pop_back();
+    if (_total_approximation < 0) { update_cumulates(); }
+    /** @post Total rate approximation should stay positive (invariant). */
+    ENSURE (_total_approximation >= 0);
+  }
+
+  // ============================
+  //  Public Methods - Accessors
+  // ============================
+  //
+  double total_rate (void) const
+  { 
+    /** @post total rate should be positive. */
+    ENSURE (_total_approximation >= 0);
+    return _total_approximation;
   }
 
 private:

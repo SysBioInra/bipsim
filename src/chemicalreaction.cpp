@@ -21,6 +21,7 @@
 #include "macros.h" // REQUIRE
 #include "chemicalreaction.h"
 #include "chemical.h"
+#include "chemicalsequence.h"
 #include "boundchemical.h"
 #include "simulatorexception.h"
 
