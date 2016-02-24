@@ -37,6 +37,7 @@ BindingSite::BindingSite (BindingSiteFamily& family,
   , _reading_frame (reading_frame)
   , _update_id (DEFAULT_ID)
   , _static (is_static)
+  , _last_availability (0)
 {
   /** @pre If defined, reading frame must be within site. */
   REQUIRE ((reading_frame == NO_READING_FRAME)
