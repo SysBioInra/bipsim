@@ -6,6 +6,7 @@
 #include <set> // std::set
 #include <list> // std::list
 #include <iostream> // std::cout
+#include <cmath> // fabs
 
 /**
  * @brief Class that stores an experimental cumulative distribution.

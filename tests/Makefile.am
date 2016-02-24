@@ -18,37 +18,37 @@ TESTS = $(check_PROGRAMS)
 
 # we use the convenience library created in src to link to the simulator
 biasedwheel_test_SOURCES = biasedwheel_test.cpp
-biasedwheel_test_LDADD = ../src/libsrc.a
+biasedwheel_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 inputdata_test_SOURCES = inputdata_test.cpp
-inputdata_test_LDADD = ../src/libsrc.a
+inputdata_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 producttable_test_SOURCES = producttable_test.cpp
-producttable_test_LDADD = ../src/libsrc.a
+producttable_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 randomhandler_test_SOURCES = randomhandler_test.cpp
-randomhandler_test_LDADD = ../src/libsrc.a
+randomhandler_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 transformationtable_test_SOURCES = transformationtable_test.cpp
-transformationtable_test_LDADD = ../src/libsrc.a
+transformationtable_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 cellstate_test_SOURCES = cellstate_test.cpp
-cellstate_test_LDADD = ../src/libsrc.a
+cellstate_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 compositiontable_test_SOURCES = compositiontable_test.cpp
-compositiontable_test_LDADD = ../src/libsrc.a
+compositiontable_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 ratetree_test_SOURCES = ratetree_test.cpp
-ratetree_test_LDADD = ../src/libsrc.a
+ratetree_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 boundunitlist_test_SOURCES = boundunitlist_test.cpp
-boundunitlist_test_LDADD = ../src/libsrc.a
+boundunitlist_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 rategroup_test_SOURCES = rategroup_test.cpp
-rategroup_test_LDADD = ../src/libsrc.a
+rategroup_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 hybridratecontainer_test_SOURCES = hybridratecontainer_test.cpp
-hybridratecontainer_test_LDADD = ../src/libsrc.a
+hybridratecontainer_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 partialstrand_test_SOURCES = partialstrand_test.cpp
 partialstrand_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a

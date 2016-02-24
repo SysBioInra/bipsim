@@ -10,10 +10,14 @@
 //  General Includes
 // ==================
 //
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE RandomHandler
+#include <boost/test/unit_test.hpp>
+#include <boost/test/floating_point_comparison.hpp>
+
 #include <vector> // std::vector
 #include <list> // std::list
 #include <iostream> // std::cerr
-#include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
 #include <cmath> // fabs exp log
 #include <numeric> // std::partial_sum
 
@@ -25,107 +29,126 @@
 #include "experimentalcumulative.h"
 #include "../src/randomhandler.h"
 
+class VectorsSize10
+{
+public:
+  VectorsSize10 (void)
+    : int_zeros (10, 0)
+    , double_zeros (10, 0)
+  {}
 
-#define FAILURE(msg) {std::cerr << "TEST FAILED: " << msg << std::endl; return EXIT_FAILURE;}
-#define WARNING(msg) {std::cerr << "TEST WARNING: " << msg << std::endl;}
+  std::vector<int> int_zeros;
+  std::vector<double> double_zeros;
+};
 
-// Cumulative distribution of U(1,10)
-double cumulative_uniform_1_10 (int k);
-
-// Cumulative distribution of Poisson(1)
-double cumulative_poisson_1 (int k);
-
-// Cumulative distribution of Poisson(13.5)
-double cumulative_poisson_13_5 (int k);
-
-// Cumulative distribution of Poisson(50000)
-double cumulative_poisson_2000 (int k);
-
-// Cumulative distribution of Exp(1)
-double cumulative_exp_1 (double x);
-
-
-int main (int argc, char *argv[])
-{ 
-  int vector_size = 10;
-  std::vector<int> int_zeros (vector_size, 0);
-  std::vector<int> int_test;
-  std::vector<double> double_zeros (vector_size, 0);
-  std::vector<double> double_test;
-
-  // draw_index should abort when total weight <= 0
-  // RandomHandler::instance().draw_index (std::vector<int>(3,0));
-
-  // draw_index should return the only non-zero weighted index
-  for (int i = 0; i < vector_size; ++i)
-    {
-      int_test = int_zeros; int_test[i] = i + 1;
-      if (RandomHandler::instance().draw_index (int_test) != i)
-	FAILURE ("draw_index did not return only non-zero weighted index");
-    }
-
-  // draw_index should return the only non-zero weighted index
-  for (int i = 0; i < vector_size; ++i)
-    {
-      double_test = double_zeros; double_test[i] = i + 1.1;
-      if (RandomHandler::instance().draw_index (double_test) != i)
-	FAILURE ("draw_index did not return only non-zero weighted index");
-    }
-  
-  // draw_uniform with min = max = a should return a
-  int a = 7;
-  if (RandomHandler::instance().draw_uniform (a,a) != a)
-    FAILURE ("draw_uniform (a,a) did not return a");
-
-  // draw_uniform should abort if a 
-  // RandomHandler::instance().draw_uniform (3,1);
-
-  // should abort
-  // RandomHandler::draw_exponential (0);
-
-  // check that draw_uniform does approximately do its job
-  ExperimentalCumulative<int> uniform;
-  for (int i = 0; i < 10000; ++i)
-      uniform.add_pick (RandomHandler::instance().draw_uniform (1,10));
-  if (distance_to_discrete_cumulative (uniform, cumulative_uniform_1_10) > 0.01)
-    FAILURE ("Uniform distribution really uniform?");
-
-  // check that draw_exponential does approximately do its job
-  ExperimentalCumulative<double> exponential;
-  for (int i = 0; i < 10000; ++i)
-    exponential.add_pick (RandomHandler::instance().draw_exponential (1));
-  if (distance_to_continuous_cumulative (exponential, cumulative_exp_1) > 0.01)
-    FAILURE ("Exponential distribution really exponential?");
-
-  // check that draw_poisson does approximately do its job (parameter 1)
-  ExperimentalCumulative<int> poisson;
-  for (int i = 0; i < 10000; ++i)
-    poisson.add_pick (RandomHandler::instance().draw_poisson (1));
-  if (distance_to_discrete_cumulative (poisson, cumulative_poisson_1) > 0.01)
-    FAILURE ("Poisson distribution really poisson (lambda = 1)?");
-
-  // check that draw_poisson does approximately do its job (parameter 13.5)
-  ExperimentalCumulative<int> poisson135;
-  for (int i = 0; i < 10000; ++i)
-    poisson135.add_pick (RandomHandler::instance().draw_poisson (13.5));
-  if (distance_to_discrete_cumulative (poisson135, cumulative_poisson_13_5) > 0.01)
-    FAILURE ("Poisson distribution really poisson (lambda = 13.5)?");
-  
-  // check that draw_poisson does approximately do its job (parameter 2000)
-  ExperimentalCumulative<int> poisson2000;
-  for (int i = 0; i < 10000; ++i)
-    {
-      int pick = RandomHandler::instance().draw_poisson (2000);
-      poisson2000.add_pick (pick);
-      // std::cout << pick << std::endl;
-    }
-  double distance = distance_to_discrete_cumulative (poisson2000, cumulative_poisson_2000);
-  if (distance > 0.01)
-    FAILURE ("Poisson distribution really poisson (lambda = 2000, max_distance = " << distance << ")?");
-
-  return EXIT_SUCCESS;
+BOOST_FIXTURE_TEST_SUITE (BaseTestsDrawIndex, VectorsSize10)
+ 
+BOOST_AUTO_TEST_CASE (draw_index_oneNoneZeroIntegerValue_returnsIndexNonZeroValue)
+{
+  int_zeros [0] = 1;
+  BOOST_CHECK_EQUAL (RandomHandler::instance().draw_index (int_zeros), 0);
 }
 
+BOOST_AUTO_TEST_CASE (draw_index_oneNoneZeroIntegerValue_returnsIndexNonZeroValue2)
+{
+  int_zeros [5] = 5;
+  BOOST_CHECK_EQUAL (RandomHandler::instance().draw_index (int_zeros), 5);
+}
+
+BOOST_AUTO_TEST_CASE (draw_index_oneNoneZeroIntegerValue_returnsIndexNonZeroValue3)
+{
+  int_zeros [9] = 9;
+  BOOST_CHECK_EQUAL (RandomHandler::instance().draw_index (int_zeros), 9);
+}
+
+BOOST_AUTO_TEST_CASE (draw_index_oneNoneZeroDoubleValue_returnsIndexNonZeroValue)
+{
+  double_zeros [0] = 1.1;
+  BOOST_CHECK_EQUAL (RandomHandler::instance().draw_index (double_zeros), 0);
+}
+
+BOOST_AUTO_TEST_CASE (draw_index_oneNoneZeroDoubleValue_returnsIndexNonZeroValue2)
+{
+  double_zeros [9] = 9.9;
+  BOOST_CHECK_EQUAL (RandomHandler::instance().draw_index (double_zeros), 9);
+}
+ 
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE (BaseTestsDistributions)
+
+BOOST_AUTO_TEST_CASE (draw_uniform_singleValue_returnsSingleValue)
+{
+  BOOST_CHECK_EQUAL (RandomHandler::instance().draw_uniform (10, 10), 10);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE (AdvancedTestsDistributions)
+
+double cumulative_uniform_1_10 (int k) { return k*0.1; }
+
+BOOST_AUTO_TEST_CASE (draw_uniform_tenThousandDraws_statisticsCheckOut)
+{
+  ExperimentalCumulative <int> uniform;
+  for (int i = 0; i < 10000; ++i)
+    { uniform.add_pick (RandomHandler::instance().draw_uniform (1,10)); }
+  BOOST_CHECK_SMALL (distance_to_discrete_cumulative (uniform, 
+						      cumulative_uniform_1_10),
+		     0.01);
+}
+
+double cumulative_exp_1 (double x) { return 1 - exp (-x);}
+
+BOOST_AUTO_TEST_CASE (draw_exponential_tenThousandDrawsLambdaOne_statisticsCheckOut)
+{
+  ExperimentalCumulative<double> exponential;
+  for (int i = 0; i < 10000; ++i)
+    { exponential.add_pick (RandomHandler::instance().draw_exponential (1)); }
+  BOOST_CHECK_SMALL (distance_to_continuous_cumulative (exponential, 
+							cumulative_exp_1),
+		     0.01);
+}
+
+
+double cumulative_poisson (int k, double lambda);
+double cumulative_poisson_1 (int k) { return cumulative_poisson (k, 1); }
+
+BOOST_AUTO_TEST_CASE (draw_poisson_tenThousandDrawsLambdaOne_statisticsCheckOut)
+{
+  ExperimentalCumulative<int> poisson;
+  for (int i = 0; i < 10000; ++i)
+    { poisson.add_pick (RandomHandler::instance().draw_poisson (1)); }
+  BOOST_CHECK_SMALL (distance_to_discrete_cumulative (poisson, 
+						      cumulative_poisson_1),
+		     0.01);
+}
+
+double cumulative_poisson_13_5 (int k) {return cumulative_poisson (k, 13.5);}
+
+BOOST_AUTO_TEST_CASE (draw_poisson_tenThousandDrawsLambdaThirteenDotFive_statisticsCheckOut)
+{
+  ExperimentalCumulative<int> poisson;
+  for (int i = 0; i < 10000; ++i)
+    { poisson.add_pick (RandomHandler::instance().draw_poisson (13.5)); }
+  BOOST_CHECK_SMALL (distance_to_discrete_cumulative (poisson, 
+						      cumulative_poisson_13_5),
+		     0.01); 
+}
+
+double cumulative_poisson_2000 (int k) {return cumulative_poisson (k, 2000);}
+
+BOOST_AUTO_TEST_CASE (draw_poisson_tenThousandDrawsLambdaTwoThousand_statisticsCheckOut)
+{
+  ExperimentalCumulative<int> poisson;
+  for (int i = 0; i < 10000; ++i)
+    { poisson.add_pick (RandomHandler::instance().draw_poisson (2000)); }
+  BOOST_CHECK_SMALL (distance_to_discrete_cumulative (poisson, 
+						      cumulative_poisson_2000),
+		     0.01);  
+}
 
 double cumulative_poisson (int k, double lambda)
 {
@@ -141,28 +164,4 @@ double cumulative_poisson (int k, double lambda)
   return val;
 }
 
-double cumulative_poisson_1 (int k)
-{
-  return cumulative_poisson (k, 1);
-}
-
-double cumulative_poisson_13_5 (int k)
-{
-  return cumulative_poisson (k, 13.5);
-}
-
-double cumulative_poisson_2000 (int k)
-{
-  return cumulative_poisson (k, 2000);
-}
-
-double cumulative_uniform_1_10 (int k)
-{
-  return k*0.1;
-}
-
-double cumulative_exp_1 (double x)
-{
-  return 1 - exp (-x);
-}
-
+BOOST_AUTO_TEST_SUITE_END()

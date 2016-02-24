@@ -10,74 +10,93 @@
 //  General Includes
 // ==================
 //
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE BiasedWheel
+#include <boost/test/unit_test.hpp>
+
 #include <vector> // std::vector
 #include <iostream> // std::cerr
-#include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
 #include <cmath> // fabs
 #include <numeric> // std::partial_sum
 
-#include "../src/biasedwheel.h"
 
 // ==================
 //  Project Includes
 // ==================
 //
-#define FAILURE(msg) {std::cerr << "TEST FAILED: " << msg << std::endl; return EXIT_FAILURE;}
+#include "../src/biasedwheel.h"
 
 template <typename T>
 std::ostream& operator<< (std::ostream& output, const std::vector<T>& v)
 {
   output << "[ ";
   for (typename std::vector<T>::const_iterator it = v.begin(); it != v.end(); ++it)
-    {
-      output << *it << " ";
-    }
+    { output << *it << " "; }
   output << "]";
   return output;
 }
 
-int main (int argc, char *argv[])
-{ 
-  int vector_size = 10;
-  std::vector<int> int_zeros (vector_size, 0);
-  std::vector<int> int_test;
-  std::vector <int> int_cumulated;
-  std::vector<double> double_zeros (vector_size, 0);
-  std::vector<double> double_test;
-  std::vector <double> double_cumulated;
+class VectorsSize10
+{
+public:
+  VectorsSize10 (void) 
+    : vector_size (10)
+    , int_zeros (vector_size, 0)
+    , int_cumulated (vector_size)
+  {}
 
-  // find index should be able to find the only positive weight index as long as weight parameter is valid
-  // test vectors [ 0 ... i+1 ... 0 ] with i+1 at position i
-  // expected result i
-  for (int i = 0; i < vector_size; ++i)
-    {
-      int_test = int_zeros; int_test [i] = i+1;
-      int_cumulated.resize (int_test.size());
-      std::partial_sum (int_test.begin(), int_test.end(), int_cumulated.begin());
-      BiasedWheel<int> bw (int_cumulated);
-      if (bw.find_index (1) != i)
-	  FAILURE ("Finding index of only positive weight failed.");
-      if (bw.find_index (i+1) != i)
-	  FAILURE ("Finding index of only positive weight failed.");
-    }
-  
-  // find indices should be able to find the only positive weight index as long as weight parameter is valid
-  // test vectors [ 0 ... i+1 ... 0 ] with i+1 at position i
-  // expected result [ i i ... i ] of length n
-  for (int i = 0; i < vector_size; ++i)
-    {
-      int n = 10;
-      int_test = int_zeros; int_test [i] = i+1;
-      int_cumulated.resize (int_test.size());
-      std::partial_sum (int_test.begin(), int_test.end(), int_cumulated.begin());
-      BiasedWheel<int> bw (int_cumulated);
-      if (bw.find_multiple_indices (std::vector <int> (n,1)) != std::vector <int> (n,i))
-	  FAILURE ("Finding index of only positive weight multiple times failed.");
-      if (bw.find_multiple_indices (std::vector <int> (n,i+1)) != std::vector <int> (n,i))
-	  FAILURE ("Finding index of only positive weight multiple times failed.");
-    }
-  
+  void cumulate_int_zeros (void)
+  { 
+    std::partial_sum (int_zeros.begin(), int_zeros.end(), 
+		      int_cumulated.begin());
+  }
 
-  return EXIT_SUCCESS;
+  int vector_size;
+  std::vector<int> int_zeros;
+  std::vector<int> int_cumulated;
+};
+
+BOOST_FIXTURE_TEST_SUITE (BaseTests, VectorsSize10)
+ 
+BOOST_AUTO_TEST_CASE (find_index_oneNonZeroIntegerValue_returnsIndexOfNonZeroValue)
+{
+  int_zeros [0] = 10; cumulate_int_zeros(); BiasedWheel<int> bw (int_cumulated);
+  BOOST_CHECK_EQUAL (bw.find_index (1), 0);
+  BOOST_CHECK_EQUAL (bw.find_index (10), 0);
 }
 
+BOOST_AUTO_TEST_CASE (find_index_oneNonZeroIntegerValue_returnsIndexOfNonZeroValue2)
+{
+  int_zeros [5] = 10; cumulate_int_zeros(); BiasedWheel<int> bw (int_cumulated);
+  BOOST_CHECK_EQUAL (bw.find_index (1), 5);
+  BOOST_CHECK_EQUAL (bw.find_index (10), 5);
+}
+
+BOOST_AUTO_TEST_CASE (find_index_oneNonZeroIntegerValue_returnsIndexOfNonZeroValue3)
+{
+  int_zeros [9] = 10; cumulate_int_zeros(); BiasedWheel<int> bw (int_cumulated);
+  BOOST_CHECK_EQUAL (bw.find_index (1), 9);
+  BOOST_CHECK_EQUAL (bw.find_index (10), 9);
+}
+
+BOOST_AUTO_TEST_CASE (find_multiple_indices_oneNonZeroIntegerValueFindTenIndices_returnsIndexOfNonZeroValueTenTimes)
+{
+  int n = 10;
+  int_zeros [0] = 10; cumulate_int_zeros(); BiasedWheel<int> bw (int_cumulated);
+  BOOST_CHECK (bw.find_multiple_indices (std::vector <int> (n, 1)) 
+	       == std::vector <int> (n, 0));
+  BOOST_CHECK (bw.find_multiple_indices (std::vector <int> (n, 10))
+	       == std::vector <int> (n, 0));
+}
+
+BOOST_AUTO_TEST_CASE (find_multiple_indices_oneNonZeroIntegerValueFindTenIndices_returnsIndexOfNonZeroValueTenTimes2)
+{
+  int n = 10;
+  int_zeros [5] = 10; cumulate_int_zeros(); BiasedWheel<int> bw (int_cumulated);
+  BOOST_CHECK (bw.find_multiple_indices (std::vector <int> (n, 1))
+	       == std::vector <int> (n, 5));
+  BOOST_CHECK (bw.find_multiple_indices (std::vector <int> (n, 10))
+	       == std::vector <int> (n, 5));
+}
+ 
+BOOST_AUTO_TEST_SUITE_END()

@@ -10,55 +10,120 @@
 //  General Includes
 // ==================
 //
-#include <iostream> // std::cerr
-#include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE ProductTable
+#include <boost/test/unit_test.hpp>
 
-#include "../src/producttable.h"
-#include "../src/chemicalsequence.h"
+#include <iostream> // std::cerr
 
 // ==================
 //  Project Includes
 // ==================
 //
-#define FAILURE(msg) {std::cerr << "TEST FAILED: " << msg << std::endl; return EXIT_FAILURE;}
+#include "../src/producttable.h"
+#include "../src/chemicalsequence.h"
 
+class AaTTFactory
+{
+public:
+  static TransformationTable* make (void)
+  {
+    TransformationTable* tt = new TransformationTable (1);
+    tt->add_rule ("A", "a"); tt->add_rule ("B", "b"); tt->add_rule ("C", "c");
+    return tt;
+  }
+};
 
-int main (int argc, char *argv[])
-{ 
-  TransformationTable dummy (1);
-  dummy.add_rule ("A","a");
-  dummy.add_rule ("B","b");
-  dummy.add_rule ("C","c");
-  dummy.add_rule ("m","x");
-  dummy.add_rule ("i","o");
+class ABCStringFactory
+{
+public:
+  static std::string make (int number)
+  {
+    std::string result;
+    for (int i = 0; i < number; ++i) { result += "ABC"; }
+    return result;
+  }
+};
 
-  ProductTable table (dummy);
-  ChemicalSequence a ("A"), b ("B"), c("C");
-  ChemicalSequence parent ("mimimi");
+class ParentL60
+{
+public:
+  ParentL60 (void)
+    : parent_ABC (ABCStringFactory::make (20))
+    , _tt (AaTTFactory::make())
+    , table_Aa_Bb_Cc (*_tt)
+  {
+  }
   
-  table.add (parent, 1, 10, a);
-  table.add (parent, 150, 200, b);
-  table.add (parent, 9, 17, c);
-  if (table.product (parent, 1, 10) != &a)
-    { FAILURE ("could not find product in table."); }
-  if (table.product (parent, 9, 17) != &c)
-    { FAILURE ("could not find product in table."); }
-  if (table.product (parent, 150, 200) != &b)
-    { FAILURE ("could not find product in table."); }
-  if (table.product (parent, 15, 18) != 0)
-    { FAILURE ("found non-existing product in table."); }
+  ~ParentL60 (void) { delete _tt; }
 
-  table.add (parent, 1, 10, c);
-  if (table.product (parent, 1, 10) != &c) { FAILURE ("rewrite failed."); }  
+private:
+  TransformationTable* _tt;
 
-  if (table.generate_child_sequence (a, 0, 0) != "a")
-    { FAILURE ("Conversion to child failed."); }  
-  if (table.generate_child_sequence (b, 0, 0) != "b")
-    { FAILURE ("Conversion to child failed."); }  
-  if (table.generate_child_sequence (c, 0, 0) != "c")
-    { FAILURE ("Conversion to child failed."); }  
-  if (table.generate_child_sequence (parent, 0, 5) != "xoxoxo")
-    { FAILURE ("Conversion to child failed."); }  
+public:
+  ChemicalSequence parent_ABC;
+  ProductTable table_Aa_Bb_Cc;
+};
 
-  return EXIT_SUCCESS;
+BOOST_FIXTURE_TEST_SUITE (BaseTests, ParentL60)
+ 
+BOOST_AUTO_TEST_CASE (product_noProduct_returnsNullPointer)
+{
+  BOOST_CHECK_EQUAL (table_Aa_Bb_Cc.product (parent_ABC, 1, 10),
+		     (ChemicalSequence*) 0);
 }
+
+BOOST_AUTO_TEST_CASE (product_oneProduct_returnsAddedProduct)
+{
+  ChemicalSequence cs (std::string (10, 'a')); 
+  table_Aa_Bb_Cc.add (parent_ABC, 1, 10, cs);
+  BOOST_CHECK_EQUAL (table_Aa_Bb_Cc.product (parent_ABC, 1, 10), &cs);
+}
+
+BOOST_AUTO_TEST_CASE (product_oneProductWrongBasesSpecified_returnsNullPointer)
+{
+  ChemicalSequence cs (std::string (10, 'a')); 
+  table_Aa_Bb_Cc.add (parent_ABC, 1, 10, cs);
+  BOOST_CHECK_EQUAL (table_Aa_Bb_Cc.product (parent_ABC, 1, 15), 
+		     (ChemicalSequence*) 0);
+}
+
+BOOST_AUTO_TEST_CASE (product_threeProducts_returnsCorrectProduct)
+{
+  ChemicalSequence cs (std::string (10, 'a')); 
+  table_Aa_Bb_Cc.add (parent_ABC, 1, 10, cs);
+  ChemicalSequence cs2 (std::string (10, 'a')); 
+  table_Aa_Bb_Cc.add (parent_ABC, 11, 20, cs2);
+  ChemicalSequence cs3 (std::string (10, 'a')); 
+  table_Aa_Bb_Cc.add (parent_ABC, 11, 30, cs3);
+  BOOST_CHECK_EQUAL (table_Aa_Bb_Cc.product (parent_ABC, 11, 20), &cs2);
+  BOOST_CHECK_EQUAL (table_Aa_Bb_Cc.product (parent_ABC, 11, 30), &cs3);
+  BOOST_CHECK_EQUAL (table_Aa_Bb_Cc.product (parent_ABC, 1, 10), &cs);
+}
+
+BOOST_AUTO_TEST_CASE (product_oneProductOverwritten_returnsSecondProduct)
+{
+  ChemicalSequence cs (std::string (10, 'a')); 
+  table_Aa_Bb_Cc.add (parent_ABC, 1, 10, cs);
+  ChemicalSequence cs2 (std::string (10, 'a')); 
+  table_Aa_Bb_Cc.add (parent_ABC, 1, 10, cs2);
+  BOOST_CHECK_EQUAL (table_Aa_Bb_Cc.product (parent_ABC, 1, 10), &cs2);
+}
+
+BOOST_AUTO_TEST_CASE (generate_child_sequence_oneBase_returnsCorrectString)
+{
+  BOOST_CHECK_EQUAL (table_Aa_Bb_Cc. generate_child_sequence (parent_ABC, 0, 0),
+		     "a");
+  BOOST_CHECK_EQUAL (table_Aa_Bb_Cc. generate_child_sequence (parent_ABC, 1, 1),
+		     "b");
+  BOOST_CHECK_EQUAL (table_Aa_Bb_Cc. generate_child_sequence (parent_ABC, 2, 2),
+		     "c");
+}
+
+BOOST_AUTO_TEST_CASE (generate_child_sequence_severalBases_returnsCorrectString)
+{
+  BOOST_CHECK_EQUAL (table_Aa_Bb_Cc. generate_child_sequence (parent_ABC, 10, 20), 
+		     "bcabcabcabc");
+}
+
+BOOST_AUTO_TEST_SUITE_END()

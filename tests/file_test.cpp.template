@@ -13,8 +13,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE ClassName
 #include <boost/test/unit_test.hpp>
-
-#include <iostream>
+// #include <boost/test/floating_point_comparison.hpp>
 
 // ==================
 //  Project Includes
@@ -22,7 +21,12 @@
 //
 #include "../src/classname.h"
 
-BOOST_FIXTURE_TEST_SUITE ()
+class Fixture
+{
+public:
+};
+
+BOOST_FIXTURE_TEST_SUITE (BaseTests,)
  
 BOOST_AUTO_TEST_CASE ()
 {

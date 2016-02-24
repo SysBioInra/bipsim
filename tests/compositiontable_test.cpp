@@ -10,92 +10,98 @@
 //  General Includes
 // ==================
 //
-#include <iostream> // std::cerr
-#include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE CompositionTable
+#include <boost/test/unit_test.hpp>
 
-#include "../src/compositiontable.h"
-#include "../src/freechemical.h"
+#include <iostream> // std::cerr
 
 // ==================
 //  Project Includes
 // ==================
 //
-#define FAILURE(msg) {std::cerr << "TEST FAILED: " << msg << std::endl; return EXIT_FAILURE;}
+#include "../src/compositiontable.h"
+#include "../src/freechemical.h"
 
-template <typename Map>
-bool map_compare (Map const &lhs, Map const &rhs) {
+class TableFourRecognizedLettersVaryingCompositions
+{
+public:
+  TableFourRecognizedLettersVaryingCompositions (void)
+  {
+    std::list <Chemical*> comp; comp.push_back(&A1); comp.push_back(&A2);
+    table_ABCD.add_rule ('A', comp);
+    comp.clear(); comp.push_back(&BC1); comp.push_back(&B2);
+    table_ABCD.add_rule ('B', comp);
+    comp.clear(); comp.push_back(&BC1); comp.push_back(&C2); 
+    comp.push_back(&C3);
+    table_ABCD.add_rule ('C', comp);
+    comp.clear(); comp.push_back(&D1);
+    table_ABCD.add_rule ('D', comp);
+  }
+
+  template <typename Map>
+  bool map_compare (Map const &lhs, Map const &rhs) {
     // No predicate needed because there is operator== for pairs already.
     return lhs.size() == rhs.size()
-        && std::equal(lhs.begin(), lhs.end(),
-                      rhs.begin());
-}
+      && std::equal(lhs.begin(), lhs.end(),
+		    rhs.begin());
+  }
 
-int main (int argc, char *argv[])
-{ 
-  // test with random composition
-  FreeChemical A1, A2, B1, B2, C1, C2, D1;
-  CompositionTable test_table;
-  std::list <Chemical*> A_comp; A_comp.push_back(&A1); A_comp.push_back(&A2);
-  test_table.add_rule ('A', A_comp);
-  std::list <Chemical*> B_comp; B_comp.push_back(&B1);
-  B_comp.push_back(&B2); B_comp.push_back(&B1);
-  test_table.add_rule ('B', B_comp);
-  std::list <Chemical*> C_comp; C_comp.push_back(&C1); C_comp.push_back(&C2);
-  test_table.add_rule ('C', C_comp);
-  std::list <Chemical*> D_comp; D_comp.push_back(&D1);
-  test_table.add_rule ('D', D_comp);
+public:
+  FreeChemical A1, A2, BC1, B2, C2, C3, D1;
+  CompositionTable table_ABCD;
+};
+
+BOOST_FIXTURE_TEST_SUITE (BaseTests, TableFourRecognizedLettersVaryingCompositions)
  
-  // simple test
-  {
-    std::string sequence = "A";
-    std::map <Chemical*, int> expected_result;
-    expected_result [&A1] = expected_result [&A2] = 1;
-    if (!map_compare (test_table.composition (sequence), expected_result))
-      { FAILURE ("could not compute composition of simple sequence successfully..."); }
-  }
-  
-  {
-    std::string sequence = "B";
-    std::map <Chemical*, int> expected_result;
-    expected_result [&B2] = 1; expected_result [&B1] = 2; 
-    if (!map_compare (test_table.composition (sequence), expected_result))
-      { FAILURE ("could not compute composition of simple sequence successfully..."); }
-  }
-
-  {
-    std::string sequence = "C";
-    std::map <Chemical*, int> expected_result;
-     expected_result [&C1] = expected_result [&C2] = 1;
-   if (!map_compare (test_table.composition (sequence), expected_result))
-      { FAILURE ("could not compute composition of simple sequence successfully..."); }
-  }
-
-  {
-    std::string sequence = "D";
-    std::map <Chemical*, int> expected_result;
-    expected_result [&D1] = 1;
-    if (!map_compare (test_table.composition (sequence), expected_result))
-      { FAILURE ("could not compute composition of simple sequence successfully..."); }
-  }
-
-  {
-    std::string sequence = "DCBA";
-    std::map <Chemical*, int> expected_result;
-    expected_result [&A1] = expected_result [&A2] = 1;
-    expected_result [&B2] = 1; expected_result [&B1] = 2; 
-    expected_result [&C1] = expected_result [&C2] = 1;
-    expected_result [&D1] = 1;
-    if (!map_compare (test_table.composition (sequence), expected_result))
-      { FAILURE ("could not compute composition of simple sequence successfully..."); }
-  }
-
-  {
-    std::string sequence1 = "AAAABBBCCDCCBBBAAAA";
-    std::string sequence2 = "DCCCCBBBBBBAAAAAAAA";
-    if (!map_compare (test_table.composition (sequence1),
-		      test_table.composition (sequence1)))
-      { FAILURE ("could not compute composition of simple sequence successfully..."); }
-  }
-
-  return EXIT_SUCCESS;
+BOOST_AUTO_TEST_CASE (composition_singleLetterSequence_returnsBaseElements)
+{
+  std::string sequence = "A"; std::map <Chemical*, int> expected_result;
+  expected_result [&A1] = expected_result [&A2] = 1;
+  BOOST_CHECK (map_compare (table_ABCD.composition (sequence), 
+			    expected_result));
 }
+
+BOOST_AUTO_TEST_CASE (composition_singleLetterSequence_returnsBaseElements2)
+{
+  std::string sequence = "B"; std::map <Chemical*, int> expected_result;
+  expected_result [&BC1] = expected_result [&B2] = 1;
+  BOOST_CHECK (map_compare (table_ABCD.composition (sequence), 
+			    expected_result));
+}
+ 
+BOOST_AUTO_TEST_CASE (composition_singleLetterSequence_returnsBaseElements3)
+{
+  std::string sequence = "C"; std::map <Chemical*, int> expected_result;
+  expected_result [&BC1] = expected_result [&C2] = expected_result [&C3] = 1; 
+  BOOST_CHECK (map_compare (table_ABCD.composition (sequence), 
+			    expected_result));
+}
+
+BOOST_AUTO_TEST_CASE (composition_singleLetterSequence_returnsBaseElements4)
+{
+  std::string sequence = "D"; std::map <Chemical*, int> expected_result;
+  expected_result [&D1] = 1;
+  BOOST_CHECK (map_compare (table_ABCD.composition (sequence), 
+			    expected_result));
+}
+
+BOOST_AUTO_TEST_CASE (composition_fourLetterSequence_returnsEachBaseElement)
+{
+  std::string sequence = "DCBA"; std::map <Chemical*, int> expected_result;
+  expected_result [&A1] = expected_result [&A2] = expected_result [&B2] = 1;
+  expected_result [&BC1] = 2;
+  expected_result [&C2] = expected_result [&C3] = expected_result [&D1] = 1;
+  BOOST_CHECK (map_compare (table_ABCD.composition (sequence), 
+			    expected_result));
+}
+
+BOOST_AUTO_TEST_CASE (composition_twoLongSequencesSameLetters_returnsSameComposition)
+{
+  std::string sequence1 = "AAAABBBCCDCCBBBAAAA";
+  std::string sequence2 = "DCCCCBBBBBBAAAAAAAA";
+  BOOST_CHECK (map_compare (table_ABCD.composition (sequence1), 
+			    table_ABCD.composition (sequence2)));
+}
+
+BOOST_AUTO_TEST_SUITE_END()

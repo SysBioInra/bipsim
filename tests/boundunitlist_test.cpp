@@ -1,6 +1,6 @@
 /**
  * @file boundunitlist_test.cpp
- * @brief Unit testing for ProductTable class.
+ * @brief Unit testing for BoundUnitList class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -10,109 +10,144 @@
 //  General Includes
 // ==================
 //
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE BoundUnitList
+#include <boost/test/unit_test.hpp>
+
 #include <iostream> // std::cerr
-#include <cstdlib> // EXIT_SUCCESS EXIT_FAILURE
 #include <list> // std::list
 
+
+// ==================
+//  Project Includes
+// ==================
+//
 #include "../src/chemicalsequence.h"
 #include "../src/bindingsite.h"
 #include "../src/bindingsitefamily.h"
 #include "../src/boundunitlist.h"
 #include "../src/boundunit.h"
 
-// ==================
-//  Project Includes
-// ==================
-//
-#define FAILURE(msg) {std::cerr << "TEST FAILED: " << msg << std::endl; return EXIT_FAILURE;}
-
-bool check_content (const BoundUnitList& ulist, 
-		    std::list <BoundUnit*> ref);
-
-int main (int argc, char *argv[])
-{ 
-  ChemicalSequence cs ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-  BindingSiteFamily dummy_family;
-  BindingSite bs (dummy_family, cs, 1, 1, 1, 1);
-  BoundUnitList ulist;
-  std::list <BoundUnit*> ref;
-
-  // test initial size
-  if (ulist.size() != 0) { FAILURE ("Wrong number of elements."); }
-
-  // test adding one element
-  BoundUnit bu (bs, bs.first(), bs.reading_frame());
-  ulist.insert (&bu);
-  if (ulist.size() != 1) { FAILURE ("Wrong number of elements."); }
-  ref.push_back (&bu);
-  if (!check_content (ulist, ref))
-    { FAILURE ("First element of list not correctly initialized."); }
-
-  // test adding a second element
-  BoundUnit bu2 (bs, bs.first()+10, bs.reading_frame());
-  ulist.insert (&bu2);
-  if (ulist.size() != 2) { FAILURE ("Wrong number of elements."); }
-  ref.push_back (&bu2);
-  if (!check_content (ulist, ref))
-    { FAILURE ("Second element of list not correctly initialized."); }
-  
-  // test erasing an element from position
-  ref.remove (ulist [1]);
-  ulist.erase (ulist [1]);
-  if (ulist.size() != 1) { FAILURE ("Wrong number of elements."); }
-  if (!check_content (ulist, ref)) { FAILURE ("Wrong element erased."); }
-
-  // test erasing an element from a stored pointer
-  ulist.insert (&bu2);
-  ulist.erase (&bu2);
-  if (ulist.size() != 1) { FAILURE ("Wrong number of elements."); }
-  if (!check_content (ulist, ref)) { FAILURE ("Wrong element erased."); }
-
-  // test erasing a non existing element
-  ulist.erase (ulist [0]);
-  if (ulist.size() != 0) { FAILURE ("Wrong number of elements."); }
-  ulist.insert (&bu2);
-  std::cout << "Warning expected: ";
-  ulist.erase (&bu);
-  if (ulist.size() != 1)
-    { FAILURE ("Element was erased when it should not."); }
-  
-  // test storing multiple copies and deleting them
-  ulist.insert (&bu2);
-  if (ulist.size() != 2) { FAILURE ("Wrong number of elements."); }
-  ulist.erase (&bu2);
-  if (ulist.size() != 1) { FAILURE ("Wrong number of elements."); }
-  ulist.erase (&bu2);
-  if (ulist.size() != 0) { FAILURE ("Wrong number of elements."); }
-
-  // add several elements and delete them
-  BoundUnit bu3 (bs, bs.first(), bs.reading_frame());
-  BoundUnit bu4 (bs, bs.first(), bs.reading_frame());
-  ulist.insert (&bu);
-  ulist.insert (&bu2);
-  ulist.insert (&bu3);
-  ulist.insert (&bu4);
-  ulist.erase (&bu3);
-  ulist.erase (&bu);
-  ulist.erase (&bu4);
-  ulist.erase (&bu2);
-
-  return EXIT_SUCCESS;
-}
-
-bool check_content (const BoundUnitList& ulist, 
-		    std::list <BoundUnit*> ref)
+class EmptyListGenericBindingSite
 {
-  for (int i = 0; i < ulist.size(); ++i)
-    {
-      const BoundUnit* search = ulist [i];
-      // look for the corresponding element in ref
-      for (std::list <BoundUnit*>::iterator bu_it = ref.begin();
-	   bu_it != ref.end(); ++bu_it)
-	{
-	  if (search == *bu_it) { ref.erase (bu_it); break; }
-	}
-    }
+public:
+  EmptyListGenericBindingSite (void)
+    : _cs (std::string (100, 'a'))
+    , _bs (_bsf, _cs, 0, 0, 1, 1)
+    , bound_unit_0 (_bs, 0, 0)
+    , bound_unit_10 (_bs, 10, 10)
+    , bound_unit_20 (_bs, 20, 20)
+    , bound_unit_30 (_bs, 30, 30)
+  {}
+  
+  bool check_content (std::list <BoundUnit*> ref)
+  {
+    for (int i = 0; i < empty_list.size(); ++i)
+      {
+	const BoundUnit* search = empty_list [i];
+	// look for the corresponding element in ref
+	for (std::list <BoundUnit*>::iterator bu_it = ref.begin();
+	     bu_it != ref.end(); ++bu_it)
+	  { if (search == *bu_it) { ref.erase (bu_it); break; } }
+      }
+    return (ref.size() == 0);
+  }
 
-  return (ref.size() == 0);
+private:
+  ChemicalSequence _cs;
+  BindingSiteFamily _bsf;
+  BindingSite _bs;
+  
+public:
+  BoundUnitList empty_list;
+  BoundUnit bound_unit_0;
+  BoundUnit bound_unit_10;
+  BoundUnit bound_unit_20;
+  BoundUnit bound_unit_30;
+};
+
+BOOST_FIXTURE_TEST_SUITE (BaseTests, EmptyListGenericBindingSite)
+ 
+BOOST_AUTO_TEST_CASE (size_EmptyList_returnsZero)
+{
+  BOOST_CHECK_EQUAL (empty_list.size(), 0);
 }
+
+BOOST_AUTO_TEST_CASE (size_listSizeOne_returnsOne)
+{
+  empty_list.insert (&bound_unit_0);
+  BOOST_CHECK_EQUAL (empty_list.size(), 1);
+}
+
+BOOST_AUTO_TEST_CASE (size_listSizeTwo_returnsTwo)
+{
+  empty_list.insert (&bound_unit_0);
+  empty_list.insert (&bound_unit_10);
+  BOOST_CHECK_EQUAL (empty_list.size(), 2);
+}
+
+BOOST_AUTO_TEST_CASE (bracketoperator_listSizeOne_returnsElementAdded)
+{
+  empty_list.insert (&bound_unit_0);
+  BOOST_CHECK_EQUAL (empty_list [0], &bound_unit_0);
+}
+
+BOOST_AUTO_TEST_CASE (bracketoperator_listSizeTwo_containsElementAdded)
+{
+  std::list <BoundUnit*> ref;
+  empty_list.insert (&bound_unit_0); ref.push_back (&bound_unit_0);
+  empty_list.insert (&bound_unit_10); ref.push_back (&bound_unit_10);
+  BOOST_CHECK (check_content (ref));
+}
+
+BOOST_AUTO_TEST_CASE (erase_listSizeTwo_erasesCorrectElement)
+{
+  empty_list.insert (&bound_unit_0);
+  empty_list.insert (&bound_unit_10);
+  empty_list.erase (&bound_unit_0);
+  BOOST_CHECK_EQUAL (empty_list.size(), 1);
+  BOOST_CHECK_EQUAL (empty_list [0], &bound_unit_10);
+}
+
+BOOST_AUTO_TEST_CASE (erase_listSizeTwo_erasesCorrectElement2)
+{
+  empty_list.insert (&bound_unit_0);
+  empty_list.insert (&bound_unit_10);
+  empty_list.erase (&bound_unit_10);
+  BOOST_CHECK_EQUAL (empty_list.size(), 1);
+  BOOST_CHECK_EQUAL (empty_list [0], &bound_unit_0);
+}
+
+BOOST_AUTO_TEST_CASE (erase_listSizeOneEraseNonContainedElement_sizeRemainsConstant)
+{
+  empty_list.insert (&bound_unit_0);
+  std::cout << "Warning expected: ";
+  empty_list.erase (&bound_unit_10);
+  BOOST_CHECK_EQUAL (empty_list.size(), 1);
+}
+
+BOOST_AUTO_TEST_CASE (erase_listTwoCopiesSameElementMultipleErases_sizeContinuallyDecreases)
+{
+  empty_list.insert (&bound_unit_10);
+  empty_list.insert (&bound_unit_10);
+  BOOST_CHECK_EQUAL (empty_list.size(), 2);
+  empty_list.erase (&bound_unit_10);
+  BOOST_CHECK_EQUAL (empty_list.size(), 1);
+  empty_list.erase (&bound_unit_10);
+  BOOST_CHECK_EQUAL (empty_list.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE (erase_addFourElementsAndRemoveInRandomOrder_sizeIsZeroAtEnd)
+{
+  empty_list.insert (&bound_unit_0);
+  empty_list.insert (&bound_unit_10);
+  empty_list.insert (&bound_unit_20);
+  empty_list.insert (&bound_unit_30);
+  empty_list.erase (&bound_unit_20);
+  empty_list.erase (&bound_unit_0);
+  empty_list.erase (&bound_unit_30);
+  empty_list.erase (&bound_unit_10);
+  BOOST_CHECK_EQUAL (empty_list.size(), 0);
+}
+ 
+BOOST_AUTO_TEST_SUITE_END()
