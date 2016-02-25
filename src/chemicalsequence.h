@@ -102,6 +102,12 @@ public:
   void move_bound_unit (ProcessiveChemical& chemical_to_move, int number_steps);
 
   /**
+   * @brief Extend or create new strand at given position.
+   * @param position Position where extension should take place.
+   **/
+  void extend_strand (int position);
+
+  /**
    * @brief Register binding site to update when its availability changes. 
    * @param site BindingSite to update when availability changes. Its position
    *  is supposed to not change over time.

@@ -73,7 +73,7 @@ class TransformationTable : public SimulatorInput
   /**
    * @brief Transform sequence motif by motif using existing rules.
    * @param sequence Sequence to transform.
-   * @return String containing transfromed sequence or empty string if
+   * @return String containing transformed sequence or empty string if
    * transformation failed (at least one input motifs was unknown).
    */
   std::string transform (const std::string& sequence) const;

@@ -76,9 +76,6 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief  Object to read/write information about units and reactions. */
-  CellState& _cell_state;
-
   /** @brief  Handler used to store event information. */
   EventHandler& _event_handler;
 

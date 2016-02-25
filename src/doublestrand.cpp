@@ -45,7 +45,19 @@ DoubleStrand::DoubleStrand (ChemicalSequence& sense,
 //  Public Methods - Commands
 // ===========================
 //
+void DoubleStrand::add (int number)
+{
+  Chemical::add (number);
+  _sense.add (number);
+  _antisense.add (number);
+}
 
+void DoubleStrand::remove (int number)
+{
+  Chemical::remove (number);
+  _sense.remove (number);
+  _antisense.remove (number);
+}
 
 // ============================
 //  Public Methods - Accessors

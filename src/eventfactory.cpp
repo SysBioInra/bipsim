@@ -30,7 +30,7 @@
 // ==========================
 //
 EventFactory::EventFactory (CellState& cell_state, EventHandler& event_handler)
-  : _cell_state (cell_state)
+  : Factory (cell_state)
   , _event_handler (event_handler)
 {
 }
@@ -53,20 +53,13 @@ bool EventFactory::handle (const std::string& line)
   // first word of line must be "event"
   if (check_tag (line_stream, "event") == false) { return false; }
   
-  // check that line is valid
-  double time;
-  std::string event_tag, target_name;
-  int quantity;
-  if (not (line_stream >> time >> event_tag >> target_name >> quantity))
-    { throw FormatException(); }
-
-  // get target reference
-  Chemical* target = _cell_state.find<Chemical> (target_name);
-  if (target == 0) { throw DependencyException (target_name); }
+  double time = read <double> (line_stream);
+  std::string event_tag = read <std::string> (line_stream);
+  Chemical* target = fetch <Chemical> (line_stream);
+  int quantity = read <int> (line_stream);
 
   // create event and return
   create_event (time, event_tag, *target, quantity);
-  return true;
 }
 
 // ============================
@@ -78,7 +71,8 @@ bool EventFactory::handle (const std::string& line)
 //  Private Methods
 // =================
 //
-void EventFactory::create_event (double time, const std::string& event_tag, Chemical& target, int quantity)
+void EventFactory::create_event (double time, const std::string& event_tag, 
+				 Chemical& target, int quantity)
 {
   if (event_tag == "ADD")
     { _event_handler.store (new AddEvent (time, target, quantity)); }

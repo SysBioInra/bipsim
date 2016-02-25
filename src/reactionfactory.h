@@ -29,8 +29,8 @@
 /**
  * @brief Class used to create reactions used by the simulator.
  *
- * ReactionFactory automatically recognizes which reaction to create and stores it
- * in a CellState object. It inherits abstract class Factory.
+ * ReactionFactory automatically recognizes which reaction to create and 
+ * stores it in a CellState object. It inherits abstract class Factory.
  */
 class ReactionFactory : public Factory
 {
@@ -69,66 +69,37 @@ class ReactionFactory : public Factory
   //
 
 private:
-
   // ============
   //  Attributes
   // ============
   //
-  /** @brief CellState object used to store new reactions. */
-  CellState& _cell_state;
+  /** @brief Stream of current line. */
+  std::istringstream _line_stream;
 
   // =================
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Create oading reaction from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_loading (const std::string& line);
+  /** @brief Create oading reaction from current line and store it. */
+  void create_loading (void);
 
-  /**
-   * @brief Create chemical reaction from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_chemical_reaction (const std::string& line);
+  /** @brief Create chemical reaction from current line and store it. */
+  void create_chemical_reaction (void);
 
-  /**
-   * @brief Create complexation from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_complexation (const std::string& line);
+  /** @brief Create complexation from current line and store it. */
+  void create_complexation (void);
 
-  /**
-   * @brief Create translocation from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_translocation (const std::string& line);
+  /** @brief Create translocation from current line and store it. */
+  void create_translocation (void);
 
-  /**
-   * @brief Create sequence binding from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_sequence_binding (const std::string& line);
+  /** @brief Create sequence binding from current line and store it. */
+  void create_sequence_binding (void);
 
-  /**
-   * @brief Create release from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_release (const std::string& line);
+  /** @brief Create release from current line and store it. */
+  void create_release (void);
 
-  /**
-   * @brief Create release from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_degradation (const std::string& line);
+  /** @brief Create release from current line and store it. */
+  void create_degradation (void);
 };
 
 // ======================

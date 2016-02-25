@@ -31,6 +31,7 @@
 #include "processivechemical.h"
 #include "loader.h"
 #include "chemicalsequence.h"
+#include "doublestrand.h"
 
 #include "compositiontable.h"
 #include "decodingtable.h"
@@ -44,7 +45,7 @@
 // ==========================
 //
 UnitFactory::UnitFactory (CellState& cell_state)
-  : _cell_state (cell_state)
+  : Factory (cell_state)
 {
 }
 
@@ -62,28 +63,27 @@ bool UnitFactory::handle (const std::string& line)
 {
   // parse the first word and hand the rest of the line over to 
   // appropriate creator
-  std::istringstream line_stream (line);  
+  _line_stream.str (line);  
+  _line_stream.clear();
   // first word of line must be "unit"
-  if (check_tag (line_stream, "unit") == false) { return false; }
+  if (check_tag (_line_stream, "unit") == false) { return false; }
 
   // try to create unit
-  // (c++ is "clever", whenever a function returns true, remaining functions are
-  // not evaluated because true || anything = true)
-  std::string remaining;
-  std::getline (line_stream, remaining);
-  bool creation_succeeded = (create_binding_site (remaining)
-			     || create_free_chemical (remaining)
-			     || create_termination_site (remaining)
-			     || create_bound_chemical (remaining)
-			     || create_chemical_sequence (remaining)
-			     || create_processive_chemical (remaining)
-			     || create_loader (remaining)
-			     || create_composition_table (remaining)
-			     || create_decoding_table (remaining)
-			     || create_product_table (remaining)
-			     || create_transformation_table (remaining));
-
-  return creation_succeeded;
+  std::string tag = read <std::string> (_line_stream);
+  if (tag == "BindingSite") { create_binding_site(); }
+  else if (tag == "TerminationSite") { create_termination_site(); }
+  else if (tag == "FreeChemical") { create_free_chemical(); }
+  else if (tag == "BoundChemical") { create_bound_chemical(); }
+  else if (tag == "ChemicalSequence") { create_chemical_sequence(); }
+  else if (tag == "DoubleStrandSequence") { create_double_strand_sequence(); }
+  else if (tag == "ProcessiveChemical") { create_processive_chemical(); }
+  else if (tag == "Loader") { create_loader(); }
+  else if (tag == "CompositionTable") { create_composition_table(); }
+  else if (tag == "DecodingTable") { create_decoding_table(); }
+  else if (tag == "ProductTable") { create_product_table(); }
+  else if (tag == "TransformationTable") { create_transformation_table(); }
+  else { return false; }
+  return true;
 }
 
 // ============================
@@ -96,22 +96,15 @@ bool UnitFactory::handle (const std::string& line)
 //  Private Methods
 // =================
 //
-bool UnitFactory::create_binding_site (const std::string& line)
+void UnitFactory::create_binding_site (void)
 {
-  std::istringstream line_stream (line);  
-  if (check_tag (line_stream, "BindingSite") == false) { return false; }
-
-  // read base data
-  std::string family_name, location;
-  int start, end;
-  double k_on, k_off;
-  if ( not (line_stream >> family_name >> location >> start >> end
-	    >> k_on >> k_off) )
-    { throw FormatException(); }
-
-  // look for location
-  ChemicalSequence* sequence = _cell_state.find <ChemicalSequence> (location);
-  if (sequence == 0) { throw DependencyException (location); }
+  std::string family_name = read <std::string> (_line_stream);
+  BindingSiteFamily* family = 
+    fetch_or_create <BindingSiteFamily> (family_name);
+  ChemicalSequence* location = fetch <ChemicalSequence> (_line_stream);
+  int start = read <int> (_line_stream); int end = read <int> (_line_stream);
+  double k_on = read <double> (_line_stream); 
+  double k_off = read <double> (_line_stream); 
 
   // check position consistency
   if (end < start)
@@ -122,8 +115,8 @@ bool UnitFactory::create_binding_site (const std::string& line)
 	      << "starting position is smaller than end...";
       throw ParserException (message.str());
     }
-  if (sequence->is_out_of_bounds (sequence->relative (start), 
-				  sequence->relative (end)))
+  if (location->is_out_of_bounds (location->relative (start), 
+				  location->relative (end)))
     {
       std::ostringstream message;
       message << "Site of family " << family_name 
@@ -132,141 +125,80 @@ bool UnitFactory::create_binding_site (const std::string& line)
       throw ParserException (message.str());
     }
 
-  // get family ref (create family if necessary)
-  BindingSiteFamily* family =
-    _cell_state.find <BindingSiteFamily> (family_name);
-  if (family == 0)
-    {
-      family = new BindingSiteFamily;
-      _cell_state.store (family, family_name);
-    }
-  
   // read reading frame (optional)
   int reading_frame = 0;
   BindingSite* binding_site;
-  if (not (line_stream >> reading_frame)) // no reading frame
-    { binding_site = new BindingSite (*family, *sequence, 
-				      sequence->relative (start), 
-				      sequence->relative (end),
-				      k_on, k_off); }
+  if (not (_line_stream >> reading_frame)) // no reading frame
+    { 
+      binding_site = new BindingSite (*family, *location, 
+				      location->relative (start), 
+				      location->relative (end),
+				      k_on, k_off); 
+    }
   else
-    { binding_site = new BindingSite (*family, *sequence, 
-				      sequence->relative (start), 
-				      sequence->relative (end),
+    { 
+      binding_site = new BindingSite (*family, *location, 
+				      location->relative (start), 
+				      location->relative (end),
 				      k_on, k_off, 
-				      sequence->relative (reading_frame)); }
-
-  // add created unit to cell state
-  _cell_state.store (binding_site);
-  return true;
+				      location->relative (reading_frame)); 
+    }
+  store (binding_site);
 }
 
-bool UnitFactory::create_termination_site (const std::string& line)
+void UnitFactory::create_termination_site (void)
 {
-  std::istringstream line_stream (line);  
-  if (check_tag (line_stream, "TerminationSite") == false) { return false; }
-
   // read base data
-  std::string family_name, location;
-  int start, end;
-  if (not (line_stream >> family_name >> location >> start >> end))
-    { throw FormatException(); }
-
-  // check location
-  ChemicalSequence* sequence = _cell_state.find <ChemicalSequence> (location);
-  if (sequence == 0) { throw DependencyException (location); }
-
-  // get family ref (create family if necessary)
-  SiteFamily* family = _cell_state.find <SiteFamily> (family_name);
-  if (family == 0)
-    {
-      family = new SiteFamily;
-      _cell_state.store (family, family_name);
-    }
+  SiteFamily* family = fetch_or_create <SiteFamily> (_line_stream);
+  ChemicalSequence* location = fetch <ChemicalSequence> (_line_stream);
+  int start = read <int> (_line_stream); int end = read <int> (_line_stream);
 
   // create and store entity
-  Site* site = new Site (*family, *sequence, sequence->relative (start), 
-			 sequence->relative (end));
-  sequence->add_termination_site (*site);
-  _cell_state.store (site);
-  return true;
+  Site* site = new Site (*family, *location, location->relative (start), 
+			 location->relative (end));
+  location->add_termination_site (*site);
+  store (site);
 }
 
-bool UnitFactory::create_composition_table (const std::string& line)
+void UnitFactory::create_composition_table (void)
 {
-  std::istringstream line_stream (line);  
-  if (check_tag (line_stream, "CompositionTable") == false) { return false; }
-
-  // read base data
-  std::string name;
-  if (not (line_stream >> name)) { throw FormatException(); }
+  CompositionTable* table = fetch_or_create <CompositionTable> (_line_stream);
   
   // read letter and associated chemicals
-  char letter;
-  std::string chemical_name;
+  char letter = read <char> (_line_stream);
   std::list <Chemical*> chemicals;
-  if (not (line_stream >> letter >> chemical_name))
-    {
-      throw FormatException();
-    }
-  do  
-    {
-      FreeChemical* chemical = _cell_state.find <FreeChemical> (chemical_name);
-      // check whether chemical is already defined
-      if (chemical == 0) { throw DependencyException (chemical_name); }
-      chemicals.push_back (chemical);
-    }
-  while (line_stream >> chemical_name);
+  chemicals.push_back (fetch <FreeChemical> (_line_stream));
+  std::string chemical_name;
+  while (_line_stream >> chemical_name)
+    { chemicals.push_back (fetch <FreeChemical> (chemical_name)); }
 
-  CompositionTable* table = _cell_state.find <CompositionTable> (name);
-  if (table == 0) // table does not exist already: create it
-    {
-      table = new CompositionTable;
-      _cell_state.store (table, name);      
-    }
-  
   table->add_rule (letter, chemicals);
-
-  return true;
 }
 
 
-bool UnitFactory::create_decoding_table (const std::string& line)
+void UnitFactory::create_decoding_table (void)
 {
-  std::istringstream line_stream (line);  
-  if (check_tag (line_stream, "DecodingTable") == false) { return false; }
-
-  // read base data
-  std::string name, template_, base, polymerase;
-  double rate;
+  std::string name = read <std::string> (_line_stream);
   std::list <std::string> template_list;
   std::list <Chemical*> base_list;
   std::list <BoundChemical*> polymerase_list;
   std::list <double> rate_list;
-  if (not (line_stream >> name)) { throw FormatException(); }
 
-  while (line_stream >> template_ >> base >> polymerase >> rate)
+  std::string template_, base, polymerase; double rate;
+  while (_line_stream >> template_ >> base >> polymerase >> rate)
     {
-      // we check whether the base and polymerase are already known
-      FreeChemical* base_ptr = _cell_state.find <FreeChemical> (base);
-      if (base_ptr == 0) { throw DependencyException (base); }
-      BoundChemical* polymerase_ptr = _cell_state.find <BoundChemical> (polymerase);
-      if (polymerase_ptr == 0) { throw DependencyException (polymerase); }
-
-      // add line to lists
       template_list.push_back (template_);
-      base_list.push_back (base_ptr);
+      base_list.push_back (fetch <FreeChemical> (base));
+      polymerase_list.push_back (fetch <BoundChemical> (polymerase));
       rate_list.push_back (rate);
-      polymerase_list.push_back (polymerase_ptr);
     }
-
   if (template_list.size() == 0) { throw FormatException(); }
 
   // create and store table
-  std::list<std::string>::const_iterator template_it = template_list.begin();
-  std::list<Chemical*>::const_iterator base_it = base_list.begin();
-  std::list<BoundChemical*>::const_iterator polymerase_it = polymerase_list.begin();
-  std::list<double>::const_iterator rate_it = rate_list.begin();
+  std::list<std::string>::iterator template_it = template_list.begin();
+  std::list<Chemical*>::iterator base_it = base_list.begin();
+  std::list<BoundChemical*>::iterator polymerase_it = polymerase_list.begin();
+  std::list<double>::iterator rate_it = rate_list.begin();
   int template_length = template_it->size();
   DecodingTable* table = new DecodingTable (template_length);
   while (template_it != template_list.end())
@@ -278,247 +210,163 @@ bool UnitFactory::create_decoding_table (const std::string& line)
 	}
       else
 	{
+	  delete table;
 	  throw ParserException ("Trying to define a decoding table with "
 				 "templates of variable length.");
 	}
       template_it++; base_it++; polymerase_it++; rate_it++;
     }
-  _cell_state.store (table, name);
-  return true;
+  store (table, name);
 }
 
-bool UnitFactory::create_product_table (const std::string& line)
+void UnitFactory::create_product_table (void)
 {
-  std::istringstream line_stream (line);  
-  if (check_tag (line_stream, "ProductTable") == false) { return false; }
+  std::string name = read <std::string> (_line_stream);
+  TransformationTable* table = fetch <TransformationTable> (_line_stream);
 
-  // read base data
-  std::string name, table_name;
-  if (not (line_stream >> name >> table_name)) { throw FormatException(); }
-
-  TransformationTable* table =
-    _cell_state.find <TransformationTable> (table_name);
-  if (table == 0) { throw DependencyException (table_name); }
-
-  _cell_state.store (new ProductTable (*table), name);
-  return true;
+  store (new ProductTable (*table), name);
 }
 
-bool UnitFactory::create_transformation_table (const std::string& line)
+void UnitFactory::create_transformation_table (void)
 {
-  std::istringstream line_stream (line);
-  if (check_tag (line_stream, "TransformationTable") == false) { return false; }
+  std::string name = read <std::string> (_line_stream);
+  std::string input_motif = read <std::string> (_line_stream);
+  std::string output_motif = read <std::string> (_line_stream);
 
-  // read base data
-  std::string name, input_motif, output_motif;
-  if (not (line_stream >> name)) { throw FormatException(); }
-
-  TransformationTable* table = 0;
-  if (line_stream >> input_motif >> output_motif)
-    {
-      // create table
-      table = new TransformationTable (input_motif.size()); 
-      table->add_rule (input_motif, output_motif);
-    }
-  else
-    {
-      throw FormatException();
-    }
-  
-  while (line_stream >> input_motif >> output_motif)
+  TransformationTable* table = new TransformationTable (input_motif.size()); 
+  table->add_rule (input_motif, output_motif);
+  while (_line_stream >> input_motif >> output_motif)
     {
       if (input_motif.size() == table->input_motif_length())
 	{ table->add_rule (input_motif, output_motif); }
       else
-	{
-	  delete table;
-	  throw FormatException();
-	}
+	{ delete table; throw FormatException(); }
     }
-
-  // store table
-  _cell_state.store (table, name);
-  return true;
+  store (table, name);
 }
 
 
-bool UnitFactory::create_free_chemical ( const std::string& line )
+void UnitFactory::create_free_chemical (void)
 {
-  std::istringstream line_stream (line);  
-  if (check_tag (line_stream, "FreeChemical") == false) { return false; }
-
-  // read base data
-  std::string name;
-  if (not (line_stream >> name)) { throw FormatException(); }
-
-  int initial_quantity;
-  if (not (line_stream >> initial_quantity)) { initial_quantity = 0; }
-
-  // create and store
+  std::string name = read <std::string> (_line_stream);
   FreeChemical* chemical = new FreeChemical;
-  chemical->add (initial_quantity);
-  _cell_state.store (chemical, name);
-  return true;
+  store (chemical, name);
+  chemical->add (read_initial_quantity (_line_stream));
 }
 
 
-bool UnitFactory::create_chemical_sequence ( const std::string& line )
+void UnitFactory::create_chemical_sequence (void)
 {
-  std::istringstream line_stream (line);  
-  if (check_tag (line_stream, "ChemicalSequence") == false) { return false; }
-
-  // read base data
-  std::string name, keyword;
-  if (not (line_stream >> name >> keyword)) { throw FormatException(); }
+  std::string name = read <std::string> (_line_stream);
 
   // check if chemical is defined by sequence or product_of
-  std::string sequence;
-  ChemicalSequence* chemical = 0;
+  std::string keyword = read <std::string> (_line_stream);
   if (keyword == "sequence")
-    {
-      if (not(line_stream >> sequence)) { throw FormatException(); }
-      chemical = new ChemicalSequence (sequence);
+    { 
+      store (new ChemicalSequence (read <std::string> (_line_stream))); 
+      return;
     }
-  else if (keyword == "product_of")
-    {
-      // gather parent
-      std::string parent_name, table_name; 
-      int pos1, pos2;
-      if (not(line_stream >> parent_name >> pos1 >> pos2 >> table_name))
-	{ throw FormatException(); }
-
-      ChemicalSequence* parent = 
-	_cell_state.find <ChemicalSequence> (parent_name);
-      if (parent == 0) { throw DependencyException (parent_name); }
-
-      ProductTable* table =
-	_cell_state.find <ProductTable> (table_name);
-      if (table == 0) { throw DependencyException (table_name); }
-
-      // check position consistency
-      if (parent->is_out_of_bounds (parent->relative (pos1), 
-				    parent->relative (pos2)))
-	  {
-	    std::ostringstream message;
-	    message << "Product " << name 
-		    << " at position [" << pos1 << "," << pos2 << "]"
-		    << " is not within bound of " << parent_name;
-	    throw ParserException (message.str());
-	  }
-
-      // check whether sequence is already listed
-      chemical = _cell_state.find <ChemicalSequence> (name);
-      if (chemical != 0)
-	{
-	  // if it is we simply need to signal that it is also
-	  // the product of another parent
-	  sequence = table->generate_child_sequence (*parent, 
-						     parent->relative (pos1), 
-						     parent->relative (pos2));
-	  if (sequence != chemical->sequence())
-	    {
-	      std::ostringstream message;
-	      message << "product " << name << " defined multiple times,"
-		      << " and inferred sequence\n" << sequence
-		      << "\ndoes not match previous definition\n"
-		      << chemical->sequence();
-	      throw ParserException (message.str());
-	    }
-	  table->add (*parent, parent->relative (pos1), 
-		      parent->relative (pos2), *chemical);
-	  return true;
-	}
-      
-      sequence = table->generate_child_sequence (*parent, 
-						 parent->relative (pos1), 
-						 parent->relative (pos2));
-      if (sequence == "")
-	{ 
-	  std::ostringstream message;
-	  message << "Applying table " << table_name << " on "
-		  << parent_name << " between positions " << pos1
-		  << " and " << pos2 << " did not yield a valid child sequence,"
-		  << " check positions and table content";
-	  throw ParserException (message.str()); 
-	}
-      chemical = new ChemicalSequence (sequence, pos1);
-      table->add (*parent, parent->relative (pos1), 
-		  parent->relative (pos2), *chemical);
-    }
-  else { throw FormatException(); }
-
-  int initial_quantity;
-  if (not (line_stream >> initial_quantity)) { initial_quantity = 0; }
-  if (initial_quantity < 0)
-    { throw ParserException ("Initial quantity must be positive"); }
-  chemical->add (initial_quantity);
-
-  _cell_state.store (chemical, name);
-  return true;
-}
-
-
-bool UnitFactory::create_bound_chemical ( const std::string& line )
-{
-  std::istringstream line_stream (line);  
-  if (check_tag (line_stream, "BoundChemical") == false) { return false; }
-
-  // read base data
-  std::string name;
-  if (not (line_stream >> name)) { throw FormatException(); }
-
-  BoundChemical* chemical = new BoundChemical;
-  _cell_state.store (chemical, name);
-  return true;
-}
-
-bool UnitFactory::create_loader ( const std::string& line )
-{
-  std::istringstream line_stream (line);  
-  if (check_tag (line_stream, "Loader") == false) { return false; }
-
-  // read base data
-  std::string name, decoding_table;
-  if (not (line_stream >> name >> decoding_table)) { throw FormatException(); }
-
-  // check whether the decoding table is known and valid
-  DecodingTable* decoding_table_ptr = _cell_state.find <DecodingTable> (decoding_table);
-  if (decoding_table_ptr == 0) { throw DependencyException (decoding_table); }
-
-  _cell_state.store (new Loader (*decoding_table_ptr), name);
-  return true;
-}
-
-
-bool UnitFactory::create_processive_chemical ( const std::string& line )
-{
-  std::istringstream line_stream (line);  
-  if (check_tag (line_stream, "ProcessiveChemical") == false) { return false; }
-
-  // read base data
-  std::string name, stalled_name;
-  if (not (line_stream >> name >> stalled_name)) { throw FormatException(); }
-
-  // check whether the stalled form is known
-  BoundChemical* stalled = _cell_state.find <BoundChemical> (stalled_name);
-  if (stalled == 0) { throw DependencyException (stalled_name); }
-
-  // parse termination sites
-  std::string site_name;
-  std::list <SiteFamily*> families;
-  while (line_stream >> site_name)
-    {
-      // check whether termination site is already known
-      SiteFamily* family_ptr = _cell_state.find <SiteFamily> (site_name);
-      if (family_ptr != 0) { families.push_back (family_ptr);}
-      else { throw DependencyException (site_name); }
-    }
+  if (keyword != "product_of") { throw FormatException(); }
   
-  // create and store
-  ProcessiveChemical* proc_chemical = new ProcessiveChemical (*stalled);
+  std::string parent_name = read <std::string> (_line_stream);
+  ChemicalSequence* parent = fetch <ChemicalSequence> (parent_name);
+  int pos1 = read <int> (_line_stream);
+  int pos2 = read <int> (_line_stream);
+  std::string table_name = read <std::string> (_line_stream);
+  ProductTable* table = fetch <ProductTable> (table_name);
+  // check position consistency
+  if (parent->is_out_of_bounds (parent->relative (pos1), 
+				parent->relative (pos2)))
+    {
+      std::ostringstream message;
+      message << "Product " << name 
+	      << " at position [" << pos1 << "," << pos2 << "]"
+	      << " is not within bound of " << parent_name;
+      throw ParserException (message.str());
+    }
+  std::string sequence = table->
+    generate_child_sequence (*parent, parent->relative (pos1), 
+			     parent->relative (pos2));
+  if (sequence == "")
+    { 
+      std::ostringstream message;
+      message << "Applying table " << table_name << " on "
+	      << parent_name << " between positions " << pos1
+	      << " and " << pos2 << " did not yield a valid child sequence,"
+	      << " check positions and table content";
+      throw ParserException (message.str()); 
+    }
+
+  ChemicalSequence* chemical = cell_state().find <ChemicalSequence> (name);
+  if (chemical == 0) // chemical does not exist: create it
+    { 
+      chemical = new ChemicalSequence (sequence, pos1); 
+      store (chemical, name);
+      chemical->add (read_initial_quantity (_line_stream));
+    }
+  else // chemical exists: signal it is product of another parent
+    {
+      // check that product sequence is consistent with previous definitions
+      if (sequence != chemical->sequence())
+	{
+	  std::ostringstream message;
+	  message << "product " << name << " defined multiple times,"
+		  << " and inferred sequence\n" << sequence
+		  << "\ndoes not match previous definition\n"
+		  << chemical->sequence();
+	  throw ParserException (message.str());
+	}
+    }
+  table->add (*parent, parent->relative (pos1), 
+	      parent->relative (pos2), *chemical);
+}
+
+void UnitFactory::create_double_strand_sequence (void)
+{
+  std::string name = read <std::string> (_line_stream);
+  std::string sense_name = read <std::string> (_line_stream);
+  std::string sequence = read <std::string> (_line_stream);
+  ChemicalSequence* sense = new ChemicalSequence (sequence); 
+  store (sense, sense_name);
+  std::string antisense_name = read <std::string> (_line_stream);
+  TransformationTable* table = fetch <TransformationTable> (_line_stream);
+  std::string antisequence = 
+    table->transform (std::string (sequence.rbegin(), sequence.rend()));
+  ChemicalSequence* antisense = new ChemicalSequence (antisequence); 
+  store (antisense, antisense_name);
+  DoubleStrand* chemical = new DoubleStrand (*sense, *antisense);
+  store (chemical, name);
+  chemical->add (read_initial_quantity (_line_stream));
+}
+
+void UnitFactory::create_bound_chemical (void)
+{
+  std::string name = read <std::string> (_line_stream);
+  store (new BoundChemical, name);
+}
+
+void UnitFactory::create_loader (void)
+{
+  std::string name = read <std::string> (_line_stream);
+  DecodingTable* decoding_table = fetch <DecodingTable> (_line_stream);
+  store (new Loader (*decoding_table), name);
+}
+
+
+void UnitFactory::create_processive_chemical (void)
+{
+  std::string name = read <std::string> (_line_stream);
+  BoundChemical* stalled = fetch <BoundChemical> (_line_stream);
+  
+  // parse termination sites
+  std::string family;
+  std::list <SiteFamily*> families;
+  while (_line_stream >> family)
+    { families.push_back (fetch <SiteFamily> (family)); }
+	
+  ProcessiveChemical* chemical = new ProcessiveChemical (*stalled);
   for (std::list <SiteFamily*>::iterator family_it = families.begin();
        family_it != families.end(); ++family_it)
-    { proc_chemical->add_recognized_termination_site (**family_it); }
-  _cell_state.store (proc_chemical, name);
-  return true;
+    { chemical->add_recognized_termination_site (**family_it); }
+  store (chemical, name);
 }

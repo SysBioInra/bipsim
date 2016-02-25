@@ -44,13 +44,13 @@
 // ==========================
 //
 ReactionFactory::ReactionFactory (CellState& cell_state)
-  : _cell_state (cell_state)
+  : Factory (cell_state)
 {
 }
 
 // Not needed for this class (use of compiler generated versions)
-// ReactionFactory::ReactionFactory (const ReactionFactory& other_factory);
-// ReactionFactory& ReactionFactory::operator= (const ReactionFactory& other_factory);
+// ReactionFactory::ReactionFactory (const ReactionFactory& other);
+// ReactionFactory& ReactionFactory::operator= (const ReactionFactory& other);
 // ReactionFactory::~ReactionFactory (void);
 
 // ===========================
@@ -61,25 +61,23 @@ bool ReactionFactory::handle (const std::string& line)
 {
   // parse the first word and hand the rest of the line over to 
   // appropriate creator
-  std::istringstream line_stream (line);
+  _line_stream.str (line);
+  _line_stream.clear();
   // first word of line must be "reaction"
-  if (check_tag (line_stream, "reaction") == false) { return false; }
-
+  if (check_tag (_line_stream, "reaction") == false) { return false; }
 
   // try to create reaction
-  // (c++ is "clever", whenever a function returns true, remaining functions are
-  // not evaluated because true || anything = true)
   std::string remaining;
-  std::getline (line_stream, remaining);
-  bool creation_succeeded = (create_chemical_reaction (remaining)
-			     || create_complexation (remaining)
-			     || create_sequence_binding (remaining)
-			     || create_translocation (remaining)
-			     || create_release (remaining)
-			     || create_degradation (remaining)
-			     || create_loading (remaining));
-			     
-  return creation_succeeded;
+  std::string tag = read <std::string> (_line_stream);
+  if (tag == "ChemicalReaction") { create_chemical_reaction(); }
+  else if (tag == "Complexation") { create_complexation(); }
+  else if (tag == "SequenceBinding") { create_sequence_binding(); }
+  else if (tag == "Translocation") { create_translocation(); }
+  else if (tag == "Release") { create_release(); }
+  else if (tag == "Degradation") { create_degradation(); }
+  else if (tag == "Loading") { create_loading(); }
+  else { return false; }
+  return true;
 }
 
 // ============================
@@ -87,235 +85,114 @@ bool ReactionFactory::handle (const std::string& line)
 // ============================
 //
 
-
 // =================
 //  Private Methods
 // =================
 //
-bool ReactionFactory::create_chemical_reaction (const std::string& line)
+void ReactionFactory::create_chemical_reaction (void)
 {
-  std::istringstream line_stream (line);
-  if (check_tag (line_stream, "ChemicalReaction") == false) { return false; }
-  
-  // read base data
   std::vector <Chemical*> chemicals;
   std::vector <int> stoichiometries;
-  std::string chemical;
-  int stoichiometry;
-  while ( (line_stream >> chemical) && (chemical != std::string ("rates")) )
+  std::string next = read <std::string> (_line_stream);
+  while (next != std::string ("rates"))
     {
-      // check that the chemical is known
-      Chemical* chemical_ptr = _cell_state.find <Chemical> (chemical);
-      if (chemical_ptr == 0) { throw DependencyException (chemical); }
-
-      if (not (line_stream >> stoichiometry)) { throw FormatException(); }
-
-      chemicals.push_back (chemical_ptr);
-      stoichiometries.push_back (stoichiometry);
+      chemicals.push_back (fetch <Chemical> (next));
+      stoichiometries.push_back (read <int> (_line_stream));
+      next = read <std::string> (_line_stream);
     }
+  if (chemicals.size() == 0) { throw FormatException(); }
+  double k_1 = read <double> (_line_stream);
+  double k_m1 = read <double> (_line_stream);
 
-  // read rates
-  double k_1, k_m1;
-  if ((chemicals.size() == 0) || (not (line_stream >> k_1 >> k_m1)))
-    { throw FormatException(); }
-
-  // create and store
   ChemicalReaction* reaction = new ChemicalReaction (chemicals, stoichiometries,
 						     k_1, k_m1);
-  _cell_state.store (reaction);
-  if (k_1 > 0) { _cell_state.store (new ForwardReaction (*reaction)); }
-  if (k_m1 > 0) { _cell_state.store (new BackwardReaction (*reaction)); } 
-  return true;
+  store (reaction);
+  if (k_1 > 0) { store (new ForwardReaction (*reaction)); }
+  if (k_m1 > 0) { store (new BackwardReaction (*reaction)); } 
 }
 
-
-
-bool ReactionFactory::create_loading (const std::string& line)
+void ReactionFactory::create_loading (void)
 {
-  std::istringstream line_stream (line);
-  if (check_tag (line_stream, "Loading") == false) { return false; }
-
-  // read base data
-  std::string loader;
-  if (not (line_stream >> loader)) { throw FormatException(); }
-
-  // check that the chemicals are known and valid
-  Loader* loader_ptr = _cell_state.find <Loader> (loader);
-  if (loader_ptr == 0) { throw DependencyException (loader); }
-    
-  // create and store
-  _cell_state.store (new Loading (*loader_ptr));
-  return true;
+  Loader* loader = fetch <Loader> (_line_stream);
+  store (new Loading (*loader));
 }
 
-
-
-bool ReactionFactory::create_complexation (const std::string& line)
+void ReactionFactory::create_complexation (void)
 {
-  std::istringstream line_stream (line);
-  if (check_tag (line_stream, "Complexation") == false) { return false; }
+  Chemical* component_a = fetch <Chemical> (_line_stream); 
+  Chemical* component_b = fetch <Chemical> (_line_stream); 
+  Chemical* complex = fetch <Chemical> (_line_stream); 
+  double k_on = read <double> (_line_stream);
+  double k_off = read <double> (_line_stream);
 
-  // read base data
-  std::string component_a, component_b, complex;
-  double k_on, k_off;
-  if (not (line_stream >> component_a >> component_b >> complex
-	   >> k_on >> k_off))
-    { throw FormatException(); }
-
-  // check that the chemicals are known
-  Chemical* component_a_ptr = _cell_state.find <Chemical> (component_a); 
-  if (component_a_ptr == 0) { throw DependencyException (component_a); }
-  Chemical* component_b_ptr = _cell_state.find <Chemical> (component_b); 
-  if (component_b_ptr == 0)  { throw DependencyException (component_b); }
-  Chemical* complex_ptr = _cell_state.find <Chemical> (complex); 
-  if (complex_ptr == 0)  { throw DependencyException (complex); }
-  
-  // create and store
-  Complexation* reaction = new Complexation (*component_a_ptr, 
-					     *component_b_ptr,
-					     *complex_ptr, k_on, k_off);
-  _cell_state.store (reaction);
-  if (k_on > 0) { _cell_state.store (new ForwardReaction (*reaction)); }
-  if (k_off > 0) { _cell_state.store (new BackwardReaction (*reaction)); } 
-  return true;
+  Complexation* reaction = new Complexation (*component_a, *component_b,
+					     *complex, k_on, k_off);
+  store (reaction);
+  if (k_on > 0) { store (new ForwardReaction (*reaction)); }
+  if (k_off > 0) { store (new BackwardReaction (*reaction)); } 
 }
 
-
-
-bool ReactionFactory::create_translocation (const std::string& line)
+void ReactionFactory::create_translocation (void)
 {
-  std::istringstream line_stream (line);
-  if (check_tag (line_stream, "Translocation") == false) { return false; }
+  ProcessiveChemical* processive = fetch <ProcessiveChemical> (_line_stream);
+  BoundChemical* chemical_after_step = fetch <BoundChemical> (_line_stream);
+  int step_size = read <int> (_line_stream);
+  double rate = read <double> (_line_stream);
 
-  // read base data
-  std::string chemical, second_chemical;
-  int step_size ;
-  double rate;
-  if (not (line_stream >> chemical >> second_chemical >> step_size >> rate))
-    { throw FormatException(); }
-
-  // check that the chemicals are valid
-  ProcessiveChemical* 
-    processive_chemical = _cell_state.find <ProcessiveChemical> (chemical);
-  if (processive_chemical == 0)  { throw DependencyException (chemical); }
-  BoundChemical* 
-    chemical_after_step = _cell_state.find <BoundChemical> (second_chemical);
-  if (chemical_after_step == 0)  throw DependencyException (second_chemical);
-
-  // create and store
-  _cell_state.store (new Translocation (*processive_chemical,
-					*chemical_after_step,
-					step_size, rate));
-  return true;
+  store (new Translocation (*processive, *chemical_after_step,
+			     step_size, rate));
 }
 
-
-
-bool ReactionFactory::create_sequence_binding (const std::string& line)
+void ReactionFactory::create_sequence_binding (void)
 {
-  std::istringstream line_stream (line);
-  if (check_tag (line_stream, "SequenceBinding") == false) { return false; }
+  FreeChemical* unit_to_bind = fetch <FreeChemical> (_line_stream);
+  BoundChemical* binding_result = fetch <BoundChemical> (_line_stream);
+  BindingSiteFamily* family = fetch <BindingSiteFamily> (_line_stream);
 
-  // read base data
-  std::string unit_to_bind, binding_result, binding_site;
-  if (not (line_stream >> unit_to_bind >> binding_result >> binding_site))
-    { throw FormatException(); }
-
-  // check that the data is valid
-  FreeChemical* 
-    unit_to_bind_ptr = _cell_state.find <FreeChemical> (unit_to_bind);
-  if (unit_to_bind_ptr == 0)  { throw DependencyException (unit_to_bind); }
-  BoundChemical*
-    binding_result_ptr = _cell_state.find <BoundChemical> (binding_result);
-  if (binding_result_ptr == 0)  { throw DependencyException (binding_result); }
-  BindingSiteFamily* family_ptr = 
-    _cell_state.find <BindingSiteFamily> (binding_site);
-  if (family_ptr == 0) { throw DependencyException (binding_site); }
-
-  // create and store
   SequenceBinding* reaction = 
-    new SequenceBinding (*unit_to_bind_ptr, *binding_result_ptr, *family_ptr);
-  _cell_state.store (reaction);
-  _cell_state.store (new ForwardReaction (*reaction));
-  _cell_state.store (new BackwardReaction (*reaction)); 
-  return true;
+    new SequenceBinding (*unit_to_bind, *binding_result, *family);
+  store (reaction);
+  store (new ForwardReaction (*reaction));
+  store (new BackwardReaction (*reaction)); 
 }
 
-bool ReactionFactory::create_release (const std::string& line)
+void ReactionFactory::create_release (void)
 {
-  std::istringstream line_stream (line);
-  if (check_tag (line_stream, "Release") == false) { return false; }
-
-  // read base data
+  BoundChemical* unit_to_release = fetch <BoundChemical> (_line_stream);
   std::vector <Chemical*> chemicals;
   std::vector <int> stoichiometries;
-  std::string chemical;
-  int stoichiometry;
-
-  // get the chemical to release
-  if (not (line_stream >> chemical)) { throw FormatException(); }
-
-  BoundChemical* unit_to_release = _cell_state.find <BoundChemical> (chemical);
-  if (unit_to_release == 0)  { throw DependencyException (chemical); }
-
-  // get other components of the reaction
-  while ((line_stream >> chemical) && (chemical != std::string ("rate")))
+  std::string next = read <std::string> (_line_stream);
+  while (next != std::string ("rate"))
     {
-      FreeChemical* chemical_ptr = _cell_state.find <FreeChemical> (chemical);
-      if (chemical_ptr == 0)  { throw DependencyException (chemical); }
-
-      if (not (line_stream >> stoichiometry)) { throw FormatException(); }
-
-      chemicals.push_back (chemical_ptr);
-      stoichiometries.push_back (stoichiometry);
+      chemicals.push_back (fetch <FreeChemical> (next));
+      stoichiometries.push_back (read <int> (_line_stream));
+      next = read <std::string> (_line_stream);
     }
-
-  // get rates
-  double rate;
-  if ((chemicals.size() == 0) || (not (line_stream >> rate)))
-    { throw FormatException(); }
+  if (chemicals.size() == 0) { throw FormatException(); }
+  double rate = read <double> (_line_stream);
   
   // get associated products (if applicable)
   ProductTable* table = 0;
-  if (check_tag (line_stream, "produces"))
-    {
-      std::string table_name;
-      if (not (line_stream >> table_name)) { throw FormatException(); }
-      table = _cell_state.find <ProductTable> (table_name);
-      if (table == 0) { throw DependencyException (table_name); } // throw error
-    }
+  if (check_tag (_line_stream, "produces"))
+    { table = fetch <ProductTable> (_line_stream); }
 
-  // create and store
-  _cell_state.store (new Release (*unit_to_release, chemicals,
-				  stoichiometries, rate, table));
-  return true;
+  store (new Release (*unit_to_release, chemicals,
+		       stoichiometries, rate, table));
 }
 
 
-bool ReactionFactory::create_degradation (const std::string& line)
+void ReactionFactory::create_degradation (void)
 {
-  std::istringstream line_stream (line);
-  if (check_tag (line_stream, "Degradation") == false) { return false; }
+  std::string sequence_name = read <std::string> (_line_stream);
+  ChemicalSequence* sequence = fetch <ChemicalSequence> (sequence_name);
+  std::string table_name = read <std::string> (_line_stream);
+  CompositionTable* table = fetch <CompositionTable> (table_name);
+  double rate = read <double> (_line_stream);
 
-  // read base data
-  std::string sequence_name, table_name;
-  double rate;
-  if (not (line_stream >> sequence_name >> table_name >> rate))
-    { throw FormatException(); }
-
-  // check that the names are valid
-  ChemicalSequence* 
-    sequence = _cell_state.find <ChemicalSequence> (sequence_name);
-  if (sequence == 0) { throw DependencyException (sequence_name); }
-  CompositionTable* 
-    table = _cell_state.find <CompositionTable> (table_name);
-  if (table == 0) { throw DependencyException (table_name); }
-  
   // get sequence composition
   std::map <Chemical*, int>
     composition = table->composition (sequence->sequence());
-  int num_el = composition.size();
-  if (num_el == 0)
+  if (composition.size() == 0)
     { 
       std::ostringstream message;
       message << "Could not compute composition after degradation of "
@@ -325,22 +202,18 @@ bool ReactionFactory::create_degradation (const std::string& line)
     }
 
   // create chemical and stoichiometry vector to represent reaction
-  std::vector <Chemical*> chemicals (num_el+1);
-  std::vector <int> stoichiometry (num_el+1);
-  chemicals [0] = sequence;
-  stoichiometry [0] = -1;
+  std::vector <Chemical*> chemicals (composition.size()+1);
+  std::vector <int> stoichiometry (chemicals.size());
+  chemicals [0] = sequence; stoichiometry [0] = -1;
   int i = 1;
   for (std::map <Chemical*, int>::iterator comp_it = composition.begin();
        comp_it != composition.end(); ++comp_it, ++i)
     {
-      chemicals [i] = comp_it->first;
-      stoichiometry [i] = comp_it->second;
+      chemicals [i] = comp_it->first; stoichiometry [i] = comp_it->second;
     }
 
-  // create and store
-  ChemicalReaction* reaction = new ChemicalReaction (chemicals, stoichiometry,
-						     rate, 0);
-  _cell_state.store (reaction);
-  _cell_state.store (new ForwardReaction (*reaction));
-  return true;
+  ChemicalReaction* reaction = 
+    new ChemicalReaction (chemicals, stoichiometry, rate, 0);
+  store (reaction);
+  store (new ForwardReaction (*reaction));
 }

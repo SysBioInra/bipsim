@@ -47,7 +47,7 @@ Sequence
 --------
  * ChemicalSequence TODO <--
  * PartialStrand Done!
- * Segment N/A.
+ * Segment TODO <--
  * SequenceOccupation Done!
  * SiteAvailability Done!
  * SiteLocation N/A.

@@ -72,89 +72,48 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief CellState object used to store new units. */
-  CellState& _cell_state;
+  /** @brief Stream of current line. */
+  std::istringstream _line_stream;
 
   // =================
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Create binding site from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_binding_site (const std::string& line);
+  /** @brief Create binding site from current line and store it. */
+  void create_binding_site (void);
 
-  /**
-   * @brief Create termination site from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_termination_site (const std::string& line);
+  /** @brief Create termination site from current line and store it. */
+  void create_termination_site (void);
 
-  /**
-   * @brief Create composition table from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_composition_table (const std::string& line);
+  /** @brief Create composition table from current line and store it. */
+  void create_composition_table (void);
 
-  /**
-   * @brief Create decoding table from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_decoding_table (const std::string& line);
+  /** @brief Create decoding table from current line and store it. */
+  void create_decoding_table (void);
 
-  /**
-   * @brief Create product table from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_product_table (const std::string& line);
+  /** @brief Create product table from current line and store it. */
+  void create_product_table (void);
 
-  /**
-   * @brief Create transformation table from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_transformation_table (const std::string& line);
+  /**  @brief Create transformation table from current line and store it. */
+  void create_transformation_table (void);
 
-  /**
-   * @brief Create free chemical from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_free_chemical (const std::string& line);
+  /** @brief Create free chemical from current line and store it. */
+  void create_free_chemical (void);
 
-  /**
-   * @brief Create bound chemical from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_bound_chemical (const std::string& line);
+  /** @brief Create bound chemical from current line and store it. */
+  void create_bound_chemical (void);
 
-  /**
-   * @brief Create loader from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_loader (const std::string& line);
+  /** @brief Create loader from current line and store it. */
+  void create_loader (void);
 
-  /**
-   * @brief Create chemical sequence from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_chemical_sequence (const std::string& line);
+  /** @brief Create chemical sequence from current line and store it. */
+  void create_chemical_sequence (void);
 
-  /**
-   * @brief Create processive chemical from line and store it in cell state.
-   * @param line Line to read creation information from.
-   * @return True if entity was successfully created.
-   */
-  bool create_processive_chemical (const std::string& line);
+  /** @brief Create double strand sequence from current line and store it. */
+  void create_double_strand_sequence (void);
+
+  /** @brief Create processive chemical from current line and store it. */
+  void create_processive_chemical (void);
 };
 
 // ======================

@@ -67,7 +67,9 @@ class DoubleStrand : public Chemical
   //  Public Methods - Commands
   // ===========================
   //
-
+  // Redefined from Chemical
+  void add (int number);
+  void remove (int number);
 
   // ============================
   //  Public Methods - Accessors
@@ -75,7 +77,6 @@ class DoubleStrand : public Chemical
   //
 
 private:
-
   // ============
   //  Attributes
   // ============

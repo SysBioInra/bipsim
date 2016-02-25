@@ -101,6 +101,13 @@ void ChemicalSequence::move_bound_unit (ProcessiveChemical& chemical_to_move,
   _sequence_occupation.add_element (chemical_to_move, first+number_steps,
 				    last+number_steps);
  }
+
+void ChemicalSequence::extend_strand (int position)
+{
+  /** @pre Position must be consistent with sequence length. */
+  REQUIRE (is_out_of_bounds (position, position) == false);
+  _sequence_occupation.extend_segment (position);
+}
      
 void ChemicalSequence::add (int quantity)
 {
