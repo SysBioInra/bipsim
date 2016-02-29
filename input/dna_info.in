@@ -4,6 +4,11 @@ unit FreeChemical dCMP
 unit FreeChemical dGMP
 unit FreeChemical dTMP
 
+unit FreeChemical dATP 1000000
+unit FreeChemical dCTP 1000000
+unit FreeChemical dGTP 1000000
+unit FreeChemical dTTP 1000000
+
 unit CompositionTable dna_composition A dAMP
 unit CompositionTable dna_composition C dCMP
 unit CompositionTable dna_composition G dGMP

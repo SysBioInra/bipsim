@@ -100,6 +100,12 @@ class SimulationParams
   std::string concentration_file (void) const;
 
   /**
+   * @brief Accessor to name for replication output file.
+   * @return Output file name.
+   */
+  std::string replication_file (void) const;
+
+  /**
    * @brief Accessor to name for reaction output file.
    * @return Output file name.
    */
@@ -116,6 +122,12 @@ class SimulationParams
    * @return List of entity names. Empty if none specified.
    */
   const std::list<std::string>& output_entities (void) const;
+
+  /**
+   * @brief Accessor to double strand to output.
+   * @return Empty if none specified.
+   */
+  const std::string& output_double_strand (void) const;
 
   /**
    * @brief Accessor to default solver factory.
@@ -182,6 +194,9 @@ private:
   /** @brief Output file name for concentrations. */
   static const std::string _concentration_file;
 
+  /** @brief Output file name for concentrations. */
+  static const std::string _replication_file;
+
   /** @brief Output file name for reactions. */
   static const std::string _reaction_file;
 
@@ -196,6 +211,9 @@ private:
 
   /** @brief List of entity names. Empty if none specified. */
   std::list<std::string> _output_entities;
+
+  /** @brief Double strand name. Empty if none specified. */
+  std::string _output_double_strand;
   
   /** @brief Initial time tag. */
   static const std::string _output_entities_tag;
@@ -336,6 +354,11 @@ inline std::string SimulationParams::concentration_file (void) const
   return _output_dir + "/" + _concentration_file;
 }
 
+inline std::string SimulationParams::replication_file (void) const
+{
+  return _output_dir + "/" + _replication_file;
+}
+
 inline std::string SimulationParams::reaction_file (void) const
 {
   return _output_dir + "/" + _reaction_file;
@@ -349,6 +372,11 @@ inline int SimulationParams::output_step (void) const
 inline const std::list<std::string>& SimulationParams::output_entities (void) const
 {
   return _output_entities;
+}
+
+inline const std::string& SimulationParams::output_double_strand (void) const
+{
+  return _output_double_strand;
 }
 
 inline const SolverFactory& SimulationParams::solver_factory (void) const

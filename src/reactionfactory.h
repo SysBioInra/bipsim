@@ -80,8 +80,11 @@ private:
   //  Private Methods
   // =================
   //
-  /** @brief Create oading reaction from current line and store it. */
+  /** @brief Create loading reaction from current line and store it. */
   void create_loading (void);
+
+  /** @brief Create paired loading reaction from current line and store it. */
+  void create_paired_loading (void);
 
   /** @brief Create chemical reaction from current line and store it. */
   void create_chemical_reaction (void);

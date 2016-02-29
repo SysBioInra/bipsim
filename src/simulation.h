@@ -90,6 +90,9 @@ private:
   /** @brief Logger used to write to file. */
   ChemicalLogger* _logger;
 
+  /** @brief Logger used to write to file. */
+  DoubleStrandLogger* _replication_logger;
+
   /** @brief Handler reading and performing user-defined events. */
   EventHandler _event_handler;
 
@@ -97,6 +100,8 @@ private:
   //  Private Methods
   // =================
   //
+  /** @brief Write logs if necessary. */
+  void write_logs (void);
 };
 
 // ======================

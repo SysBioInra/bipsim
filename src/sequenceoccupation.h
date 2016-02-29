@@ -138,6 +138,14 @@ class SequenceOccupation
   // ============================
   //
   /**
+   * @brief Compute the number of sites.
+   * @param first Starting position of the site.
+   * @param last Ending position of the site.
+   * @return Number of sites.
+   */
+  int number_sites (int first, int last) const;
+
+  /**
    * @brief Compute the number of available sites.
    * @param first Starting position of the site.
    * @param last Ending position of the site.
@@ -152,6 +160,9 @@ private:
   //
   /** @brief Number of sequences in the pool. */
   int _number_sequences;
+
+  /** @brief Tracks number of segments spanning each base. */
+  std::vector <int> _number_segments;
 
   /** @brief Tracks occupied positions along the sequence. */
   std::vector <int> _occupancy;

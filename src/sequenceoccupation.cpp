@@ -30,6 +30,7 @@
 SequenceOccupation::SequenceOccupation (int length, int number)
   : _number_sequences (number)
   , _occupancy (length, 0)
+  , _number_segments (length, 0)
   , _free_end_factory (0)
 {
 }
@@ -114,6 +115,7 @@ void SequenceOccupation::start_segment (int position)
   REQUIRE (_free_end_factory != 0);
 
   _occupancy [position] -= 1;
+  _number_segments [position] += 1;
   std::list <PartialStrand*>::iterator strand_it = _partials.begin();
   while (strand_it != _partials.end())
     {
@@ -139,6 +141,7 @@ void SequenceOccupation::extend_segment (int position)
   REQUIRE (_free_end_factory != 0);
 
   _occupancy [position] -= 1;
+  _number_segments [position] += 1;
   std::list <PartialStrand*>::iterator strand_it = _partials.begin();
   while (strand_it != _partials.end())
     {
@@ -197,6 +200,23 @@ void SequenceOccupation::deregister_moving_site (BindingSite& site)
 //  Public Methods - Accessors
 // ============================
 //
+int SequenceOccupation::number_sites (int first, int last) const
+{
+  /** @pre first must be within sequence bound. */
+  REQUIRE ((first >= 0) && (first < _occupancy.size()));
+  /** @pre last must be within sequence bound. */
+  REQUIRE ((last >= 0) && (last < _occupancy.size()));
+  /** @pre first must be smaller or equal to last. */
+  REQUIRE (first <= last);
+
+  int min = _number_segments [first];
+  for (int i = first+1; i <= last; ++i)
+    {
+      if (_number_segments [i] < min) { min = _number_segments [i]; }
+    }
+  return _number_sequences + min;
+}
+
 int SequenceOccupation::number_available_sites (int first, int last) const
 {
   /** @pre first must be within sequence bound. */
@@ -293,6 +313,10 @@ _check_completion (std::list <PartialStrand*>::iterator& strand_it)
       delete *strand_it;
       _partials.erase (strand_it);
       ++_number_sequences;
-      for (int i = 0; i < _occupancy.size(); ++i) { ++_occupancy [i]; }
+      for (int i = 0; i < _occupancy.size(); ++i) 
+	{ 
+	  ++_occupancy [i]; 
+	  _number_segments [i] -= 1;
+	}
     }
 }

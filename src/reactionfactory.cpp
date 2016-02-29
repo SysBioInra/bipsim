@@ -26,6 +26,7 @@
 #include "complexation.h"
 #include "sequencebinding.h"
 #include "loading.h"
+#include "pairedloading.h"
 #include "release.h"
 #include "translocation.h"
 #include "forwardreaction.h"
@@ -76,6 +77,7 @@ bool ReactionFactory::handle (const std::string& line)
   else if (tag == "Release") { create_release(); }
   else if (tag == "Degradation") { create_degradation(); }
   else if (tag == "Loading") { create_loading(); }
+  else if (tag == "PairedLoading") { create_paired_loading(); }
   else { return false; }
   return true;
 }
@@ -115,6 +117,12 @@ void ReactionFactory::create_loading (void)
 {
   Loader* loader = fetch <Loader> (_line_stream);
   store (new Loading (*loader));
+}
+
+void ReactionFactory::create_paired_loading (void)
+{
+  Loader* loader = fetch <Loader> (_line_stream);
+  store (new PairedLoading (*loader));
 }
 
 void ReactionFactory::create_complexation (void)

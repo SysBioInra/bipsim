@@ -84,7 +84,6 @@ class ChemicalLogger
   //
 
 private:
-
   // ============
   //  Attributes
   // ============

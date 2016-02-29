@@ -106,7 +106,7 @@ void ChemicalSequence::extend_strand (int position)
 {
   /** @pre Position must be consistent with sequence length. */
   REQUIRE (is_out_of_bounds (position, position) == false);
-  _sequence_occupation.extend_segment (position);
+  _sequence_occupation.start_segment (position);
 }
      
 void ChemicalSequence::add (int quantity)

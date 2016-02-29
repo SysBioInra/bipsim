@@ -1,8 +1,8 @@
 
 
 /**
- * @file loading.cpp
- * @brief Implementation of the Loading class.
+ * @file pairedloading.cpp
+ * @brief Implementation of the PairedLoading class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -18,42 +18,39 @@
 //  Project Includes
 // ==================
 //
-#include "macros.h" // REQUIRE()
-#include "boundchemical.h"
-#include "chemicalsequence.h"
-#include "loading.h"
+#include "pairedloading.h"
 #include "loader.h"
+#include "chemicalsequence.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-Loading::Loading (Loader& loader)
+PairedLoading::PairedLoading (Loader& loader)
   : LoadingBase (loader)
-{
-}
- 
-// Not needed for this class (use of compiler generated versions)
-// Loading::Loading (Loading& other_loading);
-// Loading& Loading::operator= (Loading& other_loading);
-// Loading::~Loading (void);
+{}
+
+// Not needed for this class (use of compiler-generated versions)
+// PairedLoading::PairedLoading (const PairedLoading& other);
+// PairedLoading& PairedLoading::operator= (const PairedLoading& other);
+// PairedLoading::~PairedLoading (void);
 
 // ===========================
 //  Public Methods - Commands
 // ===========================
 //
 
-
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
 
+
 // ===================
 //  Protected Methods
 // ===================
 //
-void Loading::do_reaction (void)
+void PairedLoading::do_reaction (void)
 {
   /** @pre There must be enough reactants to perform reaction. */
   REQUIRE (is_reaction_possible());
@@ -63,18 +60,21 @@ void Loading::do_reaction (void)
   
   // Load the element corresponding to its target template
   _loader.focused_chemical_to_load().remove (1);
-  // currently the loaded chemical just disappears into thin air. It will show
-  // up eventually when the elongated chemical is released so let us say it does
-  // virtually exist :)
+  
+  // Extend strand
+  _loader.focused_unit_location().
+    extend_strand (_loader.focused_unit_reading_frame());
   
   // Update the loader status to occupied
-  BoundChemical& occupied_loader = _loader.focused_occupied_state ();
+  BoundChemical& occupied_loader = _loader.focused_occupied_state();
   occupied_loader.add_unit_in_place_of (_loader);
-  _loader.focused_unit_location().replace_bound_unit (_loader, occupied_loader);      
+  _loader.focused_unit_location().
+    replace_bound_unit (_loader, occupied_loader);      
   _loader.remove_focused_unit();
 }
 
-void Loading::print (std::ostream& output) const
+void PairedLoading::print (std::ostream& output) const
 {
-  output << "Loading";
+  output << "Paired Loading";
 }
+

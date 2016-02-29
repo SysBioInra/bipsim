@@ -75,6 +75,8 @@ class DoubleStrand : public Chemical
   //  Public Methods - Accessors
   // ============================
   //
+  const ChemicalSequence& sense (void) const { return _sense; }
+  const ChemicalSequence& antisense (void) const { return _antisense; }
 
 private:
   // ============

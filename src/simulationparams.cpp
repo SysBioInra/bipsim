@@ -36,6 +36,7 @@ const std::string SimulationParams::_final_time_tag = "FINAL_TIME";
 const std::string SimulationParams::_input_files_tag = "INPUT_FILES";
 const std::string SimulationParams::_output_dir_tag = "OUTPUT_DIR";
 const std::string SimulationParams::_concentration_file = "concentrations.out";
+const std::string SimulationParams::_replication_file = "replication.out";
 const std::string SimulationParams::_param_file = "params.out";
 const std::string SimulationParams::_reaction_file = "reactions.out";
 const std::string SimulationParams::_output_step_tag = "OUTPUT_STEP";
@@ -52,6 +53,7 @@ SimulationParams::SimulationParams (const std::string& filename)
   , _initial_time (0)
   , _final_time (1000)
   , _output_step (10000)
+  , _output_double_strand ("chromosome")
   , _solver_factory (new NaiveSolverFactory())
   , _rate_manager_factory (new DependencyRateManagerFactory())
   , _rate_container_factory (new HybridRateContainerFactory())

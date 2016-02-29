@@ -23,7 +23,8 @@ libsrc_a_SOURCES = \
 	biasedwheel.cpp biasedwheel.h \
 	randomhandler.cpp randomhandler.h \
 	observable.h \
-	chemicallogger.cpp chemicallogger.h
+	chemicallogger.cpp chemicallogger.h \
+	doublestrandlogger.cpp doublestrandlogger.h
 
 # factories
 libsrc_a_SOURCES += \
@@ -36,6 +37,8 @@ libsrc_a_SOURCES += \
 	complexation.cpp complexation.h complexationimp.h \
 	forwardreaction.h \
 	loading.cpp loading.h \
+	loadingbase.cpp loadingbase.h \
+	pairedloading.cpp pairedloading.h \
 	reaction.h \
 	release.cpp release.h \
 	sequencebinding.cpp sequencebinding.h \

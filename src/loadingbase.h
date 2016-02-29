@@ -1,7 +1,7 @@
 
 /**
- * @file loading.h
- * @brief Header for the Loading class.
+ * @file loadingbase.h
+ * @brief Header for the LoadingBase class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -9,8 +9,8 @@
 
 // Multiple include protection
 //
-#ifndef LOADING_H
-#define LOADING_H
+#ifndef LOADING_BASE_H
+#define LOADING_BASE_H
 
 // ==================
 //  General Includes
@@ -23,21 +23,21 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "loadingbase.h"
+#include "reaction.h"
 
 // ===================
 //  Class Declaration
 // ===================
 //
 /**
- * @brief Class for representing cytosolic loading reactions.
+ * @brief Base class for loading reactions.
  *
- * Loading represents reaction in which a chemical (a Loader) matches
- * up a chemical with the template it is currently bound to, eventually
- * leading to a cytosolic product.
- * This class inherits class BaseLoading.
+ * LoadingBase represents reaction in which a chemical (a Loader) matches
+ * up a chemical with the template it is currently bound to.
+ * This class inherits class Reaction.
+ * @sa Reaction
  */
-class Loading : public LoadingBase
+class LoadingBase : public Reaction
 {
 public:
 
@@ -50,18 +50,17 @@ public:
    * @param loader Element that recognizes and loads a chemical corresponding 
    *  to the template it is reading.
    */
-  Loading (Loader& loader);
-    
+  LoadingBase (Loader& loader);    
 
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
   // Not needed for this class (use of default copy constructor) !
   // /* @brief Copy constructor */
-  // Loading (Loading& other_loading);
+  // LoadingBase (LoadingBase& other_loading);
   // /* @brief Assignment operator */
-  // Loading& operator= (Loading& other_loading);
+  // LoadingBase& operator= (LoadingBase& other_loading);
   // /* @brief Destructor */
-  // virtual ~Loading (void);
+  // virtual ~LoadingBase (void);
   
   // ===========================
   //  Public Methods - Commands
@@ -73,15 +72,23 @@ public:
   //  Public Methods - Accessors
   // ============================
   //
+  // Redefined from Reaction
+  bool is_reaction_possible (void) const;
 
- private:
-  // =================
-  //  Private Methods
-  // =================
+ protected:
+  // ===================
+  //  Protected Methods
+  // ===================
   //
-  // redefined from LoadingBase
-  void do_reaction (void);
-  void print (std::ostream& output) const;
+  // redefined from Reaction
+  double compute_rate (void) const;
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Chemical loading an element corresponding to current template. */
+  Loader& _loader;    
 };
 
 // =====================
@@ -89,4 +96,4 @@ public:
 // =====================
 //
 
-#endif // LOADING_H
+#endif // LOADING_BASE_H

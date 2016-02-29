@@ -148,6 +148,14 @@ public:
   // ============================
   //
   /**
+   * @brief Compute the number of sites.
+   * @param first Starting position of the site.
+   * @param last Ending position of the site.
+   * @return Number of sites.
+   */
+  int number_sites (int first, int last) const;
+
+  /**
    * @brief Compute the number of available sites.
    * @param first Starting position of the site.
    * @param last Ending position of the site.
@@ -252,6 +260,16 @@ private:
 // ======================
 //
 #include "macros.h"
+inline 
+int ChemicalSequence::number_sites (int first, int last) const
+{
+  /** @pre first must be smaller than last. */
+  REQUIRE (first <= last);
+  /** @pre first and last must be within sequence bound. */
+  REQUIRE (!is_out_of_bounds (first, last));
+  return _sequence_occupation.number_sites (first, last);
+}
+
 inline 
 int ChemicalSequence::number_available_sites (int first, int last) const
 {

@@ -24,10 +24,12 @@
 #include "chemical.h"
 #include "solverfactory.h"
 #include "chemicallogger.h"
+#include "doublestrandlogger.h"
 #include "eventhandler.h"
 #include "inputdata.h"
 #include "parser.h"
 #include "randomhandler.h"
+#include "doublestrand.h"
 
 
 // ==========================
@@ -36,6 +38,9 @@
 //
 Simulation::Simulation (const std::string& filename)
   : _params (filename)
+  , _logger (0)
+  , _replication_logger (0)
+  , _solver (0)
 {
   RandomHandler::instance().set_seed (_params.seed());
 
@@ -70,7 +75,10 @@ Simulation::Simulation (const std::string& filename)
     }
   _logger = new ChemicalLogger (_params.concentration_file(),
 				chemical_refs, chemical_names);
-
+  const DoubleStrand*  double_strand = 
+    _cell_state.find <DoubleStrand> (_params.output_double_strand());
+  _replication_logger = new DoubleStrandLogger (_params.replication_file(),
+						*double_strand);
 }
 
 // Forbidden
@@ -80,6 +88,7 @@ Simulation::Simulation (const std::string& filename)
 Simulation::~Simulation (void)
 {
   delete _logger;
+  delete _replication_logger;
   delete _solver;
 }
 
@@ -103,11 +112,8 @@ void Simulation::run (void)
   while (_params.final_time() > next_event_time)
     {
       while (_solver->time() < next_event_time)
-	{
-	  if ((_solver->number_reactions_performed() % _params.output_step()) == 0)
-	    { _logger->log (_solver->time()); }
-	  _solver->go_to_next_reaction(); 
-	}
+	{ write_logs(); _solver->go_to_next_reaction(); }
+
       // perform event(s)
       while (next_event_time <= _solver->time())
 	{
@@ -115,13 +121,10 @@ void Simulation::run (void)
 	  next_event_time = _event_handler.next_event_time();	  
 	}
     }
+
   // no event left: run until final time
   while (_solver->time() < _params.final_time())
-    {      
-      if ((_solver->number_reactions_performed() % _params.output_step()) == 0)
-	{ _logger->log (_solver->time()); }
-      _solver->go_to_next_reaction();
-    }
+    { write_logs(); _solver->go_to_next_reaction(); }
 
   std::cout << _solver->number_reactions_performed() << " reactions occurred."
 	    << std::endl;
@@ -136,3 +139,12 @@ void Simulation::run (void)
 //  Private Methods
 // =================
 //
+void Simulation::write_logs (void)
+{
+  if ((_solver->number_reactions_performed() % _params.output_step()) == 0)
+    { 
+      _logger->log (_solver->time()); 
+      if (_replication_logger != 0) 
+	{ _replication_logger->log (_solver->time()); }
+    }
+}

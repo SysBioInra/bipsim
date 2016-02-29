@@ -19,6 +19,7 @@ template <typename T> class BiasedWheel;
 template <class T> class Observable;
 class RandomHandler;
 class ChemicalLogger;
+class DoubleStrandLogger;
 #ifdef HAVE_BOOST_SERIALIZATION
 namespace boost { namespace serialization { class access; }}
 #endif // HAVE_BOOST_SERIALIZATION
@@ -46,6 +47,8 @@ class FreeComplexationImp;
 class BoundComplexationImp;
 class ForwardReaction;
 class Loading;
+class LoadingBase;
+class PairedLoading;
 class Reaction;
 class Release;
 class SequenceBinding;
