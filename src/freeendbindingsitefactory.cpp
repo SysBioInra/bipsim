@@ -1,7 +1,7 @@
 
 
 /**
- * @file freeendfactory.cpp
+ * @file freeendbindingsitefactory.cpp
  * @brief Implementation of the ClassName class.
  * 
  * @authors Marc Dinh, Stephan Fischer
@@ -18,7 +18,7 @@
 //  Project Includes
 // ==================
 //
-#include "freeendfactory.h"
+#include "freeendbindingsitefactory.h"
 #include "chemicalsequence.h"
 #include "bindingsite.h"
 
@@ -26,12 +26,11 @@
 //  Constructors/Destructors
 // ==========================
 //
-FreeEndFactory::FreeEndFactory (ChemicalSequence& location,
-				ChemicalSequence& opposite_strand,
-				BindingSiteFamily& left_family,
-				BindingSiteFamily& right_family)
+FreeEndBindingSiteFactory::
+FreeEndBindingSiteFactory (ChemicalSequence& location,
+			   BindingSiteFamily& left_family,
+			   BindingSiteFamily& right_family)
   : _location (location)
-  , _opposite (opposite_strand)
   , _left_family (left_family)
   , _right_family (right_family)
 {}
@@ -45,20 +44,16 @@ FreeEndFactory::FreeEndFactory (ChemicalSequence& location,
 //  Public Methods - Commands
 // ===========================
 //
-BindingSite* FreeEndFactory::create_left (int position) const
+BindingSite* FreeEndBindingSiteFactory::create_left (int position) const
 {
-  int c_position = _location.complementary (position);
-  
-  return new BindingSite (_left_family, _opposite, c_position, 
-			  c_position, 1, 1, c_position, false);
+  return new BindingSite (_left_family, _location, position, 
+			  position, 1, 1, position, false);
 }
 
-BindingSite* FreeEndFactory::create_right (int position) const
+BindingSite* FreeEndBindingSiteFactory::create_right (int position) const
 {
-  int c_position = _location.complementary (position);
-  
-  return new BindingSite (_right_family, _opposite, c_position, 
-			  c_position, 1, 1, c_position, false);
+  return new BindingSite (_right_family, _location, position, 
+			  position, 1, 1, position, false);
 }
 
 

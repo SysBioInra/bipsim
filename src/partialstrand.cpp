@@ -24,10 +24,11 @@
 //  Constructors/Destructors
 // ==========================
 //
-PartialStrand::PartialStrand (int length, const FreeEndFactory& factory)
+PartialStrand::PartialStrand (int length, 
+			      const FreeEndHandler& free_end_handler)
 : _length (length)
 , _complete (false)
-, _free_end_factory (factory)
+, _free_end_handler (free_end_handler)
 {
   // We place two dummy segments to mark beginning and end of the sequence.
   // We start with {[S S],[E E]} so nothing is occupied at beginning.
@@ -36,9 +37,9 @@ PartialStrand::PartialStrand (int length, const FreeEndFactory& factory)
   // Using dummy segments simplifies algorithms used in the class
   // (because a lot of potential border effects are removed).
   _segments.push_back (new Segment (Segment::START, Segment::START,
-				    _free_end_factory));
+				    _free_end_handler));
   _segments.push_back (new Segment (Segment::END, Segment::END,
-				    _free_end_factory));
+				    _free_end_handler));
   _segment_it = _segments.begin();
 }
 
@@ -79,14 +80,14 @@ bool PartialStrand::start_segment (int position)
 	  int last_position = (position+1 < _length)? position+1 : Segment::END;
 	  _segment_it = _segments.
 	    insert (_segment_it, 
-		    new Segment (position-1, last_position, _free_end_factory));
+		    new Segment (position-1, last_position, _free_end_handler));
 	}
       else
 	{
-	  (*_segment_it)->set_last (1, _free_end_factory);
+	  (*_segment_it)->set_last (1);
 	  // put a free end on the last segment if necessary...
 	  if (_segments.back()->first() == Segment::END)
-	    { _segments.back()->set_first (_length-1, _free_end_factory); }
+	    { _segments.back()->set_first (_length-1); }
 	}
     }
   else { extend_segment (position); }

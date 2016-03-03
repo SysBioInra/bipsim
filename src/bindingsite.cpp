@@ -47,8 +47,7 @@ BindingSite::BindingSite (BindingSiteFamily& family,
   static_cast <BindingSiteFamily&> (_family).add (this);
 
   // demand availability notifications
-  if (_static) { location.register_static_site (*this); }
-  else { location.register_dynamic_site (*this); }
+  if (_static) { location.register_site (*this); }
 }
 
 // Forbidden
@@ -57,12 +56,9 @@ BindingSite::BindingSite (BindingSiteFamily& family,
 
 BindingSite::~BindingSite (void)
 {
+  // remove binding site from family
   if (_static == false)
-    {
-      // remove binding site from family and from sequence
-      static_cast <BindingSiteFamily&> (_family).remove (this);
-      _location.deregister_dynamic_site (*this);
-    }
+    { static_cast <BindingSiteFamily&> (_family).remove (this); }
 }
 
 // ===========================

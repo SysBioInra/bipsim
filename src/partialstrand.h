@@ -42,7 +42,7 @@ class PartialStrand
   // ==========================
   //
   /** @brief Constructor. */
-  PartialStrand (int length, const FreeEndFactory& factory);
+  PartialStrand (int length, const FreeEndHandler& free_end_handler);
 
 
  private:
@@ -97,8 +97,8 @@ private:
   /** @brief True if strand has been completed. */
   bool _complete;
   
-  /** @brief Factory used to create free ends. */
-  const FreeEndFactory& _free_end_factory;
+  /** @brief Handler used to generate free end binding sites. */
+  const FreeEndHandler& _free_end_handler;
 
   /** @brief List of sequence segments. */
   std::list <Segment*> _segments;
@@ -142,8 +142,8 @@ inline bool PartialStrand::extend_segment (int position)
   if (((*result)->last() != position)) { return false; }
   
   _segment_it = result;
-  if (position < _length-1) { (*_segment_it)->extend_left(); }
-  else { (*_segment_it)->set_last (Segment::END, _free_end_factory); }
+  if (position < _length-1) { (*_segment_it)->extend_right(); }
+  else { (*_segment_it)->set_last (Segment::END); }
   _check_ligation();
   return true;
 }
@@ -200,7 +200,7 @@ inline void PartialStrand::_check_ligation (void)
       && (((*_segment_it)->last() > (*next_it)->first()) 
 	  || ((*_segment_it)->last() == Segment::END)))
     { 
-      (*_segment_it)->absorb_left (**next_it); 
+      (*_segment_it)->absorb_right (**next_it); 
       delete *next_it;
       _segments.erase (next_it); 
 
@@ -209,7 +209,7 @@ inline void PartialStrand::_check_ligation (void)
       // the start (or it is implicitly ligated if there was a segment there).
       if ((_segment_it == (--_segments.end()))
 	  && (_segments.front()->last() == Segment::START))
-	{ _segments.front()->set_last (0, _free_end_factory); }
+	{ _segments.front()->set_last (0); }
 
       // strand is complete when our two dummy segments finally meet <3
       if (((*_segment_it)->first() == Segment::START) 

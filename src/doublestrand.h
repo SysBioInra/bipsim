@@ -31,7 +31,7 @@
 //
 #include "chemical.h"
 #include "bindingsitefamily.h"
-#include "freeendfactory.h"
+#include "freeendbindingsitefactory.h"
 
 /**
  * @brief Class representing double strand sequences.
@@ -75,7 +75,17 @@ class DoubleStrand : public Chemical
   //  Public Methods - Accessors
   // ============================
   //
+  /**
+   * @brief Accessor to sense strand.
+   * @return ChemicalSequence representing sense strand of the double strand.
+   */
   const ChemicalSequence& sense (void) const { return _sense; }
+
+  /**
+   * @brief Accessor to antisense strand.
+   * @return ChemicalSequence representing antisense strand of the double 
+   *  strand.
+   */
   const ChemicalSequence& antisense (void) const { return _antisense; }
 
 private:
@@ -97,10 +107,10 @@ private:
   BindingSiteFamily _right_ends;
 
   /** @brief Factory used to create free ends properly on sense strand. */
-  FreeEndFactory _sense_factory;
+  FreeEndBindingSiteFactory _sense_factory;
 
   /** @brief Factory used to create free ends properly on antisense strand. */
-  FreeEndFactory _antisense_factory;
+  FreeEndBindingSiteFactory _antisense_factory;
 
   // =================
   //  Private Methods

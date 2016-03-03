@@ -44,7 +44,7 @@ class DoubleStrandLogger
   /**
    * @brief Constructor.
    * @param filename File where output should be written.
-   * @param doublestrand DoubleStrand whose state must be logged.
+   * @param double_strand DoubleStrand whose state must be logged.
    * @param overwrite True if existing file should be overwritten 
    *  (true by default).
    */

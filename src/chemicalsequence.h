@@ -29,6 +29,7 @@
 #include "forwarddeclarations.h"
 #include "chemical.h"
 #include "sequenceoccupation.h"
+#include "freeendhandler.h"
 
 /**
  * @brief This class stores chemicals that can be described by a sequence.
@@ -50,14 +51,15 @@ public:
    */
   ChemicalSequence (const std::string& sequence, int starting_position = 1);
 
-  // Not needed for this class (use of compiler-generated versions)
-  // (3-0 rule: either define all 3 following or none of them)
-  // /* @brief Copy constructor */
-  // ChemicalSequence (ChemicalSequence& other_chemical);
-  // /* @brief Assignment operator */
-  // ChemicalSequence& operator= (ChemicalSequence& other_chemical);
-  // /* @brief Destructor */
-  // ~ChemicalSequence (void);
+ private:
+  /** @brief Copy constructor */
+  ChemicalSequence (ChemicalSequence& other_chemical);
+  /** @brief Assignment operator */
+  ChemicalSequence& operator= (ChemicalSequence& other_chemical);
+ public:
+  
+  /** @brief Destructor */
+  ~ChemicalSequence (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -112,20 +114,7 @@ public:
    * @param site BindingSite to update when availability changes. Its position
    *  is supposed to not change over time.
    */
-  void register_static_site (BindingSite& site);
-
-  /**
-   * @brief Register binding site to update when its availability changes. 
-   * @param site BindingSite to update when availability changes. Its position
-   *  may change over time.
-   */
-  void register_dynamic_site (BindingSite& site);
-
-  /**
-   * @brief Stop updating a previously registered dynamic site. 
-   * @param site BindingSite to stop updating.
-   */
-  void deregister_dynamic_site (BindingSite& site);
+  void register_site (BindingSite& site);
 
   /**
    * @brief Add termination site on element.
@@ -135,14 +124,35 @@ public:
   void add_termination_site (const Site& termination_site);
 
   /**
-   * @brief Declare a strand to which the sequence is appariated.
-   * @param strand Antisense strand to which the sequence is appariated.
+   * @brief Declare a sequence to which the sequence is appariated.
+   * @param sequence Antisense sequence to which the sequence is appariated.
    * @param factory Factory used to generate binding sites due to free ends
-   *  in the pairing of sense/antisense strands.
+   *  in the pairing of sense/antisense sequences.
    */
-  void set_appariated_strand (ChemicalSequence& strand, 
-			      const FreeEndFactory& factory);
+  void set_appariated_sequence (ChemicalSequence& sequence, 
+				const FreeEndBindingSiteFactory& factory);
 
+  /**
+   * @brief Create binding site associated with left free end.
+   * @param opposite_position Position facing site on appariated strand.
+   * @return BindingSite created.
+   */
+  BindingSite& create_left_end_binding_site (int opposite_position);
+
+  /**
+   * @brief Create binding site associated with right free end.
+   * @param opposite_position Position facing site on appariated strand.
+   * @return BindingSite created.
+   */
+  BindingSite& create_right_end_binding_site (int opposite_position);
+
+  /**
+   * @brief Remove free end associated site.
+   * @param site BindingSite to remove.
+   */
+  void remove_free_end_binding_site (BindingSite& site);
+
+  
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -215,9 +225,9 @@ public:
   int relative (int absolute_position) const;
 
   /**
-   * @brief Get corresponding position on antisense strand.
-   * @param position Position on sense strand.
-   * @return Position of corresponding base on antisense strand.
+   * @brief Get corresponding position on antisense sequence.
+   * @param position Position on sense sequence.
+   * @return Position of corresponding base on antisense sequence.
    */
   int complementary (int position) const;
 
@@ -238,11 +248,20 @@ private:
   /** @brief Sequence of the chemical. */
   std::string _sequence;  
 
+  /** @brief Appariated sequence. */
+  ChemicalSequence* _appariated_sequence;
+
+  /** @brief List of moving sites whose availability needs to be checked. */
+  std::list <BindingSite*> _free_end_binding_sites;
+
+  /** @brief Factory for free end binding sites. */
+  const FreeEndBindingSiteFactory* _free_end_binding_site_factory;
+
+  /** @brief Handler used to place binding sites on other strand. */
+  FreeEndHandler _free_end_handler;
+
   /** @brief Sequence occupation of the chemical. */
   SequenceOccupation _sequence_occupation;
-
-  /** @brief Appariated strand (if applicable). */
-  ChemicalSequence* _appariated_strand;
 
   // =================
   //  Private Methods
@@ -253,6 +272,9 @@ private:
    * @param output Stream where output should be written.
    */
   void print (std::ostream& output) const;
+
+  void break_pairing (void);
+  void clean_free_end_binding_sites (void);
 };
 
 // ======================
@@ -318,10 +340,10 @@ inline int ChemicalSequence::complementary (int position) const
   /** @pre position must be within sequence bounds. */
   REQUIRE (!is_out_of_bounds (position, position));
   /** @pre A pairing must have been defined. */
-  REQUIRE (_appariated_strand != 0);
+  REQUIRE (_appariated_sequence != 0);
   /** @post Returned value must be within bounds of appariated strand. */
-  ENSURE (!_appariated_strand->is_out_of_bounds (_length-position-1,
-						 _length-position-1));
+  ENSURE (!_appariated_sequence->is_out_of_bounds (_length-position-1,
+						   _length-position-1));
   return _length-position-1;
 }
 

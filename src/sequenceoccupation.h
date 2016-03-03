@@ -45,8 +45,11 @@ class SequenceOccupation
    * @brief Constructor.
    * @param length Length of the sequence whose occupation should be handled.
    * @param number Number of sequences initially present.
+   * @param handler FreeEndHandler used to generate binding sites corresponding
+   *  to free ends on opposite strand.
    */
-  SequenceOccupation (int length, int number);
+  SequenceOccupation (int length, int number, 
+		      const FreeEndHandler& handler);
 
  private:
   // Forbidden
@@ -127,12 +130,6 @@ class SequenceOccupation
    */
   void deregister_moving_site (BindingSite& site);
 
-  /**
-   * @brief Define a free end factory for partial strands.
-   * @param factory Factory used to generate free ends of partial strands.
-   */
-  void set_free_end_factory (const FreeEndFactory& factory);
-
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -176,8 +173,8 @@ private:
   /** @brief List of partial strands. */
   std::list <PartialStrand*> _partials;  
 
-  /** @brief Free end factory. */
-  const FreeEndFactory* _free_end_factory; 
+  /** @brief Free end handler. */
+  const FreeEndHandler& _free_end_handler; 
 
   // =================
   //  Private Methods
@@ -230,10 +227,5 @@ private:
 //  Inline declarations
 // ======================
 //
-inline 
-void SequenceOccupation::set_free_end_factory (const FreeEndFactory& factory)
-{
-  _free_end_factory = &factory;
-}
 
 #endif // SEQUENCE_OCCUPATION_H

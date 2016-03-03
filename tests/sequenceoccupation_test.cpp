@@ -23,7 +23,7 @@
 #include "../src/sequenceoccupation.h"
 #include "../src/boundchemical.h"
 #include "../src/doublestrand.h"
-#include "../src/freeendfactory.h"
+#include "../src/freeendhandler.h"
 #include "sitedispenser.h"
 
 class SOSingleStrandL100
@@ -31,8 +31,11 @@ class SOSingleStrandL100
 public:
   SOSingleStrandL100 (void) 
     : site_dispenser (100)
-    , empty_occupation (100, 0)
+    , empty_occupation (100, 0, _empty_handler)
   {}
+
+private:
+  FreeEndHandler _empty_handler;
 
 public:
   SequenceOccupation empty_occupation;
@@ -176,14 +179,9 @@ class SODoubleStrandL100
 {
 public:
   SODoubleStrandL100 (void) 
-    : _sense (std::string (100, 'a'))
-    , _antisense (std::string (100, 't'))
-    , _ds (_sense, _antisense)
-    , _fef (_sense, _antisense, _left, _right)
-    , site_dispenser (100)
-    , empty_occupation (100, 0)
+    : site_dispenser (100)
+    , empty_occupation (100, 0, _empty_handler)
   {
-    empty_occupation.set_free_end_factory (_fef);
   }
 
   void extend_segment (int start, int end)
@@ -192,12 +190,7 @@ public:
   }
 
 private:
-  ChemicalSequence _sense;
-  ChemicalSequence _antisense;
-  DoubleStrand _ds;
-  BindingSiteFamily _left;
-  BindingSiteFamily _right;
-  FreeEndFactory _fef;
+  FreeEndHandler _empty_handler;
 
 public:
   SequenceOccupation empty_occupation;

@@ -36,7 +36,7 @@
  *
  * Segment represents a part of a double strand sequence. It can be created,
  * extended and ligated to other segments. It automatically generates binding
- * sites on the opposite strand corresponding to its free ends.
+ * sites on the opposite strand corresponding to its free ends (if applicable).
  */
 class Segment
 {
@@ -49,10 +49,10 @@ class Segment
    * @brief Constructor. 
    * @param first Initial starting position of segment.
    * @param last Initial ending position of segment.
-   * @param factory FreeEndFactory used to create free ends and corresponding
-   *  binding sites.
+   * @param handler FreeEndHandler used to generate binding sites on 
+   *  opposite strand.
    */
-  Segment (int first, int last, const FreeEndFactory& factory);
+  Segment (int first, int last, const FreeEndHandler& handler);
 
  private:
   // Forbidden
@@ -84,23 +84,19 @@ class Segment
    * @param other Other segment whose content will be absorbed (will be an 
    *  empty segment at the end of the operation).
    */
-  void absorb_left (Segment& other);
+  void absorb_right (Segment& other);
 
   /**
    * @brief Change position of first base of the segment.
    * @param position New position of first base.
-   * @param factory FreeEndFactory used to create free end and corresponding
-   *  binding site.
    */
-  void set_first (int position, const FreeEndFactory& factory);
+  void set_first (int position);
 
   /**
    * @brief Change position of las base of the segment.
    * @param position New position of last base.
-   * @param factory FreeEndFactory used to create free end and corresponding
-   *  binding site.
    */
-  void set_last (int position, const FreeEndFactory& factory);
+  void set_last (int position);
 
   // ============================
   //  Public Methods - Accessors
@@ -146,6 +142,8 @@ class Segment
 
   /** @brief Site associated with the free end on the left of the segment. */
   BindingSite* _left_site;
+
+  const FreeEndHandler& _handler;
 
   // =================
   //  Private Methods

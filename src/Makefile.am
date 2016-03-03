@@ -63,7 +63,8 @@ libsrc_a_SOURCES += \
 libsrc_a_SOURCES += \
 	chemicalsequence.cpp chemicalsequence.h \
 	doublestrand.cpp doublestrand.h \
-	freeendfactory.cpp freeendfactory.h \
+	freeendbindingsitefactory.cpp freeendbindingsitefactory.h \
+	freeendhandler.h freeendhandler.cpp\
 	partialstrand.cpp partialstrand.h \
 	segment.cpp segment.h \
 	sequenceoccupation.cpp sequenceoccupation.h \

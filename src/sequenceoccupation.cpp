@@ -27,11 +27,12 @@
 //  Constructors/Destructors
 // ==========================
 //
-SequenceOccupation::SequenceOccupation (int length, int number)
+SequenceOccupation::SequenceOccupation (int length, int number,
+					const FreeEndHandler& handler)
   : _number_sequences (number)
   , _occupancy (length, 0)
   , _number_segments (length, 0)
-  , _free_end_factory (0)
+  , _free_end_handler (handler)
 {
 }
 
@@ -111,8 +112,6 @@ void SequenceOccupation::start_segment (int position)
 {
   /** @pre position must be within sequence bound. */
   REQUIRE ((position >= 0) && (position < _occupancy.size()));
-  /** @pre Free end factory must have been defined. */
-  REQUIRE (_free_end_factory != 0);
 
   _occupancy [position] -= 1;
   _number_segments [position] += 1;
@@ -125,7 +124,7 @@ void SequenceOccupation::start_segment (int position)
   if (strand_it == _partials.end()) 
     { 
       _partials.push_back 
-	(new PartialStrand (_occupancy.size(), *_free_end_factory)); 
+	(new PartialStrand (_occupancy.size(), _free_end_handler)); 
       --strand_it;
       (*strand_it)->start_segment (position);
     }
@@ -137,8 +136,6 @@ void SequenceOccupation::extend_segment (int position)
 {
   /** @pre position must be within sequence bound. */
   REQUIRE ((position >= 0) && (position < _occupancy.size()));
-  /** @pre Free end factory must have been defined. */
-  REQUIRE (_free_end_factory != 0);
 
   _occupancy [position] -= 1;
   _number_segments [position] += 1;

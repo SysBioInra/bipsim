@@ -23,6 +23,8 @@
 #include "bindingsite.h"
 #include "boundchemical.h"
 #include "processivechemical.h"
+#include "freeendbindingsitefactory.h"
+#include "freeendhandler.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -33,15 +35,24 @@ ChemicalSequence::ChemicalSequence (const std::string& sequence,
   : _sequence (sequence)
   , _length (sequence.size())
   , _starting_position (starting_position)
-  , _sequence_occupation (sequence.size(), 0)
-  , _appariated_strand (0)
+  , _sequence_occupation (sequence.size(), 0, _free_end_handler)
+  , _appariated_sequence (0)
+  , _free_end_binding_site_factory (0)
 {
 }
 
 // Not needed for this class (use of compiler-generated versions)
 // ChemicalSequence::ChemicalSequence (ChemicalSequence& other_chemical);
 // ChemicalSequence& ChemicalSequence::operator= (ChemicalSequence& other_chemical);
-// ChemicalSequence::~ChemicalSequence (void);
+
+ChemicalSequence::~ChemicalSequence (void)
+{
+  if (_appariated_sequence) 
+    { 
+      _appariated_sequence->break_pairing(); 
+      break_pairing();
+    }
+}
 
 // ===========================
 //  Public Methods - Commands
@@ -137,7 +148,7 @@ void ChemicalSequence::add_termination_site (const Site& termination_site)
     { _termination_sites [i].push_back (&termination_site.family()); }
 }
 
-void ChemicalSequence::register_static_site (BindingSite& site)
+void ChemicalSequence::register_site (BindingSite& site)
 {
   /** @pre Site must be on sequence. */
   REQUIRE (&site.location() == this);
@@ -146,33 +157,54 @@ void ChemicalSequence::register_static_site (BindingSite& site)
   _sequence_occupation.register_site (site);
 }
 
-void ChemicalSequence::register_dynamic_site (BindingSite& site)
+void ChemicalSequence::set_appariated_sequence 
+(ChemicalSequence& sequence, const FreeEndBindingSiteFactory& factory)
 {
-  /** @pre Site must be on sequence. */
-  REQUIRE (&site.location() == this);
-  REQUIRE (is_out_of_bounds (site.first(), site.last()) == false); 
-  
-  _sequence_occupation.register_moving_site (site);
+  /** @pre Sequences must have equal length. */
+  REQUIRE (sequence._length == _length);
+  /** @pre A pairing must have not been defined already. */
+  REQUIRE (_appariated_sequence == 0);
+
+  _appariated_sequence = &sequence;
+  _free_end_binding_site_factory = &factory;
+  _free_end_handler.set_opposite (sequence);
 }
 
-void ChemicalSequence::deregister_dynamic_site (BindingSite& site)
+BindingSite& 
+ChemicalSequence::create_left_end_binding_site (int opposite_position)
 {
-  /** @pre Site must be on sequence. */
-  REQUIRE (&site.location() == this);
-  REQUIRE (is_out_of_bounds (site.first(), site.last()) == false); 
-  
+  /** @pre An free end binding site factory must have been set. */
+  REQUIRE (_free_end_binding_site_factory != 0);
+  /** @pre An appariated strand must have been set. */
+  REQUIRE (_appariated_sequence != 0);
+
+  BindingSite* site = _free_end_binding_site_factory->create_left 
+    (_appariated_sequence->complementary (opposite_position));
+  _free_end_binding_sites.push_back (site);
+  _sequence_occupation.register_moving_site (*site);
+  return *site;
+}
+
+BindingSite& 
+ChemicalSequence::create_right_end_binding_site (int opposite_position)
+{
+  /** @pre An free end binding site factory must have been set. */
+  REQUIRE (_free_end_binding_site_factory != 0);
+  /** @pre An appariated strand must have been set. */
+  REQUIRE (_appariated_sequence != 0);
+
+  BindingSite* site = _free_end_binding_site_factory->create_right 
+    (_appariated_sequence->complementary (opposite_position));  
+  _free_end_binding_sites.push_back (site);
+  _sequence_occupation.register_moving_site (*site);
+  return *site;
+}
+
+void ChemicalSequence::remove_free_end_binding_site (BindingSite& site)
+{
   _sequence_occupation.deregister_moving_site (site);
-}
-
-void ChemicalSequence::set_appariated_strand (ChemicalSequence& strand,
-					      const FreeEndFactory& factory)
-{
-  /** @pre Strands must have equal length. */
-  REQUIRE (strand._length == _length);
-  /** @pre Appariated strand cannot be reset. */
-  REQUIRE (_appariated_strand == 0);
-  _appariated_strand = &strand;
-  _sequence_occupation.set_free_end_factory (factory);
+  _free_end_binding_sites.remove (&site);
+  delete &site;
 }
 
 // ============================
@@ -229,4 +261,21 @@ void ChemicalSequence::print (std::ostream& output) const
 {
   output << "Chemical sequence of length " << _length << " with currently "
 	 << number() << " molecules.";
+}
+
+void ChemicalSequence::break_pairing (void)
+{
+  _appariated_sequence = 0;
+  _free_end_binding_site_factory = 0;
+  _free_end_handler.break_pairing();
+  clean_free_end_binding_sites();
+}
+
+void ChemicalSequence::clean_free_end_binding_sites (void)
+{
+  for (std::list <BindingSite*>::iterator 
+	 site_it = _free_end_binding_sites.begin();
+       site_it != _free_end_binding_sites.end(); ++site_it)
+    { delete *site_it; }
+  _free_end_binding_sites.clear();
 }

@@ -66,7 +66,8 @@ class ProcessiveChemical;
 // site classes
 class BindingSite;
 class BindingSiteFamily;
-class FreeEndFactory;
+class FreeEndBindingSiteFactory;
+class FreeEndHandler;
 class Site;
 class SiteFamily;
 

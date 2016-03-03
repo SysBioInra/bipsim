@@ -24,20 +24,13 @@
 // ==================
 //
 #include "../src/partialstrand.h"
-#include "../src/chemicalsequence.h"
-#include "../src/bindingsitefamily.h"
-#include "../src/doublestrand.h"
-#include "../src/freeendfactory.h"
+#include "../src/freeendhandler.h"
 
 class StrandL10
 {
 public:
   StrandL10 (void) 
-    : _sense (std::string (10, 'a'))
-    , _antisense (std::string (10, 't'))
-    , _ds (_sense, _antisense)
-    , _fef (_sense, _antisense, _left, _right)
-    , empty_strand (10, _fef)
+    : empty_strand (10, _fef)
   {
   }
 
@@ -49,12 +42,7 @@ public:
   }
 
 private:
-  ChemicalSequence _sense;
-  ChemicalSequence _antisense;
-  DoubleStrand _ds;
-  BindingSiteFamily _left;
-  BindingSiteFamily _right;
-  FreeEndFactory _fef;
+  FreeEndHandler _fef;
 
 public:
   PartialStrand empty_strand;
