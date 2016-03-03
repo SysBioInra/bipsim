@@ -121,6 +121,12 @@ public:
   double k_off (void) const;
 
   /**
+   * @brief Binding rate accessor.
+   * @return Product of k_on and number of available sites.
+   */
+  double binding_rate (void) const;
+
+  /**
    * @brief Reading frame accessor.
    * @return Reading frame on the binding site, BindingSite::NO_READING_FRAME 
    *  if there is none.
@@ -154,9 +160,6 @@ public:
 
   /** @brief Identifier to send when an update occurs. */
   int _update_id;
-
-  /** @brief Last availability value notified. */
-  int _last_availability;
 
   /** @brief Attribute storing whether site is static or not. */
   bool _static;
@@ -209,6 +212,11 @@ inline double BindingSite::k_on (void) const
 inline double BindingSite::k_off (void) const
 {
   return _k_off;
+}
+
+inline double BindingSite::binding_rate (void) const
+{
+  return _k_on * number_available_sites();
 }
 
 inline int BindingSite::reading_frame (void) const

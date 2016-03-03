@@ -60,7 +60,10 @@ void Site::move (int step_size)
 //  Public Methods - Accessors
 // ============================
 //
-
+int Site::number_available_sites (void) const
+{
+  return _location.number_available_sites (_first, _last);
+}
 // =================
 //  Private Methods
 // =================

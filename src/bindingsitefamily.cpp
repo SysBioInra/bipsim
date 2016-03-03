@@ -22,17 +22,27 @@
 #include "bindingsite.h"
 #include "randomhandler.h"
 #include "macros.h"
+#include "ratevalidity.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-BindingSiteFamily::BindingSiteFamily (void) {}
+BindingSiteFamily::BindingSiteFamily (void) 
+  : _rate_validity_size (10)
+  , _rate_validity (0)
+{
+  _rate_validity = new RateValidity (_rate_validity_size);
+}
 
 // Forbidden
 // BindingSiteFamily::BindingSiteFamily (const BindingSiteFamily& other_family);
 // BindingSiteFamily& BindingSiteFamily::operator= ( const BindingSiteFamily& other_family );
-// BindingSiteFamily::~BindingSiteFamily (void);
+
+BindingSiteFamily::~BindingSiteFamily (void)
+{
+  delete _rate_validity;
+}
 
 // ===========================
 //  Public Methods - Commands
@@ -48,6 +58,14 @@ void BindingSiteFamily::add (BindingSite* site)
 
   // configure update identifier to be index in the rate vector
   site->set_update_id (_rate_contributions.size()-1);
+  // extend ratevalidity size if necessary
+  if (_rate_contributions.size() > _rate_validity_size)
+    {
+      update_rates();
+      _rate_validity_size *= 2;
+      delete _rate_validity;
+      _rate_validity = new RateValidity (_rate_validity_size);
+    }
 }
 
 void BindingSiteFamily::remove (BindingSite* site)
@@ -68,19 +86,16 @@ void BindingSiteFamily::remove (BindingSite* site)
   _binding_sites.pop_back();
 }
 
-void BindingSiteFamily::update (int site_index, int rate_contribution)
+void BindingSiteFamily::update (int site_index)
 {  
   /** @pre site_index must be within family range. */
   REQUIRE ((site_index >= 0) && (site_index < _rate_contributions.size()));
-  /** @pre rate_contribution must be positive. */
-  REQUIRE (rate_contribution >= 0);
 
-  _rate_contributions.set_rate (site_index, rate_contribution);
+  _rate_validity->update (site_index);
       
   // notify change to rate managers
   notify_change();
 }
-
 
 // ============================
 //  Public Methods - Accessors
@@ -111,3 +126,13 @@ bool BindingSiteFamily::contains (const BindingSite* site) const
 //  Private Methods
 // =================
 //
+void BindingSiteFamily::update_rates (void) const
+{
+  while (!_rate_validity->empty())
+    {
+      int site_index = _rate_validity->front();
+      _rate_contributions.set_rate 
+	(site_index, _binding_sites [site_index]->binding_rate());
+      _rate_validity->pop();
+    }
+}

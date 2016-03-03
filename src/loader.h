@@ -129,7 +129,7 @@ private:
   /** @brief Loading rates associated with each template. */
   UpdatedTotalRateVector _loading_rates;
 
-  /** @brief */
+  /** @brief Object handling rate indices to update. */
   RateValidity _rate_validity;
 
   /** @brief Index of template that the focused unit is reading. */

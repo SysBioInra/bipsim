@@ -37,7 +37,6 @@ BindingSite::BindingSite (BindingSiteFamily& family,
   , _reading_frame (reading_frame)
   , _update_id (DEFAULT_ID)
   , _static (is_static)
-  , _last_availability (0)
 {
   /** @pre If defined, reading frame must be within site. */
   REQUIRE ((reading_frame == NO_READING_FRAME)
@@ -67,15 +66,7 @@ BindingSite::~BindingSite (void)
 //
 void BindingSite::update (void)
 {
-  // read availability
-  int availability = _location.number_available_sites (first(), last());
-
-  if (availability != _last_availability)
-    {
-      static_cast <BindingSiteFamily&> (_family).
-	update (_update_id, _k_on * availability);
-      _last_availability = availability;
-    }
+  static_cast <BindingSiteFamily&> (_family).update (_update_id);  
 }
 
 

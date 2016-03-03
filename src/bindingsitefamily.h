@@ -47,14 +47,15 @@ class BindingSiteFamily : public Reactant, public SiteFamily
   /** @brief Default constructor */
   BindingSiteFamily (void);
 
-  // Not needed for this class (use of compiler-generated versions)
-  // (3-0 rule: either define all 3 following or none of them)
-  // /* @brief Copy constructor */
-  // BindingSiteFamily (const BindingSiteFamily& other_family);
-  // /* @brief Assignment operator */
-  // BindingSiteFamily& operator= (const BindingSiteFamily& other_family);
-  // /* @brief Destructor */
-  // ~BindingSiteFamily (void);
+ private:
+  /** @brief Copy constructor */
+  BindingSiteFamily (const BindingSiteFamily& other_family);
+  /** @brief Assignment operator */
+  BindingSiteFamily& operator= (const BindingSiteFamily& other_family);
+ public:
+  
+  /** @brief Destructor */
+  ~BindingSiteFamily (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -76,9 +77,8 @@ class BindingSiteFamily : public Reactant, public SiteFamily
    * @brief Update contributions given that a binding site availability has
    *  changed.
    * @param site_index Index of the binding site that has changed.
-   * @param number_available_sites New number of available sites.
    */
-  void update (int site_index, int number_available_sites);
+  void update (int site_index);
 
   // ============================
   //  Public Methods - Accessors
@@ -130,27 +130,41 @@ private:
   /**
    * @brief Contribution of each binding site to the binding rate.
    */
-  mutable UpdatedTotalRateVector _rate_contributions;  
+  mutable UpdatedTotalRateVector _rate_contributions;
+
+  /**
+   * @brief RateValidity object monitoring rates to update.
+   */
+  mutable RateValidity* _rate_validity;
+
+  /**
+   * @brief Current size of rate validity object.
+   */
+  mutable int _rate_validity_size;
 
   // =================
   //  Private Methods
   // =================
   //
+  /** @brief Update rates according to RateValidity object. */
+  void update_rates (void) const;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-
 inline double BindingSiteFamily::total_binding_rate_contribution (void) const
 {
+  update_rates();
   return _rate_contributions.total_rate();
 }
+
 
 inline 
 const BindingSite& BindingSiteFamily::get_random_available_site (void) const
 {
+  update_rates();
   _rate_contributions.update_cumulates();
   return *(_binding_sites [_rate_contributions.random_index()]);
 }

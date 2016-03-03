@@ -64,6 +64,11 @@ public:
   //  Public Methods - Commands
   // ===========================
   //
+  /**
+   * @brief Move site along the sequence.
+   * @param step_size Step by which to move the binding site.
+   */
+  virtual void move (int step_size);
 
   // ============================
   //  Public Methods - Accessors
@@ -94,17 +99,17 @@ public:
   int last (void) const;   
 
   /**
+   * @brief Accessor to number of available sites.
+   * @return Number of sites currently available.
+   */
+  int number_available_sites (void) const;
+
+  /**
    * @brief Check whether site overlaps with a given segment.
    * @param a Start of the segment to check against.
    * @param b End of the segment to check against.
    */
   bool overlaps (int a, int b) const;   
-
-  /**
-   * @brief Move site along the sequence.
-   * @param step_size Step by which to move the binding site.
-   */
-  virtual void move (int step_size);
 
  protected:
   // ============
