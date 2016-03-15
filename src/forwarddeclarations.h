@@ -76,7 +76,6 @@ class PartialStrand;
 class Segment;
 class SequenceOccupation;
 class SiteGroup;
-class SiteLocation;
 
 // tables
 class CompositionTable;

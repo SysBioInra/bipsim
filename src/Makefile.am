@@ -68,8 +68,7 @@ libsrc_a_SOURCES += \
 	partialstrand.cpp partialstrand.h \
 	segment.cpp segment.h \
 	sequenceoccupation.cpp sequenceoccupation.h \
-	sitegroup.cpp sitegroup.h \
-	sitelocation.h
+	sitegroup.cpp sitegroup.h 
 
 # table sources
 libsrc_a_SOURCES += \
