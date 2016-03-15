@@ -27,7 +27,7 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "chemical.h"
+#include "freechemical.h"
 #include "sequenceoccupation.h"
 #include "freeendhandler.h"
 
@@ -37,7 +37,7 @@
  * Usually polymers based on a specific alphabet. Typical examples include DNA,
  * RNA and proteins.
  */
-class ChemicalSequence : public Chemical
+class ChemicalSequence : public FreeChemical
 {
 public:
   // ==========================
@@ -70,44 +70,34 @@ public:
   void remove (int quantity);
 
   /**
-   * @brief Binds a chemical element to a binding site of the sequence.
-   * @param chemical_to_bind
-   *  The chemical element to bind.
+   * @brief Bind an element to the sequence.
+   * @param first First position occupied by element.
+   * @param last Last position occupied by element.
    */
-  void bind_unit (const BoundChemical& chemical_to_bind);
+  void bind_unit (int first, int last);
 
   /**
-   * @brief Unbinds one of the chemical elements that is bound to the sequence
-   *  element.
-   * @param  chemical_to_unbind
-   *  The element to unbind.
+   * @brief Unbinds an element from sequence.
+   * @param first First position occupied by element.
+   * @param last Last position occupied by element.
    */
-  void unbind_unit (const BoundChemical& chemical_to_unbind);
+  void unbind_unit (int first, int last);
 
   /**
-   * @brief Changes the nature of a bound unit.
-   * @param old_chemical
-   *  The original nature of the bound unit.
-   * @param new_chemical
-   *  The new nature of the bound unit.
-   */
-  void replace_bound_unit (const BoundChemical& old_chemical,
-			   const BoundChemical& new_chemical);
-
-  /**
-   * @brief Move a bound unit
-   * @param chemical_to_move
-   *  The processive element that is moving along the sequence.
-   * @param number_steps
-   *  The number of steps by which it moves.
-   */
-  void move_bound_unit (ProcessiveChemical& chemical_to_move, int number_steps);
+   * @brief Create new strand segment at given position.
+   * @param position Position opposite to which segment should be created.
+   * @return Integer identifier of the strand where segment was created (used
+   *  later for extension).
+   **/
+  int start_appariated_strand (int position);
 
   /**
    * @brief Extend or create new strand at given position.
-   * @param position Position where extension should take place.
+   * @param strand_id Integer identifier provided at strand creation.
+   * @param position Position opposite to which extension should take place.
+   * @return True if extension worked, false if position already occupied.
    **/
-  void extend_strand (int position);
+  bool extend_appariated_strand (int strand_id, int position);
 
   /**
    * @brief Register binding site to update when its availability changes. 
@@ -191,8 +181,9 @@ public:
    * @return True if a requested termination site is present at requested
    *  position.
    */
-  bool is_termination_site (int position, 
-			    const std::list <const SiteFamily*>& termination_site_families) const;
+  bool is_termination_site 
+    (int position, 
+     const std::vector <const SiteFamily*>& termination_site_families) const;
 
   /**
    * @brief Returns length of sequence.
@@ -232,11 +223,27 @@ public:
   int complementary (int position) const;
 
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+  /**
+   * @brief Print class content.
+   * @param output Stream where output should be written.
+   */
+  void print (std::ostream& output) const;
+
+  /** @brief Break pairing with appariated sequence. */
+  void break_pairing (void);
+
+  /** @brief Remove BindingSites associated with free ends. */
+  void clean_free_end_binding_sites (void);
+
   // ============
   //  Attributes
   // ============
   //
-  /** @brief Starting position of the sequence (allows absolute positionning). */
+  /** @brief Starting position of the sequence (allows absolute positioning). */
   int _starting_position;
 
   /** @brief Length of the sequence. */
@@ -262,19 +269,6 @@ private:
 
   /** @brief Sequence occupation of the chemical. */
   SequenceOccupation _sequence_occupation;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  void print (std::ostream& output) const;
-
-  void break_pairing (void);
-  void clean_free_end_binding_sites (void);
 };
 
 // ======================

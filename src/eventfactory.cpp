@@ -55,7 +55,7 @@ bool EventFactory::handle (const std::string& line)
   
   double time = read <double> (line_stream);
   std::string event_tag = read <std::string> (line_stream);
-  Chemical* target = fetch <Chemical> (line_stream);
+  FreeChemical* target = fetch <FreeChemical> (line_stream);
   int quantity = read <int> (line_stream);
 
   // create event and return
@@ -72,7 +72,7 @@ bool EventFactory::handle (const std::string& line)
 // =================
 //
 void EventFactory::create_event (double time, const std::string& event_tag, 
-				 Chemical& target, int quantity)
+				 FreeChemical& target, int quantity)
 {
   if (event_tag == "ADD")
     { _event_handler.store (new AddEvent (time, target, quantity)); }

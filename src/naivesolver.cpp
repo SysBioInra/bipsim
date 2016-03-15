@@ -79,7 +79,7 @@ double NaiveSolver::compute_next_reaction (void)
 		<< _rate_manager->total_rate() << ")."
 		<< std::endl;
       // do not update time
-      return time();
+      return NO_REACTIONS_LEFT;
     }
   
   // compute next reaction to perform

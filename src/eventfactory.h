@@ -72,13 +72,6 @@ class EventFactory : public Factory
   //
 
 private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /** @brief  Handler used to store event information. */
-  EventHandler& _event_handler;
-
   // =================
   //  Private Methods
   // =================
@@ -87,12 +80,19 @@ private:
    * @brief Create and store event with given characteristics.
    * @param time Event time.
    * @param event_tag Tag indicating event type.
-   * @param target Chemical targetted by event.
+   * @param target FreeChemical targetted by event.
    * @param quantity Quantity indicating how chemical is affected by event.
    * @return True if event was successfully created and stored.
    */
   void create_event (double time, const std::string& event_tag, 
-		     Chemical& target, int quantity);
+		     FreeChemical& target, int quantity);
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief  Handler used to store event information. */
+  EventHandler& _event_handler;
 };
 
 // ======================

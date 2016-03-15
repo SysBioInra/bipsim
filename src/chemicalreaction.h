@@ -48,11 +48,15 @@ public:
    *  positive for products, negative for reactants.
    * @param forward_rate_constant Forward rate constant.
    * @param backward_rate_constant Backward rate constant.
+   * @param forward_bound BoundChemical reactant (if applicable).
+   * @param backward_bound BoundChemical product (if applicable).
    */
-  ChemicalReaction (std::vector<Chemical*>& components,
-		    std::vector<int>& stoichiometry,
+  ChemicalReaction (const std::vector<FreeChemical*>& components,
+		    const std::vector<int>& stoichiometry,
 		    double forward_rate_constant,
-		    double backward_rate_constant);
+		    double backward_rate_constant,
+		    BoundChemical* forward_bound = 0,
+		    BoundChemical* backward_bound = 0);
   
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
@@ -80,6 +84,43 @@ public:
   bool is_backward_reaction_possible (void) const;
 
  private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+  // redefinitions from BidirectionalReaction
+  double compute_forward_rate (void) const;
+  double compute_backward_rate (void) const;
+  void print (std::ostream& output) const;
+
+  /**
+   * @brief Cast forward reactant to chemical.
+   * @param index Index of the reactant.
+   * @return Reactant cast to pointer to Chemical.
+   */
+  FreeChemical* forward_chemical (int index);
+
+  /**
+   * @brief Cast backward reactant to chemical.
+   * @param index Index of the reactant.
+   * @return Reactant cast to pointer to Chemical.
+   */
+  FreeChemical* backward_chemical (int index);
+
+  /**
+   * @brief Cast forward reactant to chemical.
+   * @param index Index of the reactant.
+   * @return Reactant cast to pointer to Chemical.
+   */
+  const FreeChemical* forward_chemical (int index) const;
+
+  /**
+   * @brief Cast backward reactant to chemical.
+   * @param index Index of the reactant.
+   * @return Reactant cast to pointer to Chemical.
+   */
+  const FreeChemical* backward_chemical (int index) const;
+
   // ============
   //  Attributes
   // ============
@@ -107,81 +148,32 @@ public:
 
   /** @brief Forward rate constant k_-1. */
   double _k_m1;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
-  // redefinitions from BidirectionalReaction
-  double compute_forward_rate (void) const;
-  double compute_backward_rate (void) const;
-  void print (std::ostream& output) const;
-
-  /**
-   * @brief Looks for bound chemicals in the reaction and isolates them.
-   *
-   * If no bound chemical is found, pointers to bound elements will be null. If
-   * some are found the routine performs checks (no more than 1 bound
-   * product/reactant, if there is a bound product there needs to be a bound
-   * reactant and vice versa, the stoichiometry coefficient has to be 1). Bound
-   * elements are moved to the end of the forward/backward_reactants vectors
-   * for simplicity.
-   */
-  void isolate_bound_components (void);
-
-  /**
-   * @brief Cast forward reactant to chemical.
-   * @param index Index of the reactant.
-   * @return Reactant cast to pointer to Chemical.
-   */
-  Chemical* forward_chemical (int index);
-
-  /**
-   * @brief Cast backward reactant to chemical.
-   * @param index Index of the reactant.
-   * @return Reactant cast to pointer to Chemical.
-   */
-  Chemical* backward_chemical (int index);
-
-  /**
-   * @brief Cast forward reactant to chemical.
-   * @param index Index of the reactant.
-   * @return Reactant cast to pointer to Chemical.
-   */
-  const Chemical* forward_chemical (int index) const;
-
-  /**
-   * @brief Cast backward reactant to chemical.
-   * @param index Index of the reactant.
-   * @return Reactant cast to pointer to Chemical.
-   */
-  const Chemical* backward_chemical (int index) const;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-#include "chemical.h"
+#include "freechemical.h"
 
-inline Chemical* ChemicalReaction::forward_chemical (int index) 
+inline FreeChemical* ChemicalReaction::forward_chemical (int index) 
 {
-  return static_cast <Chemical*> (_forward_reactants [index]);
+  return static_cast <FreeChemical*> (_forward_reactants [index]);
 }
 
-inline Chemical* ChemicalReaction::backward_chemical (int index) 
+inline FreeChemical* ChemicalReaction::backward_chemical (int index) 
 {
-  return static_cast <Chemical*> (_backward_reactants [index]);
+  return static_cast <FreeChemical*> (_backward_reactants [index]);
 }
 
-inline const Chemical* ChemicalReaction::forward_chemical (int index) const
+inline const FreeChemical* ChemicalReaction::forward_chemical (int index) const
 {
-  return static_cast <const Chemical*> (_forward_reactants [index]);
+  return static_cast <const FreeChemical*> (_forward_reactants [index]);
 }
 
-inline const Chemical* ChemicalReaction::backward_chemical (int index) const
+inline const FreeChemical* ChemicalReaction::backward_chemical (int index) const
 {
-  return static_cast <const Chemical*> (_backward_reactants [index]);
+  return static_cast <const FreeChemical*> (_backward_reactants [index]);
 }
 
 #endif // CHEMICALREACTION_H

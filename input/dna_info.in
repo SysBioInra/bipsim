@@ -1,17 +1,14 @@
 
-unit FreeChemical dAMP
-unit FreeChemical dCMP
-unit FreeChemical dGMP
-unit FreeChemical dTMP
+FreeChemical dAMP
+FreeChemical dCMP
+FreeChemical dGMP
+FreeChemical dTMP
 
-unit FreeChemical dATP 1000000
-unit FreeChemical dCTP 1000000
-unit FreeChemical dGTP 1000000
-unit FreeChemical dTTP 1000000
+FreeChemical dATP 1000000
+FreeChemical dCTP 1000000
+FreeChemical dGTP 1000000
+FreeChemical dTTP 1000000
 
-unit CompositionTable dna_composition A dAMP
-unit CompositionTable dna_composition C dCMP
-unit CompositionTable dna_composition G dGMP
-unit CompositionTable dna_composition T dTMP
+CompositionTable dna_composition A dAMP, C dCMP, G dGMP, T dTMP
 
-unit TransformationTable dna2dna A T C G G C T A
+TransformationTable dna2dna A T, C G, G C, T A

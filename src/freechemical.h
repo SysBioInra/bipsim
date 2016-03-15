@@ -1,12 +1,10 @@
 
-
 /**
  * @file freechemical.h
  * @brief Header for the ClassName class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -44,7 +42,7 @@ class FreeChemical : public Chemical
   // ==========================
   //
   // Not needed for this class (use of compiler-generated versions)
-  // /* @brief Default constructor. */
+  /** @brief Constructor. */
   // FreeChemical (void);
   // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
@@ -58,7 +56,8 @@ class FreeChemical : public Chemical
   //  Public Methods - Commands
   // ===========================
   //
-
+  using Chemical::add;
+  using Chemical::remove;
 
   // ============================
   //  Public Methods - Accessors
@@ -67,16 +66,15 @@ class FreeChemical : public Chemical
 
 
 private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  
-
   // =================
   //  Private Methods
   // =================
   //
+
+  // ============
+  //  Attributes
+  // ============
+  //  
 };
 
 // ======================

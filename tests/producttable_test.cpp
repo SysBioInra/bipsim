@@ -28,9 +28,11 @@ class AaTTFactory
 public:
   static TransformationTable* make (void)
   {
-    TransformationTable* tt = new TransformationTable (1);
-    tt->add_rule ("A", "a"); tt->add_rule ("B", "b"); tt->add_rule ("C", "c");
-    return tt;
+    std::vector <std::string> input, output;
+    input.push_back ("A"); output.push_back ("a");
+    input.push_back ("B"); output.push_back ("b");
+    input.push_back ("C"); output.push_back ("c");
+    return new TransformationTable (input, output);
   }
 };
 

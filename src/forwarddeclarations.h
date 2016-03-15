@@ -25,6 +25,7 @@ namespace boost { namespace serialization { class access; }}
 #endif // HAVE_BOOST_SERIALIZATION
 
 // factories
+class BoundUnitFactory;
 class SolverFactory;
 class NaiveSolverFactory;
 class ManualDispatchFactory;
@@ -41,27 +42,24 @@ class HybridRateContainerFactory;
 class BackwardReaction;
 class BidirectionalReaction;
 class ChemicalReaction;
-class Complexation;
-class ComplexationImp;
-class FreeComplexationImp;
-class BoundComplexationImp;
 class ForwardReaction;
 class Loading;
-class LoadingBase;
-class PairedLoading;
+class ProductLoading;
+class DoubleStrandLoading;
 class Reaction;
 class Release;
 class SequenceBinding;
 class Translocation;
 
 // chemical entity classes
-class Loader;
 class BoundChemical;
 class BoundUnit;
 class BoundUnitList;
+class BoundUnitFilter;
+class FamilyFilter;
+class TemplateFilter;
 class Chemical;
 class FreeChemical;
-class ProcessiveChemical;
 
 // site classes
 class BindingSite;
@@ -82,7 +80,7 @@ class SiteLocation;
 
 // tables
 class CompositionTable;
-class DecodingTable;
+class LoadingTable;
 class ProductTable;
 class TransformationTable;
 

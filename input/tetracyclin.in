@@ -1,9 +1,9 @@
 # chemical entities
-unit Chemical Tcn
-unit BoundChemical 70STcn 
+Chemical Tcn
+BoundChemical 70STcn 
 
 # reactions 
-reaction Complexation 70S Tcn 70STcn 10 1
+ChemicalReaction 70S -1 Tcn -1 70STcn 1 rates 10 1
 
 # tetracyclin injection
 event 1000 ADD Tcn 2000

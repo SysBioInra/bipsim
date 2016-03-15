@@ -18,7 +18,7 @@
 //  General Includes
 // ==================
 //
-#include <map>  // std::map
+#include <list>  // std::list
 
 // ==================
 //  Project Includes
@@ -35,7 +35,6 @@
  * Bound chemicals may be linked with specific reactions (i.e. different from
  * their free counterparts) and collide with other bound elements.
  * Inherits class Chemical.
- * @sa Chemical
  */
 class BoundChemical : public Chemical
 {
@@ -54,206 +53,85 @@ public:
   BoundChemical& operator= (BoundChemical& other_chemical);
  public:
 
-  /**
-   * @brief Destructor
-   */
-  virtual ~BoundChemical (void);
+  // /* @brief Destructor. */
+  // ~BoundChemical (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  // redefined from Chemical
   /**
-   * @brief Adds a given quantity of chemical to the existing pool.
-   * @param quantity The amount to add
-   * @details Cannot be called directly, will be ignored. 
+   * @brief Add unit.
+   * @param unit BoundUnit to add to species.
    */
-  void add (int quantity);
-
-  /**
-   * @brief Remove a given quantity of chemical to the existing pool.
-   * @param quantity The amount to remove.
-   * @details Cannot be called directly, will be ignored. 
-   */
-  void remove (int quantity);
-
-  /**
-   * @brief Add a new unit specific binding site.
-   * @param binding_site The binding site to which it bound.
-   */
-  void add_unit_at_site (const BindingSite& binding_site);
-
-  /**
-   * @brief Add a new unit in place of an existing new chemical.
-   */
-  void add_unit_in_place_of (const BoundChemical& precursor);
+  void add (BoundUnit& unit);
   
   /**
-   * @brief Remove focused unit.
+   * @brief Remove unit.
+   * @param unit BoundUnit to remove from species.
    */
-  virtual void remove_focused_unit (void);
+  void remove (BoundUnit& unit);
 
   /**
-   * @brief Focus a unit randomly.
+   * @brief Add filter to organize units.
+   * @param filter BoundUnitFilter used to organize units.
    */
-  virtual void focus_random_unit (void);
+  void add_filter (BoundUnitFilter& filter);
 
   /**
-   * @brief Focus a unit that bound to a specific binding site family.
-   * @param family The binding site family to inspect.
+   * @brief Remove filter.
+   * @param filter BoundUnitFilter to remove.
    */
-  virtual void focus_random_unit (const BindingSiteFamily& family);
+  void remove_filter (BoundUnitFilter& filter);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
   /**
-   * @brief Returns the number of elements bound to a specific binding site
-   *  family.
-   * @return Number of elements bound to the binding site family.
-   * @param family The binding site family to inspect.
+   * @brief Accessor to random unit (has to be activated).
+   * @return Random BoundUnit belonging to this species.
    */
-  int number_bound_to_family (const BindingSiteFamily& family) const;
-
-  /**
-   * @brief Returns the binding site of focused unit.
-   * @return Binding site of focused unit.
-   */
-  const BindingSite& focused_unit_binding_site (void) const;
-
-  /**
-   * @brief Accessor of first position of focused unit.
-   * @return First position of focused unit.
-   */
-  int focused_unit_first (void) const;
-
-  /**
-   * @brief Accessor to last position of focused unit.
-   * @return Last position of focused unit.
-   */
-  int focused_unit_last (void) const;
-
-  /**
-   * @brief Accessor to reading frame of focused unit.
-   * @return Position where unit can potentially read its sequence.
-   */
-  int focused_unit_reading_frame (void) const;
-
-  /**
-   * @brief Returns the location of focused unit.
-   * @return ChemicalSequence that bears the bound chemical.
-   */
-  ChemicalSequence& focused_unit_location (void) const;
-
-  /**
-   * @brief Returns the total unbinding rate for a subset of chemicals.
-   * @param family Binding site family to which the chemicals of interest must 
-   *  be bound.
-   * @return Total unbinding rate for chemicals bound to given family.
-   */
-  double unbinding_rate_contribution (const BindingSiteFamily& family) const;
-
- protected:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /** @brief Pointer to the focused unit. */
-  BoundUnit* _focused_unit;
-
-  // =================
-  //  Protected Methods
-  // =================
-  //
-  /**
-   * @brief Add a new unit.
-   *
-   * This function MUST be called every time a unit is added.
-   * @param binding_site The binding site to which it bound.
-   * @param position Current position.
-   * @param reading_frame Reading frame position.
-   */
-  virtual void add_unit (const BindingSite& binding_site,
-			 int position, int reading_frame);
-  
+  BoundUnit& random_unit (void) const;
 
  private:
-  // ============
-  //  Attributes
-  // ============
-  //  
-  /**
-   * @brief A map that classifies all BoundChemical depending on the family of
-   *  BindingSite they bound to.
-   */
-  typedef std::map <const BindingSiteFamily*, BoundUnitList> UnitFamilyMap;
-
-  /**
-   * @brief Binding sites to which chemicals bound and current position 
-   *   (sorted by family). 
-   */
-  UnitFamilyMap _family_map;
-
-    
   // =================
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Print class content.
-   * @param output Stream where output should be written.
-   */
-  virtual void print (std::ostream& output) const;
+  // redefined from Chemical
+  void print (std::ostream& output) const;
+
+  // ============
+  //  Attributes
+  // ============
+  //  
+  /** @brief Units belonging to species. */
+  BoundUnitList _units;
+
+  /** @brief Filters used to organize units. */
+  std::list <BoundUnitFilter*> _filters;    
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-#include <iostream>
-#include "boundunit.h"
-
-inline void BoundChemical::add (int quantity)
+inline void BoundChemical::add_filter (BoundUnitFilter& filter)
 {
-  std::cerr << "ERROR: cannot directly add molecules of type BoundChemical."
-	    << " Command ignored.\n";
+  _filters.push_back (&filter);
 }
 
-inline void BoundChemical::remove (int quantity)
+inline void BoundChemical::remove_filter (BoundUnitFilter& filter)
 {
-  std::cerr << "ERROR: cannot directly remove molecules of type BoundChemical."
-	    << " Command ignored.\n";
+  _filters.remove (&filter);
 }
 
-inline const BindingSite& BoundChemical::focused_unit_binding_site (void) const
+inline BoundUnit& BoundChemical::random_unit (void) const
 {
-  return _focused_unit->binding_site();
+  /** @pre There must be at least one unit stored. */
+  REQUIRE (_units.size() > 0);
+  return _units.random_unit();
 }
-
-inline int BoundChemical::focused_unit_last (void) const
-{
-  return (_focused_unit->binding_site()).last()
-    + _focused_unit->current_position() 
-    - (_focused_unit->binding_site()).first();
-}
-
-inline ChemicalSequence& BoundChemical::focused_unit_location (void) const
-{
-  return (_focused_unit->binding_site()).location();
-}
-
-inline int BoundChemical::focused_unit_first (void) const
-{
-  return _focused_unit->current_position();
-}
-
-inline int BoundChemical::focused_unit_reading_frame (void) const
-{
-  return _focused_unit->reading_frame();
-}
-
-
 
 #endif // BOUNDCHEMICAL_H

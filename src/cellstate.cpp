@@ -46,7 +46,7 @@ void CellState::store (SimulatorInput* element,
 	   || _reaction_handler.store (element, name)
 	   || _bireaction_handler.store (element, name)
 	   || _composition_table_handler.store (element, name)
-	   || _decoding_table_handler.store (element, name)
+	   || _loading_table_handler.store (element, name)
 	   || _product_table_handler.store (element, name)
 	   || _transformation_table_handler.store (element, name)))
     {

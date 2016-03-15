@@ -2,16 +2,16 @@
 ###################
 # Small Chemicals #
 ###################
-unit FreeChemical H2O 1000
-unit FreeChemical H+ 
-unit FreeChemical ppGpp
-unit FreeChemical PPi
-unit FreeChemical Pi
+FreeChemical H2O 1000
+FreeChemical H+ 
+FreeChemical ppGpp
+FreeChemical PPi
+FreeChemical Pi
 
-reaction ChemicalReaction PPi -1 Pi 2 rates 1 0
+ChemicalReaction PPi -1 Pi 2 rates 1 0
 
-reaction ChemicalReaction GDP -1 Pi -1 GTP 1 rates 1 0
-reaction ChemicalReaction AMP -1 Pi -2 ATP 1 rates 1 0 
-reaction ChemicalReaction GMP -1 Pi -2 GTP 1 rates 1 0 
-reaction ChemicalReaction UMP -1 Pi -2 UTP 1 rates 1 0 
-reaction ChemicalReaction CMP -1 Pi -2 CTP 1 rates 1 0 
+ChemicalReaction GDP -1 Pi -1 GTP 1 rates 1 0
+ChemicalReaction AMP -1 Pi -2 ATP 1 rates 1 0 
+ChemicalReaction GMP -1 Pi -2 GTP 1 rates 1 0 
+ChemicalReaction UMP -1 Pi -2 UTP 1 rates 1 0 
+ChemicalReaction CMP -1 Pi -2 CTP 1 rates 1 0 

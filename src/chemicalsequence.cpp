@@ -12,7 +12,6 @@
 //  General Includes
 // ==================
 //
-#include <iostream> // std::cout
 #include <algorithm> // std::fill
 
 // ==================
@@ -21,8 +20,6 @@
 //
 #include "chemicalsequence.h"
 #include "bindingsite.h"
-#include "boundchemical.h"
-#include "processivechemical.h"
 #include "freeendbindingsitefactory.h"
 #include "freeendhandler.h"
 
@@ -58,66 +55,37 @@ ChemicalSequence::~ChemicalSequence (void)
 //  Public Methods - Commands
 // ===========================
 //
-void ChemicalSequence::bind_unit (const BoundChemical& chemical_to_bind)
+void ChemicalSequence::bind_unit (int first, int last)
 {
   /** @pre Unit positions must be consistent with sequence length. */
-  REQUIRE (is_out_of_bounds (chemical_to_bind.focused_unit_first(),
-			     chemical_to_bind.focused_unit_last()) == false); 
+  REQUIRE (is_out_of_bounds (first, last) == false); 
 
-  _sequence_occupation.add_element
-    (chemical_to_bind, chemical_to_bind.focused_unit_first(),
-     chemical_to_bind.focused_unit_last());
+  _sequence_occupation.add_element (first, last);
 }
 
 
-void ChemicalSequence::unbind_unit ( const BoundChemical& chemical_to_unbind )
+void ChemicalSequence::unbind_unit (int first, int last)
 {
   /** @pre Unit positions must be consistent with sequence length. */
-  REQUIRE (is_out_of_bounds (chemical_to_unbind.focused_unit_first(),
-			     chemical_to_unbind.focused_unit_last()) == false); 
+  REQUIRE (is_out_of_bounds (first, last) == false); 
   
-  _sequence_occupation.remove_element
-    (chemical_to_unbind, chemical_to_unbind.focused_unit_first(),
-     chemical_to_unbind.focused_unit_last());
+  _sequence_occupation.remove_element (first, last);
 }
 
-void ChemicalSequence::replace_bound_unit (const BoundChemical& old_chemical,
-					   const BoundChemical& new_chemical)
-{
-  /** @pre Unit positions must be consistent with sequence length. */
-  REQUIRE (is_out_of_bounds (old_chemical.focused_unit_first(),
-			     old_chemical.focused_unit_last()) == false); 
-  REQUIRE (is_out_of_bounds (new_chemical.focused_unit_first(),
-			     new_chemical.focused_unit_last()) == false); 
-
-  _sequence_occupation.remove_element
-    (old_chemical, old_chemical.focused_unit_first(),
-     old_chemical.focused_unit_last());
-  _sequence_occupation.add_element
-    (new_chemical, new_chemical.focused_unit_first(),
-     new_chemical.focused_unit_last());
-}
-
-void ChemicalSequence::move_bound_unit (ProcessiveChemical& chemical_to_move,
-					int number_steps)
-{
-  /** @pre Position and length must be consistent with sequence length. */
-  REQUIRE (is_out_of_bounds (chemical_to_move.focused_unit_first(),
-			     chemical_to_move.focused_unit_last()) == false); 
-
-  // update occupancy status
-  int first = chemical_to_move.focused_unit_first();
-  int last = chemical_to_move.focused_unit_last();
-  _sequence_occupation.remove_element (chemical_to_move, first, last);
-  _sequence_occupation.add_element (chemical_to_move, first+number_steps,
-				    last+number_steps);
- }
-
-void ChemicalSequence::extend_strand (int position)
+int ChemicalSequence::start_appariated_strand (int position)
 {
   /** @pre Position must be consistent with sequence length. */
   REQUIRE (is_out_of_bounds (position, position) == false);
-  _sequence_occupation.start_segment (position);
+  return _appariated_sequence->_sequence_occupation.start_segment 
+    (complementary (position));
+}
+
+bool ChemicalSequence::extend_appariated_strand (int strand_id, int position)
+{
+  /** @pre Position must be consistent with sequence length. */
+  REQUIRE (is_out_of_bounds (position, position) == false);
+  return _appariated_sequence->_sequence_occupation.extend_segment 
+    (strand_id, complementary (position));
 }
      
 void ChemicalSequence::add (int quantity)
@@ -213,21 +181,21 @@ void ChemicalSequence::remove_free_end_binding_site (BindingSite& site)
 //
 bool ChemicalSequence::is_termination_site 
 (int position,
- const std::list <const SiteFamily*>& termination_site_families) const
+ const std::vector <const SiteFamily*>& termination_site_families) const
 {
   /** @pre Position must be within sequence. */
   REQUIRE (is_out_of_bounds (position, position) == false); 
 
   // if there is no site to check or no termination site at the position 
   // to enquire
+  if (termination_site_families.size() == 0) { return false; }
   const std::map <int, std::list <const SiteFamily*> >::const_iterator 
     local_sites = _termination_sites.find (position);
-  if ((termination_site_families.size() == 0)
-      || (local_sites == _termination_sites.end())) { return false; }
+  if (local_sites == _termination_sites.end()) { return false; }
   
-  // we loop through the list of termination sites to inspect
-  // we place ourselves at the beginnig of the list
-  std::list <const SiteFamily*>::const_iterator
+  // we loop through the vector of termination sites to inspect
+  // we place ourselves at the beginnig of the vector
+  std::vector <const SiteFamily*>::const_iterator
     family_it = termination_site_families.begin();
   // we get start and end iterator to the list of sites at the current position
   // on the sequence

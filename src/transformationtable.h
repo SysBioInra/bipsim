@@ -17,6 +17,7 @@
 //  General Includes
 // ==================
 //
+#include <vector> // std::vector
 #include <string> // std::string
 #include <map> // std::map
 
@@ -46,9 +47,11 @@ class TransformationTable : public SimulatorInput
   //
   /**
    * @brief Constructor.
-   * @param input_motif_length Length of input motifs.
+   * @param input_motifs Vector of strings containing input motifs.
+   * @param output_motifs Vector of strings containing output motifs.
    */
-  TransformationTable (int input_motif_length);
+  TransformationTable (const std::vector <std::string>& input_motifs, 
+		       const std::vector <std::string>& output_motifs);
 
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
@@ -63,13 +66,6 @@ class TransformationTable : public SimulatorInput
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Add new transformation rule.
-   * @param input String containing input motif.
-   * @param output string containing output motif.
-   */
-  void add_rule (const std::string& input, const std::string& output);
-
   /**
    * @brief Transform sequence motif by motif using existing rules.
    * @param sequence Sequence to transform.
@@ -89,6 +85,11 @@ class TransformationTable : public SimulatorInput
   int input_motif_length (void) const;
 
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+
   // ============
   //  Attributes
   // ============
@@ -98,26 +99,12 @@ private:
 
   /** @brief Input motif length. */
   int _motif_length;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-inline void TransformationTable::add_rule (const std::string& input,
-					   const std::string& output)
-{
-  /** @pre Input motif length must match length specified at construction. */
-  REQUIRE (input.length() == _motif_length);
-  
-  _rules [input] = output;
-}
-
 inline int TransformationTable::input_motif_length (void) const
 {
   return _motif_length;

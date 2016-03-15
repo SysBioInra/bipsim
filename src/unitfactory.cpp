@@ -13,6 +13,7 @@
 // ==================
 //
 #include <iostream> // std::cout
+#include <cstdlib> // atof
 
 // ==================
 //  Project Includes
@@ -28,13 +29,11 @@
 
 #include "freechemical.h"
 #include "boundchemical.h"
-#include "processivechemical.h"
-#include "loader.h"
 #include "chemicalsequence.h"
 #include "doublestrand.h"
 
 #include "compositiontable.h"
-#include "decodingtable.h"
+#include "loadingtable.h"
 #include "producttable.h"
 #include "transformationtable.h"
 
@@ -65,8 +64,6 @@ bool UnitFactory::handle (const std::string& line)
   // appropriate creator
   _line_stream.str (line);  
   _line_stream.clear();
-  // first word of line must be "unit"
-  if (check_tag (_line_stream, "unit") == false) { return false; }
 
   // try to create unit
   std::string tag = read <std::string> (_line_stream);
@@ -76,10 +73,8 @@ bool UnitFactory::handle (const std::string& line)
   else if (tag == "BoundChemical") { create_bound_chemical(); }
   else if (tag == "ChemicalSequence") { create_chemical_sequence(); }
   else if (tag == "DoubleStrandSequence") { create_double_strand_sequence(); }
-  else if (tag == "ProcessiveChemical") { create_processive_chemical(); }
-  else if (tag == "Loader") { create_loader(); }
   else if (tag == "CompositionTable") { create_composition_table(); }
-  else if (tag == "DecodingTable") { create_decoding_table(); }
+  else if (tag == "LoadingTable") { create_loading_table(); }
   else if (tag == "ProductTable") { create_product_table(); }
   else if (tag == "TransformationTable") { create_transformation_table(); }
   else { return false; }
@@ -126,24 +121,13 @@ void UnitFactory::create_binding_site (void)
     }
 
   // read reading frame (optional)
-  int reading_frame = 0;
-  BindingSite* binding_site;
-  if (not (_line_stream >> reading_frame)) // no reading frame
-    { 
-      binding_site = new BindingSite (*family, *location, 
-				      location->relative (start), 
-				      location->relative (end),
-				      k_on, k_off); 
-    }
-  else
-    { 
-      binding_site = new BindingSite (*family, *location, 
-				      location->relative (start), 
-				      location->relative (end),
-				      k_on, k_off, 
-				      location->relative (reading_frame)); 
-    }
-  store (binding_site);
+  int reading_frame;
+  if (not (_line_stream >> reading_frame))
+    { reading_frame = BindingSite::NO_READING_FRAME; }
+  else { reading_frame = location->relative (reading_frame); }
+
+  store (new BindingSite (*family, *location, location->relative (start), 
+			  location->relative (end), k_on, k_off, reading_frame));
 }
 
 void UnitFactory::create_termination_site (void)
@@ -162,61 +146,68 @@ void UnitFactory::create_termination_site (void)
 
 void UnitFactory::create_composition_table (void)
 {
-  CompositionTable* table = fetch_or_create <CompositionTable> (_line_stream);
-  
-  // read letter and associated chemicals
-  char letter = read <char> (_line_stream);
-  std::list <Chemical*> chemicals;
-  chemicals.push_back (fetch <FreeChemical> (_line_stream));
-  std::string chemical_name;
-  while (_line_stream >> chemical_name)
-    { chemicals.push_back (fetch <FreeChemical> (chemical_name)); }
+  std::string name = read <std::string> (_line_stream);
+  std::vector <char> letters;
+  std::vector <std::list <FreeChemical*> > chemical_lists;
 
-  table->add_rule (letter, chemicals);
+  bool next = true;
+  while (next)
+    {
+      // read letter and associated chemicals
+      letters.push_back (read <char> (_line_stream));      
+      chemical_lists.resize (chemical_lists.size() + 1);
+      std::list <FreeChemical*>& chemicals = chemical_lists.back();
+
+      std::string chemical_name = read <std::string> (_line_stream);
+      bool comma = check_comma (chemical_name);
+      chemicals.push_back (fetch <FreeChemical> (chemical_name));
+      while (next && (comma == false))
+	{
+	  if (_line_stream >> chemical_name)
+	    { 
+	      comma = check_comma (chemical_name);
+	      if (chemical_name != "")
+		{ chemicals.push_back (fetch <FreeChemical> (chemical_name)); }
+	    }
+	  else { next = false; }
+	}
+    }
+  store (new CompositionTable (letters, chemical_lists), name);
 }
 
 
-void UnitFactory::create_decoding_table (void)
+void UnitFactory::create_loading_table (void)
 {
   std::string name = read <std::string> (_line_stream);
-  std::list <std::string> template_list;
-  std::list <Chemical*> base_list;
-  std::list <BoundChemical*> polymerase_list;
-  std::list <double> rate_list;
+  std::vector <std::string> templates;
+  std::vector <FreeChemical*> bases;
+  std::vector <BoundChemical*> occupied;
+  std::vector <double> rates;
 
-  std::string template_, base, polymerase; double rate;
-  while (_line_stream >> template_ >> base >> polymerase >> rate)
+  bool next = true;
+  while (next)
     {
-      template_list.push_back (template_);
-      base_list.push_back (fetch <FreeChemical> (base));
-      polymerase_list.push_back (fetch <BoundChemical> (polymerase));
-      rate_list.push_back (rate);
-    }
-  if (template_list.size() == 0) { throw FormatException(); }
-
-  // create and store table
-  std::list<std::string>::iterator template_it = template_list.begin();
-  std::list<Chemical*>::iterator base_it = base_list.begin();
-  std::list<BoundChemical*>::iterator polymerase_it = polymerase_list.begin();
-  std::list<double>::iterator rate_it = rate_list.begin();
-  int template_length = template_it->size();
-  DecodingTable* table = new DecodingTable (template_length);
-  while (template_it != template_list.end())
-    {
-      if (template_it->size() == template_length)
+      templates.push_back (read <std::string> (_line_stream));
+      if (templates.back().length() != templates.front().length())
 	{
-	  table->add_template (*template_it, **base_it,
-			       **polymerase_it, *rate_it);
-	}
-      else
-	{
-	  delete table;
-	  throw ParserException ("Trying to define a decoding table with "
+	  throw ParserException ("Trying to define a loading table with "
 				 "templates of variable length.");
 	}
-      template_it++; base_it++; polymerase_it++; rate_it++;
+      bases.push_back (fetch <FreeChemical> (_line_stream));
+      occupied.push_back (fetch <BoundChemical> (_line_stream)); 
+
+      // quadruplets are separated by commas, if there is no comma
+      // then the list should end here
+      std::string rate_str = read <std::string> (_line_stream);
+      if (check_comma (rate_str) == false)
+	{
+	  char next_char;
+	  if (not (_line_stream >> next_char)) { next = false; }
+	  else if (next_char != ',') { throw FormatException(); }
+	}
+      rates.push_back (atof (rate_str.c_str()));
     }
-  store (table, name);
+  store (new LoadingTable (templates, bases, occupied, rates), name);  
 }
 
 void UnitFactory::create_product_table (void)
@@ -230,21 +221,29 @@ void UnitFactory::create_product_table (void)
 void UnitFactory::create_transformation_table (void)
 {
   std::string name = read <std::string> (_line_stream);
-  std::string input_motif = read <std::string> (_line_stream);
-  std::string output_motif = read <std::string> (_line_stream);
+  std::vector <std::string> input_motifs;
+  std::vector <std::string> output_motifs; 
 
-  TransformationTable* table = new TransformationTable (input_motif.size()); 
-  table->add_rule (input_motif, output_motif);
-  while (_line_stream >> input_motif >> output_motif)
+  bool next = true;
+  while (next)
     {
-      if (input_motif.size() == table->input_motif_length())
-	{ table->add_rule (input_motif, output_motif); }
-      else
-	{ delete table; throw FormatException(); }
-    }
-  store (table, name);
-}
+      input_motifs.push_back (read <std::string> (_line_stream));
+      if (input_motifs.back().length() != input_motifs.front().length())
+	{ throw ParserException ("Motifs must have same length"); }
 
+      // duplets are separated by commas, if there is no comma
+      // then the list should end here
+      std::string motif = read <std::string> (_line_stream);
+      if (check_comma (motif) == false)
+	{
+	  char next_char;
+	  if (not (_line_stream >> next_char)) { next = false; }
+	  else if (next_char != ',') { throw FormatException(); }
+	}      
+      output_motifs.push_back (motif);
+    }
+  store (new TransformationTable (input_motifs, output_motifs), name);
+}
 
 void UnitFactory::create_free_chemical (void)
 {
@@ -343,30 +342,4 @@ void UnitFactory::create_bound_chemical (void)
 {
   std::string name = read <std::string> (_line_stream);
   store (new BoundChemical, name);
-}
-
-void UnitFactory::create_loader (void)
-{
-  std::string name = read <std::string> (_line_stream);
-  DecodingTable* decoding_table = fetch <DecodingTable> (_line_stream);
-  store (new Loader (*decoding_table), name);
-}
-
-
-void UnitFactory::create_processive_chemical (void)
-{
-  std::string name = read <std::string> (_line_stream);
-  BoundChemical* stalled = fetch <BoundChemical> (_line_stream);
-  
-  // parse termination sites
-  std::string family;
-  std::list <SiteFamily*> families;
-  while (_line_stream >> family)
-    { families.push_back (fetch <SiteFamily> (family)); }
-	
-  ProcessiveChemical* chemical = new ProcessiveChemical (*stalled);
-  for (std::list <SiteFamily*>::iterator family_it = families.begin();
-       family_it != families.end(); ++family_it)
-    { chemical->add_recognized_termination_site (**family_it); }
-  store (chemical, name);
 }

@@ -45,12 +45,18 @@ class Translocation : public Reaction
    * @brief Constructor
    * @param processive_chemical Polymerase that does the translocation.
    * @param chemical_after_step Chemical after translocation.
+   * @param stalled_form BoundChemical that results when the translocating 
+   *  chemical encounters a termination site or end of sequence.
    * @param step_size Number of bases processed at each translocation step.
    * @param rate Translocation rate (in step/s).
+   * @param families List of SiteFamily recognized by the translocating 
+   *  chemical as termination sites.
    */
-  Translocation (ProcessiveChemical& processive_chemical,
+  Translocation (BoundChemical& processive_chemical,
 		 BoundChemical& chemical_after_step,
-		 int step_size, double rate);
+		 BoundChemical& stalled_form,
+		 int step_size, double rate,
+		 const std::vector <const SiteFamily*>& families);
 
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
@@ -75,22 +81,6 @@ class Translocation : public Reaction
   bool is_reaction_possible (void) const;
 
  private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /** @brief Polymerase that does the translocation. */
-  ProcessiveChemical& _processive_chemical;
-
-  /** @brief New polymerase from after stepping. */
-  BoundChemical& _chemical_after_step;
-
-  /** @brief Number of bases processed at each translocation step. */
-  int _step_size;
-
-  /** @brief Translocation rate (in s^-1). */
-  double _rate;
-
   // =================
   //  Private Methods
   // =================
@@ -99,13 +89,38 @@ class Translocation : public Reaction
   void do_reaction (void);
   double compute_rate (void) const;
   void print (std::ostream& output) const;
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Form that translocates. */
+  BoundChemical& _processive_chemical;
+
+  /** @brief Form after translocation. */
+  BoundChemical& _chemical_after_step;
+
+  /**
+   * @brief Form if translocation reached termination site or end of 
+   *  sequence. 
+   */
+  BoundChemical& _stalled_form;
+
+  /** @brief Number of bases processed at each translocation step. */
+  int _step_size;
+
+  /** @brief Translocation rate (in s^-1). */
+  double _rate;
+
+  /** @brief The list of termination sites the chemical recognizes. */
+  std::vector <const SiteFamily*> _termination_sites;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-#include "processivechemical.h"
+#include "boundchemical.h"
 
 inline bool Translocation::is_reaction_possible (void) const
 {

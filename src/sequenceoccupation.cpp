@@ -22,6 +22,7 @@
 #include "bindingsite.h"
 #include "sitegroup.h"
 #include "partialstrand.h"
+#include "macros.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -43,8 +44,9 @@ SequenceOccupation::SequenceOccupation (int length, int number,
 SequenceOccupation::~SequenceOccupation (void)
 {
   for (int i = 0; i < _site_groups.size(); ++i)  { delete _site_groups[i]; }
-  for (std::list <PartialStrand*>::iterator strand_it = _partials.begin();
-       strand_it != _partials.end(); ++strand_it)
+  for (std::vector <PartialStrand*>::iterator strand_it 
+	 = _partial_by_index.begin();
+       strand_it != _partial_by_index.end(); ++strand_it)
     { delete *strand_it; }
 }
 
@@ -52,8 +54,7 @@ SequenceOccupation::~SequenceOccupation (void)
 //  Public Methods - Commands
 // ===========================
 //
-void SequenceOccupation::add_element (const BoundChemical& element,
-				      int first, int last)
+void SequenceOccupation::add_element (int first, int last)
 {
   /** @pre first must be within sequence bound. */
   REQUIRE ((first >= 0) && (first < _occupancy.size()));
@@ -69,8 +70,7 @@ void SequenceOccupation::add_element (const BoundChemical& element,
   notify_change (first, last);
 }
 
-void SequenceOccupation::remove_element (const BoundChemical& element,
-					 int first, int last)
+void SequenceOccupation::remove_element (int first, int last)
 {
   /** @pre first must be within sequence bound. */
   REQUIRE ((first >= 0) && (first < _occupancy.size()));
@@ -92,8 +92,6 @@ void SequenceOccupation::add_sequence (int quantity)
   REQUIRE (quantity >= 0);
 
   _number_sequences += quantity;
-
-  // notify change
   notify_all_sites();
 }
 
@@ -103,52 +101,55 @@ void SequenceOccupation::remove_sequence (int quantity)
   REQUIRE (quantity <= _number_sequences);
 
   _number_sequences -= quantity;
-
-  // notify change
   notify_all_sites();
 }
 
-void SequenceOccupation::start_segment (int position)
+int SequenceOccupation::start_segment (int position)
 {
   /** @pre position must be within sequence bound. */
   REQUIRE ((position >= 0) && (position < _occupancy.size()));
 
   _occupancy [position] -= 1;
   _number_segments [position] += 1;
-  std::list <PartialStrand*>::iterator strand_it = _partials.begin();
-  while (strand_it != _partials.end())
+  int strand_id;
+  std::list <int>::iterator strand_id_it = _partial_creation_order.begin();
+  while (strand_id_it != _partial_creation_order.end())
     {
-      if ((*strand_it)->start_segment (position)) { break; }
-      ++strand_it;
+      strand_id = *strand_id_it;
+      if (_partial_by_index [strand_id]->start_segment (position)) { break; }
+      ++strand_id_it;
     }
-  if (strand_it == _partials.end()) 
+  if (strand_id_it == _partial_creation_order.end()) 
     { 
-      _partials.push_back 
-	(new PartialStrand (_occupancy.size(), _free_end_handler)); 
-      --strand_it;
-      (*strand_it)->start_segment (position);
+      strand_id = next_strand_id();
+      _partial_by_index [strand_id] = 
+	new PartialStrand (_occupancy.size(), _free_end_handler); 
+      _partial_creation_order.push_back (strand_id);
+      _partial_by_index [strand_id]->start_segment (position);
     }
-  _check_completion (strand_it);
+  check_completion (strand_id);
   notify_change (position, position);
+  /** @post strand_id must be in valid range. */
+  ENSURE ((strand_id >= 0) && (strand_id < _partial_by_index.size()));
+  return strand_id;
 }
 
-void SequenceOccupation::extend_segment (int position)
+bool SequenceOccupation::extend_segment (int strand_id, int position)
 {
   /** @pre position must be within sequence bound. */
   REQUIRE ((position >= 0) && (position < _occupancy.size()));
+  /** @pre strand_id must be in valid range. */
+  REQUIRE ((strand_id >= 0) && (strand_id < _partial_by_index.size()));
 
-  _occupancy [position] -= 1;
-  _number_segments [position] += 1;
-  std::list <PartialStrand*>::iterator strand_it = _partials.begin();
-  while (strand_it != _partials.end())
+  if (_partial_by_index [strand_id]->extend_segment (position))
     {
-      if ((*strand_it)->extend_segment (position)) { break; }
-      ++strand_it;
+      _occupancy [position] -= 1;
+      _number_segments [position] += 1;
+      check_completion (strand_id);
+      notify_change (position, position);
+      return true;
     }
-  /** @pre There must be a segment to extend. */
-  REQUIRE (strand_it != _partials.end()); 
-  _check_completion (strand_it);
-  notify_change (position, position);
+  else { return false; }
 }
 
 void SequenceOccupation::register_site (BindingSite& site)
@@ -302,18 +303,26 @@ void SequenceOccupation::notify_all_sites (void) const
     { (*site_it)->update(); }
 }
 
-void SequenceOccupation::
-_check_completion (std::list <PartialStrand*>::iterator& strand_it)
+void SequenceOccupation::check_completion (int strand_id)
 {
-  if ((*strand_it)->completed()) 
+  if (_partial_by_index [strand_id]->completed()) 
     {
-      delete *strand_it;
-      _partials.erase (strand_it);
+      delete _partial_by_index [strand_id];
+      _partial_by_index [strand_id] = 0;
+      _partial_creation_order.remove (strand_id);
       ++_number_sequences;
       for (int i = 0; i < _occupancy.size(); ++i) 
-	{ 
-	  ++_occupancy [i]; 
-	  _number_segments [i] -= 1;
-	}
+	{ ++_occupancy [i]; _number_segments [i] -= 1; }
     }
+}
+
+int SequenceOccupation::next_strand_id (void)
+{
+  for (int i = 0; i < _partial_by_index.size(); ++i)
+    { 
+      if (_partial_by_index [i] == 0) { return i; }
+    }
+  int result = _partial_by_index.size();
+  _partial_by_index.resize (result+1, 0);
+  return result;
 }

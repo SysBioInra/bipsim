@@ -18,22 +18,27 @@
 //  Project Includes
 // ==================
 //
-#include "macros.h" // REQUIRE()
+#include "macros.h" // REQUIRE
 #include "translocation.h"
-#include "processivechemical.h"
+#include "boundchemical.h"
+#include "boundunit.h"
 #include "chemicalsequence.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-Translocation::Translocation (ProcessiveChemical& processive_chemical,
+Translocation::Translocation (BoundChemical& processive_chemical,
 			      BoundChemical& chemical_after_step,
-			      int step_size, double rate)
+			      BoundChemical& stalled_form,
+			      int step_size, double rate,
+			      const std::vector <const SiteFamily*>& families)
   : _processive_chemical (processive_chemical)
   , _chemical_after_step (chemical_after_step)
+  , _stalled_form (stalled_form)
   , _step_size (step_size)
   , _rate (rate)
+  , _termination_sites (families)
 {
   /** @pre Rate must be positive. */
   REQUIRE (rate >= 0);
@@ -42,7 +47,7 @@ Translocation::Translocation (ProcessiveChemical& processive_chemical,
 
   _reactants.push_back (&processive_chemical);
   _products.push_back (&chemical_after_step);
-  _products.push_back (&_processive_chemical.stalled_form());
+  _products.push_back (&stalled_form);
 }
  
 // Not needed for this class (use of compiler generated versions)
@@ -72,49 +77,31 @@ void Translocation::do_reaction (void)
   bool stall = false;
   
   // choose one unit to move randomly
-  _processive_chemical.focus_random_unit();
+  BoundUnit& unit = _processive_chemical.random_unit();
   
   // update position on location if it is possible
-  ChemicalSequence& location = _processive_chemical.focused_unit_location();
-  if (not location.is_out_of_bounds 
-      (_processive_chemical.focused_unit_first() + _step_size,
-       _processive_chemical.focused_unit_last() + _step_size))
+  int new_first = unit.first() + _step_size;
+  int new_last = unit.last() + _step_size;
+  if (unit.location().is_out_of_bounds (new_first, new_last))
+    { std::cout << "out of bounds\n"; stall = true; }
+  else
     {
-      // move the processive chemical (order is important here)
-      // first update location
-      location.move_bound_unit (_processive_chemical, _step_size); 
-      _processive_chemical.step_forward (_step_size);
+      unit.location().unbind_unit (unit.first(), unit.last()); 
+      unit.move (_step_size);
+      unit.location().bind_unit (unit.first(), unit.last());
     }
-  else 
-    {
-      std::cout << "out of bounds\n";
-      stall = true;
-    }
-
+  
   // check whether the unit has reached a termination site
-  if (_processive_chemical.is_terminating() == true) { stall = true; }
+  if (unit.location().is_termination_site
+      (unit.reading_frame(), _termination_sites)) 
+    { stall = true; }
 
   // replace the chemical with its stalled form or its form after step
-  if (stall == true) // stalled
-    {
-      // create a stalled form of the chemical
-      BoundChemical& stalled_form = _processive_chemical.stalled_form();
-      stalled_form.add_unit_in_place_of ( _processive_chemical );
-      // update location status
-      location.replace_bound_unit ( _processive_chemical, stalled_form );
-      // delete processive chemical
-      _processive_chemical.remove_focused_unit();
-    }
-  else // stepped
-    {
-      // transform the processive chemical in its form after stepping
-      // first create _chemical_after_step
-      _chemical_after_step.add_unit_in_place_of (_processive_chemical); 
-      _processive_chemical.focused_unit_location().
-	replace_bound_unit (_processive_chemical, _chemical_after_step);      
-      _processive_chemical.remove_focused_unit();
-    }
+  _processive_chemical.remove (unit);
+  if (stall == false) { _chemical_after_step.add (unit); }
+  else  { _stalled_form.add (unit); }
 }
+
 
 double Translocation::compute_rate (void) const
 {

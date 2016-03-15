@@ -68,13 +68,6 @@ class UnitFactory : public Factory
   //
 
 private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /** @brief Stream of current line. */
-  std::istringstream _line_stream;
-
   // =================
   //  Private Methods
   // =================
@@ -88,8 +81,8 @@ private:
   /** @brief Create composition table from current line and store it. */
   void create_composition_table (void);
 
-  /** @brief Create decoding table from current line and store it. */
-  void create_decoding_table (void);
+  /** @brief Create loading table from current line and store it. */
+  void create_loading_table (void);
 
   /** @brief Create product table from current line and store it. */
   void create_product_table (void);
@@ -103,17 +96,18 @@ private:
   /** @brief Create bound chemical from current line and store it. */
   void create_bound_chemical (void);
 
-  /** @brief Create loader from current line and store it. */
-  void create_loader (void);
-
   /** @brief Create chemical sequence from current line and store it. */
   void create_chemical_sequence (void);
 
   /** @brief Create double strand sequence from current line and store it. */
   void create_double_strand_sequence (void);
 
-  /** @brief Create processive chemical from current line and store it. */
-  void create_processive_chemical (void);
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Stream of current line. */
+  std::istringstream _line_stream;
 };
 
 // ======================

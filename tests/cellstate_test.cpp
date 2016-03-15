@@ -13,26 +13,27 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE CellState
 #include <boost/test/unit_test.hpp>
-#include <iostream> // std::cerr
-
-#include "../src/producttable.h"
-#include "../src/chemicalsequence.h"
-#include "../src/cellstate.h"
 
 // ==================
 //  Project Includes
 // ==================
 //
+#include "../src/producttable.h"
+#include "../src/chemicalsequence.h"
+#include "../src/cellstate.h"
 
 class BaseElements
 {
 public:
   BaseElements (void)
-    : transformation_table (new TransformationTable (1))
-    , product_table (new ProductTable (*transformation_table))
-    , chemical_sequence_1 (new ChemicalSequence ("AAA"))
+    : chemical_sequence_1 (new ChemicalSequence ("AAA"))
     , chemical_sequence_2 (new ChemicalSequence ("BBB"))
-  {}
+  {
+    std::vector <std::string> input, output;
+    input.push_back ("A"); output.push_back ("a");
+    transformation_table = new TransformationTable (input, output);
+    product_table = new ProductTable (*transformation_table);
+  }
 
   TransformationTable* transformation_table;
   ProductTable* product_table;

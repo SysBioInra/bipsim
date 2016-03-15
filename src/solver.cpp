@@ -12,7 +12,7 @@
 //  General Includes
 // ==================
 //
-#include <iostream> // std::cerr
+#include <limits> // std::numeric_limits
 
 // ==================
 //  Project Includes
@@ -29,6 +29,9 @@
 //  Constructors/Destructors
 // ==========================
 //
+const double Solver::NO_REACTIONS_LEFT = 
+  std::numeric_limits<double>::infinity();
+
 Solver::Solver (const SimulationParams& params, CellState& cell_state)
   : _reactions (cell_state.reactions())
   , _cell_state (cell_state)
@@ -47,26 +50,26 @@ Solver::Solver (const SimulationParams& params, CellState& cell_state)
 //  Public Methods - Commands
 // ===========================
 //
-
 void Solver::solve (double time_step)
 {  
   double final_time = _t + time_step;
-
-  while ( _t < final_time )
+  bool reactions_left = true;
+  while (reactions_left && (_t < final_time))
     {
       // compute next reaction
-      go_to_next_reaction();
+      reactions_left = go_to_next_reaction();
     }
   _t = final_time;
 }
 
-void Solver::go_to_next_reaction (void)
+bool Solver::go_to_next_reaction (void)
 {
   // perform next reaction
-  _t = compute_next_reaction();
-
-  // increase number of reactions performed
+  double t = compute_next_reaction();
+  if (t == NO_REACTIONS_LEFT) { return false; }
+  _t = t;
   ++_number_reactions_performed;
+  return true;
 }
 
 // ============================

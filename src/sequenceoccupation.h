@@ -70,19 +70,17 @@ class SequenceOccupation
   //
   /**
    * @brief Register new bound element.
-   * @param element Element that was bound to the sequence.
    * @param first First base occupied by element.
    * @param last Last base occupied by element.
    */
-  void add_element (const BoundChemical& element, int first, int last);
+  void add_element (int first, int last);
   
   /**
    * @brief Register element removed from sequence.
-   * @param element Element that was removed from the sequence.
    * @param first First base occupied by element.
    * @param last Last base occupied by element.
    */
-  void remove_element (const BoundChemical& element, int first, int last);
+  void remove_element (int first, int last);
 
   /**
    * @brief Register new sequence instances added to the pool.
@@ -99,18 +97,17 @@ class SequenceOccupation
   /**
    * @brief Start segment of sequence.
    * @param position Position where to start the segment.
+   * @return Identifier of the strand on which segment was started.
    */
-  void start_segment (int position);
+  int start_segment (int position);
 
   /**
    * @brief Extend a segment.
+   * @param strand_id Integer identifer of strand to extend.
    * @param position Position where extension should happen.
-   *
-   * Extension can only take place if a segment has already been started that
-   * extends until position-1. If there are several segments meeting this
-   * requirement, the last segment accessed will be extended.
+   * @return True if extension worked.
    */
-  void extend_segment (int position);
+  bool extend_segment (int strand_id, int position);
 
   /**
    * @brief Register static site.
@@ -151,31 +148,6 @@ class SequenceOccupation
   int number_available_sites (int first, int last) const;
 
 private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /** @brief Number of sequences in the pool. */
-  int _number_sequences;
-
-  /** @brief Tracks number of segments spanning each base. */
-  std::vector <int> _number_segments;
-
-  /** @brief Tracks occupied positions along the sequence. */
-  std::vector <int> _occupancy;
-
-  /** @brief Groups of static sites whose availability needs to be checked. */
-  std::vector <SiteGroup*> _site_groups;
-
-  /** @brief List of moving sites whose availability needs to be checked. */
-  std::list <BindingSite*> _moving_sites;
-
-  /** @brief List of partial strands. */
-  std::list <PartialStrand*> _partials;  
-
-  /** @brief Free end handler. */
-  const FreeEndHandler& _free_end_handler; 
-
   // =================
   //  Private Methods
   // =================
@@ -206,21 +178,54 @@ private:
 
   /**
    * @brief Fuse overlapping site groups starting from a specific index.
+   * @param index Index of the group to start the fusion from, typically a group
+   *  that was just extended towards the end of the sequence.
    *
    *  This function should be called whenever a group is extended. It tries to
    *  fuse the group recursively with following groups, as it assumes that the
    *  first group was extended towards the end of the sequence.
-   *
-   * @param index Index of the group to start the fusion from, typically a group
-   *  that was just extended towards the end of the sequence.
    */
   void fuse_groups (int index);
 
   /**
    * @brief Check if partial strand is complete and add it to full sequences.
-   * @param strand_it Partial strand to check.
+   * @param strand_id Integer of partial strand to check.
    */
-  void _check_completion (std::list <PartialStrand*>::iterator& strand_it);
+  void check_completion (int strand_id);
+
+  /**
+   * @brief Get next available strand identifier.
+   * @return Integer strand identifier.
+   */
+  int next_strand_id (void);
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Number of sequences in the pool. */
+  int _number_sequences;
+
+  /** @brief Tracks number of segments spanning each base. */
+  std::vector <int> _number_segments;
+
+  /** @brief Tracks occupied positions along the sequence. */
+  std::vector <int> _occupancy;
+
+  /** @brief Groups of static sites whose availability needs to be checked. */
+  std::vector <SiteGroup*> _site_groups;
+
+  /** @brief List of moving sites whose availability needs to be checked. */
+  std::list <BindingSite*> _moving_sites;
+
+  /** @brief Vector of partial strands (access by identifier). */
+  std::vector <PartialStrand*> _partial_by_index;  
+
+  /** @brief List of partial strand identifiers in creation order. */
+  std::list <int> _partial_creation_order;  
+
+  /** @brief Free end handler. */
+  const FreeEndHandler& _free_end_handler; 
 };
 
 // ======================

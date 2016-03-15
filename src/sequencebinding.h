@@ -23,6 +23,7 @@
 //
 #include "forwarddeclarations.h"
 #include "bidirectionalreaction.h"
+#include "familyfilter.h"
 
 // ===================
 //  Class Declaration
@@ -47,25 +48,28 @@ public:
   //
   /**
    * @brief Constructor
-   * @param unit_to_bind Chemical element that can potentially bind to a 
+   * @param unit_to_bind FreeChemical that can potentially bind to a 
    *  binding site.
    * @param binding_result A bound chemical element that corresponds to the 
    *  original chemical in its bound form.
    * @param binding_site_family The family of binding sites the chemical 
    *  can bind onto.
    */
-  SequenceBinding (Chemical& unit_to_bind, BoundChemical& binding_result,
+  SequenceBinding (FreeChemical& unit_to_bind, 
+		   BoundChemical& binding_result,
 		   BindingSiteFamily& binding_site_family);
     
 
-  // Not needed for this class (use of compiler-generated versions)
-  // (3-0 rule: either define all 3 following or none of them)
-  // /* @brief Copy constructor. */
-  // SequenceBinding (SequenceBinding& other_sequence_binding);
-  // /* @brief Assignment operator. */
-  // SequenceBinding& operator= (SequenceBinding& other_sequence_binding);
-  // /* @brief Destructor. */
-  // ~SequenceBinding (void);
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  SequenceBinding (SequenceBinding& other_sequence_binding);
+  /** @brief Assignment operator. */
+  SequenceBinding& operator= (SequenceBinding& other_sequence_binding);
+ public:
+  
+  /** @brief Destructor. */
+  ~SequenceBinding (void);
   
   // ===========================
   //  Public Methods - Commands
@@ -85,22 +89,6 @@ public:
   bool is_backward_reaction_possible (void) const;
 
  private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /** @brief Chemical element that can potentially bind to a binding site. */
-  Chemical& _unit_to_bind;
-  
-  /**
-   * @brief A bound chemical element that corresponds to the original chemical
-   * in its bound form.
-   */
-  BoundChemical& _binding_result;
-  
-  /** @brief Binding sites the chemical can bind onto. */
-  BindingSiteFamily& _binding_site_family;
-
   // =================
   //  Private Methods
   // =================
@@ -109,6 +97,22 @@ public:
   double compute_forward_rate (void) const;
   double compute_backward_rate (void) const;
   void print (std::ostream& output) const;
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief FreeChemical that can bind to a binding site. */
+  FreeChemical& _unit_to_bind;
+  
+  /** @brief Corresponding BoundChemical (bound form of unit to bind). */
+  BoundChemical& _binding_result;
+  
+  /** @brief Binding sites the chemical can bind onto. */
+  BindingSiteFamily& _family;
+
+  /** @brief Filter used to select units that bound to correct family. */
+  FamilyFilter _family_filter;
 };
 
 // =====================

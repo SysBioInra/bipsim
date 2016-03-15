@@ -90,7 +90,7 @@ class BindingSiteFamily : public Reactant, public SiteFamily
    * @return Total binding rate contribution reflecting global affinity for
    *  ligand and availability.
    */
-  double total_binding_rate_contribution (void) const;
+  double total_binding_rate (void) const;
 
   /**
    * @brief Return a random available site based on contributions computed
@@ -98,7 +98,7 @@ class BindingSiteFamily : public Reactant, public SiteFamily
    * @return Available site drawn according to a biased wheel favoring high
    *  affinity and availability.
    */
-  const BindingSite& get_random_available_site (void) const;
+  const BindingSite& random_available_site (void) const;
 
   /**
    * @brief Checks whether a site from this family is currently available.
@@ -119,50 +119,42 @@ class BindingSiteFamily : public Reactant, public SiteFamily
   bool contains (const BindingSite* site) const;
 
 private:
-  // ============
-  //  Attributes
-  // ============
-  /**
-   * @brief Binding sites belonging to the family.
-   */
-  std::vector <BindingSite*> _binding_sites;
-
-  /**
-   * @brief Contribution of each binding site to the binding rate.
-   */
-  mutable UpdatedTotalRateVector _rate_contributions;
-
-  /**
-   * @brief RateValidity object monitoring rates to update.
-   */
-  mutable RateValidity* _rate_validity;
-
-  /**
-   * @brief Current size of rate validity object.
-   */
-  mutable int _rate_validity_size;
-
   // =================
   //  Private Methods
   // =================
   //
   /** @brief Update rates according to RateValidity object. */
   void update_rates (void) const;
+
+  // ============
+  //  Attributes
+  // ============
+  /** @brief Binding sites belonging to the family. */
+  std::vector <BindingSite*> _binding_sites;
+
+  /** @brief Contribution of each binding site to the binding rate. */
+  mutable UpdatedTotalRateVector _rate_contributions;
+
+  /** @brief RateValidity object monitoring rates to update. */
+  mutable RateValidity* _rate_validity;
+
+  /** @brief Current size of rate validity object. */
+  mutable int _rate_validity_size;
+
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-inline double BindingSiteFamily::total_binding_rate_contribution (void) const
+inline double BindingSiteFamily::total_binding_rate (void) const
 {
   update_rates();
   return _rate_contributions.total_rate();
 }
 
-
 inline 
-const BindingSite& BindingSiteFamily::get_random_available_site (void) const
+const BindingSite& BindingSiteFamily::random_available_site (void) const
 {
   update_rates();
   _rate_contributions.update_cumulates();

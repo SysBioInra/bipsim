@@ -1,13 +1,13 @@
 ###################
 # Small Chemicals #
 ###################
-unit Chemical GDP 
+Chemical GDP 
 
 ##################################
 # Translation elongation Factors #
 ##################################
-unit Chemical EFP 0
-unit Chemical EFPd 10000
+Chemical EFP 0
+Chemical EFPd 10000
 
-reaction Complexation EFP GDP EFPd 0 10
+ChemicalReaction EFP -1 GDP -1 EFPd 1 rates 0 10
 

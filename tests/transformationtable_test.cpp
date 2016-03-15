@@ -14,7 +14,8 @@
 #define BOOST_TEST_MODULE TransformationTable
 #include <boost/test/unit_test.hpp>
 
-#include <iostream> // std::cerr
+#include <vector>
+#include <string>
 
 // ==================
 //  Project Includes
@@ -26,16 +27,34 @@ class TTDNA2RNA
 {
 public:
   TTDNA2RNA (void)
-    : table_dna2rna (1)
+    : table_dna2rna (input_motifs, output_motifs)
   {
-    table_dna2rna.add_rule ("A", "U");
-    table_dna2rna.add_rule ("C", "G");
-    table_dna2rna.add_rule ("G", "C");
-    table_dna2rna.add_rule ("T", "A");
   }
 
   TransformationTable table_dna2rna;
+  
+private:
+  static std::vector <std::string> input_motifs;
+  static std::vector <std::string> output_motifs;
 };
+
+std::vector <std::string> init_input (void)
+{
+  std::vector <std::string> result;
+  result.push_back ("A"); result.push_back ("C"); 
+  result.push_back ("G"); result.push_back ("T"); 
+  return result;
+}
+std::vector <std::string> TTDNA2RNA::input_motifs (init_input()); 
+
+std::vector <std::string> init_output (void)
+{
+  std::vector <std::string> result;
+  result.push_back ("U"); result.push_back ("G");
+  result.push_back ("C"); result.push_back ("A");
+  return result;
+}
+std::vector <std::string> TTDNA2RNA::output_motifs (init_output());
 
 BOOST_FIXTURE_TEST_SUITE (BaseTests, TTDNA2RNA)
  
@@ -64,16 +83,34 @@ class ComplexTT
 {
 public:
   ComplexTT (void)
-    : table_motif_L3 (3)
+    : table_motif_L3 (input_motifs, output_motifs)
   {
-    table_motif_L3.add_rule ("AAA", "1");
-    table_motif_L3.add_rule ("BBB", "22");
-    table_motif_L3.add_rule ("CCC", "333");
-    table_motif_L3.add_rule ("DDD", "4444");
   }
 
   TransformationTable table_motif_L3;
+
+private:
+  static std::vector <std::string> input_motifs;
+  static std::vector <std::string> output_motifs;
 };
+
+std::vector <std::string> init_input_2 (void)
+{
+  std::vector <std::string> result;
+  result.push_back ("AAA"); result.push_back ("BBB"); 
+  result.push_back ("CCC"); result.push_back ("DDD"); 
+  return result;
+}
+std::vector <std::string> ComplexTT::input_motifs (init_input_2()); 
+
+std::vector <std::string> init_output_2 (void)
+{
+  std::vector <std::string> result;
+  result.push_back ("1"); result.push_back ("22");
+  result.push_back ("333"); result.push_back ("4444");
+  return result;
+}
+std::vector <std::string> ComplexTT::output_motifs (init_output_2());
 
 BOOST_FIXTURE_TEST_SUITE (BaseTestsMotifLength3, ComplexTT)
 

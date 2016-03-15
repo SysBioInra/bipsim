@@ -69,28 +69,22 @@ class ReactionFactory : public Factory
   //
 
 private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /** @brief Stream of current line. */
-  std::istringstream _line_stream;
-
   // =================
   //  Private Methods
   // =================
   //
-  /** @brief Create loading reaction from current line and store it. */
-  void create_loading (void);
+  /** @brief Create product loading reaction from current line and store it. */
+  void create_product_loading (void);
+
+  /** @brief Create double strand loading reaction from current line and 
+   *   store it. */
+  void create_double_strand_loading (void);
 
   /** @brief Create paired loading reaction from current line and store it. */
   void create_paired_loading (void);
 
   /** @brief Create chemical reaction from current line and store it. */
   void create_chemical_reaction (void);
-
-  /** @brief Create complexation from current line and store it. */
-  void create_complexation (void);
 
   /** @brief Create translocation from current line and store it. */
   void create_translocation (void);
@@ -103,6 +97,13 @@ private:
 
   /** @brief Create release from current line and store it. */
   void create_degradation (void);
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Stream of current line. */
+  std::istringstream _line_stream;
 };
 
 // ======================

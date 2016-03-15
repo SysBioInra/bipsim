@@ -91,12 +91,11 @@ class CellState
    */
   int number_chemicals (void) const;
 
-
-  // ==================
-  //  Public Constants
-  // ==================
-  //
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
 
   // ============
   //  Attributes
@@ -117,22 +116,17 @@ private:
   /** @brief Handler containing two-way reaction information. */
   Handler <BidirectionalReaction> _bireaction_handler;
 
-  /** @brief Handler containing information about decoding tables. */
+  /** @brief Handler containing information about composition tables. */
   Handler <CompositionTable> _composition_table_handler;
 
-  /** @brief Handler containing information about decoding tables. */
-  Handler <DecodingTable> _decoding_table_handler;
+  /** @brief Handler containing information about loading tables. */
+  Handler <LoadingTable> _loading_table_handler;
 
-  /** @brief Handler containing information about decoding tables. */
+  /** @brief Handler containing information about prdouct tables. */
   Handler <ProductTable> _product_table_handler;
   
   /** @brief Handler containing information about transformation tables. */
   Handler <TransformationTable> _transformation_table_handler;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
 };
 
 // ======================
@@ -147,7 +141,7 @@ private:
 #include "chemical.h"
 
 #include "compositiontable.h"
-#include "decodingtable.h"
+#include "loadingtable.h"
 #include "producttable.h"
 #include "transformationtable.h"
 
@@ -186,7 +180,7 @@ inline T* CellState::find (const std::string& name) const
   CompositionTable* ct = _composition_table_handler.find (name);
   if (ct != 0) { return dynamic_cast <T*> (ct); }
 
-  DecodingTable* dt = _decoding_table_handler.find (name);
+  LoadingTable* dt = _loading_table_handler.find (name);
   if (dt != 0) { return dynamic_cast <T*> (dt); }
 
   ProductTable* pt = _product_table_handler.find (name);

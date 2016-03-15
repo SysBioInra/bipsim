@@ -20,6 +20,7 @@
 #include <string> // std::string
 #include <map> // std::map
 #include <list> // std::list
+#include <vector> // std::vector
 
 // ======================
 //  Forward declarations
@@ -44,9 +45,16 @@ class CompositionTable : public SimulatorInput
   //  Constructors/Destructors
   // ==========================
   //
+  /**
+   * @brief Constructor. 
+   * @param letters Vector of letters in the sequence.
+   * @param compositions Vector of lists of FreeChemical composing each letter 
+   *  who will be released during degradation.
+   */
+  CompositionTable (const std::vector <char>& letters, 
+		    const std::vector <std::list<FreeChemical*> >& compositions);
+
   // Not needed for this class (use of compiler-generated versions)
-  // /* @brief Default constructor. */
-  // CompositionTable (void);
   // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
   // CompositionTable (const CompositionTable& other_composition_table);
@@ -59,51 +67,37 @@ class CompositionTable : public SimulatorInput
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Add new composition rule.
-   * @param letter Letter of the sequence.
-   * @param composition List of chemicals implementing the letter who will
-   *  be released during degradation.
-   */
-  void add_rule (char letter, const std::list<Chemical*>& composition);
 
+  // ============================
+  //  Public Methods - Accessors
+  // ============================
+  //
   /**
    * @brief Get composition of a sequence according to registered rules.
    * @param sequence Sequence whose composition should be computed.
    * @return Map containing associating a reference to a chemical with the
    *  number of chemicals that would be released upon total degradation.
    */
-  std::map <Chemical*, int> composition (const std::string& sequence) const;
-
-  // ============================
-  //  Public Methods - Accessors
-  // ============================
-  //
+  std::map <FreeChemical*, int> composition (const std::string& sequence) const;
 
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
 
   // ============
   //  Attributes
   // ============
   //
   /** @brief Map containing the composition rules. */
-  std::map <char, std::list <Chemical*> > _rules;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
+  std::map <char, std::list <FreeChemical*> > _rules;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-inline void CompositionTable::add_rule (char letter,
-					const std::list <Chemical*>& chemicals)
-{
-  _rules [letter] = chemicals;
-}
 
 
 #endif // COMPOSITION_TABLE_H

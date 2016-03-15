@@ -23,10 +23,8 @@
 #include "simulatorexception.h"
 
 #include "chemicalreaction.h"
-#include "complexation.h"
 #include "sequencebinding.h"
 #include "loading.h"
-#include "pairedloading.h"
 #include "release.h"
 #include "translocation.h"
 #include "forwardreaction.h"
@@ -34,8 +32,6 @@
 
 #include "boundchemical.h"
 #include "freechemical.h"
-#include "processivechemical.h"
-#include "loader.h"
 #include "chemicalsequence.h"
 
 #include "cellstate.h"
@@ -64,20 +60,16 @@ bool ReactionFactory::handle (const std::string& line)
   // appropriate creator
   _line_stream.str (line);
   _line_stream.clear();
-  // first word of line must be "reaction"
-  if (check_tag (_line_stream, "reaction") == false) { return false; }
 
   // try to create reaction
-  std::string remaining;
   std::string tag = read <std::string> (_line_stream);
   if (tag == "ChemicalReaction") { create_chemical_reaction(); }
-  else if (tag == "Complexation") { create_complexation(); }
   else if (tag == "SequenceBinding") { create_sequence_binding(); }
   else if (tag == "Translocation") { create_translocation(); }
   else if (tag == "Release") { create_release(); }
   else if (tag == "Degradation") { create_degradation(); }
-  else if (tag == "Loading") { create_loading(); }
-  else if (tag == "PairedLoading") { create_paired_loading(); }
+  else if (tag == "ProductLoading") { create_product_loading(); }
+  else if (tag == "DoubleStrandLoading") { create_double_strand_loading(); }
   else { return false; }
   return true;
 }
@@ -93,62 +85,87 @@ bool ReactionFactory::handle (const std::string& line)
 //
 void ReactionFactory::create_chemical_reaction (void)
 {
-  std::vector <Chemical*> chemicals;
+  std::vector <FreeChemical*> free_chemicals;
   std::vector <int> stoichiometries;
   std::string next = read <std::string> (_line_stream);
+  BoundChemical* bound_reactant = 0;
+  BoundChemical* bound_product = 0;
   while (next != std::string ("rates"))
     {
-      chemicals.push_back (fetch <Chemical> (next));
-      stoichiometries.push_back (read <int> (_line_stream));
+      Chemical* chemical = fetch <Chemical> (next);
+      FreeChemical* free_chemical = dynamic_cast <FreeChemical*> (chemical);
+      BoundChemical* bound_chemical = dynamic_cast <BoundChemical*> (chemical);
+      int stoichiometry = read <int> (_line_stream);
+      if (free_chemical)
+	{
+	  free_chemicals.push_back (free_chemical);
+	  stoichiometries.push_back (stoichiometry);
+	}
+      else if (bound_chemical && (stoichiometry == 1) && (bound_product == 0))
+	{
+	  bound_product = bound_chemical;
+	}
+      else if (bound_chemical && (stoichiometry == -1) && (bound_reactant == 0))
+	{
+	  bound_reactant = bound_chemical;
+	}
+      else
+	{
+	  throw ParserException ("A chemical reaction can only contain free "
+				 "chemicals or bound chemicals. It contains"
+				 " at most one bound chemical on each side of"
+				 " the reaction with unitary stoichiometry.");
+	}
       next = read <std::string> (_line_stream);
     }
-  if (chemicals.size() == 0) { throw FormatException(); }
+  if (((bound_reactant == 0) && (bound_product != 0))
+      || ((bound_reactant != 0) && (bound_product == 0)))
+    {
+      throw ParserException ("If a chemical reaction contains bound elements,"
+			     " it must have exactly one bound reactant and one"
+			     " bound product.");
+    }
+  if ((free_chemicals.size() == 0) && (bound_reactant == 0)) 
+    { throw FormatException(); }
   double k_1 = read <double> (_line_stream);
   double k_m1 = read <double> (_line_stream);
 
-  ChemicalReaction* reaction = new ChemicalReaction (chemicals, stoichiometries,
-						     k_1, k_m1);
+  ChemicalReaction* reaction = 
+    new ChemicalReaction (free_chemicals, stoichiometries, k_1, k_m1,
+			  bound_reactant, bound_product);
   store (reaction);
   if (k_1 > 0) { store (new ForwardReaction (*reaction)); }
   if (k_m1 > 0) { store (new BackwardReaction (*reaction)); } 
 }
 
-void ReactionFactory::create_loading (void)
+void ReactionFactory::create_product_loading (void)
 {
-  Loader* loader = fetch <Loader> (_line_stream);
-  store (new Loading (*loader));
+  BoundChemical* loader = fetch <BoundChemical> (_line_stream);
+  LoadingTable* loading_table = fetch <LoadingTable> (_line_stream);
+  store (new ProductLoading (*loader, *loading_table));
 }
 
-void ReactionFactory::create_paired_loading (void)
+void ReactionFactory::create_double_strand_loading (void)
 {
-  Loader* loader = fetch <Loader> (_line_stream);
-  store (new PairedLoading (*loader));
-}
-
-void ReactionFactory::create_complexation (void)
-{
-  Chemical* component_a = fetch <Chemical> (_line_stream); 
-  Chemical* component_b = fetch <Chemical> (_line_stream); 
-  Chemical* complex = fetch <Chemical> (_line_stream); 
-  double k_on = read <double> (_line_stream);
-  double k_off = read <double> (_line_stream);
-
-  Complexation* reaction = new Complexation (*component_a, *component_b,
-					     *complex, k_on, k_off);
-  store (reaction);
-  if (k_on > 0) { store (new ForwardReaction (*reaction)); }
-  if (k_off > 0) { store (new BackwardReaction (*reaction)); } 
+  BoundChemical* loader = fetch <BoundChemical> (_line_stream);
+  LoadingTable* loading_table = fetch <LoadingTable> (_line_stream);
+  BoundChemical* stalled_form = fetch <BoundChemical> (_line_stream);
+  store (new DoubleStrandLoading (*loader, *loading_table, *stalled_form));
 }
 
 void ReactionFactory::create_translocation (void)
 {
-  ProcessiveChemical* processive = fetch <ProcessiveChemical> (_line_stream);
+  BoundChemical* processive = fetch <BoundChemical> (_line_stream);
   BoundChemical* chemical_after_step = fetch <BoundChemical> (_line_stream);
+  BoundChemical* stalled = fetch <BoundChemical> (_line_stream);
   int step_size = read <int> (_line_stream);
   double rate = read <double> (_line_stream);
-
-  store (new Translocation (*processive, *chemical_after_step,
-			     step_size, rate));
+  std::string family;
+  std::vector <const SiteFamily*> families;
+  while (_line_stream >> family)
+    { families.push_back (fetch <SiteFamily> (family)); }	
+  store (new Translocation (*processive, *chemical_after_step, *stalled,
+			    step_size, rate, families));
 }
 
 void ReactionFactory::create_sequence_binding (void)
@@ -167,7 +184,7 @@ void ReactionFactory::create_sequence_binding (void)
 void ReactionFactory::create_release (void)
 {
   BoundChemical* unit_to_release = fetch <BoundChemical> (_line_stream);
-  std::vector <Chemical*> chemicals;
+  std::vector <FreeChemical*> chemicals;
   std::vector <int> stoichiometries;
   std::string next = read <std::string> (_line_stream);
   while (next != std::string ("rate"))
@@ -198,7 +215,7 @@ void ReactionFactory::create_degradation (void)
   double rate = read <double> (_line_stream);
 
   // get sequence composition
-  std::map <Chemical*, int>
+  std::map <FreeChemical*, int>
     composition = table->composition (sequence->sequence());
   if (composition.size() == 0)
     { 
@@ -210,14 +227,15 @@ void ReactionFactory::create_degradation (void)
     }
 
   // create chemical and stoichiometry vector to represent reaction
-  std::vector <Chemical*> chemicals (composition.size()+1);
+  std::vector <FreeChemical*> chemicals (composition.size()+1);
   std::vector <int> stoichiometry (chemicals.size());
   chemicals [0] = sequence; stoichiometry [0] = -1;
   int i = 1;
-  for (std::map <Chemical*, int>::iterator comp_it = composition.begin();
+  for (std::map <FreeChemical*, int>::iterator comp_it = composition.begin();
        comp_it != composition.end(); ++comp_it, ++i)
     {
-      chemicals [i] = comp_it->first; stoichiometry [i] = comp_it->second;
+      chemicals [i] = comp_it->first; 
+      stoichiometry [i] = comp_it->second;
     }
 
   ChemicalReaction* reaction = 

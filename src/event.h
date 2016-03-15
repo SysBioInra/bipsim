@@ -48,9 +48,9 @@ class Event
   /**
    * @brief Constructor.
    * @param time Time at which the event happens during simulation.
-   * @param target Chemical impacted by the event.
+   * @param target FreeChemical impacted by the event.
    */
-  Event (double time, Chemical& target)
+  Event (double time, FreeChemical& target)
     : _time (time)
     , _target (target)
   { REQUIRE (time>0); /** @pre time must be positive. */ }
@@ -97,7 +97,7 @@ class Event
    * @brief Accessor to the target of event.
    * @return Reference to event target.
    */
-  Chemical& target (void) { return _target; }
+  FreeChemical& target (void) { return _target; }
 
  private:  
   // ============
@@ -108,7 +108,7 @@ class Event
   double _time;
 
   /** @brief Target impacted by event. */
-  Chemical& _target;
+  FreeChemical& _target;
 
   // =================
   //  Private Methods
@@ -135,10 +135,10 @@ class AddEvent : public Event
   /**
    * @brief Constructor.
    * @param time Time at which the event happens during simulation.
-   * @param target Chemical impacted by the event.
+   * @param target FreeChemical impacted by the event.
    * @param quantity Amout of chemical to add.
    */
-  AddEvent (double time, Chemical& target, int quantity)
+  AddEvent (double time, FreeChemical& target, int quantity)
     : Event (time, target)
     , _quantity (quantity)
   { REQUIRE (quantity > 0); /** @pre Quantity must be strictly positive. */ }
@@ -199,10 +199,10 @@ class SetEvent : public Event
   /**
    * @brief Constructor.
    * @param time Time at which the event happens during simulation.
-   * @param target Chemical impacted by the event.
+   * @param target FreeChemical impacted by the event.
    * @param quantity Amout of chemical to set.
    */
-  SetEvent (double time, Chemical& target, int quantity)
+  SetEvent (double time, FreeChemical& target, int quantity)
     : Event (time, target)
     , _quantity (quantity)
   { REQUIRE (quantity >= 0); /** @pre Quantity must be positive. */ }
@@ -261,10 +261,10 @@ class RemoveEvent : public Event
   /**
    * @brief Constructor.
    * @param time Time at which the event happens during simulation.
-   * @param target Chemical impacted by the event.
+   * @param target FreeChemical impacted by the event.
    * @param quantity Amout of chemical to remove.
    */
-  RemoveEvent (double time, Chemical& target, int quantity)
+  RemoveEvent (double time, FreeChemical& target, int quantity)
     : Event (time, target), _quantity (quantity)
   { REQUIRE (quantity > 0); /** @pre Quantity must be strictly positive. */ }
 
@@ -290,6 +290,10 @@ class RemoveEvent : public Event
   // ============================
   //
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
 
   // ============
   //  Attributes
@@ -297,18 +301,13 @@ private:
   //
   /** @brief Quantity of chemical to remove. */
   int _quantity;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-#include "chemical.h"
+#include "freechemical.h"
 
 inline void AddEvent::perform (void) { target().add (_quantity); }
 

@@ -1,12 +1,9 @@
 
-
 /**
  * @file FILE.h
  * @brief Header for the ClassName class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -18,12 +15,10 @@
 // ==================
 //
 
-
 // ==================
 //  Project Includes
 // ==================
 //
-
 
 // ======================
 //  Forward declarations
@@ -44,7 +39,7 @@ class ClassName
   // ==========================
   //
   // Not needed for this class (use of compiler-generated versions)
-  // /* @brief Default constructor. */
+  // /* @brief Constructor. */
   // ClassName (void);
   // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
@@ -59,24 +54,21 @@ class ClassName
   // ===========================
   //
 
-
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
 
-
 private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  
-
   // =================
   //  Private Methods
   // =================
   //
+
+  // ============
+  //  Attributes
+  // ============
+  //  
 };
 
 // ======================

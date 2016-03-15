@@ -52,18 +52,16 @@ public:
   /**
    * @brief Constructor
    * @param unit_to_release Unit that is released from its template.
-   * @param other_components
-   *  Vector of other chemicals involved in the reaction.
-   * @param stoichiometry
-   *  Vector of stoichiometry of the other chemicals, positive for products,
-   *  negative for reactants.
+   * @param other_components Vector of other chemicals involved in the reaction.
+   * @param stoichiometry Vector of stoichiometry of the other chemicals, 
+   *  positive for products, negative for reactants.
    * @param rate Reaction rate constant.
    * @param product_table If bound chemical releases a product, table listing
    *  molecules it may produce depending on its binding and release sites.
    * @sa ChemicalReaction
    */
   Release (BoundChemical& unit_to_release,
-	   std::vector<Chemical*>& other_components,
+	   std::vector<FreeChemical*>& other_components,
 	   std::vector<int>& stoichiometry, double rate,
 	   ProductTable* product_table = 0);
     
@@ -90,23 +88,7 @@ public:
   // Redefined from Reaction
   bool is_reaction_possible (void) const;
 
- private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /** @brief Chemical element to release. */
-  BoundChemical& _unit_to_release;
-
-  /**
-   * @brief Side reaction representing other components that are involved in 
-   *  the release other than the unit to release. 
-   */
-  ChemicalReaction _side_reaction;
-  
-  /** @brief Table of molecules that the released chemical may have produced. */
-  ProductTable* _product_table;
-  
+ private:  
   // =================
   //  Private Methods
   // =================
@@ -115,6 +97,19 @@ public:
   void do_reaction (void);
   double compute_rate (void) const;
   void print (std::ostream& output) const;
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Chemical element to release. */
+  BoundChemical& _unit_to_release;
+
+  /** @brief Side reaction representing other components involved. */
+  ChemicalReaction _side_reaction;
+  
+  /** @brief Table of molecules that the released chemical may have produced. */
+  ProductTable* _product_table;
 };
 
 // =====================

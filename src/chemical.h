@@ -34,7 +34,6 @@
 class Chemical : public Reactant, public SimulatorInput
 {
 public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -55,17 +54,6 @@ public:
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Adds a given quantity of chemical to the existing pool.
-   * @param quantity The amount to add
-   */
-  virtual void add (int quantity);
-
-  /**
-   * @brief Remove a given quantity of chemical to the existing pool.
-   * @param quantity The amount to remove.
-   */
-  virtual void remove (int quantity);
 
   // ============================
   //  Public Methods - Accessors
@@ -87,15 +75,24 @@ public:
   friend std::ostream& operator<< (std::ostream& output,
 				   const Chemical& chemical);
 
-private:
-
-  // ============
-  //  Attributes
-  // ============
+ protected:
+  // ===================
+  //  Protected Methods
+  // ===================
   //
-  /** @brief The number of elements in the current pool. */
-  int _number;
+  /**
+   * @brief Adds a given quantity of chemical to the existing pool.
+   * @param quantity The amount to add
+   */
+  virtual void add (int quantity);
+  
+  /**
+   * @brief Remove a given quantity of chemical to the existing pool.
+   * @param quantity The amount to remove.
+   */
+  virtual void remove (int quantity);
 
+ private:
   // =================
   //  Private Methods
   // =================
@@ -106,6 +103,12 @@ private:
    */
   virtual void print (std::ostream& output) const;
 
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief The number of elements in the current pool. */
+  int _number;
 };
 
 // ======================

@@ -1,23 +1,20 @@
 
-unit FreeChemical GTP 1000000
-unit FreeChemical GDP 
-unit FreeChemical GMP
+FreeChemical GTP 1000000
+FreeChemical GDP 
+FreeChemical GMP
 
-unit FreeChemical ATP 1000000
-unit FreeChemical ADP
-unit FreeChemical AMP 
+FreeChemical ATP 1000000
+FreeChemical ADP
+FreeChemical AMP 
 
-unit FreeChemical CTP 1000000
-unit FreeChemical CMP
+FreeChemical CTP 1000000
+FreeChemical CMP
 
-unit FreeChemical UTP 1000000
-unit FreeChemical UMP
+FreeChemical UTP 1000000
+FreeChemical UMP
 
-unit CompositionTable rna_composition A AMP 
-unit CompositionTable rna_composition C CMP 
-unit CompositionTable rna_composition G GMP 
-unit CompositionTable rna_composition U UMP 
+CompositionTable rna_composition A AMP, C CMP, G GMP, U UMP 
 
-unit TransformationTable dna2rna A U C G G C T A
+TransformationTable dna2rna A U, C G, G C, T A
 
-unit ProductTable rnas dna2rna 
+ProductTable rnas dna2rna 

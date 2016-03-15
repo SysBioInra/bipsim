@@ -28,17 +28,15 @@ libsrc_a_SOURCES = \
 
 # factories
 libsrc_a_SOURCES += \
-	solverfactory.h ratemanagerfactory.h ratecontainerfactory.h
+	solverfactory.h ratemanagerfactory.h ratecontainerfactory.h \
+	boundunitfactory.cpp boundunitfactory.h
 
 # reaction sources
 libsrc_a_SOURCES += \
 	backwardreaction.h bidirectionalreaction.h \
 	chemicalreaction.cpp chemicalreaction.h \
-	complexation.cpp complexation.h complexationimp.h \
 	forwardreaction.h \
 	loading.cpp loading.h \
-	loadingbase.cpp loadingbase.h \
-	pairedloading.cpp pairedloading.h \
 	reaction.h \
 	release.cpp release.h \
 	sequencebinding.cpp sequencebinding.h \
@@ -46,11 +44,13 @@ libsrc_a_SOURCES += \
 
 # chemical entity sources
 libsrc_a_SOURCES += \
-	loader.cpp loader.h \
 	boundchemical.cpp boundchemical.h \
-	boundunit.h boundunitlist.h \
-	chemical.h \
-	processivechemical.cpp processivechemical.h 
+	boundunit.cpp boundunit.h \
+	boundunitlist.cpp boundunitlist.h \
+	boundunitfilter.h \
+	familyfilter.cpp familyfilter.h \
+	templatefilter.cpp templatefilter.h \
+	chemical.h
 
 # site sources
 libsrc_a_SOURCES += \
@@ -74,7 +74,7 @@ libsrc_a_SOURCES += \
 # table sources
 libsrc_a_SOURCES += \
 	compositiontable.cpp compositiontable.h \
-	decodingtable.cpp decodingtable.h \
+	loadingtable.cpp loadingtable.h \
 	producttable.h \
 	transformationtable.cpp transformationtable.h
 

@@ -1,28 +1,34 @@
 
 ##############
-# Initiation #
+#    UNITS   #
 ##############
 #
-unit FreeChemical DnaA 2
-unit BoundChemical bound_DnaA
-unit BindingSite DnaA_BS sensedna 1 1 10 0 1
-unit BindingSite DnaA_BS antisensedna 1 1 10 0 1
-unit FreeChemical free_DNAP 10
-unit FreeChemical used_DnaA
-unit BoundChemical loaded_DNAP
-unit DecodingTable dNTP_loading A dTTP loaded_DNAP 1 C dGTP loaded_DNAP 1 G dCTP loaded_DNAP 1 T dATP loaded_DNAP 1
-unit Loader DNAP dNTP_loading
 
-reaction SequenceBinding DnaA bound_DnaA DnaA_BS
-reaction ChemicalReaction free_DNAP -1 bound_DnaA -1 DNAP 1 used_DnaA 1 rates 1 0
+# initiation
+FreeChemical DnaA 2
+BoundChemical bound_DnaA
+BindingSite DnaA_BS sensedna 1 1 10 0 1
+BindingSite DnaA_BS antisensedna 1 1 10 0 1
+FreeChemical free_DNAP 10
+FreeChemical used_DnaA
+BoundChemical loaded_DNAP
+LoadingTable dNTP_loading A dTTP loaded_DNAP 1, C dGTP loaded_DNAP 1, G dCTP loaded_DNAP 1, T dATP loaded_DNAP 1
+BoundChemical DNAP
+
+# elongation
+BoundChemical stalled_DNAP
+BoundChemical translocating_DNAP
 
 ##############
-# Elongation #
+# REACTIONS  #
 ##############
 #
-unit BoundChemical stalled_DNAP
-unit ProcessiveChemical translocating_DNAP stalled_DNAP
 
-reaction PairedLoading DNAP
-reaction ChemicalReaction loaded_DNAP -1 PPi 1 translocating_DNAP 1 rates 1 0
-reaction Translocation translocating_DNAP DNAP 1 10
+# initiation
+SequenceBinding DnaA bound_DnaA DnaA_BS
+ChemicalReaction free_DNAP -1 bound_DnaA -1 DNAP 1 used_DnaA 1 rates 1 0
+
+# elongation
+DoubleStrandLoading DNAP dNTP_loading stalled_DNAP
+ChemicalReaction loaded_DNAP -1 PPi 1 translocating_DNAP 1 rates 1 0
+Translocation translocating_DNAP DNAP stalled_DNAP 1 10

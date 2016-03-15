@@ -25,9 +25,23 @@
 //  Constructors/Destructors
 // ==========================
 //
-TransformationTable::TransformationTable (int input_motif_length)
-  : _motif_length (input_motif_length)
+TransformationTable::TransformationTable 
+(const std::vector <std::string>& input_motifs, 
+ const std::vector <std::string>& output_motifs)
 {
+  /** @pre Vector must have equal length. */
+  REQUIRE (input_motifs.size() == output_motifs.size());
+  /** @pre Vectors must not be empty. */
+  REQUIRE (input_motifs.size() != 0);
+
+  _motif_length = input_motifs[0].length();
+  for (int i = 0; i < input_motifs.size(); ++i)
+    {
+      /** @pre All input motifs must have equal length. */
+      REQUIRE (input_motifs[i].length() == _motif_length);
+      
+      _rules [input_motifs[i]] = output_motifs[i];
+    }
 }
 
 // Not needed for this class (use of compiler generated versions)

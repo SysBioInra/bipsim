@@ -1,18 +1,14 @@
 
-
 /**
  * @file FILE.cpp
  * @brief Implementation of the ClassName class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
 // ==================
 //
-#include <iostream> // std::cout
 
 // ==================
 //  Project Includes
@@ -35,12 +31,10 @@
 // ===========================
 //
 
-
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-
 
 // =================
 //  Private Methods

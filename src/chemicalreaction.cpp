@@ -20,21 +20,27 @@
 //
 #include "macros.h" // REQUIRE
 #include "chemicalreaction.h"
-#include "chemical.h"
+#include "freechemical.h"
 #include "chemicalsequence.h"
 #include "boundchemical.h"
+#include "boundunit.h"
 #include "simulatorexception.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
-				    std::vector<int>& stoichiometry,
+ChemicalReaction::ChemicalReaction (const std::vector<FreeChemical*>& components,
+				    const std::vector<int>& stoichiometry,
 				    double forward_rate_constant,
-				    double backward_rate_constant)
+				    double backward_rate_constant,
+				    BoundChemical* forward_bound /*= 0*/,
+				    BoundChemical* backward_bound /*= 0*/)
+
   : _k_1 (forward_rate_constant)
   , _k_m1 (backward_rate_constant)
+  , _bound_reactant (forward_bound)
+  , _bound_product (backward_bound)
 {
 
   /** @pre Stoichiometry container size must match number of components. */
@@ -43,8 +49,11 @@ ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
   REQUIRE (forward_rate_constant >= 0);
   /** @pre k_-1 must be positive. */
   REQUIRE (backward_rate_constant >= 0);
+  /** @pre There must be exactly two bound chemicals or none. */
+  REQUIRE (((forward_bound == 0) && (backward_bound == 0))
+	   || ((forward_bound != 0) && (backward_bound != 0)));
 
-  // fill in the reactant and stoichiometry vectors
+  // fill in the reactant and stoichiometry vectors with free chemicals
   for (int i = 0; i < components.size(); ++i)
     {
       /** @pre Stoichiometries must be nonzero. */
@@ -60,28 +69,20 @@ ChemicalReaction::ChemicalReaction (std::vector<Chemical*>& components,
 	  _backward_stoichiometry.push_back (stoichiometry[i]);
 	}
     }
+  _free_reactant_number = _forward_reactants.size();
+  _free_product_number = _backward_reactants.size();
 
-  // look for bound chemicals in the reaction
-  isolate_bound_components();
-
-  /** @post Total number of components must be conserved. */
-  ENSURE (_forward_reactants.size() + _backward_reactants.size()
-	  == components.size());
-
-  /** @post There are either no bound chemical in the reaction or one on each
-   *   side of the reaction. */
-  ENSURE (((_bound_reactant == 0) && (_bound_product == 0))
-	  || ((_bound_reactant != 0) && (_bound_product != 0)));
-
-  /** @post Sum of free and bound reactants must match total number of
-   *   reactants */
-  ENSURE (_free_reactant_number == 
-	  _forward_reactants.size() - (_bound_reactant != 0));
-
-  /** @post Sum of free and bound products must match total number of
-   *   products */
-  ENSURE (_free_product_number == 
-	  _backward_reactants.size() - (_bound_product != 0));
+  // handle bound chemicals
+  if (forward_bound != 0) 
+    { 
+      _forward_reactants.push_back (forward_bound); 
+      _forward_stoichiometry.push_back (1);
+    }
+  if (backward_bound != 0) 
+    {
+      _backward_reactants.push_back (backward_bound); 
+      _backward_stoichiometry.push_back (1);
+    }
 }
 
 // Not needed for this class (use of compiler-generated versions)
@@ -108,11 +109,9 @@ void ChemicalReaction::perform_forward (void)
   // update bound chemical number (if applicable)
   if (_bound_reactant != 0)
     {
-      _bound_reactant->focus_random_unit();
-      _bound_product->add_unit_in_place_of (*_bound_reactant);
-      _bound_reactant->focused_unit_location().
-	replace_bound_unit (*_bound_reactant, *_bound_product);      
-      _bound_reactant->remove_focused_unit();
+      BoundUnit& unit = _bound_reactant->random_unit();
+      _bound_reactant->remove (unit);
+      _bound_product->add (unit);
     }
 }
 
@@ -131,11 +130,9 @@ void ChemicalReaction::perform_backward (void)
   // update bound chemical number (if applicable)
   if (_bound_reactant != 0)
     {
-      _bound_product->focus_random_unit ();
-      _bound_reactant->add_unit_in_place_of (*_bound_product);
-      _bound_product->focused_unit_location().
-	replace_bound_unit (*_bound_product, *_bound_reactant);      
-      _bound_product->remove_focused_unit();
+      BoundUnit& unit = _bound_product->random_unit();
+      _bound_product->remove (unit);
+      _bound_reactant->add (unit);
     }
 }
 
@@ -148,7 +145,8 @@ bool ChemicalReaction::is_forward_reaction_possible (void) const
 {
   for (int i = 0; i < forward_reactants().size(); i++)
     {
-      if (forward_chemical(i)->number() < _forward_stoichiometry[i])
+      if (static_cast <const Chemical*> (_forward_reactants [i])->number() 
+	  < _forward_stoichiometry[i])
 	{ return false; }
     }
   return true;
@@ -158,7 +156,8 @@ bool ChemicalReaction::is_backward_reaction_possible (void) const
 {
   for (int i = 0; i < backward_reactants().size(); i++)
     {
-      if (backward_chemical(i)->number() < _backward_stoichiometry[i])
+      if (static_cast <const Chemical*> (_backward_reactants [i])->number() 
+	  < _backward_stoichiometry[i])
 	{ return false; }
     }
   return true;
@@ -182,9 +181,10 @@ double ChemicalReaction::compute_forward_rate (void) const
   double rate = _k_1;
   for (int i = 0; i < _forward_reactants.size(); i++)
     {
-      if (forward_chemical(i)->number() < _forward_stoichiometry[i])
+      if (static_cast <const Chemical*> (_forward_reactants [i])->number() 
+	  < _forward_stoichiometry[i])
 	{ return 0; }
-      rate *= forward_chemical(i)->number();
+      rate *= static_cast <const Chemical*> (_forward_reactants [i])->number();
     } 
   return rate;
 }
@@ -198,109 +198,10 @@ double ChemicalReaction::compute_backward_rate (void) const
   double rate = _k_m1;
   for (int i = 0; i < _backward_reactants.size(); i++)
     {
-      if (backward_chemical(i)->number() < _backward_stoichiometry[i])
+      if (static_cast <const Chemical*> (_backward_reactants [i])->number() 
+	  < _backward_stoichiometry[i])
 	{ return 0; }
-      rate *= backward_chemical(i)->number();
+      rate *= static_cast <const Chemical*> (_backward_reactants [i])->number();
     }
   return rate;
-}
-
-void ChemicalReaction::isolate_bound_components (void)
-{
-  // look for a bound reactant
-  _bound_reactant = 0;
-  int bound_reactant_index = 0;
-  for (int i = 0; i < _forward_reactants.size(); i++)
-    {
-      BoundChemical* test
-	= dynamic_cast <BoundChemical*> (_forward_reactants[i]);
-      if (test != 0) // true if chemical is a bound chemical
-	{
-	  // check whether a bound product has not already been defined
-	  if (_bound_reactant == 0)
-	    {
-	      _bound_reactant = test;
-	      bound_reactant_index = i;
-	    }
-	  else
-	    {
-	      throw ParserException ("Reaction contains 2 or more bound"
-				     " reactants. Class can only handle one"
-				     " at the moment");
-	    }
-	}
-    }
-      
-  // look for a bound product
-  _bound_product = 0;
-  int bound_product_index = 0;
- for (int i = 0; i < _backward_reactants.size(); i++)
-    {
-      BoundChemical* test
-	= dynamic_cast <BoundChemical*> (_backward_reactants[i]);
-      if (test != 0) // true if chemical is a bound chemical
-	{
-	  // check whether a bound reactant has not already been defined
-	  if (_bound_product == 0)
-	    {
-	      _bound_product = test;
-	      bound_product_index = i;
-	    }
-	  else
-	    {
-	      throw ParserException ("Reaction contains 2 or more"
-				     " bound products. Class can only handle"
-				     " one at the moment");
-	    }
-	}
-    }
- 
- // check that we have a pair of bound reactant AND product
- if (((_bound_reactant == 0) && (_bound_product != 0))
-     || ((_bound_reactant != 0) && (_bound_product == 0)))
-   {
-     throw ParserException ("Reaction contains a bound reactant/product without"
-			    " its corresponding bound product/reactant"
-			    " counterpart (a chemical reaction cannot imply"
-			    " binding)");
-   }
-
- // check that the stoichiometry is 1
- if (((_bound_reactant != 0)
-      && (_forward_stoichiometry [bound_reactant_index] != 1))
-     || ((_bound_product != 0)
-	 && (_backward_stoichiometry [bound_product_index] != 1)))
-    {
-      throw ParserException ("Trying to define a chemical reaction in which the"
-			     " stoichiometry of a bound element is not equal" 
-			     " to 1");
-    }
-
- // move bound reactant at the end of reactants if applicable
- if (_bound_reactant == 0)
-   { _free_reactant_number = _forward_reactants.size(); }
- else
-   {
-     int s = _forward_reactants.size();
-     _free_reactant_number = s-1;
-     _forward_reactants [bound_reactant_index] = _forward_reactants [s-1];
-     _forward_stoichiometry [bound_reactant_index] =
-       _forward_stoichiometry [s-1];
-     _forward_reactants [s-1] = _bound_reactant;
-     _forward_stoichiometry [s-1] = 1;
-   }
-
- // move bound product at the end of products if applicable
- if (_bound_product == 0)
-   { _free_product_number = _backward_reactants.size(); }
- else
-   {
-     int s = _backward_reactants.size();
-     _free_product_number = s-1;
-     _backward_reactants [bound_product_index] = _backward_reactants [s-1];
-     _backward_stoichiometry [bound_product_index] =
-       _backward_stoichiometry [s-1];
-     _backward_reactants [s-1] = _bound_product;
-     _backward_stoichiometry [s-1] = 1;
-   }
 }

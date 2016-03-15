@@ -65,36 +65,42 @@ bool PartialStrand::start_segment (int position)
   /** @pre position must be consistent with length provided at construction. */
   REQUIRE ((position >= 0) && (position < _length));
 
-  std::list <Segment*>::iterator result = _find (position);
+  std::list <Segment*>::iterator result = find (position);
   // if previous segment spans position, no new segment can be created
   if ((*result)->last() > position) { return false; }
   _segment_it = result;
 
-  // if the new segment starts right next to an existing segment, we elongate
+  // if the new segment starts right next to an existing segment, we extend
   // the existing segment, else we create a new one
-  if ((*_segment_it)->last() < position)
+  if ((*_segment_it)->first() == position) { extend_left(); }
+  else if ((*_segment_it)->last() == position) { extend_right(); }
+  else // no joining
     {
-      if (position != 0)
-	{
-	  ++_segment_it;
-	  int last_position = (position+1 < _length)? position+1 : Segment::END;
-	  _segment_it = _segments.
-	    insert (_segment_it, 
-		    new Segment (position-1, last_position, _free_end_handler));
-	}
-      else
+      if (position == 0) // on starting dummy segment
 	{
 	  (*_segment_it)->set_last (1);
-	  // put a free end on the last segment if necessary...
+	  // put a free end on the last segment if necessary
 	  if (_segments.back()->first() == Segment::END)
 	    { _segments.back()->set_first (_length-1); }
 	}
+      else if (position == _length-1) // on ending dummy segment
+	{
+	  ++_segment_it;
+	  (*_segment_it)->set_first (_length-2);
+	  // put a free end on the first segment if necessary
+	  if (_segments.front()->last() == Segment::START)
+	    { _segments.front()->set_last (0); }
+	}
+      else
+	{
+	  ++_segment_it;
+	  _segment_it = _segments.insert 
+	    (_segment_it, 
+	     new Segment (position-1, position+1, _free_end_handler));
+	}
     }
-  else { extend_segment (position); }
-  _check_ligation();
   return true;
 }
-
 
 // ============================
 //  Public Methods - Accessors

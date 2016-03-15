@@ -160,19 +160,26 @@ protected:
    */
   const CellState& cell_state (void) const;
 
+  /**
+   * @brief Check if last character is a comma, if yes, remove it.
+   * @param str String to check. If it contains a comma as a last character,
+   *  the comma will be removed.
+   * @return True if a comma was found.
+   */
+  bool check_comma (std::string& str) const;
 
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+
   // ============
   //  Attributes
   // ============
   //
   /** @brief CellState object used to store new units. */
   CellState& _cell_state;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
 };
 
 // ======================
@@ -245,5 +252,16 @@ inline const CellState& Factory::cell_state (void) const
 { 
   return _cell_state; 
 }
+
+inline bool Factory::check_comma (std::string& str) const
+{
+  if (str [str.length()-1] == ',') 
+    { 
+      str.resize (str.length()-1);
+      return true; 
+    }
+  return false;
+}
+
 
 #endif // FACTORY_H

@@ -1,44 +1,55 @@
 
-unit FreeChemical RNAP 1000
+
+######################
+#       UNITS        #
+######################
+#
+FreeChemical RNAP 1000
 
 # initiation
-
-unit FreeChemical SigA 1000
-unit FreeChemical RNAP_SigA
-unit BoundChemical bound_RNAP_SigA
-unit BoundChemical stable_RNAP_SigA
-unit FreeChemical SigB 1000
-unit FreeChemical RNAP_SigB
-unit BoundChemical bound_RNAP_SigB
-unit BoundChemical stable_RNAP_SigB
-
-reaction Complexation RNAP SigA RNAP_SigA 1 1
-reaction Complexation RNAP SigB RNAP_SigB 1 1
-
-reaction SequenceBinding RNAP_SigA bound_RNAP_SigA promoter_SigA
-reaction SequenceBinding RNAP_SigB bound_RNAP_SigB promoter_SigB
-
-reaction ChemicalReaction bound_RNAP_SigA -1 stable_RNAP_SigA 1 rates 1 0
-reaction ChemicalReaction bound_RNAP_SigB -1 stable_RNAP_SigB 1 rates 1 0
-
-reaction Complexation stable_RNAP SigA stable_RNAP_SigA 0 1
-reaction Complexation stable_RNAP SigB stable_RNAP_SigB 0 1
+FreeChemical SigA 1000
+FreeChemical RNAP_SigA
+BoundChemical bound_RNAP_SigA
+BoundChemical stable_RNAP_SigA
+FreeChemical SigB 1000
+FreeChemical RNAP_SigB
+BoundChemical bound_RNAP_SigB
+BoundChemical stable_RNAP_SigB
 
 # elongation
-
-unit FreeChemical Mg2+ 1000
-unit BoundChemical loaded_RNAP
-unit DecodingTable NTP_loading A ATP loaded_RNAP 1 C CTP loaded_RNAP 1 G GTP loaded_RNAP 1 T UTP loaded_RNAP 1
-unit Loader stable_RNAP NTP_loading
-unit BoundChemical stalled_RNAP
-unit ProcessiveChemical translocating_RNAP stalled_RNAP hairpin
-
-reaction Loading stable_RNAP
-reaction ChemicalReaction loaded_RNAP -1 Mg2+ -2 translocating_RNAP 1 PPi 1 Mg2+ 2 rates 1 0
-reaction Translocation translocating_RNAP stable_RNAP 1 6
+FreeChemical Mg2+ 1000
+BoundChemical loaded_RNAP
+LoadingTable NTP_loading A ATP loaded_RNAP 1, C CTP loaded_RNAP 1, G GTP loaded_RNAP 1, T UTP loaded_RNAP 1
+BoundChemical stable_RNAP
+BoundChemical stalled_RNAP
+BoundChemical translocating_RNAP
 
 # termination
+FreeChemical NutA 100
+FreeChemical rna
 
-unit FreeChemical NutA 100
-unit FreeChemical rna
-reaction Release stalled_RNAP NutA -1 NutA 1 RNAP 1 rna 1 rate 1 produces rnas
+######################
+#     REACTIONS      #
+######################
+#
+
+# initiation
+ChemicalReaction RNAP -1 SigA -1 RNAP_SigA 1 rates 1 1
+ChemicalReaction RNAP -1 SigB -1 RNAP_SigB 1 rates 1 1
+
+SequenceBinding RNAP_SigA bound_RNAP_SigA promoter_SigA
+SequenceBinding RNAP_SigB bound_RNAP_SigB promoter_SigB
+
+ChemicalReaction bound_RNAP_SigA -1 stable_RNAP_SigA 1 rates 1 0
+ChemicalReaction bound_RNAP_SigB -1 stable_RNAP_SigB 1 rates 1 0
+
+ChemicalReaction stable_RNAP_SigA -1 stable_RNAP 1 SigA 1 rates 1 0
+ChemicalReaction stable_RNAP_SigB -1 stable_RNAP 1 SigB 1 rates 1 0
+
+# elongation
+ProductLoading stable_RNAP NTP_loading
+ChemicalReaction loaded_RNAP -1 Mg2+ -2 translocating_RNAP 1 PPi 1 Mg2+ 2 rates 1 0
+Translocation translocating_RNAP stable_RNAP stalled_RNAP 1 6 hairpin
+
+# termination
+Release stalled_RNAP NutA -1 NutA 1 RNAP 1 rna 1 rate 1 produces rnas

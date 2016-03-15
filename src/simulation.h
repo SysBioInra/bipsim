@@ -73,6 +73,12 @@ class Simulation
   // ============================
   //
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+  /** @brief Write logs if necessary. */
+  void write_logs (void);
 
   // ============
   //  Attributes
@@ -95,13 +101,6 @@ private:
 
   /** @brief Handler reading and performing user-defined events. */
   EventHandler _event_handler;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
-  /** @brief Write logs if necessary. */
-  void write_logs (void);
 };
 
 // ======================

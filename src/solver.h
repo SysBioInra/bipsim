@@ -72,8 +72,10 @@ class Solver
   /**
    * @brief Update system according to the reaction system until a reaction 
    *  happens.
+   * @return True if a reaction was successfully performed, false if no
+   *  reactions were left to perform.
    */
-  void go_to_next_reaction (void);
+  bool go_to_next_reaction (void);
   
 
   // ============================
@@ -103,7 +105,8 @@ class Solver
    * 
    * The computation is actually done by classes inheriting
    * from Solver.
-   * @return Time at which the reaction occurred.
+   * @return Time at which the reaction occurred. NO_REACTIONS_LEFT if there
+   *  was no reaction left to perform.
    */
   virtual double compute_next_reaction (void) = 0;
 
@@ -119,9 +122,20 @@ class Solver
    * @return Vector of reactions composing the system to integrate.
    */
   const std::vector<Reaction*>& reactions (void) const;
-  
+
+  // =====================
+  //  Protected constants
+  // =====================
+  //  
+  /** @brief Constant used when no reactions are left in the system. */
+  static const double NO_REACTIONS_LEFT;
 
  private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+
   // ============
   //  Attributes
   // ============
@@ -140,11 +154,6 @@ class Solver
 
   /** @brief State of the cell. */
   CellState& _cell_state;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
 };
 
 // ======================

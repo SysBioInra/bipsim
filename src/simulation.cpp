@@ -77,8 +77,7 @@ Simulation::Simulation (const std::string& filename)
 				chemical_refs, chemical_names);
   const DoubleStrand*  double_strand = 
     _cell_state.find <DoubleStrand> (_params.output_double_strand());
-  _replication_logger = new DoubleStrandLogger (_params.replication_file(),
-						*double_strand);
+  // _replication_logger = new DoubleStrandLogger (_params.replication_file(), *double_strand);
 }
 
 // Forbidden
@@ -100,6 +99,7 @@ void Simulation::run (void)
 {
   std::cout << "Solving from t = " << _params.initial_time()
 	    << " to t = "<< _params.final_time() << "..." << std::endl;
+  bool reactions_left = true;
 
   double next_event_time = _event_handler.next_event_time();
   while (next_event_time < _solver->time())
@@ -111,8 +111,11 @@ void Simulation::run (void)
   // run until next event
   while (_params.final_time() > next_event_time)
     {
-      while (_solver->time() < next_event_time)
-	{ write_logs(); _solver->go_to_next_reaction(); }
+      while (reactions_left && (_solver->time() < next_event_time))
+	{ 
+	  write_logs(); 
+	  reactions_left = _solver->go_to_next_reaction(); 
+	}
 
       // perform event(s)
       while (next_event_time <= _solver->time())
@@ -120,11 +123,15 @@ void Simulation::run (void)
 	  _event_handler.perform_event();
 	  next_event_time = _event_handler.next_event_time();	  
 	}
+      reactions_left = true; // due to events, reaction rates may have changed
     }
 
   // no event left: run until final time
-  while (_solver->time() < _params.final_time())
-    { write_logs(); _solver->go_to_next_reaction(); }
+  while (reactions_left && (_solver->time() < _params.final_time()))
+    { 
+      write_logs(); 
+      reactions_left = _solver->go_to_next_reaction(); 
+    }
 
   std::cout << _solver->number_reactions_performed() << " reactions occurred."
 	    << std::endl;
@@ -144,7 +151,6 @@ void Simulation::write_logs (void)
   if ((_solver->number_reactions_performed() % _params.output_step()) == 0)
     { 
       _logger->log (_solver->time()); 
-      if (_replication_logger != 0) 
-	{ _replication_logger->log (_solver->time()); }
+      if (_replication_logger) { _replication_logger->log (_solver->time()); }
     }
 }

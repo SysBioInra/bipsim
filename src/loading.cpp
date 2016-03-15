@@ -19,24 +19,47 @@
 // ==================
 //
 #include "macros.h" // REQUIRE()
-#include "boundchemical.h"
-#include "chemicalsequence.h"
 #include "loading.h"
-#include "loader.h"
+#include "freechemical.h"
+#include "boundchemical.h"
+#include "boundunit.h"
+#include "loadingtable.h"
+#include "chemicalsequence.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-Loading::Loading (Loader& loader)
-  : LoadingBase (loader)
+Loading::Loading (BoundChemical& loader, const LoadingTable& table)
+  : _loader (loader)
+  , _template_filter (table)
+  , _table (table)
 {
+  // ask loader to classify units according to templates read
+  _loader.add_filter (_template_filter);
+
+  _reactants.push_back (&loader);
+  const std::set<FreeChemical*>& bases = table.chemicals_loaded();
+  _reactants.insert (_reactants.end(), bases.begin(), bases.end());
+  const std::set<BoundChemical*>& occupied = table.occupied_states();
+  _products.insert (_products.end(), occupied.begin(), occupied.end());
 }
+
+DoubleStrandLoading::DoubleStrandLoading (BoundChemical& loader, 
+					  const LoadingTable& table,
+					  BoundChemical& stalled_form)
+  : Loading (loader, table)
+  , _stalled_form (stalled_form)
+{}
  
-// Not needed for this class (use of compiler generated versions)
+// Forbidden
 // Loading::Loading (Loading& other_loading);
 // Loading& Loading::operator= (Loading& other_loading);
-// Loading::~Loading (void);
+
+Loading::~Loading (void)
+{
+  _loader.remove_filter (_template_filter);
+}
 
 // ===========================
 //  Public Methods - Commands
@@ -48,30 +71,72 @@ Loading::Loading (Loader& loader)
 //  Public Methods - Accessors
 // ============================
 //
+bool Loading::is_reaction_possible (void) const
+{
+  return (_template_filter.loading_rate() > 0);
+}
 
-// ===================
-//  Protected Methods
-// ===================
+// =================
+//  Private Methods
+// =================
 //
+double Loading::compute_rate (void) const
+{
+  /**
+   * Loading rate is generally defined by r = sum ( k_on_i x [A_i] x [B_i]),
+   * where [A_i] is the concentration of Loader on template i and [B_i] the
+   * concentration of chemical to load i. k_on_i may vary from a
+   * template to another. All this information is stored within the
+   * LoadingTable associated with the Loader. The concentration of units to
+   * bind is easy to get, the loader can compute the rest of the formula for
+   * us as it holds information about templates and base concentrations.
+   */
+  return _template_filter.loading_rate();
+}
+
 void Loading::do_reaction (void)
 {
   /** @pre There must be enough reactants to perform reaction. */
   REQUIRE (is_reaction_possible());
+  load_chemical (random_unit());
+  // for the moment nothing is done at the sequence level,
+  // Release handles product creation.
+}
 
-  // Choose one of the loaders randomly
-  _loader.focus_random_unit_from_loading_rates();
-  
-  // Load the element corresponding to its target template
-  _loader.focused_chemical_to_load().remove (1);
-  // currently the loaded chemical just disappears into thin air. It will show
-  // up eventually when the elongated chemical is released so let us say it does
-  // virtually exist :)
-  
-  // Update the loader status to occupied
-  BoundChemical& occupied_loader = _loader.focused_occupied_state ();
-  occupied_loader.add_unit_in_place_of (_loader);
-  _loader.focused_unit_location().replace_bound_unit (_loader, occupied_loader);      
-  _loader.remove_focused_unit();
+void DoubleStrandLoading::do_reaction (void)
+{
+  // select unit weighted by the template read
+  BoundUnit& unit = random_unit();
+  if (unit.strand() != BoundUnit::NO_STRAND)
+    {
+      if (unit.location().extend_appariated_strand 
+	  (unit.strand(), unit.reading_frame()))
+	{ 
+	  load_chemical (unit); 
+	}
+      else // go to stalled form
+	{
+	  std::cout << "miiii" << unit.reading_frame() << std::endl;
+	  _loader.remove (unit);
+	  _stalled_form.add (unit);
+	}
+    }
+  else // unit.strand() == NO_STRAND
+    {
+      unit.set_strand 
+	(unit.location().start_appariated_strand (unit.reading_frame()));
+      load_chemical (unit);
+    }
+}
+
+void Loading::load_chemical (BoundUnit& unit)
+{
+  int template_index =  _table.template_index 
+    (unit.location().sequence().substr 
+     (unit.reading_frame(), _table.template_length()));
+  _loader.remove (unit);
+  _table.chemical_to_load (template_index).remove (1);
+  _table.occupied_state (template_index).add (unit);
 }
 
 void Loading::print (std::ostream& output) const
