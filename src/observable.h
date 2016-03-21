@@ -17,7 +17,7 @@
 //  General Includes
 // ==================
 //
-#include <set> // std::set
+#include <list> // std::list
 #ifdef HAVE_BOOST_SERIALIZATION
 #include <boost/serialization/set.hpp>
 #endif // HAVE_BOOST_SERIALIZATION
@@ -53,9 +53,9 @@ class Observable
  private:
   // Forbidden
   /** @brief Copy constructor. */
-  Observable (const Observable& other_observable);
+  Observable (const Observable& other);
   /** @brief Assignment operator. */
-  Observable& operator= ( const Observable& other_observable );
+  Observable& operator= (const Observable& other);
 
  public:
   /**
@@ -63,7 +63,7 @@ class Observable
    */
   virtual ~Observable (void)
     {
-      for (typename std::set<T*>::iterator obs_it = _observers.begin();
+      for (typename std::list<T*>::iterator obs_it = _observers.begin();
 	   obs_it != _observers.end(); ++obs_it)
 	{
 	  (*obs_it)->deregister();
@@ -78,13 +78,13 @@ class Observable
    * @brief Attach an observer for notification when a chage occurs.
    * @param observer Observer to add to observer list.
    */
-  void attach (T& observer) { _observers.insert (&observer); }
+  void attach (T& observer) { _observers.push_back (&observer); }
 
   /**
    * @brief Detach a previously added observer from observer list.
    * @param observer Observer to remove from observer list.
    */
-  void detach (T& observer) { _observers.erase (&observer); }
+  void detach (T& observer) { _observers.remove (&observer); }
 
   // ============================
   //  Public Methods - Accessors
@@ -101,8 +101,8 @@ class Observable
    */
   void notify_change (void)
   {
-    for (typename std::set <T*>::iterator obs_it = _observers.begin();
-	 obs_it != _observers.end(); obs_it++)
+    for (typename std::list <T*>::iterator obs_it = _observers.begin();
+	 obs_it != _observers.end(); ++obs_it)
       {
 	(*obs_it)->update();
       }
@@ -117,7 +117,7 @@ class Observable
   /**
    * @brief Set of observers to notify when concentration changes.
    */
-  std::set <T*> _observers;
+  std::list <T*> _observers;
 
   // =================
   //  Private Methods

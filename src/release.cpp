@@ -91,7 +91,7 @@ void Release::do_reaction (void)
 	 unit.binding_site().reading_frame(),
 	 unit.reading_frame() - 1);
 
-      if (product != 0) { product->add(1); }
+      if (product != 0) { product->add (1); }
       else
 	{
 	  std::cerr << "Unknown product ("

@@ -134,8 +134,14 @@ public:
   /** @brief Number of free chemicals among forward reactants. */
   int _free_reactant_number;
 
-  /** @brief Number of free chemicals among forward reactants. */
+  /** @brief Number of free chemicals among backward reactants. */
   int _free_product_number;
+
+  /** @brief Number of forward reactants. */
+  int _forward_reactant_number;
+
+  /** @brief Number of backward reactants. */
+  int _backward_reactant_number;
   
   /** @brief Bound reactant of the reaction (0 if none). */
   BoundChemical* _bound_reactant;

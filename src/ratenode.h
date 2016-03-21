@@ -18,12 +18,12 @@
 // ==================
 //
 
-
 // ======================
 //  Forward declarations
 // ======================
 //
 #include "forwarddeclarations.h"
+#include "macros.h"
 
 /**
  * @brief Abstract class used to store rates in a tree.
@@ -199,7 +199,10 @@ class DummyNode : public RateNode
   // ===========================
   //
   // redefined from RateNode
-  int find (double value) { return _child.find (value); }
+  int find (double value) 
+  { 
+    return _child.find (value); 
+  }
 
 
   // ============================
@@ -256,7 +259,10 @@ class ReactionNode : public RateNode
   // ===========================
   //
   // Redefined from RateNode
-  int find (double value) { return _rate_index; }
+  int find (double value) 
+  { 
+    return _rate_index; 
+  }
 
   /**
    * @brief Change rate associated to reaction represented by the node.
@@ -329,11 +335,11 @@ class SumNode : public RateNode
   //
   // Redefined from RateNode
   int find (double value)
-    { 
-      if (_left.rate() >= value) return _left.find (value);
-      else return _right.find (value - _left.rate());
-    }
-
+  { 
+    if (_left.rate() >= value) { return _left.find (value); }
+    else { return _right.find (value - _left.rate()); }
+  }
+  
   // ============================
   //  Public Methods - Accessors
   // ============================

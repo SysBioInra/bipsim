@@ -95,8 +95,8 @@ int RandomHandler::draw_uniform (int a, int b)
   REQUIRE (a <= b); /** @pre a must be smaller or equal to b. */
 
   // we create the distribution and draw a number
-  boost::uniform_int<int> distribution ( a, b );
-  return distribution( RandomHandler::_generator );
+  boost::uniform_int<int> distribution (a, b);
+  return distribution (RandomHandler::_generator);
 }
 
 double RandomHandler::draw_uniform (double a, double b)
@@ -104,8 +104,8 @@ double RandomHandler::draw_uniform (double a, double b)
   REQUIRE (a <= b); /** @pre a must be smaller or equal to b. */
 
   // we create the distribution and draw a number
-  boost::uniform_real<double> distribution ( a, b );
-  return distribution( RandomHandler::_generator );
+  boost::uniform_real<double> distribution (a, b);
+  return distribution (RandomHandler::_generator);
 }
 
 double RandomHandler::draw_exponential ( double lambda )
@@ -116,7 +116,7 @@ double RandomHandler::draw_exponential ( double lambda )
   // boost implementation
   // TODO update boost libraries
   boost::uniform_01<double> distribution;
-  return ( - log (1 - distribution (RandomHandler::_generator)) / lambda );
+  return (-log (1 - distribution (RandomHandler::_generator)) / lambda);
 }
 
 

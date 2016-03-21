@@ -78,18 +78,6 @@ public:
   void move (int step_size);
 
   /**
-   * @brief Bind a chemical at the binding site.
-   * @param unit_to_bind Chemical to bind.
-   */
-  void bind_unit (BoundChemical& unit_to_bind) const;
-
-  /**
-   * @brief Unbind a chemical at the binding site.
-   * @param unit_to_unbind Chemical to unbind.
-   */
-  void unbind_unit (BoundChemical& unit_to_unbind) const;
-
-  /**
    * @brief Perform necessary actions when availability of the observed site 
    *  has changed.
    */

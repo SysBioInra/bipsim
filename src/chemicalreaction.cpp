@@ -83,6 +83,8 @@ ChemicalReaction::ChemicalReaction (const std::vector<FreeChemical*>& components
       _backward_reactants.push_back (backward_bound); 
       _backward_stoichiometry.push_back (1);
     }
+  _forward_reactant_number = _forward_reactants.size();
+  _backward_reactant_number = _backward_reactants.size();
 }
 
 // Not needed for this class (use of compiler-generated versions)
@@ -143,7 +145,7 @@ void ChemicalReaction::perform_backward (void)
 //
 bool ChemicalReaction::is_forward_reaction_possible (void) const
 {
-  for (int i = 0; i < forward_reactants().size(); i++)
+  for (int i = 0; i < _forward_reactant_number; i++)
     {
       if (static_cast <const Chemical*> (_forward_reactants [i])->number() 
 	  < _forward_stoichiometry[i])
@@ -154,7 +156,7 @@ bool ChemicalReaction::is_forward_reaction_possible (void) const
 
 bool ChemicalReaction::is_backward_reaction_possible (void) const
 {
-  for (int i = 0; i < backward_reactants().size(); i++)
+  for (int i = 0; i < _backward_reactant_number; i++)
     {
       if (static_cast <const Chemical*> (_backward_reactants [i])->number() 
 	  < _backward_stoichiometry[i])
@@ -179,7 +181,7 @@ double ChemicalReaction::compute_forward_rate (void) const
    * It is 0 if there are not enough reactants.
    */
   double rate = _k_1;
-  for (int i = 0; i < _forward_reactants.size(); i++)
+  for (int i = 0; i < _forward_reactant_number; i++)
     {
       if (static_cast <const Chemical*> (_forward_reactants [i])->number() 
 	  < _forward_stoichiometry[i])
@@ -196,7 +198,7 @@ double ChemicalReaction::compute_backward_rate (void) const
    * It is 0 if there are not enough reactants.
    */
   double rate = _k_m1;
-  for (int i = 0; i < _backward_reactants.size(); i++)
+  for (int i = 0; i < _backward_reactant_number; i++)
     {
       if (static_cast <const Chemical*> (_backward_reactants [i])->number() 
 	  < _backward_stoichiometry[i])

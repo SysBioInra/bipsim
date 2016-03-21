@@ -133,8 +133,8 @@ void Simulation::run (void)
       reactions_left = _solver->go_to_next_reaction(); 
     }
 
-  std::cout << _solver->number_reactions_performed() << " reactions occurred."
-	    << std::endl;
+  std::cout << "\n" << _solver->number_reactions_performed() 
+	    << " reactions occurred." << std::endl;
 }
 
 // ============================

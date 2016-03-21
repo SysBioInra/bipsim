@@ -135,7 +135,13 @@ inline int RateTree::find (double value) const
 {
   /** @pre value must be smaller than total tree rate. */
   REQUIRE (value <= total_rate());
+  /** @pre value must be greater than 0. */
+  REQUIRE (value > 0);
   int index = _root->find (value);
+  // rarely, the algorithm will fail because of rounding problems and return
+  // a leaf with zero rate. We just take the next nonzero rate.
+  while (_leaves [index]->rate() == 0) 
+    { ++index; if (index == _leaves.size()) { index = 0; } }
   ENSURE (_leaves [index]->rate() > 0);
   return index;
 }
