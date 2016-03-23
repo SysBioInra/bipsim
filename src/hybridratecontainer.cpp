@@ -93,7 +93,7 @@ void HybridRateContainer::_create_new_groups (double value)
   RateValidity* new_update_stack = new RateValidity (_groups.size());
   while (!_update_stack->empty())
     {
-      new_update_stack->update (_update_stack->front());
+      new_update_stack->invalidate (_update_stack->front());
       _update_stack->pop();
     }
   delete _update_stack;

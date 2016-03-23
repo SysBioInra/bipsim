@@ -118,7 +118,7 @@ private:
    */
   FlyRateVector _group_container;
 
-  /** @brief Stack storing group indices that need to be updated in the tree. */
+  /** @brief Stack storing group indices that need to be updated. */
   RateValidity* _update_stack;
 
   /** @brief Constant used to specify that a rate is not stored in any group. */
@@ -197,7 +197,7 @@ inline void HybridRateContainer::set_rate (int index, double value)
   if (token->group() != NULL_GROUP) 
     { 
       _groups [token->group()]->remove (token); 
-      _update_stack->update (token->group());
+      _update_stack->invalidate (token->group());
     }
   
   // add to new group
@@ -205,7 +205,7 @@ inline void HybridRateContainer::set_rate (int index, double value)
   if (token->group() != NULL_GROUP)
     { 
       _groups [token->group()]->insert (token, value);
-      _update_stack->update (token->group());
+      _update_stack->invalidate (token->group());
     }
 }
 

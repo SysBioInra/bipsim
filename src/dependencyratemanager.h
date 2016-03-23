@@ -18,7 +18,6 @@
 // ==================
 //
 #include <vector> // std::vector
-#include <list> //std::list
 
 // ==================
 //  Project Includes
@@ -57,15 +56,16 @@ class DependencyRateManager : public RateManager
   DependencyRateManager (const SimulationParams& params,
 			 const std::vector <Reaction*>& reactions);
 
-  // Not needed for this class (use of compiler-generated versions)
-  // (3-0 rule: either define all 3 following or none of them)
-  // Not needed for this class (use of default copy constructor) !
-  // /* @brief Copy constructor. */
-  // DependencyRateManager (const DependencyRateManager& other_manager);
-  // /* @brief Assignment operator. */
-  // DependencyRateManager& operator= (const DependencyRateManager& other_manager);
+ private:
+  // Forbidden
+  /** @brief Copy constructor. */
+  DependencyRateManager (const DependencyRateManager& other);
+  /** @brief Assignment operator. */
+  DependencyRateManager& operator= (const DependencyRateManager& other);
+ public:
+  
   // /* @brief Destructor. */
-  // virtual ~DependencyRateManager (void);
+  // ~DependencyRateManager (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -87,28 +87,31 @@ class DependencyRateManager : public RateManager
   //
 
 private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /**
-   * @brief Vector indicating reactions whose rates need to be recomputed at next update.
-   */
-  RateValidity _rate_validity;
-
   // =================
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Create dependency map from the list of reactions and subscribe for notfication by reactants.
-   */
-  void create_dependencies (void);
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Container storing rate indices to update. */
+  RateValidity _rate_validity;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+inline void DependencyRateManager::update_rates (void)
+{
+  while (!_rate_validity.empty())
+    {
+      update_reaction (_rate_validity.front());
+      _rate_validity.pop();
+    }
+  cumulate_rates();
+}
 
 #endif // DEPENDENCY_RATE_MANAGER_H

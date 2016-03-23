@@ -18,9 +18,6 @@
 // ==================
 //
 #include <vector> // std::vector
-#include <map> // std::map
-#include <list> // std::list
-#include <set> // std::set
 
 // ==================
 //  Project Includes
@@ -28,6 +25,7 @@
 //
 #include "forwarddeclarations.h"
 #include "ratemanager.h"
+#include "ratevalidity.h"
 
 /**
  * @brief Class handling updates of reaction rates by using dependencies 
@@ -68,10 +66,8 @@ class GraphRateManager : public RateManager
   GraphRateManager& operator= (const GraphRateManager& other_manager);
  public:
 
-  /**
-   * @brief Destructor.
-   */
-  ~GraphRateManager (void);
+  // /* @brief Destructor. */
+  // ~GraphRateManager (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -100,53 +96,31 @@ class GraphRateManager : public RateManager
   // ============================
   //
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
 
   // ============
   //  Attributes
   // ============
   //
-  /**
-   * @brief Vector indicating reactions whose rates need to be recomputed at next update.
-   */
-  std::vector <bool> _reactions_to_update;
-
-  /**
-   * @brief List of observers used to monitor reaction occurring.
-   */
-  std::list <ReactionObserver*> _reaction_observers;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
-  /**
-   * @brief Create reaction observers to receive notifications about reaction 
-   *  occuring.
-   * @param dependency_graph Global dependencies between reactions.
-   */
-  void create_observers (const DependencyGraph& dependency_graph);
-
-  /**
-   * @brief Clear all reaction observers.
-   */
-  void clear_observers (void);
-
-  /**
-   * @brief Convert list of reaction pointers to list of integers.
-   * @return List of integers corresponding to reactions found in the map. 
-   *  If reactions are not found in the map, they are ignored, so that the 
-   *  list returned can be shorter than the initial list of reaction pointers.
-   * @param reaction_to_index Map enabling to convert reaction pointers to 
-   *  integers.
-   * @param reactions Set of reactions to convert to integers.
-   */
-  std::list<int> convert_to_indices (const std::map <Reaction*, int>& reaction_to_index, 
-				     const std::set <Reaction*>& reactions);
+  /** @brief Container storing rate indices to update. */
+  RateValidity _rate_validity;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+inline void GraphRateManager::update_rates (void)
+{
+  while (!_rate_validity.empty())
+    {
+      update_reaction (_rate_validity.front());
+      _rate_validity.pop();
+    }
+  cumulate_rates();
+}
 
 #endif // GRAPH_RATE_MANAGER_H

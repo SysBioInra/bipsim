@@ -60,7 +60,6 @@ BOOST_AUTO_TEST_CASE (find_MultipleRates_returnsAppropriateIndex)
   zero_tree.set_rate (0, 2); zero_tree.set_rate (1, 3);
   zero_tree.set_rate (2, 3); zero_tree.set_rate (4, 6);
   zero_tree.update_cumulates();
-  BOOST_CHECK_EQUAL (zero_tree.find (0), 0);
   BOOST_CHECK_EQUAL (zero_tree.find (1), 0);
   BOOST_CHECK_EQUAL (zero_tree.find (2), 0);
   BOOST_CHECK_EQUAL (zero_tree.find (3), 1);

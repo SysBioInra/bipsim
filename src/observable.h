@@ -18,6 +18,7 @@
 // ==================
 //
 #include <list> // std::list
+
 #ifdef HAVE_BOOST_SERIALIZATION
 #include <boost/serialization/set.hpp>
 #endif // HAVE_BOOST_SERIALIZATION
@@ -29,25 +30,20 @@
 #include "forwarddeclarations.h"
 
 /**
- * @brief Generic class that accept observers and sends them notifications.
+ * @brief Astract class that accept observers and sends them notifications.
  *
- * Observable<T> accepts observers of type T and sends them notifications
+ * Observable accepts RateInvalidator and sends them notifications
  * via their update() function. Children can use the notify_change() function
  * to trigger the notification system.
  */
-
-template <class T>
 class Observable
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
   //
-  /**
-   * @brief Default constructor.
-   */
+  /** @brief Default constructor. */
   Observable (void) {}
 
  private:
@@ -56,19 +52,10 @@ class Observable
   Observable (const Observable& other);
   /** @brief Assignment operator. */
   Observable& operator= (const Observable& other);
-
  public:
-  /**
-   * @brief Destructor.
-   */
-  virtual ~Observable (void)
-    {
-      for (typename std::list<T*>::iterator obs_it = _observers.begin();
-	   obs_it != _observers.end(); ++obs_it)
-	{
-	  (*obs_it)->deregister();
-	}
-    }
+
+  // /* @brief Destructor. */
+  // virtual ~Observable (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -76,15 +63,15 @@ class Observable
   //
   /**
    * @brief Attach an observer for notification when a chage occurs.
-   * @param observer Observer to add to observer list.
+   * @param observer RateInvalidator to add to observer list.
    */
-  void attach (T& observer) { _observers.push_back (&observer); }
+  void attach (RateInvalidator& observer);
 
   /**
    * @brief Detach a previously added observer from observer list.
-   * @param observer Observer to remove from observer list.
+   * @param observer RateInvalidator to remove from observer list.
    */
-  void detach (T& observer) { _observers.remove (&observer); }
+  void detach (RateInvalidator& observer);
 
   // ============================
   //  Public Methods - Accessors
@@ -96,33 +83,22 @@ class Observable
   //  Protected Methods
   // ===================
   //
-  /**
-   * @brief Notify all observers that concentration has changed.
-   */
-  void notify_change (void)
-  {
-    for (typename std::list <T*>::iterator obs_it = _observers.begin();
-	 obs_it != _observers.end(); ++obs_it)
-      {
-	(*obs_it)->update();
-      }
-  }
+  /** @brief Notify all observers. */
+  void notify_change (void);
 
 
  private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /**
-   * @brief Set of observers to notify when concentration changes.
-   */
-  std::list <T*> _observers;
-
   // =================
   //  Private Methods
   // =================
   //
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Set of observers to notify. */
+  std::list <RateInvalidator*> _observers;
 
 #ifdef HAVE_BOOST_SERIALIZATION
   // ===============
@@ -142,5 +118,24 @@ class Observable
 //  Inline declarations
 // ======================
 //
+#include "rateinvalidator.h"
+
+inline void Observable::attach (RateInvalidator& observer) 
+{
+  _observers.push_back (&observer); 
+}
+
+inline void Observable::detach (RateInvalidator& observer) 
+{
+  _observers.remove (&observer);
+}
+
+inline void Observable::notify_change (void)
+{
+  for (std::list <RateInvalidator*>::iterator obs_it = _observers.begin();
+       obs_it != _observers.end(); ++obs_it)
+    { (*obs_it)->update(); }
+}
+
 
 #endif // OBSERVABLE_H

@@ -23,6 +23,7 @@
 #include "freechemical.h"
 #include "boundunit.h"
 #include "chemicalsequence.h"
+#include "rateinvalidator.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -38,7 +39,7 @@ TemplateFilter::TemplateFilter (const LoadingTable& table)
 
   // create an observer for every loadable base
   for (int i = 0; i < table.size(); ++i)
-    { _rate_validity.add_observer (_table.chemical_to_load(i), i); }
+    { _table.chemical_to_load(i).attach (_rate_validity.invalidator(i)); }
 }
 
 
@@ -61,7 +62,7 @@ void TemplateFilter::add (BoundUnit& unit)
     {
       // update unit map
       _unit_map [template_index].add (&unit);
-      _rate_validity.update (template_index);
+      _rate_validity.invalidate (template_index);
     }
   else // invalid template
     {
@@ -84,7 +85,7 @@ void TemplateFilter::remove (BoundUnit& unit)
     {
       // remove the unit from the map
       _unit_map [template_index].remove (&unit);
-      _rate_validity.update (template_index);
+      _rate_validity.invalidate (template_index);
     }
   // else there is nothing to do, nothing was written into the table at creation
 }

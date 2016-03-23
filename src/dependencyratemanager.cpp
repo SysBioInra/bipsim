@@ -23,7 +23,7 @@
 #include "dependencyratemanager.h"
 #include "reactant.h"
 #include "reaction.h"
-#include "concentrationobserver.h"
+#include "rateinvalidator.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -34,27 +34,26 @@ DependencyRateManager::DependencyRateManager (const SimulationParams& params,
   : RateManager (params, reactions)
   , _rate_validity (reactions.size())
 {
-  create_dependencies();
+  const std::vector <Reaction*>& _reactions = this->reactions();
+
+  // loop through reactions and create observers
+  for (int i = 0; i < _reactions.size(); ++i)
+    {
+      const std::vector <Reactant*>& reactants = _reactions [i]->reactants();
+      for (std::vector <Reactant*>::const_iterator reactant_it = reactants.begin();
+	   reactant_it != reactants.end(); ++reactant_it)
+	{ (*reactant_it)->attach (_rate_validity.invalidator (i)); }
+    }
 }
 
-// Not needed for this class (use of compiler-generated versions)
-// DependencyRateManager::DependencyRateManager (const DependencyRateManager& other_manager);
-// DependencyRateManager& DependencyRateManager::operator= (const DependencyRateManager& other_manager);
+// DependencyRateManager::DependencyRateManager (const DependencyRateManager& other);
+// DependencyRateManager& DependencyRateManager::operator= (const DependencyRateManager& other);
 // DependencyRateManager::~DependencyRateManager (void);
 
 // ===========================
 //  Public Methods - Commands
 // ===========================
 //
-void DependencyRateManager::update_rates (void)
-{
-  while (!_rate_validity.empty())
-    {
-      update_reaction (_rate_validity.front());
-      _rate_validity.pop();
-    }
-  cumulate_rates();
-}
 
 
 // ============================
@@ -67,16 +66,3 @@ void DependencyRateManager::update_rates (void)
 //  Private Methods
 // =================
 //
-void DependencyRateManager::create_dependencies (void)
-{
-  // loop through reactions and create observers
-  for (int i = 0; i < reactions().size(); ++i)
-    {
-      const std::vector <Reactant*>& reactants = reactions() [i]->reactants();
-      for (std::vector <Reactant*>::const_iterator reactant_it = reactants.begin();
-	   reactant_it != reactants.end(); ++reactant_it)
-	{
-	  _rate_validity.add_observer (**reactant_it, i);
-	}
-    }
-}

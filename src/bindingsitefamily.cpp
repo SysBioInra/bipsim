@@ -91,7 +91,7 @@ void BindingSiteFamily::update (int site_index)
   /** @pre site_index must be within family range. */
   REQUIRE ((site_index >= 0) && (site_index < _rate_contributions.size()));
 
-  _rate_validity->update (site_index);
+  _rate_validity->invalidate (site_index);
       
   // notify change to rate managers
   notify_change();

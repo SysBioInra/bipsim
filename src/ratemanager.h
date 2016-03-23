@@ -17,6 +17,7 @@
 //  General Includes
 // ==================
 //
+#include <iostream> // std::ostream
 #include <vector> // std::vector
 
 // ==================
@@ -145,18 +146,14 @@ class RateManager
   //
 };
 
-// ==================
-//  Inline Includes
-// ==================
+// ======================
+//  Inline declarations
+// ======================
 //
 #include <numeric> // std::partial_sum
 #include "reaction.h"
 #include "ratecontainer.h"
 
-// ======================
-//  Inline declarations
-// ======================
-//
 inline int RateManager::random_index (void)
 {
   return _rates->random_index();

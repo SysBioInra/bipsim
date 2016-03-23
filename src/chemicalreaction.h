@@ -93,55 +93,21 @@ public:
   double compute_backward_rate (void) const;
   void print (std::ostream& output) const;
 
-  /**
-   * @brief Cast forward reactant to chemical.
-   * @param index Index of the reactant.
-   * @return Reactant cast to pointer to Chemical.
-   */
-  FreeChemical* forward_chemical (int index);
-
-  /**
-   * @brief Cast backward reactant to chemical.
-   * @param index Index of the reactant.
-   * @return Reactant cast to pointer to Chemical.
-   */
-  FreeChemical* backward_chemical (int index);
-
-  /**
-   * @brief Cast forward reactant to chemical.
-   * @param index Index of the reactant.
-   * @return Reactant cast to pointer to Chemical.
-   */
-  const FreeChemical* forward_chemical (int index) const;
-
-  /**
-   * @brief Cast backward reactant to chemical.
-   * @param index Index of the reactant.
-   * @return Reactant cast to pointer to Chemical.
-   */
-  const FreeChemical* backward_chemical (int index) const;
-
   // ============
   //  Attributes
   // ============
   //
+  struct CRParticipant 
+  { 
+    FreeChemical* chemical; 
+    int stoichiometry;
+  };
+
   /** @brief Stoichiometry of the forward reactants. */
-  std::vector <int> _forward_stoichiometry;
+  std::vector <CRParticipant> _free_reactants;
 
   /** @brief Stoichiometry of the backward reactants. */
-  std::vector <int> _backward_stoichiometry;  
-
-  /** @brief Number of free chemicals among forward reactants. */
-  int _free_reactant_number;
-
-  /** @brief Number of free chemicals among backward reactants. */
-  int _free_product_number;
-
-  /** @brief Number of forward reactants. */
-  int _forward_reactant_number;
-
-  /** @brief Number of backward reactants. */
-  int _backward_reactant_number;
+  std::vector <CRParticipant> _free_products;  
   
   /** @brief Bound reactant of the reaction (0 if none). */
   BoundChemical* _bound_reactant;
@@ -160,26 +126,5 @@ public:
 //  Inline declarations
 // ======================
 //
-#include "freechemical.h"
-
-inline FreeChemical* ChemicalReaction::forward_chemical (int index) 
-{
-  return static_cast <FreeChemical*> (_forward_reactants [index]);
-}
-
-inline FreeChemical* ChemicalReaction::backward_chemical (int index) 
-{
-  return static_cast <FreeChemical*> (_backward_reactants [index]);
-}
-
-inline const FreeChemical* ChemicalReaction::forward_chemical (int index) const
-{
-  return static_cast <const FreeChemical*> (_forward_reactants [index]);
-}
-
-inline const FreeChemical* ChemicalReaction::backward_chemical (int index) const
-{
-  return static_cast <const FreeChemical*> (_backward_reactants [index]);
-}
 
 #endif // CHEMICALREACTION_H

@@ -15,8 +15,8 @@
 
 
 // utility classes
+class Observable;
 template <typename T> class BiasedWheel;
-template <class T> class Observable;
 class RandomHandler;
 class ChemicalLogger;
 class DoubleStrandLogger;
@@ -52,6 +52,7 @@ class SequenceBinding;
 class Translocation;
 
 // chemical entity classes
+class Reactant;
 class BoundChemical;
 class BoundUnit;
 class BoundUnitList;
@@ -120,8 +121,7 @@ class NaiveRateManager;
 class DependencyRateManager;
 class GraphRateManager;
 
-class ConcentrationObserver;
-class ReactionObserver;
+class RateInvalidator;
 class RateValidity;
 
 // rate containers
@@ -149,15 +149,5 @@ class DependencyException;
 class FormatException;
 class ParserException;
 
-// template typedefs
-/**
- * @brief Class representing any entity that can be involved in a reaction.
- *
- * Reactant mainly provides an interface for handling reaction rate updates.
- * The type inheritance allows to list all components of a reaction as a list
- * of Reactant, while the implementation inheritance provides a way to communicate
- * with a DependencyRateManager automatically whenever a change in concentration occurs.
- */
-typedef Observable<ConcentrationObserver> Reactant;
 
 #endif // FORWARD_DECLARATIONS_H

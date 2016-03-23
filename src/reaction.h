@@ -36,7 +36,7 @@
  * reaction.
  * @sa BidirectionalReaction
  */
-class Reaction : public Observable<ReactionObserver>, public SimulatorInput
+class Reaction : public Observable, public SimulatorInput
 {
 public:
 
@@ -158,7 +158,6 @@ public:
 // ======================
 //
 #include "macros.h" // ENSURE ()
-#include "reactionobserver.h"
 
 inline Reaction::Reaction (void)
   : _rate (0)

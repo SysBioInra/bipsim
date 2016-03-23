@@ -24,10 +24,51 @@
 //
 #include "forwarddeclarations.h"
 #include "observable.h"
-#include "concentrationobserver.h"
 
-// this file allows implementation of
-// typedef Observable<ConcentrationObserver> Reactant;
-// where it is needed
+/**
+ * @brief Abstract class that contains all possible reactants.
+ */
+class Reactant : public Observable
+{
+ public:
+  // ==========================
+  //  Constructors/Destructors
+  // ==========================
+  //
+  // Not needed for this class (use of compiler-generated versions)
+  // /* @brief Constructor. */
+  // Reactant (void);
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // Reactant (const Reactant& other);
+  // /* @brief Assignment operator. */
+  // Reactant& operator= (const Reactant& other);
+
+  /** @brief Destructor. */
+  virtual ~Reactant (void) = 0;
+
+  // ===========================
+  //  Public Methods - Commands
+  // ===========================
+  //
+
+  // ============================
+  //  Public Methods - Accessors
+  // ============================
+  //
+
+private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+
+  // ============
+  //  Attributes
+  // ============
+  //  
+};
+
+inline Reactant::~Reactant (void) {}
 
 #endif // REACTANT_H

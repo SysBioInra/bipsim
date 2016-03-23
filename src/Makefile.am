@@ -50,7 +50,7 @@ libsrc_a_SOURCES += \
 	boundunitfilter.h \
 	familyfilter.cpp familyfilter.h \
 	templatefilter.cpp templatefilter.h \
-	chemical.h
+	chemical.h reactant.h
 
 # site sources
 libsrc_a_SOURCES += \
@@ -110,9 +110,8 @@ libsrc_a_SOURCES += \
 	naiveratemanager.cpp naiveratemanager.h \
 	dependencyratemanager.cpp dependencyratemanager.h \
 	graphratemanager.cpp graphratemanager.h \
-	concentrationobserver.h \
-	reactionobserver.cpp reactionobserver.h \
-	ratevalidity.h
+	rateinvalidator.h \
+	ratevalidity.cpp ratevalidity.h
 
 # rate containers
 libsrc_a_SOURCES += \

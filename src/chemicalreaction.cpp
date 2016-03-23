@@ -54,37 +54,31 @@ ChemicalReaction::ChemicalReaction (const std::vector<FreeChemical*>& components
 	   || ((forward_bound != 0) && (backward_bound != 0)));
 
   // fill in the reactant and stoichiometry vectors with free chemicals
+  CRParticipant current_reactant;
   for (int i = 0; i < components.size(); ++i)
     {
       /** @pre Stoichiometries must be nonzero. */
       REQUIRE (stoichiometry [i] != 0);
+      current_reactant.chemical = components[i];
       if (stoichiometry [i] < 0)
 	{
+	  current_reactant.stoichiometry = -stoichiometry[i];
 	  _forward_reactants.push_back (components[i]);
-	  _forward_stoichiometry.push_back (-stoichiometry[i]);
+	  _free_reactants.push_back (current_reactant);
 	}
       else
 	{
+	  current_reactant.stoichiometry = stoichiometry[i];
 	  _backward_reactants.push_back (components[i]);
-	  _backward_stoichiometry.push_back (stoichiometry[i]);
+	  _free_products.push_back (current_reactant);
 	}
     }
-  _free_reactant_number = _forward_reactants.size();
-  _free_product_number = _backward_reactants.size();
 
   // handle bound chemicals
   if (forward_bound != 0) 
-    { 
-      _forward_reactants.push_back (forward_bound); 
-      _forward_stoichiometry.push_back (1);
-    }
+    { _forward_reactants.push_back (forward_bound); }
   if (backward_bound != 0) 
-    {
-      _backward_reactants.push_back (backward_bound); 
-      _backward_stoichiometry.push_back (1);
-    }
-  _forward_reactant_number = _forward_reactants.size();
-  _backward_reactant_number = _backward_reactants.size();
+    { _backward_reactants.push_back (backward_bound); }
 }
 
 // Not needed for this class (use of compiler-generated versions)
@@ -102,11 +96,14 @@ void ChemicalReaction::perform_forward (void)
   REQUIRE (is_forward_reaction_possible() == true);
   
   // update free chemical numbers
-  for (int i = 0; i < _free_reactant_number; i++)
-    { forward_chemical (i)->remove (_forward_stoichiometry[i]); }
+  std::vector <CRParticipant>::iterator reactant_it;
+  for (reactant_it = _free_reactants.begin(); 
+       reactant_it != _free_reactants.end(); ++reactant_it)
+    { (reactant_it->chemical)->remove (reactant_it->stoichiometry); }
 
-  for (int i = 0; i < _free_product_number; i++)
-    { backward_chemical (i)->add (_backward_stoichiometry[i]); }
+  for (reactant_it = _free_products.begin(); 
+       reactant_it != _free_products.end(); ++reactant_it)
+    { (reactant_it->chemical)->add (reactant_it->stoichiometry); }
 
   // update bound chemical number (if applicable)
   if (_bound_reactant != 0)
@@ -123,11 +120,14 @@ void ChemicalReaction::perform_backward (void)
   REQUIRE (is_backward_reaction_possible() == true);
   
   // update free chemical numbers
-  for (int i = 0; i < _free_reactant_number; i++)
-    { forward_chemical (i)->add (_forward_stoichiometry[i]); }
+  std::vector <CRParticipant>::iterator reactant_it;
+  for (reactant_it = _free_reactants.begin(); 
+       reactant_it != _free_reactants.end(); ++reactant_it)
+    { (reactant_it->chemical)->add (reactant_it->stoichiometry); }
 
-  for (int i = 0; i < _free_product_number; i++)
-    { backward_chemical (i)->remove (_backward_stoichiometry[i]); }
+  for (reactant_it = _free_products.begin(); 
+       reactant_it != _free_products.end(); ++reactant_it)
+    { (reactant_it->chemical)->remove (reactant_it->stoichiometry); }
 
   // update bound chemical number (if applicable)
   if (_bound_reactant != 0)
@@ -145,23 +145,29 @@ void ChemicalReaction::perform_backward (void)
 //
 bool ChemicalReaction::is_forward_reaction_possible (void) const
 {
-  for (int i = 0; i < _forward_reactant_number; i++)
+  for (std::vector <CRParticipant>::const_iterator 
+	 reactant_it = _free_reactants.begin(); 
+       reactant_it != _free_reactants.end(); ++reactant_it)
     {
-      if (static_cast <const Chemical*> (_forward_reactants [i])->number() 
-	  < _forward_stoichiometry[i])
+      if ((reactant_it->chemical)->number() < reactant_it->stoichiometry)
 	{ return false; }
     }
+  if ((_bound_reactant != 0) && (_bound_reactant->number() < 1)) 
+    { return false; }
   return true;
 }
 
 bool ChemicalReaction::is_backward_reaction_possible (void) const
 {
-  for (int i = 0; i < _backward_reactant_number; i++)
+  for (std::vector <CRParticipant>::const_iterator 
+	 reactant_it = _free_products.begin(); 
+       reactant_it != _free_products.end(); ++reactant_it)
     {
-      if (static_cast <const Chemical*> (_backward_reactants [i])->number() 
-	  < _backward_stoichiometry[i])
+      if ((reactant_it->chemical)->number() < reactant_it->stoichiometry)
 	{ return false; }
     }
+  if ((_bound_product != 0) && (_bound_product->number() < 1)) 
+    { return false; }
   return true;
 }
 
@@ -181,13 +187,15 @@ double ChemicalReaction::compute_forward_rate (void) const
    * It is 0 if there are not enough reactants.
    */
   double rate = _k_1;
-  for (int i = 0; i < _forward_reactant_number; i++)
+  for (std::vector <CRParticipant>::const_iterator 
+	 reactant_it = _free_reactants.begin(); 
+       reactant_it != _free_reactants.end(); ++reactant_it)
     {
-      if (static_cast <const Chemical*> (_forward_reactants [i])->number() 
-	  < _forward_stoichiometry[i])
+      if ((reactant_it->chemical)->number() < reactant_it->stoichiometry)
 	{ return 0; }
-      rate *= static_cast <const Chemical*> (_forward_reactants [i])->number();
-    } 
+      rate *= (reactant_it->chemical)->number();
+    }
+  if (_bound_reactant != 0) { rate *= _bound_reactant->number(); }
   return rate;
 }
 
@@ -198,12 +206,14 @@ double ChemicalReaction::compute_backward_rate (void) const
    * It is 0 if there are not enough reactants.
    */
   double rate = _k_m1;
-  for (int i = 0; i < _backward_reactant_number; i++)
+  for (std::vector <CRParticipant>::const_iterator 
+	 reactant_it = _free_products.begin(); 
+       reactant_it != _free_products.end(); ++reactant_it)
     {
-      if (static_cast <const Chemical*> (_backward_reactants [i])->number() 
-	  < _backward_stoichiometry[i])
+      if ((reactant_it->chemical)->number() < reactant_it->stoichiometry)
 	{ return 0; }
-      rate *= static_cast <const Chemical*> (_backward_reactants [i])->number();
+      rate *= (reactant_it->chemical)->number();
     }
+  if (_bound_product != 0) { rate *= _bound_product->number(); }
   return rate;
 }
