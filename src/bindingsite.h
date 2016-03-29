@@ -23,6 +23,7 @@
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "config.h"
 #include "macros.h"
 #include "site.h"
 
@@ -81,7 +82,11 @@ public:
    * @brief Perform necessary actions when availability of the observed site 
    *  has changed.
    */
+#ifndef PERFORM_UNIT_TESTS
+  void update (void);
+#else
   virtual void update (void);
+#endif
 
   /**
    * @brief Change update_id to pass along when update occurs.

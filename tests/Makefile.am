@@ -1,17 +1,20 @@
 
-###############################################################################
-# THE PROGRAMS TO BUILD
-###############################################################################
-
+#########################
+#         FLAGS         #
+#########################
+#
 AM_CPPFLAGS = $(BOOST_CPPFLAGS)
 AM_LDFLAGS = $(BOOST_LDFLAGS)
 
+#########################
+# THE PROGRAMS TO BUILD #
+#########################
+#
 # the programs to build (the names of the final binaries)
-check_PROGRAMS = biasedwheel_test inputdata_test randomhandler_test \
-	transformationtable_test producttable_test cellstate_test \
-	compositiontable_test ratetree_test boundunitlist_test \
-	rategroup_test hybridratecontainer_test partialstrand_test \
-	sitegroup_test sequenceoccupation_test 
+check_PROGRAMS =
+if HAVE_UNIT_TESTS
+check_PROGRAMS += biasedwheel_test inputdata_test randomhandler_test transformationtable_test producttable_test cellstate_test compositiontable_test ratetree_test boundunitlist_test rategroup_test hybridratecontainer_test partialstrand_test sitegroup_test sequenceoccupation_test freechemical_test
+endif
 
 # declare programs to be part of `make check`
 TESTS = $(check_PROGRAMS)
@@ -23,14 +26,14 @@ biasedwheel_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 inputdata_test_SOURCES = inputdata_test.cpp
 inputdata_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
-producttable_test_SOURCES = producttable_test.cpp
-producttable_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
-
 randomhandler_test_SOURCES = randomhandler_test.cpp
 randomhandler_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 transformationtable_test_SOURCES = transformationtable_test.cpp
 transformationtable_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
+
+producttable_test_SOURCES = producttable_test.cpp
+producttable_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 cellstate_test_SOURCES = cellstate_test.cpp
 cellstate_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
@@ -59,4 +62,6 @@ sitegroup_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 sequenceoccupation_test_SOURCES = sequenceoccupation_test.cpp
 sequenceoccupation_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
-###############################################################################
+freechemical_test_SOURCES = freechemical_test.cpp
+freechemical_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
+

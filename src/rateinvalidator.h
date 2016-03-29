@@ -24,6 +24,7 @@
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "config.h"
 
 /**
  * @brief Class noticing parent when rate changes.
@@ -35,7 +36,6 @@
 class RateInvalidator
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -65,7 +65,11 @@ class RateInvalidator
   /**
    * @brief Notify observer that a change affecting its rate occurred.
    */
+#ifndef PERFORM_UNIT_TESTS
   void update (void);
+#else
+  virtual void update (void);
+#endif
 
   // ============================
   //  Public Methods - Accessors

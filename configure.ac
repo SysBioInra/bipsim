@@ -55,6 +55,10 @@ AC_ARG_ENABLE([post-check],
 	[ --enable-post-check	enable postcondition checks],
 	[post_check=${enableval}], [post_check=no])
 
+AC_ARG_ENABLE([unit-tests],
+	[ --enable-unit-tests	enable unit tests],
+	[unit_tests=${enableval}], [unit_tests=no])
+
 
 if test "x${pre_check}" = xyes; then
    AC_DEFINE([CHECK_PRECONDITIONS], 1, [Precondition check enabled])
@@ -62,6 +66,11 @@ fi
 
 if test "x${post_check}" = xyes; then
    AC_DEFINE([CHECK_POSTCONDITIONS], 1, [Postcondition check enabled])
+fi
+
+AM_CONDITIONAL([HAVE_UNIT_TESTS], [test "x${unit_tests}" = xyes])	     
+if test "x${unit_tests}" = xyes; then
+   AC_DEFINE([PERFORM_UNIT_TESTS], 1, [Unit tests enabled])
 fi
 
 # generate the final Makefile etc.

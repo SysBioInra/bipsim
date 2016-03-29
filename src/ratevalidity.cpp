@@ -26,6 +26,8 @@ RateValidity::RateValidity (int number_rates)
   , _update_stack (number_rates)
   , _invalidators (number_rates)
 {
+  /** @pre number_rates must be positive. */
+  REQUIRE (number_rates > 0);
   for (int i = 0; i < _invalidators.size(); ++i)
     { _invalidators[i] = new RateInvalidator (*this, i); }
 }

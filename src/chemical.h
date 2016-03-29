@@ -124,7 +124,7 @@ inline int Chemical::number (void) const { return _number; }
 
 inline void Chemical::add (int quantity)
 {
-  REQUIRE( quantity >= 0 ); /** @pre Quantity is nonnegative. */
+  REQUIRE (quantity >= 0); /** @pre Quantity is nonnegative. */
   
   _number += quantity;
   notify_change();
@@ -133,7 +133,7 @@ inline void Chemical::add (int quantity)
 inline void Chemical::remove (int quantity)
 { 
   /** @pre Quantity does not exceed current number. */
-  REQUIRE( quantity <= _number );
+  REQUIRE (quantity <= _number);
   
   _number -= quantity;
   notify_change();
