@@ -73,6 +73,10 @@ public:
    */
   void update_rate (void);
 
+  /**
+   * @brief Update computation of rate following a change in volume.
+   */
+  // virtual void handle_volume_change (double volume);
 
   // ============================
   //  Public Methods - Accessors

@@ -162,7 +162,6 @@ class RateVector : public RateContainer
   const double& operator[] (int index) const { return _rates [index]; }
 
 private:
-
   // ============
   //  Attributes
   // ============

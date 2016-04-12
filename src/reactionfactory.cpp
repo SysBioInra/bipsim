@@ -87,6 +87,7 @@ void ReactionFactory::create_chemical_reaction (void)
 {
   std::vector <FreeChemical*> free_chemicals;
   std::vector <int> stoichiometries;
+  std::vector <int> orders;
   std::string next = read <std::string> (_line_stream);
   BoundChemical* bound_reactant = 0;
   BoundChemical* bound_product = 0;
@@ -100,6 +101,7 @@ void ReactionFactory::create_chemical_reaction (void)
 	{
 	  free_chemicals.push_back (free_chemical);
 	  stoichiometries.push_back (stoichiometry);
+	  orders.push_back (abs (stoichiometry));
 	}
       else if (bound_chemical && (stoichiometry == 1) && (bound_product == 0))
 	{
@@ -131,8 +133,8 @@ void ReactionFactory::create_chemical_reaction (void)
   double k_m1 = read <double> (_line_stream);
 
   ChemicalReaction* reaction = 
-    new ChemicalReaction (free_chemicals, stoichiometries, k_1, k_m1,
-			  bound_reactant, bound_product);
+    new ChemicalReaction (free_chemicals, stoichiometries, orders,
+			  k_1, k_m1, bound_reactant, bound_product);
   store (reaction);
   if (k_1 > 0) { store (new ForwardReaction (*reaction)); }
   if (k_m1 > 0) { store (new BackwardReaction (*reaction)); } 
@@ -186,11 +188,14 @@ void ReactionFactory::create_release (void)
   BoundChemical* unit_to_release = fetch <BoundChemical> (_line_stream);
   std::vector <FreeChemical*> chemicals;
   std::vector <int> stoichiometries;
+  std::vector <int> orders;
   std::string next = read <std::string> (_line_stream);
   while (next != std::string ("rate"))
     {
       chemicals.push_back (fetch <FreeChemical> (next));
-      stoichiometries.push_back (read <int> (_line_stream));
+      int stoichiometry = read <int> (_line_stream);
+      stoichiometries.push_back (stoichiometry);
+      orders.push_back (abs (stoichiometry));
       next = read <std::string> (_line_stream);
     }
   if (chemicals.size() == 0) { throw FormatException(); }
@@ -201,8 +206,8 @@ void ReactionFactory::create_release (void)
   if (check_tag (_line_stream, "produces"))
     { table = fetch <ProductTable> (_line_stream); }
 
-  store (new Release (*unit_to_release, chemicals,
-		       stoichiometries, rate, table));
+  store (new Release (*unit_to_release, chemicals, stoichiometries, 
+		      orders, rate, table));
 }
 
 
@@ -229,17 +234,19 @@ void ReactionFactory::create_degradation (void)
   // create chemical and stoichiometry vector to represent reaction
   std::vector <FreeChemical*> chemicals (composition.size()+1);
   std::vector <int> stoichiometry (chemicals.size());
-  chemicals [0] = sequence; stoichiometry [0] = -1;
+  std::vector <int> orders (chemicals.size());
+  chemicals [0] = sequence; stoichiometry [0] = -1; orders [0] = 1;
   int i = 1;
   for (std::map <FreeChemical*, int>::iterator comp_it = composition.begin();
        comp_it != composition.end(); ++comp_it, ++i)
     {
       chemicals [i] = comp_it->first; 
       stoichiometry [i] = comp_it->second;
+      orders [i] = comp_it->second;
     }
 
   ChemicalReaction* reaction = 
-    new ChemicalReaction (chemicals, stoichiometry, rate, 0);
+    new ChemicalReaction (chemicals, stoichiometry, orders, rate, 0);
   store (reaction);
   store (new ForwardReaction (*reaction));
 }

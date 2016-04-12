@@ -189,7 +189,7 @@ inline const std::vector<Reaction*>& RateManager::reactions (void) const
 inline std::ostream& operator<< (std::ostream& output,
 				 const RateManager& manager)
 {
-  output << manager._rates;
+  output << *(manager._rates);
   return output;
 }
 

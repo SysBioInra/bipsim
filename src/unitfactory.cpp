@@ -262,7 +262,10 @@ void UnitFactory::create_chemical_sequence (void)
   std::string keyword = read <std::string> (_line_stream);
   if (keyword == "sequence")
     { 
-      store (new ChemicalSequence (read <std::string> (_line_stream))); 
+      ChemicalSequence* chemical = 
+	new ChemicalSequence (read <std::string> (_line_stream));
+      store (chemical, name); 
+      chemical->add (read_initial_quantity (_line_stream));
       return;
     }
   if (keyword != "product_of") { throw FormatException(); }

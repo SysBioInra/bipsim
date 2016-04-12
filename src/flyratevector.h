@@ -19,6 +19,7 @@
 //
 #include <vector> // std::vector
 #include <numeric> // std::partial_sum
+#include <cmath> // fabs
 
 // ======================
 //  Forward declarations
@@ -56,6 +57,7 @@ class FlyRateVector : public RateContainer
     : _rates (size, 0)
     , _forward (forward)
     , _total_rate (0)
+    , _last_max_rate (0)
   {
   }
 
@@ -96,6 +98,11 @@ class FlyRateVector : public RateContainer
   { 
     /** @post total rate should be positive. */
     ENSURE (_total_rate >= 0);
+    /** @post total rate should be close to real rate. */
+    ENSURE ((_total_rate == 0) ||
+	    (fabs (std::accumulate (_rates.begin(), _rates.end(), 0.0) 
+		   - _total_rate)
+	    < 1e-5 * std::accumulate (_rates.begin(), _rates.end(), 0.0)));
     return _total_rate;
   }
 
@@ -117,7 +124,7 @@ class FlyRateVector : public RateContainer
   //  Public Methods - Setters
   // ==========================
   //
-  // inherited (virtual)
+  // redefined from RateContainer
   void set_rate (int index, double value)
   {
     /** @pre index must be within vector bounds. */
@@ -126,11 +133,35 @@ class FlyRateVector : public RateContainer
     REQUIRE (value >= 0);
     _total_rate += value - _rates [index];
     _rates [index] = value;
-    if (_total_rate <= 0) { _compute_total_rate(); }
-    ENSURE (_total_rate >= 0);
+    if ((_total_rate <= 0) || (_total_rate < 1e-5 * _last_max_rate))
+      { _compute_total_rate(); }
+    else if (_total_rate > _last_max_rate) { _last_max_rate = _total_rate; }
   }
 
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+  /**
+   * @brief Compute total rate from scratch.
+   */
+  void _compute_total_rate (void) const
+  {
+    _last_max_rate =_total_rate = 
+      std::accumulate (_rates.begin(), _rates.end(), 0.0);
+  }
+
+  // redefined from RateContainer
+  std::ostream& _print (std::ostream& output) const
+  {
+    for (std::vector <double>::const_iterator it = _rates.begin();
+	 it != _rates.end(); ++it)
+      { output << *it << " "; }
+    output << _total_rate << "\n";
+    return output;
+  }
+
   // ============
   //  Attributes
   // ============
@@ -141,20 +172,11 @@ private:
   /** @brief Total rate. */
   mutable double _total_rate;
 
+  /** @brief Max rate attained since last actual computation of total rate. */
+  mutable double _last_max_rate;
+
   /** @brief Sense of cumulation. */
   bool _forward;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
-  /**
-   * @brief Compute total rate from scratch.
-   */
-  void _compute_total_rate (void) const
-  {
-    _total_rate = std::accumulate (_rates.begin(), _rates.end(), 0.0);
-  }
 };
 
 // ======================
@@ -163,8 +185,8 @@ private:
 //
 inline int FlyRateVector::random_index (void) const
 {
-  /** Total rate must be strictly positive. */
-  ENSURE (total_rate() > 0);
+  /** @pre Total rate must be strictly positive. */
+  REQUIRE (total_rate() > 0);
   double u = RandomHandler::instance().draw_uniform
     (1e-16*total_rate(), total_rate());
   if (_forward)

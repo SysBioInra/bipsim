@@ -55,6 +55,7 @@ public:
    * @param other_components Vector of other chemicals involved in the reaction.
    * @param stoichiometry Vector of stoichiometry of the other chemicals, 
    *  positive for products, negative for reactants.
+   * @param orders Vector of orders of the other chemicals.
    * @param rate Reaction rate constant.
    * @param product_table If bound chemical releases a product, table listing
    *  molecules it may produce depending on its binding and release sites.
@@ -62,7 +63,8 @@ public:
    */
   Release (BoundChemical& unit_to_release,
 	   std::vector<FreeChemical*>& other_components,
-	   std::vector<int>& stoichiometry, double rate,
+	   std::vector<int>& stoichiometry, 
+	   std::vector<int>& orders, double rate,
 	   ProductTable* product_table = 0);
     
 

@@ -89,7 +89,7 @@ public:
   // ============================
   //
   /**
-   * @brief Accessor to random unit (has to be activated).
+   * @brief Accessor to random unit.
    * @return Random BoundUnit belonging to this species.
    */
   BoundUnit& random_unit (void) const;

@@ -97,6 +97,27 @@ class HybridRateContainer : public RateContainer
   int number_groups (void) const;
 
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+  // redefined from RateContainer
+  std::ostream& _print (std::ostream& output) const; 
+
+  /**
+   * @brief Compute which group a value is in.
+   * @param value Rate value.
+   * @return Index of the group the rates belongs to. If the rate is exactly a
+   *  value separating two groups, the larger index is returned.
+   */
+  int _rate_to_group (double value);
+
+  /**
+   * @brief Create new groups until a given value can be stored.
+   * @param value Rate value that needs to be stored.
+   */
+  void _create_new_groups (double value);
+
   // ============
   //  Attributes
   // ============
@@ -123,27 +144,6 @@ private:
 
   /** @brief Constant used to specify that a rate is not stored in any group. */
   static const int NULL_GROUP = -1;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
-  // redefined from RateContainer
-  std::ostream& _print (std::ostream& output) const; 
-
-  /**
-   * @brief Compute which group a value is in.
-   * @param value Rate value.
-   * @return Index of the group the rates belongs to. If the rate is exactly a
-   *  value separating two groups, the larger index is returned.
-   */
-  int _rate_to_group (double value);
-
-  /**
-   * @brief Create new groups until a given value can be stored.
-   * @param value Rate value that needs to be stored.
-   */
-  void _create_new_groups (double value);
 };
 
 // ======================

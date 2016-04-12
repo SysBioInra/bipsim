@@ -56,6 +56,7 @@ class FreeChemical : public Chemical
   //  Public Methods - Commands
   // ===========================
   //
+  // makes the protected methods from Chemical public
   using Chemical::add;
   using Chemical::remove;
 

@@ -1,18 +1,14 @@
 
-
-
 /**
  * @file chemicalreaction.h
  * @authors Marc Dinh, Stephan Fischer
  * @brief Header for the ChemicalReaction class.
  */
 
-
 // Multiple include protection
 //
 #ifndef CHEMICALREACTION_H
 #define CHEMICALREACTION_H
-
 
 // ==================
 //  General Includes
@@ -46,6 +42,7 @@ public:
    * @param components Vector of chemicals involved in the reaction.
    * @param stoichiometry Vector of stoichiometry of the chemicals, 
    *  positive for products, negative for reactants.
+   * @param orders Vector of orders of the chemicals.
    * @param forward_rate_constant Forward rate constant.
    * @param backward_rate_constant Backward rate constant.
    * @param forward_bound BoundChemical reactant (if applicable).
@@ -53,6 +50,7 @@ public:
    */
   ChemicalReaction (const std::vector<FreeChemical*>& components,
 		    const std::vector<int>& stoichiometry,
+		    const std::vector<int>& orders,
 		    double forward_rate_constant,
 		    double backward_rate_constant,
 		    BoundChemical* forward_bound = 0,
@@ -74,6 +72,7 @@ public:
   // Redefinitions from BidirectionalReaction
   void perform_forward (void);
   void perform_backward (void);
+  void handle_volume_change (double volume);
 
   // ============================
   //  Public Methods - Accessors
@@ -93,21 +92,24 @@ public:
   double compute_backward_rate (void) const;
   void print (std::ostream& output) const;
 
+  static double contribution (int number, int order);
+  
   // ============
   //  Attributes
   // ============
   //
-  struct CRParticipant 
-  { 
-    FreeChemical* chemical; 
+  struct CRFree
+  {
+    FreeChemical* chemical;
     int stoichiometry;
+    int order;
   };
 
-  /** @brief Stoichiometry of the forward reactants. */
-  std::vector <CRParticipant> _free_reactants;
+  /** @brief Free forward reactants. */
+  std::vector <CRFree> _free_forward;
 
-  /** @brief Stoichiometry of the backward reactants. */
-  std::vector <CRParticipant> _free_products;  
+  /** @brief Free backward reactants. */
+  std::vector <CRFree> _free_backward;
   
   /** @brief Bound reactant of the reaction (0 if none). */
   BoundChemical* _bound_reactant;
@@ -120,11 +122,40 @@ public:
 
   /** @brief Forward rate constant k_-1. */
   double _k_m1;
+
+  /** @brief Current forward rate including volume. */
+  double _forward_constant;
+
+  /** @brief Current backward rate including volume. */
+  double _backward_constant;
+
+  /** @brief Total order of forward reactants. */
+  int _forward_order;
+
+  /** @brief Total order of backward reactants. */
+  int _backward_order;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+#include <cmath> // pow
+#include "freechemical.h"
+
+inline double 
+ChemicalReaction::contribution (int number, int order)
+{  
+  double result = 1;
+  order = number - order;
+  while (number > order) { result *= number; --number; }
+  return result;      
+}
+
+inline void ChemicalReaction::handle_volume_change (double volume)
+{
+  _forward_constant = _k_1 / pow (volume, _forward_order);
+  _backward_constant = _k_m1 / pow (volume, _backward_order);
+}
 
 #endif // CHEMICALREACTION_H

@@ -32,9 +32,11 @@
 //
 Release::Release (BoundChemical& unit_to_release,
 		  std::vector<FreeChemical*>& other_components,
-		  std::vector<int>& stoichiometry, double rate,
+		  std::vector<int>& stoichiometry, 
+		  std::vector<int>& orders, 
+		  double rate,
 		  ProductTable* product_table /*= 0*/)
-  : _side_reaction (other_components, stoichiometry, rate, 0)
+  : _side_reaction (other_components, stoichiometry, orders, rate, 0)
   , _unit_to_release (unit_to_release)
   , _product_table (product_table)
 {

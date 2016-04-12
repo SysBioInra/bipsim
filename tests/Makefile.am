@@ -13,7 +13,7 @@ AM_LDFLAGS = $(BOOST_LDFLAGS)
 # the programs to build (the names of the final binaries)
 check_PROGRAMS =
 if HAVE_UNIT_TESTS
-check_PROGRAMS += biasedwheel_test inputdata_test randomhandler_test transformationtable_test producttable_test cellstate_test compositiontable_test ratetree_test boundunitlist_test rategroup_test hybridratecontainer_test partialstrand_test sitegroup_test sequenceoccupation_test freechemical_test
+check_PROGRAMS += biasedwheel_test inputdata_test randomhandler_test transformationtable_test producttable_test cellstate_test compositiontable_test ratetree_test boundunitlist_test rategroup_test hybridratecontainer_test partialstrand_test sitegroup_test sequenceoccupation_test freechemical_test boundchemical_test
 endif
 
 # declare programs to be part of `make check`
@@ -64,4 +64,7 @@ sequenceoccupation_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 
 freechemical_test_SOURCES = freechemical_test.cpp
 freechemical_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
+
+boundchemical_test_SOURCES = boundchemical_test.cpp
+boundchemical_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) ../src/libsrc.a
 

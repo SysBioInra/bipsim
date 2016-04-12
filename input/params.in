@@ -56,6 +56,7 @@ OUTPUT_STEP 100000
 
 OUTPUT_ENTITIES protein rna GTP GMP CTP CMP ATP AMP UTP UMP
 
+
 ################################################################################
 # DRAWING_ALGORITHM
 # Algorithm to use to determine next reaction to perform. Format is
