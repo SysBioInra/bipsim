@@ -1,12 +1,10 @@
 
-
 /**
  * @file solver.h
  * @brief Header for the Solver class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -36,7 +34,6 @@
 class Solver
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -63,20 +60,28 @@ class Solver
   // ===========================
   //
   /**
-   * @brief Update system according to the reaction system during given time 
-   *  step.
+   * @brief Update system during given time step.
    * @param time_step Time during which the reactions should be integrated.
    */
   void solve (double time_step);
 
   /**
-   * @brief Update system according to the reaction system until a reaction 
-   *  happens.
-   * @return True if a reaction was successfully performed, false if no
-   *  reactions were left to perform.
+   * @brief Perform next scheduled reaction.
    */
-  bool go_to_next_reaction (void);
+  void perform_next_reaction (void);
   
+  /**
+   * @brief Reset simulation time and reschedule next reaction.
+   * @param time New simulation time.
+   */
+  void reschedule (double time);
+
+  /**
+   * @brief Set volume and time and reschedule next reaction.
+   * @param time Time at which the volume changes.
+   * @param volume New volume value.
+   */
+  void set_volume (double time, double volume);
 
   // ============================
   //  Public Methods - Accessors
@@ -89,71 +94,58 @@ class Solver
   double time (void) const;
 
   /**
+   * @brief Accessor to next reaction time.
+   * @return Time of next scheduled reaction or INFINITY if none.
+   */
+  virtual double next_reaction_time (void) const = 0;
+
+  /**
    * @brief Accessor to the number of reactions that have occurred.
    * @return Number of reactions that have occurred from the beginning of 
    *  simulation.
    */
   long long int number_reactions_performed (void) const;  
-  
- protected:
-  // ===================
-  //  Protected Methods
-  // ===================
-  //
-  /**
-   * @brief Compute next reaction of the system.
-   * 
-   * The computation is actually done by classes inheriting
-   * from Solver.
-   * @return Time at which the reaction occurred. NO_REACTIONS_LEFT if there
-   *  was no reaction left to perform.
-   */
-  virtual double compute_next_reaction (void) = 0;
 
-  /**
-   * @brief Accessor to the dependency graph between reactions.
-   * @return DependencyGraph built during construction of the class
-   *  establishing which reaction should be updated.
-   */
-  const DependencyGraph& dependency_graph (void) const;
-
-  /**
-   * @brief Accessor to the reactions.
-   * @return Vector of reactions composing the system to integrate.
-   */
-  const std::vector<Reaction*>& reactions (void) const;
-
-  // =====================
-  //  Protected constants
-  // =====================
+  // ==================
+  //  Public constants
+  // ==================
   //  
-  /** @brief Constant used when no reactions are left in the system. */
-  static const double NO_REACTIONS_LEFT;
-
+  /** @brief Shortcut for double value representing infinity. */
+  static const double INFINITY;
+  
  private:
   // =================
   //  Private Methods
   // =================
   //
+  /**
+   * @brief Schedule next reaction.
+   */
+  virtual void schedule_next_reaction (void) = 0;
+
+  /**
+   * @brief Reset system and reschedule next reaction.
+   */
+  virtual void reinitialize (void);
+
+  /**
+   * @brief Accessor to next reaction.
+   * @return Reaction scheduled to be performed next.
+   */
+  virtual Reaction& next_reaction (void) const = 0;
 
   // ============
   //  Attributes
   // ============
   //
-  /** @brief Vector of reactions to integrate. */
-  std::vector< Reaction* > _reactions;
-
-  /** @brief Dependency graph between relations. */
-  DependencyGraph _dependency_graph;
+  /** @brief Reactions to integrate. */
+  std::vector <Reaction*> _reactions;
 
   /** @brief Simulation time. */
   double _t;
 
   /** @brief Number of reactions that have been performed. */
   long long int _number_reactions_performed;
-
-  /** @brief State of the cell. */
-  CellState& _cell_state;
 };
 
 // ======================
@@ -170,14 +162,9 @@ inline long long int Solver::number_reactions_performed (void) const
   return _number_reactions_performed;
 }
 
-inline const DependencyGraph& Solver::dependency_graph (void) const
+inline void Solver::reinitialize (void)
 {
-  return _dependency_graph;
-}
-
-inline const std::vector<Reaction*>& Solver::reactions (void) const
-{
-  return _reactions;
+  schedule_next_reaction();
 }
 
 #endif // SOLVER_H

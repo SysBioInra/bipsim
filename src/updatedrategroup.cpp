@@ -1,12 +1,10 @@
 
-
 /**
  * @file updatedrategroup.cpp
  * @brief Implementation of the UpdatedRateGroup class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -27,13 +25,17 @@
 //  Constructors/Destructors
 // ==========================
 //
+const double UpdatedRateGroup::INFINITY = 
+  std::numeric_limits<double>::infinity();
+
 UpdatedRateGroup::UpdatedRateGroup (const SimulationParams& params,
 				    const std::vector<Reaction*>& reactions,
 				    double initial_time)
-  : ReactionGroup (reactions)
-  , _rate_manager (params, reactions)
+  : _rate_manager (params, reactions)
+  , _next_reaction (0)
+  , _next_reaction_time (initial_time)
 {
-  reschedule_next_reaction (initial_time);
+  schedule_next_reaction (initial_time);
 }
 
 // Not needed for this class (use of default copy constructor) !
@@ -45,35 +47,33 @@ UpdatedRateGroup::UpdatedRateGroup (const SimulationParams& params,
 //  Public Methods - Commands
 // ===========================
 //
-
-bool UpdatedRateGroup::perform_next_reaction (void)
+void UpdatedRateGroup::schedule_next_reaction (double current_time)
 {
-  // perform next scheduled reaction
-  perform_reaction (_rate_manager.random_index());
-
-  // schedule next reaction
-  reschedule_next_reaction (_next_reaction_time);
-
-  return true;
-}
-
-
-void UpdatedRateGroup::reschedule_next_reaction (double current_time)
-{
-  // update rates
   _rate_manager.update_rates();
-
-  // compute reaction time
-  _next_reaction_time = current_time + RandomHandler::instance().draw_exponential (_rate_manager.total_rate());
+  
+  if (_rate_manager.total_rate() > 0)
+    {
+      _next_reaction = &(_rate_manager.random_reaction());
+      _next_reaction_time = current_time + 
+	RandomHandler::instance().draw_exponential (_rate_manager.total_rate());
+    }
+  else
+    {
+      _next_reaction = 0;
+      _next_reaction_time = INFINITY;
+    }
 }
 
-
+void UpdatedRateGroup::reinitialize (double time)
+{
+  _rate_manager.compute_all_rates();
+  schedule_next_reaction (time);
+}
 
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-
 
 // =================
 //  Private Methods

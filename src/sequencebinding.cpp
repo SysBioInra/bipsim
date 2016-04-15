@@ -39,6 +39,7 @@ SequenceBinding::SequenceBinding (FreeChemical& unit_to_bind,
   , _binding_result (binding_result)
   , _family (binding_site_family)
   , _family_filter (_family)
+  , _volume_constant (1)
 {
   _forward_reactants.push_back (&unit_to_bind);
   _forward_reactants.push_back (&binding_site_family);
@@ -49,8 +50,8 @@ SequenceBinding::SequenceBinding (FreeChemical& unit_to_bind,
 }
  
 // Forbidden
-// SequenceBinding::SequenceBinding (SequenceBinding& other_binding);
-// SequenceBinding& SequenceBinding::operator= (SequenceBinding& other_binding);
+// SequenceBinding::SequenceBinding (SequenceBinding& other);
+// SequenceBinding& SequenceBinding::operator= (SequenceBinding& other);
 
 SequenceBinding::~SequenceBinding (void)
 {
@@ -123,7 +124,8 @@ double SequenceBinding::compute_forward_rate (void) const
    * family can compute the rest of the formula for us as it holds information
    * about binding rates and binding site concentrations.
    */
-  return _unit_to_bind.number() * _family.total_binding_rate();
+  return _volume_constant * 
+    _unit_to_bind.number() * _family.total_binding_rate();
 }
 
 double SequenceBinding::compute_backward_rate (void) const
@@ -137,7 +139,7 @@ double SequenceBinding::compute_backward_rate (void) const
    * binding_result bound to every single binding sites and the vector of 
    * corresponding unbinding rates.
    */
-  return _family_filter.total_unbinding_rate();
+  return _volume_constant * _family_filter.total_unbinding_rate();
 }
 
 

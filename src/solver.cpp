@@ -29,13 +29,10 @@
 //  Constructors/Destructors
 // ==========================
 //
-const double Solver::NO_REACTIONS_LEFT = 
-  std::numeric_limits<double>::infinity();
+const double Solver::INFINITY = std::numeric_limits<double>::infinity();
 
 Solver::Solver (const SimulationParams& params, CellState& cell_state)
   : _reactions (cell_state.reactions())
-  , _cell_state (cell_state)
-  , _dependency_graph (cell_state.reactions())
   , _t (params.initial_time())
   , _number_reactions_performed (0)
 {
@@ -53,23 +50,33 @@ Solver::Solver (const SimulationParams& params, CellState& cell_state)
 void Solver::solve (double time_step)
 {  
   double final_time = _t + time_step;
-  bool reactions_left = true;
-  while (reactions_left && (_t < final_time))
-    {
-      // compute next reaction
-      reactions_left = go_to_next_reaction();
-    }
+  while (next_reaction_time() < final_time) { perform_next_reaction(); }
   _t = final_time;
 }
 
-bool Solver::go_to_next_reaction (void)
+void Solver::perform_next_reaction (void)
 {
+  REQUIRE (next_reaction_time() != INFINITY);
   // perform next reaction
-  double t = compute_next_reaction();
-  if (t == NO_REACTIONS_LEFT) { return false; }
-  _t = t;
+  _t = next_reaction_time(); 
+  next_reaction().perform();
   ++_number_reactions_performed;
-  return true;
+  schedule_next_reaction();
+}
+
+void Solver::reschedule (double time)
+{
+  _t = time;
+  reinitialize();
+}
+
+void Solver::set_volume (double time, double volume)
+{
+  _t = time;
+  for (std::vector <Reaction*>::iterator it = _reactions.begin();
+       it != _reactions.end(); ++it)
+    { (*it)->handle_volume_change (volume); }
+  reinitialize();
 }
 
 // ============================

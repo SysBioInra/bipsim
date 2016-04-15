@@ -34,6 +34,7 @@ Loading::Loading (BoundChemical& loader, const LoadingTable& table)
   : _loader (loader)
   , _template_filter (table)
   , _table (table)
+  , _volume_constant (1)
 {
   // ask loader to classify units according to templates read
   _loader.add_filter (_template_filter);
@@ -91,7 +92,7 @@ double Loading::compute_rate (void) const
    * bind is easy to get, the loader can compute the rest of the formula for
    * us as it holds information about templates and base concentrations.
    */
-  return _template_filter.loading_rate();
+  return _volume_constant * _template_filter.loading_rate();
 }
 
 void Loading::do_reaction (void)

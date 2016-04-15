@@ -79,6 +79,7 @@ public:
   // Redefined from BidirectionReaction
   void perform_forward (void);
   void perform_backward (void);
+  void handle_volume_change (double volume);
 
   // ============================
   //  Public Methods - Accessors
@@ -113,11 +114,18 @@ public:
 
   /** @brief Filter used to select units that bound to correct family. */
   FamilyFilter _family_filter;
+
+  /** @brief Volume constant. */
+  double _volume_constant;
 };
 
 // =====================
 //  Inline Declarations
 // =====================
 //
+inline void SequenceBinding::handle_volume_change (double volume)
+{
+  _volume_constant = 1 / (volume * volume);
+}
 
 #endif // BINDING_H

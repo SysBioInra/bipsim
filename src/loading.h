@@ -65,7 +65,8 @@ public:
   //  Public Methods - Commands
   // ===========================
   //
-  //
+  // Redefined from Reaction
+  void handle_volume_change (double volume);
 
   // ============================
   //  Public Methods - Accessors
@@ -117,6 +118,9 @@ public:
 
   /** @brief Filter organizing loader units according to templates. */
   TemplateFilter _template_filter;  
+
+  /** @brief Volume constant. */
+  double _volume_constant;
 };
 
 /**
@@ -170,9 +174,16 @@ class DoubleStrandLoading: public Loading
 //  Inline Declarations
 // =====================
 //
+inline void Loading::handle_volume_change (double volume)
+{
+  _volume_constant = 1 / (volume * volume);
+}
+
 inline BoundUnit& Loading::random_unit (void) const
 {
   return _template_filter.random_unit();
 }
+
+
 
 #endif // LOADING_H

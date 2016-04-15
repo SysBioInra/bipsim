@@ -89,7 +89,8 @@ libsrc_a_SOURCES += \
 	simulation.cpp simulation.h \
 	simulationparams.cpp simulationparams.h \
 	simulatorinput.h \
-	unitfactory.cpp unitfactory.h
+	unitfactory.cpp unitfactory.h \
+	volumehandler.cpp volumehandler.h
 
 # solver sources
 libsrc_a_SOURCES += \
@@ -98,8 +99,7 @@ libsrc_a_SOURCES += \
 	dependencygraph.cpp dependencygraph.h \
 	manualdispatchsolver.cpp manualdispatchsolver.h \
 	naivesolver.cpp naivesolver.h \
-	reactiongroup.cpp reactiongroup.h \
-	reactiongroupevent.h \
+	reactiongroup.h \
 	reactionclassification.cpp reactionclassification.h \
 	solver.cpp solver.h \
 	updatedrategroup.cpp updatedrategroup.h

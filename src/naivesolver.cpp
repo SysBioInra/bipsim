@@ -36,8 +36,9 @@ NaiveSolver::NaiveSolver (const SimulationParams& params, CellState& cell_state)
   : Solver (params, cell_state)
   , _rate_manager (0)
 {
-  _rate_manager = params.rate_manager_factory().create (params, reactions(),
-							dependency_graph());
+  _rate_manager = params.rate_manager_factory().
+    create (params, cell_state.reactions(),
+	    DependencyGraph (cell_state.reactions()));
 }
 
 // Forbidden
@@ -64,27 +65,25 @@ NaiveSolver::~NaiveSolver (void)
 //  Private Methods
 // =================
 //
-double NaiveSolver::compute_next_reaction (void)
+void NaiveSolver::schedule_next_reaction (void)
 {
   // update reaction rates
   _rate_manager->update_rates();
   //std::cout << time() << " " << number_reactions_performed() << "\n";
   //std::cout << (*_rate_manager) << "\n\n";
       
-  if (_rate_manager->total_rate() <= 0)
+  if (_rate_manager->total_rate() > 0)
+    {
+      _next_reaction = &(_rate_manager->random_reaction());
+      _next_reaction_time = time() + RandomHandler::instance().draw_exponential 
+	(_rate_manager->total_rate());
+    }
+  else
     {
       std::cerr << "Warning: no reactions left to perform "
 		<< "(total reaction rate = "
-		<< _rate_manager->total_rate() << ")."
-		<< std::endl;
-      // do not update time
-      return NO_REACTIONS_LEFT;
-    }
-  
-  // compute next reaction to perform
-  reactions() [_rate_manager->random_index()]->perform();
- 
-  // return updated time
-  return time() +
-    RandomHandler::instance().draw_exponential (_rate_manager->total_rate());
+		<< _rate_manager->total_rate() << ")." << std::endl;
+      _next_reaction = 0;
+      _next_reaction_time = INFINITY;
+    }  
 }

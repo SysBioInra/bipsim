@@ -77,8 +77,14 @@ private:
   //  Private Methods
   // =================
   //
+  /** @brief Compute type and time of next event or reaction. */
+  void compute_next_timing (void);
+
   /** @brief Write logs if necessary. */
-  void write_logs (void);
+  void write_logs (double time);
+
+  /** @brief Create ChemicalLogger from simulation parameters. */
+  ChemicalLogger* create_chemical_logger (void);
 
   // ============
   //  Attributes
@@ -99,8 +105,23 @@ private:
   /** @brief Logger used to write to file. */
   DoubleStrandLogger* _replication_logger;
 
+  /** @brief Handler used to update volume. */
+  VolumeHandler* _volume_handler;
+
   /** @brief Handler reading and performing user-defined events. */
   EventHandler _event_handler;
+
+  /** @brief Next log time. */
+  double _next_log_time;
+
+  /** @brief Next timing of reaction, event, volume change, etc. */
+  double _next_timing;
+
+  /** @brief Possible types for next occurrence (reaction, event, etc.). */
+  enum NextType { REACTION, EVENT, VOLUME };
+
+  /** @brief Type of next occurrence (reaction, event, etc.). */
+  NextType _next;
 };
 
 // ======================

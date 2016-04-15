@@ -72,8 +72,17 @@ class NaiveSolver : public Solver
   //  Public Methods - Accessors
   // ============================
   //  
+  // Redefined from Solver
+  double next_reaction_time (void) const;
 
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+  // Redefined from Solver
+  void schedule_next_reaction (void);
+  Reaction& next_reaction (void) const;
 
   // ============
   //  Attributes
@@ -82,18 +91,27 @@ private:
   /** @brief Rate manager handling rates and rate updates. */
   RateManager* _rate_manager;
 
-  // =================
-  //  Private Methods
-  // =================
-  //
-  // Redefined from Solver
-  double compute_next_reaction (void);
+  /** @brief Next reaction. */
+  Reaction* _next_reaction;
+
+  /** @brief Next reaction time. */
+  double _next_reaction_time;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+inline double NaiveSolver::next_reaction_time (void) const
+{
+  return _next_reaction_time;
+}
 
+inline Reaction& NaiveSolver::next_reaction (void) const
+{
+  /** @pre A reaction must be scheduled (i.e. next reaction time is finite). */
+  REQUIRE (_next_reaction_time != NO_REACTIONS_LEFT);
+  return *_next_reaction;
+}
 
 #endif // NAIVE_SOLVER_H

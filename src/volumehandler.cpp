@@ -1,8 +1,8 @@
 
 
 /**
- * @file reactiongroup.cpp
- * @brief Implementation of the ReactionGroup class.
+ * @file volumehandler.cpp
+ * @brief Implementation of the VolumeHandler class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -19,36 +19,39 @@
 //  Project Includes
 // ==================
 //
-#include "reactiongroup.h"
+#include "volumehandler.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
-const double ReactionGroup::OVERTIME = std::numeric_limits<double>::infinity();
+const double VolumeHandler::INFINITY = 
+  std::numeric_limits <double>::infinity();
 
-ReactionGroup::ReactionGroup (const std::vector<Reaction*>& reactions)
-  : _reactions (reactions)
-  , _next_reaction_time (0)
+VolumeHandler::VolumeHandler (double initial_volume)
+  : _initial (initial_volume)
+  , _next (initial_volume)
+  , _next_time (INFINITY)
 {
 }
 
-// Not needed for this class (use of compiler generated versions)
-// ReactionGroup::ReactionGroup (const ReactionGroup& other_reaction_group);
-// ReactionGroup& ReactionGroup::operator= (const ReactionGroup& other_reaction_group);
-// ReactionGroup::~ReactionGroup (void);
-
+// Forbidden
+// VolumeHandler::VolumeHandler (const VolumeHandler& other);
+// VolumeHandler& VolumeHandler::operator= (const VolumeHandler& other);
 
 // ===========================
 //  Public Methods - Commands
 // ===========================
 //
+void VolumeHandler::step (void)
+{
+  
+}
 
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-
 
 
 // =================

@@ -75,10 +75,15 @@ class RateManager
   virtual void update_rates (void) = 0;
 
   /**
-   * @brief Draw a random index according to current rates.
-   * @return Index obtained from multinomial drawing.
+   * @brief Recompute rates for all reactions and refill whole _rates vector.
    */
-  int random_index (void);
+  void compute_all_rates (void);
+
+  /**
+   * @brief Draw a random reaction according to current rates.
+   * @return Reaction obtained from multinomial drawing.
+   */
+  Reaction& random_reaction (void);
 
   // ============================
   //  Public Methods - Accessors
@@ -105,11 +110,6 @@ class RateManager
   //  Protected Methods
   // ===================
   //
-  /**
-   * @brief Recompute rates for all reactions and refill whole _rates vector.
-   */
-  void compute_all_rates (void);
-
   /**
    * @brief Update rates for reaction at a specific index.
    * @param reaction_index Index of the reaction in the reaction vector.
@@ -154,9 +154,9 @@ class RateManager
 #include "reaction.h"
 #include "ratecontainer.h"
 
-inline int RateManager::random_index (void)
+inline Reaction& RateManager::random_reaction (void)
 {
-  return _rates->random_index();
+  return *(_reactions [_rates->random_index()]);
 }
 
 inline void RateManager::compute_all_rates (void)

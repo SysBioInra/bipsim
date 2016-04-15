@@ -132,7 +132,6 @@ private:
 #include "randomhandler.h"
 #include "ratetoken.h"
 
-
 inline RateGroup::RateGroup (double min_rate, double max_rate)
 		 : _min_rate (min_rate)
 		, _max_rate (max_rate)

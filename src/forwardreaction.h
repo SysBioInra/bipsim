@@ -71,7 +71,11 @@ public:
   //  Public Methods - Commands
   // ===========================
   //
-  //
+  // Redefined from Reaction
+  void handle_volume_change (double volume)
+  {
+    _reaction.handle_volume_change (volume);
+  }
 
   // ============================
   //  Public Methods - Accessors

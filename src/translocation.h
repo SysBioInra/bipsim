@@ -71,6 +71,8 @@ class Translocation : public Reaction
   //  Public Methods - Commands
   // ===========================
   //
+  // Redefined from reaction
+  void handle_volume_change (double volume);
   
 
   // ============================
@@ -114,6 +116,9 @@ class Translocation : public Reaction
 
   /** @brief The list of termination sites the chemical recognizes. */
   std::vector <const SiteFamily*> _termination_sites;
+
+  /** @brief Volume constant. */
+  double _volume_constant;
 };
 
 // ======================
@@ -125,6 +130,11 @@ class Translocation : public Reaction
 inline bool Translocation::is_reaction_possible (void) const
 {
   return (_processive_chemical.number() > 0);
+}
+
+inline void Translocation::handle_volume_change (double volume)
+{
+  _volume_constant = _rate / volume;
 }
 
 #endif // TRANSLOCATION_H

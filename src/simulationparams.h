@@ -113,9 +113,9 @@ class SimulationParams
 
   /**
    * @brief Accessor to output step.
-   * @return Output step in number of reactions. 10000 if none specified
+   * @return Output step. 1 if none specified
    */
-  int output_step (void) const;
+  double output_step (void) const;
   
   /**
    * @brief Accessor to entities to output.
@@ -203,8 +203,8 @@ private:
   /** @brief Output file name for parameters.. */
   static const std::string _param_file;
 
-  /** @brief Output step in number of reactions. 10000 if none specified. */
-  int _output_step;
+  /** @brief Output step. 1 if none specified. */
+  double _output_step;
   
   /** @brief Initial time tag. */
   static const std::string _output_step_tag;
@@ -364,7 +364,7 @@ inline std::string SimulationParams::reaction_file (void) const
   return _output_dir + "/" + _reaction_file;
 }
 
-inline int SimulationParams::output_step (void) const
+inline double SimulationParams::output_step (void) const
 {
   return _output_step;
 }

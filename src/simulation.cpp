@@ -26,6 +26,7 @@
 #include "chemicallogger.h"
 #include "doublestrandlogger.h"
 #include "eventhandler.h"
+#include "volumehandler.h"
 #include "inputdata.h"
 #include "parser.h"
 #include "randomhandler.h"
@@ -41,6 +42,10 @@ Simulation::Simulation (const std::string& filename)
   , _logger (0)
   , _replication_logger (0)
   , _solver (0)
+  , _next_log_time (0)
+  , _next_timing (0)
+  , _next (EVENT)
+  , _volume_handler (0)
 {
   RandomHandler::instance().set_seed (_params.seed());
 
@@ -58,6 +63,85 @@ Simulation::Simulation (const std::string& filename)
   _solver = _params.solver_factory().create (_params, _cell_state);
 
   // create logger
+  _next_log_time = _params.initial_time();
+  _logger = create_chemical_logger();
+  // _replication_logger = new DoubleStrandLogger 
+  //   (_params.replication_file(), 
+  //    *_cell_state.find <DoubleStrand> (_params.output_double_strand()));
+
+  // create volume handler
+  _volume_handler = new VolumeHandler (1);
+  _solver->set_volume (_params.initial_time(),
+		       _volume_handler->initial_value());
+}
+
+// Forbidden
+// Simulation::Simulation (const Simulation& other_simulation);
+// Simulation& Simulation::operator= (const Simulation& other_simulation);
+
+Simulation::~Simulation (void)
+{
+  delete _volume_handler;
+  delete _replication_logger;
+  delete _logger;
+  delete _solver;
+}
+
+// ===========================
+//  Public Methods - Commands
+// ===========================
+//
+void Simulation::run (void)
+{
+  std::cout << "Solving from t = " << _params.initial_time()
+	    << " to t = "<< _params.final_time() << "..." << std::endl;
+
+  // ignore all events preceding simulation start
+  while (_event_handler.next_event_time() < _params.initial_time())
+    { _event_handler.ignore_event(); }
+
+  compute_next_timing();
+  while (_next_timing < _params.final_time())
+    {
+      write_logs (_next_timing);
+      if (_next == REACTION)
+	{ 
+	  _solver->perform_next_reaction(); 
+	}
+      else if (_next == EVENT)
+	{ 
+	  _event_handler.perform_event(); 
+	  _solver->reschedule (_event_handler.next_event_time());
+	}
+      else if (_next == VOLUME)
+	{
+	  _solver->set_volume (_volume_handler->next_time(),
+			       _volume_handler->next_value());
+	  _volume_handler->step();
+	}
+      else
+	{
+	  std::cerr << "Impossible case in simulation loop..." << std::endl;
+	}
+      compute_next_timing();
+    }
+  write_logs (_params.final_time());
+
+  std::cout << "\n" << _solver->number_reactions_performed() 
+	    << " reactions occurred." << std::endl;
+}
+
+// ============================
+//  Public Methods - Accessors
+// ============================
+//
+
+// =================
+//  Private Methods
+// =================
+//
+ChemicalLogger* Simulation::create_chemical_logger (void)
+{
   std::list <std::string> chemical_names = _params.output_entities();
   std::list <const Chemical*> chemical_refs;
   std::list <std::string>::iterator name_it = chemical_names.begin();
@@ -73,84 +157,32 @@ Simulation::Simulation (const std::string& filename)
 	  name_it = chemical_names.erase (name_it);
 	}
     }
-  _logger = new ChemicalLogger (_params.concentration_file(),
-				chemical_refs, chemical_names);
-  const DoubleStrand*  double_strand = 
-    _cell_state.find <DoubleStrand> (_params.output_double_strand());
-  // _replication_logger = new DoubleStrandLogger (_params.replication_file(), *double_strand);
+  return new ChemicalLogger (_params.concentration_file(),
+			     chemical_refs, chemical_names);
 }
 
-// Forbidden
-// Simulation::Simulation (const Simulation& other_simulation);
-// Simulation& Simulation::operator= (const Simulation& other_simulation);
-
-Simulation::~Simulation (void)
+void Simulation::compute_next_timing (void)
 {
-  delete _logger;
-  delete _replication_logger;
-  delete _solver;
-}
-
-// ===========================
-//  Public Methods - Commands
-// ===========================
-//
-void Simulation::run (void)
-{
-  std::cout << "Solving from t = " << _params.initial_time()
-	    << " to t = "<< _params.final_time() << "..." << std::endl;
-  bool reactions_left = true;
-
-  double next_event_time = _event_handler.next_event_time();
-  while (next_event_time < _solver->time())
+  _next_timing = _event_handler.next_event_time();
+  _next = EVENT;
+  if (_volume_handler->next_time() < _next_timing)
     {
-      _event_handler.ignore_event();
-      next_event_time = _event_handler.next_event_time();
+      _next_timing = _volume_handler->next_time();
+      _next = VOLUME;
     }
-
-  // run until next event
-  while (_params.final_time() > next_event_time)
+  if (_solver->next_reaction_time() < _next_timing)
     {
-      while (reactions_left && (_solver->time() < next_event_time))
-	{ 
-	  write_logs(); 
-	  reactions_left = _solver->go_to_next_reaction(); 
-	}
-
-      // perform event(s)
-      while (next_event_time <= _solver->time())
-	{
-	  _event_handler.perform_event();
-	  next_event_time = _event_handler.next_event_time();	  
-	}
-      reactions_left = true; // due to events, reaction rates may have changed
+      _next_timing = _solver->next_reaction_time();
+      _next = REACTION;
     }
-
-  // no event left: run until final time
-  while (reactions_left && (_solver->time() < _params.final_time()))
-    { 
-      write_logs(); 
-      reactions_left = _solver->go_to_next_reaction(); 
-    }
-
-  std::cout << "\n" << _solver->number_reactions_performed() 
-	    << " reactions occurred." << std::endl;
 }
 
-// ============================
-//  Public Methods - Accessors
-// ============================
-//
-
-// =================
-//  Private Methods
-// =================
-//
-void Simulation::write_logs (void)
+void Simulation::write_logs (double t)
 {
-  if ((_solver->number_reactions_performed() % _params.output_step()) == 0)
+  while (t >= _next_log_time)
     { 
-      _logger->log (_solver->time()); 
-      if (_replication_logger) { _replication_logger->log (_solver->time()); }
+      _logger->log (_next_log_time); 
+      if (_replication_logger) { _replication_logger->log (_next_log_time); }
+      _next_log_time += _params.output_step();
     }
 }

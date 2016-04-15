@@ -81,7 +81,8 @@ public:
   //  Public Methods - Commands
   // ===========================
   //
-  //
+  // Redefined from Reaction
+  void handle_volume_change (double volume);
 
   // ============================
   //  Public Methods - Accessors
@@ -112,11 +113,18 @@ public:
   
   /** @brief Table of molecules that the released chemical may have produced. */
   ProductTable* _product_table;
+
+  /** @brief Volume constant. */
+  double _volume_constant;
 };
 
 // =====================
 //  Inline Declarations
 // =====================
 //
+inline void Release::handle_volume_change (double volume)
+{
+  _volume_constant = 1 / volume;
+}
 
 #endif // RELEASE_H

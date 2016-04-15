@@ -1,12 +1,10 @@
 
-
 /**
  * @file updatedrategroup.h
  * @brief Header for the UpdatedRateGroup class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -17,7 +15,6 @@
 //  General Includes
 // ==================
 //
-
 
 // ==================
 //  Project Includes
@@ -71,30 +68,31 @@ class UpdatedRateGroup : public ReactionGroup
   //  Public Methods - Commands
   // ===========================
   //
-  // Redefined from ReactionGroup
-  bool perform_next_reaction (void);
-
-  /**
-   * @brief Recompute rates and reschedule next reaction.
-   *
-   * Because reaction rates are critical for the reactions contained in this
-   * class, they need to be updated every time a reaction happens somewhere else
-   * in the system. This function MUST be called every time a reaction occurs
-   * ELSEWHERE. Else it should NOT be called, as it is computationnaly
-   * expensive. For example, there is no need to call it just after calling
-   * perform_next_reaction() as the latter already schedules the following
-   * reaction.
-   *
-   * @param current_time Current simulation time.
-   */
-  void reschedule_next_reaction (double current_time);
+  // Redefined from RateGroup
+  void schedule_next_reaction (double current_time);
+  void reinitialize (double time);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
+  // Redefined from ReactionGroup
+  double next_reaction_time (void) const;
+  Reaction* next_reaction (void) const;
+
+  // ==================
+  //  Public constants
+  // ==================
+  //  
+  /** @brief Shortcut for double value representing infinity. */
+  static const double INFINITY;
 
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+
   // ============
   //  Attributes
   // ============
@@ -102,16 +100,26 @@ private:
   /** @brief Manager that stores the rates and updates them. */
   DependencyRateManager _rate_manager;
 
-  // =================
-  //  Private Methods
-  // =================
-  //
+  /** @brief Next reaction. */
+  Reaction* _next_reaction;
+
+  /** @brief Next reaction time. */
+  double _next_reaction_time;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+inline double UpdatedRateGroup::next_reaction_time (void) const
+{
+  return _next_reaction_time;
+}
+
+inline Reaction* UpdatedRateGroup::next_reaction (void) const
+{
+  return _next_reaction;
+}
 
 
 #endif // UPDATED_RATE_GROUP_H

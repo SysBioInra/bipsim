@@ -96,6 +96,7 @@ class Simulation;
 class SimulationParams;
 class SimulatorInput;
 class UnitFactory;
+class VolumeHandler;
 
 // event classes
 class AddEvent;
@@ -110,7 +111,6 @@ class DependencyGraph;
 class NaiveSolver;
 class ManualDispatchSolver;
 class ReactionGroup;
-class ReactionGroupEvent;
 class ReactionClassification;
 class Solver;
 class UpdatedRateGroup;

@@ -39,6 +39,7 @@ Translocation::Translocation (BoundChemical& processive_chemical,
   , _step_size (step_size)
   , _rate (rate)
   , _termination_sites (families)
+  , _volume_constant (rate)
 {
   /** @pre Rate must be positive. */
   REQUIRE (rate >= 0);
@@ -51,8 +52,8 @@ Translocation::Translocation (BoundChemical& processive_chemical,
 }
  
 // Not needed for this class (use of compiler generated versions)
-// Translocation::Translocation (Translocation& other_translocation);
-// Translocation& Translocation::operator= (Translocation& other_translocation);
+// Translocation::Translocation (Translocation& other);
+// Translocation& Translocation::operator= (Translocation& other);
 // Translocation::~Translocation (void);
 
 // ===========================
@@ -107,9 +108,9 @@ double Translocation::compute_rate (void) const
 {
   /**
    * Translocation rate is simply
-   *  r = #(processive_chemical) * translocation_rate / step_size.
+   *  r = #(processive_chemical) * translocation_rate.
    */
-  return (_rate * _processive_chemical.number()) / _step_size;
+  return _volume_constant * _processive_chemical.number();
 }
 
 void Translocation::print (std::ostream& output) const

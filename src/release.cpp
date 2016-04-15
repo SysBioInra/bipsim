@@ -39,6 +39,7 @@ Release::Release (BoundChemical& unit_to_release,
   : _side_reaction (other_components, stoichiometry, orders, rate, 0)
   , _unit_to_release (unit_to_release)
   , _product_table (product_table)
+  , _volume_constant (1)
 {
   /** @pre Rate must be strictly positive. */
   REQUIRE (rate > 0);
@@ -113,7 +114,8 @@ double Release::compute_rate (void) const
    * Forward rate is simply defined by r = k_1 x product ( [reactant_i] ).
    * It is 0 if there are not enough reactants.
    */
-  return _unit_to_release.number()*_side_reaction.forward_rate();
+  return _volume_constant * 
+    _unit_to_release.number() * _side_reaction.forward_rate();
 }
 
 void Release::print (std::ostream& output) const

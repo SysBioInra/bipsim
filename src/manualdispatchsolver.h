@@ -1,12 +1,10 @@
 
-
 /**
  * @file manualdispatchsolver.h
  * @brief Header for the ManualDispatchSolver class.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -25,7 +23,6 @@
 //
 #include "forwarddeclarations.h"
 #include "solver.h"
-#include "reactiongroupevent.h"
 
 /**
  * @brief Class integrating reactions with user-defined groups and time steps.
@@ -67,77 +64,93 @@ class ManualDispatchSolver : public Solver
   /**
    * @brief Destructor
    */
-  virtual ~ManualDispatchSolver (void);
+  ~ManualDispatchSolver (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
 
-
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
+  // Redefined from Solver
+  double next_reaction_time (void) const;
 
 private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /**
-   * @brief Vector of reaction groups that enables integration according to 
-   *  different time steps.
-   * @sa ReactionGroup
-   * @sa ConstantRateGroup
-   * @sa UpdatedRateGroup
-   */
-  std::vector<ReactionGroup*> _reaction_groups;
-
-  /**
-   * @brief List containing next scheduled event type for every group sorted 
-   *  by event time.
-   * 
-   * Event types is either performing a reaction or updating a group because 
-   * it has expired.
-   * @sa ConstantRateGroup
-   * @sa ReactionGroupEvent
-   */
-  std::list<ReactionGroupEvent> _event_list;
-
-  /**
-   * @brief List containing indices of groups that should be updated after 
-   *  every reaction.
-   */
-  std::list<int> _updated_rate_group_indices;
-
+  /** @brief Struct storing next scheduled event. */
   // =================
   //  Private Methods
   // =================
   //
-  /**
-   * @brief Compute next reaction.
-   * @return Time at which the reaction occurred.
-   */
-  virtual double compute_next_reaction (void);
+  // Redefined from Solver
+  void schedule_next_reaction (void);
+  void reinitialize (void);
+  Reaction& next_reaction (void) const;
   
   /**
-   * @brief Add event in the event list for a specific reaction group.
-   * @param group_index Index of the group for which an event should be added.
+   * @brief Insert event in event list.
+   * @param time Time of event.
+   * @param group Pointer to group performing event.
    */
-  void add_event_for_group (int group_index);
+  void insert_event (double time, ReactionGroup* group);
 
   /**
-   * @brief For UpdatedRateGroup, update rates, events and event list.
-   * @param already_updated Index of the group that has already been updated.
-   * @param current_time Current simulation time.
+   * @brief Update first envent in event list.
    */
-  void update_variable_rate_events (int already_updated, double current_time);
+  void update_first_event (void);
+
+  /**
+   * @brief For UpdatedRateGroup, update rates and event.
+   */
+  void update_variable_event (void);
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Next reaction. */
+  Reaction* _next_reaction;
+
+  /** @brief Next reaction time. */
+  double _next_reaction_time;
+
+  /** @brief Vector of groups with varying time steps. */
+  std::vector <ConstantRateGroup*> _constant_rate_groups;
+
+  /** @brief Vector of groups to update after every reaction. */
+  std::vector <UpdatedRateGroup*> _updated_rate_groups;
+
+  struct GroupEvent 
+  {
+    GroupEvent (double time = 0, ReactionGroup* group = 0)
+    : time (time), group (group) {}
+    double time;
+    ReactionGroup* group;
+  };
+
+  /** @brief List of events (reaction or group update) sorted by time. */
+  std::list <GroupEvent> _event_list;
+
+  /** @brief Event for the next UpdatedRateGroup that triggers. */
+  GroupEvent _variable_event;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+inline double ManualDispatchSolver::next_reaction_time (void) const
+{
+  return _next_reaction_time;
+}
+
+inline Reaction& ManualDispatchSolver::next_reaction (void) const
+{
+  /** @pre A reaction must be scheduled (i.e. next reaction time is finite). */
+  REQUIRE (_next_reaction_time != NO_REACTIONS_LEFT);
+  return *_next_reaction;
+}
 
 #endif // MANUAL_DISPATCH_SOLVER_H
