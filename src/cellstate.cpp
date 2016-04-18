@@ -56,6 +56,13 @@ void CellState::store (SimulatorInput* element,
     }
 }
 
+void CellState::set_volume (double volume)
+{
+  for (std::vector <Reaction*>::const_iterator it = reactions().begin();
+       it != reactions().end(); ++it)
+    { (*it)->handle_volume_change (volume); }
+}
+
 // ============================
 //  Public Methods - Accessors
 // ============================

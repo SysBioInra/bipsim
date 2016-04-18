@@ -41,10 +41,8 @@ class Solver
   /**
    * @brief Constructor
    * @param params Simulation parameters.
-   * @param cell_state Reference to a cell state describing current state and
-   *  reactions within the cell.
    */
-  Solver (const SimulationParams& params, CellState& cell_state);
+  Solver (const SimulationParams& params);
 
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
@@ -75,13 +73,6 @@ class Solver
    * @param time New simulation time.
    */
   void reschedule (double time);
-
-  /**
-   * @brief Set volume and time and reschedule next reaction.
-   * @param time Time at which the volume changes.
-   * @param volume New volume value.
-   */
-  void set_volume (double time, double volume);
 
   // ============================
   //  Public Methods - Accessors
@@ -138,9 +129,6 @@ class Solver
   //  Attributes
   // ============
   //
-  /** @brief Reactions to integrate. */
-  std::vector <Reaction*> _reactions;
-
   /** @brief Simulation time. */
   double _t;
 

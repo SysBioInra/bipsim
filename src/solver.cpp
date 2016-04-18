@@ -31,9 +31,8 @@
 //
 const double Solver::INFINITY = std::numeric_limits<double>::infinity();
 
-Solver::Solver (const SimulationParams& params, CellState& cell_state)
-  : _reactions (cell_state.reactions())
-  , _t (params.initial_time())
+Solver::Solver (const SimulationParams& params)
+  : _t (params.initial_time())
   , _number_reactions_performed (0)
 {
 }
@@ -67,15 +66,6 @@ void Solver::perform_next_reaction (void)
 void Solver::reschedule (double time)
 {
   _t = time;
-  reinitialize();
-}
-
-void Solver::set_volume (double time, double volume)
-{
-  _t = time;
-  for (std::vector <Reaction*>::iterator it = _reactions.begin();
-       it != _reactions.end(); ++it)
-    { (*it)->handle_volume_change (volume); }
   reinitialize();
 }
 

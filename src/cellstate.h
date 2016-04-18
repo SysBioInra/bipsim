@@ -65,6 +65,11 @@ class CellState
    */
   void store (SimulatorInput* element, const std::string& name = "");
   
+  /**
+   * @brief Set volume.
+   * @param volume New volume value.
+   */
+  void set_volume (double volume);
 
   // ============================
   //  Public Methods - Accessors

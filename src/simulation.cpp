@@ -59,6 +59,10 @@ Simulation::Simulation (const std::string& filename)
 	    << _cell_state.reactions().size() << " reactions."
 	    << std::endl;
 
+  // create volume handler
+  _volume_handler = new VolumeHandler (1);
+  _cell_state.set_volume (_volume_handler->initial_value());
+
   // create solver
   _solver = _params.solver_factory().create (_params, _cell_state);
 
@@ -68,11 +72,6 @@ Simulation::Simulation (const std::string& filename)
   // _replication_logger = new DoubleStrandLogger 
   //   (_params.replication_file(), 
   //    *_cell_state.find <DoubleStrand> (_params.output_double_strand()));
-
-  // create volume handler
-  _volume_handler = new VolumeHandler (1);
-  _solver->set_volume (_params.initial_time(),
-		       _volume_handler->initial_value());
 }
 
 // Forbidden
@@ -81,10 +80,10 @@ Simulation::Simulation (const std::string& filename)
 
 Simulation::~Simulation (void)
 {
-  delete _volume_handler;
   delete _replication_logger;
   delete _logger;
   delete _solver;
+  delete _volume_handler;
 }
 
 // ===========================
@@ -115,8 +114,8 @@ void Simulation::run (void)
 	}
       else if (_next == VOLUME)
 	{
-	  _solver->set_volume (_volume_handler->next_time(),
-			       _volume_handler->next_value());
+	  _cell_state.set_volume (_volume_handler->next_value());
+	  _solver->reschedule (_volume_handler->next_time());
 	  _volume_handler->step();
 	}
       else

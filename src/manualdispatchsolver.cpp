@@ -28,9 +28,11 @@
 // ==========================
 //
 ManualDispatchSolver::
-ManualDispatchSolver (const SimulationParams& params, CellState& cell_state, 
+ManualDispatchSolver (const SimulationParams& params, 
 		      const ReactionClassification& classification)
-  : Solver (params, cell_state)
+  : Solver (params)
+  , _next_reaction (0)
+  , _next_reaction_time (INFINITY)
 {
   int number_groups = classification.number_classes();
 
@@ -40,7 +42,7 @@ ManualDispatchSolver (const SimulationParams& params, CellState& cell_state,
       if (classification.time_step (i) 
 	  == ReactionClassification::ALWAYS_UPDATED)
 	{
-	  // if ates are always updated, we use UpdatedRateGroup
+	  // if rates are always updated, we use UpdatedRateGroup
 	  _updated_rate_groups.push_back 
 	    (new UpdatedRateGroup (params, classification.reactions (i),
 				   time()));
@@ -56,6 +58,7 @@ ManualDispatchSolver (const SimulationParams& params, CellState& cell_state,
 	  insert_event (group->next_reaction_time(), group);
 	}
     }
+  schedule_next_reaction();
 }
 
 // Forbidden

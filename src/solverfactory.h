@@ -94,7 +94,7 @@ inline Solver*
 NaiveSolverFactory::create (const SimulationParams& params,
 			    CellState& cell_state) const
 {
-  return new NaiveSolver (params, cell_state);
+  return new NaiveSolver (params, cell_state.reactions());
 }
 
 inline Solver*
@@ -104,7 +104,7 @@ ManualDispatchSolverFactory::create (const SimulationParams& params,
   ReactionClassification classification;
   int class_id = classification.create_new_class (0.001);
   classification.add_reactions_to_class (class_id, cell_state.reactions());
-  return new ManualDispatchSolver (params, cell_state, classification);
+  return new ManualDispatchSolver (params, classification);
 }
 
 #endif // SOLVER_FACTORY_H

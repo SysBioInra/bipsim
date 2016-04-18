@@ -45,12 +45,10 @@ class ManualDispatchSolver : public Solver
   /**
    * @brief Default constructor
    * @param params Simulation parameters.
-   * @param cell_state Reference to a cell state describing current state and 
-   *  reactions within the cell.
    * @param reaction_classification Classification specifying how reactions 
    *  should be integrated.
    */
-  ManualDispatchSolver (const SimulationParams& params, CellState& cell_state,
+  ManualDispatchSolver (const SimulationParams& params,
 			const ReactionClassification& reaction_classification);
 
  private:
@@ -149,7 +147,7 @@ inline double ManualDispatchSolver::next_reaction_time (void) const
 inline Reaction& ManualDispatchSolver::next_reaction (void) const
 {
   /** @pre A reaction must be scheduled (i.e. next reaction time is finite). */
-  REQUIRE (_next_reaction_time != NO_REACTIONS_LEFT);
+  REQUIRE (_next_reaction_time != INFINITY);
   return *_next_reaction;
 }
 

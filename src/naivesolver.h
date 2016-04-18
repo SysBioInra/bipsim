@@ -17,6 +17,7 @@
 //  General Includes
 // ==================
 //
+#include <vector> // std::vector
 
 // ==================
 //  Project Includes
@@ -46,9 +47,10 @@ class NaiveSolver : public Solver
   /**
    * @brief Default constructor
    * @param params Simulation parameters.
-   * @param cell_state Reference to a cell state describing current state and reactions within the cell.
+   * @param reactions Vector of reactions to integrate.
    */
-  NaiveSolver (const SimulationParams& params, CellState& cell_state);
+  NaiveSolver (const SimulationParams& params,
+	       const std::vector <Reaction*>& reactions);
 
  private:
   // Forbidden
@@ -110,7 +112,7 @@ inline double NaiveSolver::next_reaction_time (void) const
 inline Reaction& NaiveSolver::next_reaction (void) const
 {
   /** @pre A reaction must be scheduled (i.e. next reaction time is finite). */
-  REQUIRE (_next_reaction_time != NO_REACTIONS_LEFT);
+  REQUIRE (_next_reaction_time != INFINITY);
   return *_next_reaction;
 }
 

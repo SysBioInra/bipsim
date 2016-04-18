@@ -23,7 +23,6 @@
 #include "reaction.h"
 #include "randomhandler.h"
 #include "dependencygraph.h"
-#include "cellstate.h"
 #include "ratemanager.h"
 #include "ratemanagerfactory.h"
 #include "simulationparams.h"
@@ -32,13 +31,16 @@
 //  Constructors/Destructors
 // ==========================
 //
-NaiveSolver::NaiveSolver (const SimulationParams& params, CellState& cell_state)
-  : Solver (params, cell_state)
+NaiveSolver::NaiveSolver (const SimulationParams& params, 
+			  const std::vector <Reaction*>& reactions)
+  : Solver (params)
   , _rate_manager (0)
+  , _next_reaction (0)
+  , _next_reaction_time (INFINITY)
 {
   _rate_manager = params.rate_manager_factory().
-    create (params, cell_state.reactions(),
-	    DependencyGraph (cell_state.reactions()));
+    create (params, reactions, DependencyGraph (reactions));
+  schedule_next_reaction();
 }
 
 // Forbidden
