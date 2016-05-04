@@ -26,7 +26,7 @@
 //
 #include "forwarddeclarations.h"
 #include "chemical.h"
-#include "boundunitlist.h"
+#include "vectorlist.h"
 
 
 /**
@@ -107,7 +107,7 @@ public:
   // ============
   //  
   /** @brief Units belonging to species. */
-  BoundUnitList _units;
+  VectorList <BoundUnit*> _units;
 
   /** @brief Filters used to organize units. */
   std::list <BoundUnitFilter*> _filters;    
@@ -131,7 +131,7 @@ inline BoundUnit& BoundChemical::random_unit (void) const
 {
   /** @pre There must be at least one unit stored. */
   REQUIRE (_units.size() > 0);
-  return _units.random_unit();
+  return *(_units.random_element());
 }
 
 #endif // BOUNDCHEMICAL_H

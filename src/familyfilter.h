@@ -1,12 +1,9 @@
 
-
 /**
  * @file familyfilter.h
  * @brief Header for the FamilyFilter class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -24,7 +21,7 @@
 // ==================
 //
 #include "boundunitfilter.h"
-#include "boundunitlist.h"
+#include "vectorlist.h"
 
 // ======================
 //  Forward declarations
@@ -102,7 +99,7 @@ private:
   const BindingSiteFamily* _family;
 
   /** @brief Units bounded to family provided at construction. */
-  BoundUnitList _units;
+  VectorList <BoundUnit*> _units;
 };
 
 // ======================
@@ -115,7 +112,7 @@ inline BoundUnit& FamilyFilter::random_unit (void) const
 {
   /** @pre Filter must not be empty. */
   REQUIRE (number() > 0);
-  return _units.random_unit();
+  return *(_units.random_element());
 }
 
 inline int FamilyFilter::number (void) const

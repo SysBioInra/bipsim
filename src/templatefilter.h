@@ -26,7 +26,7 @@
 #include "boundunitfilter.h"
 #include "ratevalidity.h"
 #include "updatedtotalratevector.h"
-#include "boundunitlist.h"
+#include "vectorlist.h"
 
 
 // ======================
@@ -107,7 +107,7 @@ private:
   const LoadingTable& _table;
 
   /** @brief Unit lists indexed by template they are reading. */
-  std::vector <BoundUnitList> _unit_map;
+  std::vector <VectorList <BoundUnit*> > _unit_map;
 
   /** @brief Loading rates associated with each template. */
   mutable UpdatedTotalRateVector _loading_rates;
@@ -124,7 +124,7 @@ inline BoundUnit& TemplateFilter::random_unit (void) const
 {
   update_rates(); 
   _loading_rates.update_cumulates();
-  return _unit_map [_loading_rates.random_index()].random_unit();
+  return *(_unit_map [_loading_rates.random_index()].random_element());
 }
 
 inline double TemplateFilter::loading_rate (void) const

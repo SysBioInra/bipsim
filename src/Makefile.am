@@ -46,7 +46,6 @@ libsrc_a_SOURCES += \
 libsrc_a_SOURCES += \
 	boundchemical.cpp boundchemical.h \
 	boundunit.cpp boundunit.h \
-	boundunitlist.cpp boundunitlist.h \
 	boundunitfilter.h \
 	familyfilter.cpp familyfilter.h \
 	templatefilter.cpp templatefilter.h \
@@ -122,7 +121,7 @@ libsrc_a_SOURCES += \
 
 # generic containers
 libsrc_a_SOURCES += \
-	vectorqueue.h vectorstack.h
+	vectorqueue.h vectorstack.h vectorlist.h
 
 # exceptions
 libsrc_a_SOURCES += simulatorexception.h
