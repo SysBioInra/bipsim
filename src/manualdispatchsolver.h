@@ -139,6 +139,8 @@ private:
 //  Inline declarations
 // ======================
 //
+#include "macros.h" // REQUIRE
+
 inline double ManualDispatchSolver::next_reaction_time (void) const
 {
   return _next_reaction_time;

@@ -22,7 +22,6 @@
 #include "naivesolver.h"
 #include "reaction.h"
 #include "randomhandler.h"
-#include "dependencygraph.h"
 #include "ratemanager.h"
 #include "ratemanagerfactory.h"
 #include "simulationparams.h"
@@ -38,8 +37,7 @@ NaiveSolver::NaiveSolver (const SimulationParams& params,
   , _next_reaction (0)
   , _next_reaction_time (INFINITY)
 {
-  _rate_manager = params.rate_manager_factory().
-    create (params, reactions, DependencyGraph (reactions));
+  _rate_manager = params.rate_manager_factory().create (params, reactions);
   schedule_next_reaction();
 }
 

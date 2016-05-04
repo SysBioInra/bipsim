@@ -25,7 +25,6 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "observable.h"
 #include "simulatorinput.h"
 
 /**
@@ -36,7 +35,7 @@
  * reaction.
  * @sa BidirectionalReaction
  */
-class Reaction : public Observable, public SimulatorInput
+class Reaction : public SimulatorInput
 {
 public:
 
@@ -94,12 +93,6 @@ public:
    * @return Vector of chemicals consumed by reaction.
    */
   const std::vector<Reactant*>& reactants (void) const;
-
-  /**
-   * @brief Returns chemicals created by reaction.
-   * @return Vector of chemicals created by reaction.
-   */
-  const std::vector<Reactant*>& products (void) const;
 
   /**
    * @brief Returns whether there are enough chemicals to perform reaction.
@@ -185,15 +178,9 @@ inline const std::vector<Reactant*>& Reaction::reactants (void) const
   return _reactants;
 }
 
-inline const std::vector<Reactant*>& Reaction::products (void) const
-{
-  return _products;
-}
-
 inline void Reaction::perform (void)
 {
   do_reaction();
-  notify_change();
 }
 
 inline std::ostream& operator<< (std::ostream& output, const Reaction& reaction)

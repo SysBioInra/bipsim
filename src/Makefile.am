@@ -22,7 +22,6 @@ libsrc_a_SOURCES = \
 	macros.h forwarddeclarations.h \
 	biasedwheel.cpp biasedwheel.h \
 	randomhandler.cpp randomhandler.h \
-	observable.h \
 	chemicallogger.cpp chemicallogger.h \
 	doublestrandlogger.cpp doublestrandlogger.h
 
@@ -98,7 +97,6 @@ libsrc_a_SOURCES += \
 libsrc_a_SOURCES += \
 	cellstate.cpp cellstate.h \
 	constantrategroup.cpp constantrategroup.h \
-	dependencygraph.cpp dependencygraph.h \
 	manualdispatchsolver.cpp manualdispatchsolver.h \
 	naivesolver.cpp naivesolver.h \
 	reactiongroup.h \
@@ -111,7 +109,6 @@ libsrc_a_SOURCES += \
 	ratemanager.cpp ratemanager.h \
 	naiveratemanager.cpp naiveratemanager.h \
 	dependencyratemanager.cpp dependencyratemanager.h \
-	graphratemanager.cpp graphratemanager.h \
 	rateinvalidator.h \
 	ratevalidity.cpp ratevalidity.h
 

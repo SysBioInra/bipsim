@@ -21,7 +21,6 @@
 #include "macros.h" // REQUIRE() ENSURE()
 #include "solver.h"
 #include "reaction.h"
-#include "dependencygraph.h"
 #include "cellstate.h"
 #include "simulationparams.h"
 

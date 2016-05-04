@@ -15,7 +15,6 @@
 
 
 // utility classes
-class Observable;
 template <typename T> class BiasedWheel;
 class RandomHandler;
 class ChemicalLogger;
@@ -32,7 +31,6 @@ class ManualDispatchFactory;
 class RateManagerFactory;
 class NaiveRateManagerFactory;
 class DependencyRateManagerFactory;
-class GraphRateManagerFactory;
 class RateContainerFactory;
 class RateVectorFactory;
 class RateTreeFactory;
@@ -109,7 +107,6 @@ class SetEvent;
 // solver classes
 class CellState;
 class ConstantRateGroup;
-class DependencyGraph;
 class NaiveSolver;
 class ManualDispatchSolver;
 class ReactionGroup;

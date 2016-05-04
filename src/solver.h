@@ -22,7 +22,6 @@
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "dependencygraph.h"
 
 /**
  * @brief Solver class for integrating reactions.

@@ -17,18 +17,18 @@
 //  General Includes
 // ==================
 //
+#include <list> // std::list
 
 // ==================
 //  Project Includes
 // ==================
 //
 #include "forwarddeclarations.h"
-#include "observable.h"
 
 /**
  * @brief Abstract class that contains all possible reactants.
  */
-class Reactant : public Observable
+class Reactant
 {
  public:
   // ==========================
@@ -51,13 +51,32 @@ class Reactant : public Observable
   //  Public Methods - Commands
   // ===========================
   //
+  /**
+   * @brief Attach an observer for notification when a change occurs.
+   * @param observer RateInvalidator to add to observer list.
+   */
+  void attach (RateInvalidator& observer);
+
+  /**
+   * @brief Detach a previously added observer from observer list.
+   * @param observer RateInvalidator to remove from observer list.
+   */
+  void detach (RateInvalidator& observer);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
+  
+ protected:
+  // ===================
+  //  Protected Methods
+  // ===================
+  //
+  /** @brief Notify all observers. */
+  void notify_change (void);
 
-private:
+ private:
   // =================
   //  Private Methods
   // =================
@@ -67,8 +86,33 @@ private:
   //  Attributes
   // ============
   //  
+  /** @brief Set of observers to notify. */
+  std::list <RateInvalidator*> _observers;
 };
 
+// ======================
+//  Inline declarations
+// ======================
+//
+#include "rateinvalidator.h"
+
 inline Reactant::~Reactant (void) {}
+
+inline void Reactant::attach (RateInvalidator& observer) 
+{
+  _observers.push_back (&observer); 
+}
+
+inline void Reactant::detach (RateInvalidator& observer) 
+{
+  _observers.remove (&observer);
+}
+
+inline void Reactant::notify_change (void)
+{
+  for (std::list <RateInvalidator*>::iterator obs_it = _observers.begin();
+       obs_it != _observers.end(); ++obs_it)
+    { (*obs_it)->update(); }
+}
 
 #endif // REACTANT_H
