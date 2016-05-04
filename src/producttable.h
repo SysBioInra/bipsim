@@ -18,6 +18,7 @@
 // ==================
 //
 #include <map> // std::map
+#include <set> // std::set
 
 // ======================
 //  Forward declarations
@@ -42,6 +43,7 @@ class ProductTable : public SimulatorInput
   //
   /**
    * @brief Constructor.
+   * @param transformation_table Table used to generate products from parent.
    */
   ProductTable (const TransformationTable& transformation_table);
 
@@ -94,6 +96,12 @@ class ProductTable : public SimulatorInput
   ChemicalSequence* product (const ChemicalSequence& parent,
 			     int first, int last) const;
 
+  /**
+   * @brief Accessor to products stored in the table.
+   * @return Set of products stored in the table.
+   */
+  const std::set <ChemicalSequence*>& products (void) const;
+
  private:
   // ============
   //  Attributes
@@ -102,16 +110,14 @@ class ProductTable : public SimulatorInput
   /** @brief TransformationTable giving child sequence from parent sequence. */
   const TransformationTable& _transformation_table;
 
-
   typedef std::map <int, ChemicalSequence*> EndMap;
   typedef std::map <int, EndMap> StartMap;
-  typedef std::map <const ChemicalSequence*, StartMap> ParentMap;  
+  typedef std::map <const ChemicalSequence*, StartMap> ParentMap;
 
-  /** 
-   * @brief Map storing the products given parent, starting and ending 
-   * positions. 
-   */
-  ParentMap _products;
+  /** @brief Map yielding product given parent, start and end positions.*/
+  ParentMap _product_map;
+  /** @brief Set of products stored. */
+  std::set <ChemicalSequence*> _products;
 
   // =================
   //  Private Methods
@@ -135,7 +141,8 @@ ProductTable::ProductTable (const TransformationTable& transformation_table)
 inline void ProductTable::add (const ChemicalSequence& parent,
 			       int first, int last, ChemicalSequence& product)
 {
-  _products [&parent][first][last] = &product;
+  _product_map [&parent][first][last] = &product;
+  _products.insert (&product);
 }
 
 inline std::string
@@ -150,8 +157,8 @@ inline
 ChemicalSequence* ProductTable::product (const ChemicalSequence& parent,
 					 int first, int last) const
 {
-  ParentMap::const_iterator p_it = _products.find (&parent);
-  if (p_it == _products.end()) return 0;
+  ParentMap::const_iterator p_it = _product_map.find (&parent);
+  if (p_it == _product_map.end()) return 0;
 
   StartMap::const_iterator s_it = (p_it->second).find (first);
   if (s_it == (p_it->second).end()) return 0;
@@ -160,6 +167,12 @@ ChemicalSequence* ProductTable::product (const ChemicalSequence& parent,
   if (e_it == (s_it->second).end()) return 0;
 
   return e_it->second;
+}
+
+inline
+const std::set <ChemicalSequence*>& ProductTable::products (void) const
+{
+  return _products;
 }
 
 #endif // PRODUCT_TABLE_H

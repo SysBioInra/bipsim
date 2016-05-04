@@ -42,14 +42,17 @@ FamilyFilter::FamilyFilter (const BindingSiteFamily& family)
 //
 inline void FamilyFilter::add (BoundUnit& unit)
 {
-  if ((&(unit.binding_site().family()) == _family)
-      && (unit.binding_site().first() == unit.first())) 
+  if ((unit.binding_site() != 0)
+      && (&(unit.binding_site()->family()) == _family)
+      && (unit.binding_site()->first() == unit.first())) 
     { _units.add (&unit); }
 }
 
 inline void FamilyFilter::remove (BoundUnit& unit)
 {
-  if (&(unit.binding_site().family()) == _family) { _units.remove (&unit); }
+  if ((unit.binding_site() != 0)
+      && (&(unit.binding_site()->family()) == _family))
+    { _units.remove (&unit); }
 }
 
 
@@ -57,6 +60,16 @@ inline void FamilyFilter::remove (BoundUnit& unit)
 //  Public Methods - Accessors
 // ============================
 //
+
+double FamilyFilter::total_unbinding_rate (void) const
+{
+  // we loop through the list and sum the k_off
+  double r_total = 0;
+  for (std::vector <BoundUnit*>::const_iterator it = _units().begin();
+       it != _units().end(); ++it)
+    { r_total += (*it)->binding_site()->k_off(); }
+  return r_total;
+}
 
 // =================
 //  Private Methods

@@ -107,6 +107,24 @@ bool PartialStrand::start_segment (int position)
 // ============================
 //
 
+std::vector <int> PartialStrand::segments (void) const
+{
+  std::vector <int> result;
+  for (std::list <Segment*>::const_iterator it = _segments.begin();
+       it != _segments.end(); ++it)
+    {
+      int first = (*it)->first(); int last = (*it)->last();
+      // if not a dummy segment
+      if (first != last)
+	{
+	  if (first == Segment::START) { first = -1; }
+	  if (last == Segment::END) { last = _length; }
+	  if (last > first+1) 
+	    { result.push_back (first+1); result.push_back (last-1); }
+	}
+    }
+  return result;
+}
 
 // =================
 //  Private Methods

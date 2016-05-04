@@ -47,6 +47,24 @@ BoundUnitFactory::~BoundUnitFactory (void)
 //  Public Methods - Commands
 // ===========================
 //
+BoundUnit& BoundUnitFactory::create (ChemicalSequence& location, 
+				     int first, int last, int reading_frame)
+{
+  BoundUnit* unit;
+  if (_unused.empty()) 
+    { 
+      unit = new BoundUnit (location, first, last, reading_frame); 
+      _created.push_back (unit);
+    }
+  else 
+    {
+      unit = _unused.back();
+      _unused.pop_back();
+      unit->rebind (location, first, last, reading_frame);
+    }
+  return *unit;
+}
+
 BoundUnit& BoundUnitFactory::create (const BindingSite& site)
 {
   BoundUnit* unit;

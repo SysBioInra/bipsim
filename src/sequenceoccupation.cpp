@@ -234,6 +234,17 @@ int SequenceOccupation::number_available_sites (int first, int last) const
   return result;
 }
 
+std::list <std::vector <int> > SequenceOccupation::partial_strands (void) const
+{
+  std::list <std::vector <int> > result;
+  for (std::list <int>::const_iterator it = _partial_creation_order.begin();
+       it != _partial_creation_order.end(); ++it)
+    {
+      result.push_back (_partial_by_index [*it]->segments());
+    }
+  return result;
+}
+
 // =================
 //  Private Methods
 // =================

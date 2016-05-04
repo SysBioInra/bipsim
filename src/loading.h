@@ -26,10 +26,6 @@
 #include "reaction.h"
 #include "templatefilter.h"
 
-// ===================
-//  Class Declaration
-// ===================
-//
 /**
  * @brief Abstract class for loading reactions.
  *

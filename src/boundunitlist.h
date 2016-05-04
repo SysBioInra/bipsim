@@ -90,12 +90,6 @@ class BoundUnitList
   BoundUnit& random_unit (void) const;
 
   /**
-   * @brief Accessor to total unbinding rate of stored elements.
-   * @return Sum of k_offs of binding sites of the BoundUnit stored.
-   */
-  double unbinding_rate (void) const;
-
-  /**
    * @brief Accessor to all elements of list.
    * @return Vector of BoundUnit in an arbitrary order.
    */

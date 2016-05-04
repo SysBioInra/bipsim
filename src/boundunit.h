@@ -29,9 +29,6 @@
 
 /**
  * @brief The BoundUnit class describes a bound unit.
- *
- * It contains the unit's binding site, its current position and its current
- * reading frame position.
  */
 class BoundUnit
 {
@@ -41,10 +38,20 @@ class BoundUnit
   // ==========================
   //
   /**
-   * @brief Constructor
-   * @param binding_site Position to which the unit bound.
+   * @brief Constructor from binding site.
+   * @param site BindingSite the unit bound to.
    */
-  BoundUnit (const BindingSite& binding_site);
+  BoundUnit (const BindingSite& site);
+
+  /**
+   * @brief Constructor from location.
+   * @param location ChemicalSequence to which unit bound.
+   * @param first First position occupied by unit.
+   * @param last Last position occupied by unit.
+   * @param reading_frame Reading frame of new unit.
+   */
+  BoundUnit (ChemicalSequence& location, int first, 
+	     int last, int reading_frame);
 
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
@@ -66,10 +73,20 @@ class BoundUnit
   void move (int step_size);
   
   /**
-   * @brief Rebind bound unit at a different location.
-   * @param binding_site Position to which the unit bound.
+   * @brief Rebind bound unit at a different binding site.
+   * @param site BindingSite the unit bound to.
    */
-  void rebind (const BindingSite& binding_site);
+  void rebind (const BindingSite& site);
+
+  /**
+   * @brief Rebind bound unit at a different location.
+   * @param location ChemicalSequence to which unit bound.
+   * @param first First position occupied by unit.
+   * @param last Last position occupied by unit.
+   * @param reading_frame Reading frame of new unit.
+   */
+  void rebind (ChemicalSequence& location, int first, 
+	       int last, int reading_frame);
 
   /**
    * @brief Specify position as being on particular strand.
@@ -82,10 +99,10 @@ class BoundUnit
   // ============================
   //
   /**
-   * @brief Return unit's original binding site.
-   * @return Position to which the unit bound.
+   * @brief Return reading frame of unit at binding.
+   * @return Reading frame of unit at binding.
    */
-  const BindingSite& binding_site (void) const;
+  int initial_reading_frame (void) const;
 
   /**
    * @brief Return location of unit.
@@ -112,6 +129,12 @@ class BoundUnit
   int reading_frame (void) const;
 
   /**
+   * @brief Return site the unit bound to.
+   * @return Pointer to BindingSite the unit bound to.
+   */
+  const BindingSite* binding_site (void) const;
+
+  /**
    * @brief Accessor to strand identifier.
    * @return Integer identifier of strand or NO_STRAND if none specified.
    */
@@ -134,21 +157,18 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief Position to which the unit bound. */
-  const BindingSite* _binding_site;
-
+  /** @brief Reading frame of unit at binding. */
+  int _initial_reading_frame;
   /** @brief ChemicalSequence on which unit is bound. */
   ChemicalSequence* _location;
-
+  /** @brief BindingSite to which unit bound (0 if no specific site). */
+  const BindingSite* _binding_site;
   /** @brief First position spanned by unit. */
   int _first;
-
   /** @brief Last position spanned by unit. */
   int _last;
-  
   /** @brief Position where unit can potentially read its sequence. */
   int _reading_frame;
-
   /** @brief Specific strand on which the bound unit is located. */
   int _strand;
 };
@@ -171,14 +191,19 @@ inline void BoundUnit::set_strand (int strand_id)
   _strand = strand_id;
 }
 
-inline const BindingSite& BoundUnit::binding_site (void) const
+inline int BoundUnit::initial_reading_frame (void) const
 {
-  return *_binding_site;
+  return _initial_reading_frame;
 }
 
 inline ChemicalSequence& BoundUnit::location (void) const
 {
   return *_location;
+}
+
+inline const BindingSite* BoundUnit::binding_site (void) const
+{
+  return _binding_site;
 }
 
 inline int BoundUnit::first (void) const

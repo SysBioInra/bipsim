@@ -88,15 +88,15 @@ public:
    * @param position Position opposite to which segment should be created.
    * @return Integer identifier of the strand where segment was created (used
    *  later for extension).
-   **/
+   */
   int start_appariated_strand (int position);
 
   /**
-   * @brief Extend or create new strand at given position.
+   * @brief Extend strand at given position.
    * @param strand_id Integer identifier provided at strand creation.
    * @param position Position opposite to which extension should take place.
    * @return True if extension worked, false if position already occupied.
-   **/
+   */
   bool extend_appariated_strand (int strand_id, int position);
 
   /**
@@ -141,7 +141,6 @@ public:
    * @param site BindingSite to remove.
    */
   void remove_free_end_binding_site (BindingSite& site);
-
   
   // ============================
   //  Public Methods - Accessors
@@ -162,6 +161,16 @@ public:
    * @return Number of unoccupied sites.
    */
   int number_available_sites (int first, int last) const;
+
+  /**
+   * @brief Composition of partial strands.
+   * @return Each entry of the list represents a different strand. Each strand
+   *  is represented by a vector of integers giving the position of the segments
+   *  composing the strand. E.g. {[1 10], [1 5 10 20]} means there are two
+   *  partial strands. Strand 1 is composed of a single segment [1 10], strand
+   *  2 of segments [1 5] and [10 20].
+   */
+  std::list <std::vector <int> > partial_strands (void) const;
 
   /**
    * @brief Returns whether the given site can be logically found on the
@@ -214,6 +223,12 @@ public:
    *  position.
    */
   int relative (int absolute_position) const;
+
+  /**
+   * @brief Get chemical's appariated strand.
+   * @return Pointer to appariated strand or 0 if sequence is not double strand.
+   */
+  ChemicalSequence* appariated_strand (void) const;
 
   /**
    * @brief Get corresponding position on antisense sequence.
@@ -296,6 +311,12 @@ int ChemicalSequence::number_available_sites (int first, int last) const
   return _sequence_occupation.number_available_sites (first, last);
 }
 
+inline 
+std::list <std::vector <int> > ChemicalSequence::partial_strands (void) const
+{
+  return _sequence_occupation.partial_strands();
+}
+
 inline int ChemicalSequence::length (void) const
 { 
   return _length;
@@ -327,6 +348,11 @@ const std::string ChemicalSequence::sequence (int first, int last) const
 inline int ChemicalSequence::relative (int absolute_position) const
 { 
   return absolute_position - _starting_position;
+}
+
+inline ChemicalSequence* ChemicalSequence::appariated_strand (void) const
+{
+  return _appariated_sequence;
 }
 
 inline int ChemicalSequence::complementary (int position) const

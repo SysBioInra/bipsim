@@ -21,7 +21,8 @@
 #include <fstream> // std::ifstream
 #include <string> // std::string
 #include <vector> // std::vector
-#include <list> // std::list
+
+#include "inputline.h"
 
 // ======================
 //  Forward declarations
@@ -46,9 +47,9 @@ class InputData
   //
   /**
    * @brief Constructor from file names.
-   * @param input_file_names List of the files to open.
+   * @param input_file_names Vector of the files to open.
    */
-  InputData (const std::list <std::string>& input_file_names);
+  InputData (const std::vector <std::string>& input_file_names);
 
  private:
   // Forbidden
@@ -100,9 +101,15 @@ class InputData
 
   /**
    * @brief Returns current line.
-   * @return Current line content as a string.
+   * @return Current line content as InputLine.
    */
-  std::string line (void);
+  InputLine& line (void);
+
+  /**
+   * @brief Returns current line.
+   * @return Current line content as std::string.
+   */
+  const std::string& string_line (void);
 
   /**
    * @brief Returns current file name.
@@ -117,37 +124,6 @@ class InputData
   int line_number (void);
 
 private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /** @brief Input files. */
-  std::list <std::ifstream*> _files;
-
-  /** @brief Index (in the _files vector) of file being currently read. */
-  std::list <std::ifstream*>::iterator _file;
- 
-  /** @brief Input file names. */
-  std::list <std::string> _file_names;
-
-  /** @brief Input file name of file being currently read. */
-  std::list <std::string>::iterator _file_name;
-
-  /** @brief Number of line being read (summed over all files). */
-  int _line_number;
-
-  /** @brief Number of line being read (relative to its file). */
-  int _file_line_number;
-
-  /** @brief Line being read. */
-  std::string _line;
-
-  /** @brief List of lines that have been left untreated. */
-  std::vector <bool> _line_treated;
-
-  /** @brief Flag indicating whether end of file was reached. */
-  bool _eof;
-
   // =================
   //  Private Methods
   // =================
@@ -164,10 +140,42 @@ private:
    */
   bool is_line_empty (void);
 
-  /**
-   * @brief Move to the next file line (possibly in the next file).
-   */
+  /** @brief Move to the next file line (possibly in the next file). */
   void go_to_next_line (void);
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Input files. */
+  std::vector <std::ifstream*> _files;
+
+  /** @brief Index (in the _files vector) of file being currently read. */
+  std::vector <std::ifstream*>::iterator _file;
+ 
+  /** @brief Input file names. */
+  std::vector <std::string> _file_names;
+
+  /** @brief Input file name of file being currently read. */
+  std::vector <std::string>::iterator _file_name;
+
+  /** @brief Number of line being read (summed over all files). */
+  int _line_number;
+
+  /** @brief Number of line being read (relative to its file). */
+  int _file_line_number;
+
+  /** @brief Line being read. */
+  std::string _line;
+
+  /** @brief Line being read as a vector of words. */
+  InputLine _input_line;
+
+  /** @brief Vector of lines that have been left untreated. */
+  std::vector <bool> _line_treated;
+
+  /** @brief Flag indicating whether end of file was reached. */
+  bool _eof;
 };
 
 // ======================
@@ -180,7 +188,12 @@ inline bool InputData::is_line_treated (void)
   return _line_treated [_line_number-1];
 }
 
-inline std::string InputData::line (void)
+inline InputLine& InputData::line (void)
+{
+  return _input_line;
+}
+
+inline const std::string& InputData::string_line (void)
 {
   return _line;
 }

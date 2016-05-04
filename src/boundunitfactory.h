@@ -59,11 +59,22 @@ class BoundUnitFactory
   // ===========================
   //
   /**
-   * @brief Create new BoundUnit at given binding site.
-   * @param site BindingSite where boundunit bound.
+   * @brief Create new BoundUnit at given location.
+   * @param site BindingSite the unit bound to.
    * @return BoundUnit instantiated at given site.
    */
   BoundUnit& create (const BindingSite& site);
+
+  /**
+   * @brief Create new BoundUnit at given location.
+   * @param location ChemicalSequence to which unit bound.
+   * @param first First position occupied by unit.
+   * @param last Last position occupied by unit.
+   * @param reading_frame Reading frame of new unit.
+   * @return BoundUnit instantiated at given location.
+   */
+  BoundUnit& create (ChemicalSequence& location, int first,
+		     int last, int reading_frame);
 
   /**
    * @brief Indicate that BoundUnit is not used anymore and can be deleted.

@@ -93,7 +93,7 @@ private:
   // ============
   //
   /** @brief Vector that stores dependencies between reactions. */
-  std::map< Reaction*, std::set<Reaction*> > _dependencies;
+  std::map <Reaction*, std::set<Reaction*> > _dependencies;
 
   /** @brief Reactions used to create the dependency graph. */
   std::vector <Reaction*> _reactions;  

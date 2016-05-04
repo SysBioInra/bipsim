@@ -75,8 +75,7 @@ void BoundChemical::print (std::ostream& output) const
   for (int i = 0; i < _units.size(); ++i)
     {
       BoundUnit* unit = _units()[i];
-      output << " initially bound at position "
-	     << unit->binding_site().first() << " and now at position " 
+      output << " at position " 
 	     << unit->first() << "." << std::endl;
     }
 }

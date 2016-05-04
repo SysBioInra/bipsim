@@ -54,7 +54,12 @@ Release::Release (BoundChemical& unit_to_release,
 		    _side_reaction.backward_reactants().begin(),
 		    _side_reaction.backward_reactants().end());
 
-  // TODO add products from the product table
+  if (product_table)
+    {
+      _products.insert (_products.end(),
+			product_table->products().begin(),
+			product_table->products().end());
+    }
 }
 
 // Not needed for this class (use of compiler generated versions)
@@ -91,14 +96,14 @@ void Release::do_reaction (void)
     {
       ChemicalSequence* product = _product_table->product 
 	(unit.location(),
-	 unit.binding_site().reading_frame(),
+	 unit.initial_reading_frame(),
 	 unit.reading_frame() - 1);
 
       if (product != 0) { product->add (1); }
       else
 	{
 	  std::cerr << "Unknown product ("
-		    << unit.binding_site().reading_frame() << ", "
+		    << unit.initial_reading_frame() << ", "
 		    << unit.reading_frame() - 1 << ")";
 	}
     }

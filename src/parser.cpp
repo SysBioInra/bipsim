@@ -12,10 +12,6 @@
 //  General Includes
 // ==================
 //
-#include <iostream> // std::cout
-#include <fstream> // std::ifstream
-#include <sstream> // std::istringstream
-#include <string> // std::string
 #include <stdexcept> // std::runtime_error
 
 // ==================
@@ -23,26 +19,54 @@
 // ==================
 //
 #include "parser.h"
-#include "factory.h"
 #include "cellstate.h"
 #include "inputdata.h"
 #include "simulatorexception.h"
+#include "reactionbuilder.h"
+#include "reactantbuilder.h"
+#include "tablebuilder.h"
+#include "eventbuilder.h"
 
 // ==========================
 //  Constructors/Destructors
 // ==========================
 //
 Parser::Parser (CellState& cell_state, EventHandler& event_handler)
-  : _unit_factory (cell_state)
-  , _reaction_factory (cell_state)
-  , _event_factory (cell_state, event_handler)
 {
+  // reactant builder
+  _builders.push_back (new BindingSiteBuilder (cell_state));
+  _builders.push_back (new TerminationSiteBuilder (cell_state));
+  _builders.push_back (new FreeChemicalBuilder (cell_state));
+  _builders.push_back (new BoundChemicalBuilder (cell_state));
+  _builders.push_back (new ChemicalSequenceBuilder (cell_state));
+  _builders.push_back (new DoubleStrandBuilder (cell_state));
+  // table builder
+  _builders.push_back (new CompositionTableBuilder (cell_state));
+  _builders.push_back (new LoadingTableBuilder (cell_state));
+  _builders.push_back (new ProductTableBuilder (cell_state));
+  _builders.push_back (new TransformationTableBuilder (cell_state));
+  // reaction builder
+  _builders.push_back (new ChemicalReactionBuilder (cell_state));
+  _builders.push_back (new ProductLoadingBuilder (cell_state));
+  _builders.push_back (new DoubleStrandLoadingBuilder (cell_state));
+  _builders.push_back (new TranslocationBuilder (cell_state));
+  _builders.push_back (new SequenceBindingBuilder (cell_state));
+  _builders.push_back (new ReleaseBuilder (cell_state));
+  _builders.push_back (new DegradationBuilder (cell_state));
+  _builders.push_back (new DoubleStrandRecruitmentBuilder (cell_state));
+  // event builder
+  _builders.push_back (new EventBuilder (cell_state, event_handler));
 }
 
-// Not needed for this class (use of compiler generated versions)
 // Parser::Parser (const Parser& other_parser);
 // Parser& Parser::operator= (const Parser& other_parser);
-// Parser::~Parser (void);
+
+Parser::~Parser (void)
+{
+  for (std::vector <Builder*>::iterator it = _builders.begin();
+       it != _builders.end(); ++it)
+    { delete *it; }
+}
 
 // ===========================
 //  Public Methods - Commands
@@ -54,11 +78,54 @@ void Parser::parse (InputData& input_data)
   // the idea is that as long as dependencies may not have been resolved
   // we need to try to create everything again
   std::cout << "Parsing data..." << std::endl;
-  while (loop_through_data (input_data) == true) {}
-  if (display_dependency_errors (input_data))
+  bool entity_created = true;
+  bool display_dependency_errors = false;
+  bool dependency_errors = false;
+  while (entity_created || display_dependency_errors)
     {
-      throw std::runtime_error ("corrupted input data");
+      input_data.rewind();
+      entity_created = false;
+      while (input_data.is_eof()==false)
+	{
+	  try
+	    {
+	      bool success = false;
+	      std::vector <Builder*>::iterator it = _builders.begin();
+	      while (success == false && it != _builders.end())
+		{ success = (*it)->match (input_data.line()); ++it; }
+	      if (success)
+		{ entity_created = true; input_data.mark_line_as_treated(); }
+	      else 
+		{ throw FormatException(); }
+	    }
+	  catch (const ParserException& error)
+	    {
+	      std::ostringstream msg;
+	      msg << "PARSING ERROR (file " << input_data.file_name()
+		  << ", line " << input_data.line_number() << "): "
+		  << error.what();
+	      input_data.mark_line_as_treated();
+	      throw ParserException (msg.str());
+	    }
+	  catch (const DependencyException& error)
+	    {
+	      if (display_dependency_errors)
+		{
+		  dependency_errors = true;
+		  std::cerr << "DEPENDENCY ERROR (file " 
+			    << input_data.file_name() << ", line " 
+			    << input_data.line_number() << "): "
+			    << error.what() << "." << std::endl;
+		  input_data.mark_line_as_treated();
+		}
+	    }
+	  input_data.go_next();
+	}
+      if (entity_created == false) 
+	{ display_dependency_errors = !display_dependency_errors; }
     }
+  if (dependency_errors)
+    { throw std::runtime_error ("could not solve dependencies."); }
 }
 
 // ============================
@@ -71,75 +138,3 @@ void Parser::parse (InputData& input_data)
 //  Private Methods
 // =================
 //
-bool Parser::loop_through_data (InputData& input_data)
-{
-  bool entity_created = false;
-  bool success = false;
-  input_data.rewind();
-  while (input_data.is_eof()==false)
-    {
-      try
-	{
-	  success = _unit_factory.handle (input_data.line())
-	    || _reaction_factory.handle (input_data.line())
-	    || _event_factory.handle (input_data.line());
-
-	  if (success)
-	    {
-	      entity_created = true;
-	      input_data.mark_line_as_treated();
-	    }
-	}
-      catch (const ParserException& error)
-	{
-	  std::ostringstream msg;
-	  msg << "PARSING ERROR (file " << input_data.file_name()
-	      << ", line " << input_data.line_number() << "): "
-	      << error.what();
-	  input_data.mark_line_as_treated();
-	  throw ParserException (msg.str());
-	}
-      catch (const DependencyException& error)
-	{
-	  // ignore dependency errors as some entities/reactions have not been
-	  // created yet
-	}
-      
-      input_data.go_next();
-    }
-
-  return entity_created;
-}
-
-bool Parser::display_dependency_errors (InputData& input_data)
-{
-  bool error_occurred = false;
-  input_data.rewind();
-  while (input_data.is_eof()==false)
-    {
-      try
-	{
-	  if (not (_unit_factory.handle (input_data.line())
-		   || _reaction_factory.handle (input_data.line())
-		   || _event_factory.handle (input_data.line())))
-	    {
-	      error_occurred = true;
-	      std::cerr << "ERROR (file " << input_data.file_name()
-			<< ", line " << input_data.line_number() << "): "
-			<< "line does not make sense." << std::endl;
-	      input_data.mark_line_as_treated();
-	    }
-	}
-      catch (const DependencyException& error)
-	{
-	  error_occurred = true;
-	  std::cerr << "DEPENDENCY ERROR (file " << input_data.file_name()
-		    << ", line " << input_data.line_number() << "): "
-		    << error.what() << "." << std::endl;
-	  input_data.mark_line_as_treated();
-	}
-      
-      input_data.go_next();
-    }
-  return error_occurred;
-}

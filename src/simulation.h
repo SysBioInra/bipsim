@@ -83,8 +83,8 @@ private:
   /** @brief Write logs if necessary. */
   void write_logs (double time);
 
-  /** @brief Create ChemicalLogger from simulation parameters. */
-  ChemicalLogger* create_chemical_logger (void);
+  /** @brief Create various loggers from simulation parameters. */
+  void create_loggers (void);
 
   // ============
   //  Attributes
@@ -92,34 +92,25 @@ private:
   //
   /** @brief Simulation parameters. */
   SimulationParams _params;
-
   /** @brief Global cell state. */
   CellState _cell_state;
-
   /** @brief Solver used to integrate system. */
   Solver* _solver;
-
   /** @brief Logger used to write to file. */
   ChemicalLogger* _logger;
-
   /** @brief Logger used to write to file. */
   DoubleStrandLogger* _replication_logger;
-
-  /** @brief Handler used to update volume. */
-  VolumeHandler* _volume_handler;
-
   /** @brief Handler reading and performing user-defined events. */
   EventHandler _event_handler;
 
   /** @brief Next log time. */
   double _next_log_time;
-
+  /** @brief Next volume update time. */
+  double _next_volume_time;
   /** @brief Next timing of reaction, event, volume change, etc. */
   double _next_timing;
-
   /** @brief Possible types for next occurrence (reaction, event, etc.). */
   enum NextType { REACTION, EVENT, VOLUME };
-
   /** @brief Type of next occurrence (reaction, event, etc.). */
   NextType _next;
 };

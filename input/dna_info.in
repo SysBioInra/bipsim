@@ -4,10 +4,10 @@ FreeChemical dCMP
 FreeChemical dGMP
 FreeChemical dTMP
 
-FreeChemical dATP 1000000
-FreeChemical dCTP 1000000
-FreeChemical dGTP 1000000
-FreeChemical dTTP 1000000
+FreeChemical dATP 10000000
+FreeChemical dCTP 10000000
+FreeChemical dGTP 10000000
+FreeChemical dTTP 10000000
 
 CompositionTable dna_composition A dAMP, C dCMP, G dGMP, T dTMP
 

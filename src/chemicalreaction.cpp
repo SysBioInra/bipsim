@@ -155,11 +155,9 @@ bool ChemicalReaction::is_forward_reaction_possible (void) const
 {
   for (std::vector <CRFree>::const_iterator 
   	 it = _free_forward.begin(); it != _free_forward.end(); ++it)
-    {
-      if ((it->chemical)->number() < it->stoichiometry) { return false; }
-    }
+    { if ((it->chemical)->number() < it->stoichiometry) { return false; } }
 
-  if ((_bound_reactant != 0) && (_bound_reactant->number() < 1)) 
+  if ((_bound_reactant != 0) && (_bound_reactant->number() < 1))
     { return false; }
   return true;
 }
@@ -168,9 +166,7 @@ bool ChemicalReaction::is_backward_reaction_possible (void) const
 {
   for (std::vector <CRFree>::const_iterator 
   	 it = _free_backward.begin(); it != _free_backward.end(); ++it)
-    {
-      if ((it->chemical)->number() < it->stoichiometry) { return false; }
-    }
+    { if ((it->chemical)->number() < it->stoichiometry) { return false; } }
 
   if ((_bound_product != 0) && (_bound_product->number() < 1)) 
     { return false; }

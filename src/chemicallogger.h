@@ -18,7 +18,7 @@
 // ==================
 //
 #include <fstream> // std::ofstream
-#include <list> // std::list
+#include <vector> // std::vector
 #include <string> // std::string
 
 // ==================
@@ -32,7 +32,7 @@
  *
  * ChemicalLogger opens an output file and writes all concentration levels
  * to that file when asked to. Names and chemicals to write are read from 
- * a chemical handler at construction, the list does not change afterwards.
+ * a chemical handler at construction, the vector does not change afterwards.
  * User can choose whether an existing file should be overwritten or not.
  */
 class ChemicalLogger
@@ -48,12 +48,13 @@ class ChemicalLogger
    * @param filename File where output should be written.
    * @param chemicals Chemicals whose concentrations must be logged.
    * @param names Name of the chemicals (used for writing header).
-   * @param overwrite True if existing file should be overwritten (true by default).
-   *
+   * @param overwrite True if existing file should be overwritten 
+   *  (true by default).
    */
   ChemicalLogger (const std::string& filename, 
-		  const std::list <const Chemical*>& chemicals, 
-		  const std::list <std::string>& names, bool overwrite = true);
+		  const std::vector <const Chemical*>& chemicals, 
+		  const std::vector <std::string>& names, 
+		  bool overwrite = true);
 
  private:
   // Forbidden
@@ -92,7 +93,7 @@ private:
   std::ofstream _output;
 
   /** @brief Chemicals to log. */
-  std::list <const Chemical*> _chemicals;
+  std::vector <const Chemical*> _chemicals;
       
   // =================
   //  Private Methods
@@ -102,10 +103,10 @@ private:
    * @brief Write a header to outupt file.
    * @param names Names to write in the header.
    *
-   * Header starts with simulation time then lists all chemicals in
+   * Header starts with simulation time then vectors all chemicals in
    * tab separated fields.
    */
-  void write_header (const std::list <std::string>& names);
+  void write_header (const std::vector <std::string>& names);
 };
 
 // ======================

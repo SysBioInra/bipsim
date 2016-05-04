@@ -26,16 +26,18 @@
 //  Constructors/Destructors
 // ==========================
 //
-InputData::InputData (const std::list <std::string>& input_file_names)
+InputData::InputData (const std::vector <std::string>& input_file_names)
   : _file (0)
   , _line_number (0)
   , _file_line_number (0)
   , _line ("")
+  , _input_line ("")
   , _eof (false)
 {
   std::cout << "Opening input files... " << std::endl;
   // open files
-  for (std::list <std::string>::const_iterator file_it = input_file_names.begin();
+  for (std::vector <std::string>::const_iterator 
+	 file_it = input_file_names.begin();
        file_it != input_file_names.end(); file_it++)
     {
       _files.push_back (new std::ifstream (file_it->c_str()));
@@ -86,16 +88,11 @@ void InputData::go_next (void)
 
       if (is_line_treated() == false)
 	{
-	  if (is_line_empty())
-	    {
-	      mark_line_as_treated();
-	    }
-	  else
-	    {
-	      found = true;
-	    }
+	  if (is_line_empty()) { mark_line_as_treated(); }
+	  else { found = true; }
 	}
     }
+  _input_line = InputLine (_line);
 }
 
 void InputData::rewind (void)
@@ -148,10 +145,7 @@ void InputData::go_to_next_line (void)
       _file_line_number = 1;
     }
   
-  if (_file == _files.end())
-    {
-      _eof = true;
-    }
+  if (_file == _files.end()) { _eof = true; }
   else
     {
       // mark line as untreated if it is parsed for the first time
@@ -159,7 +153,7 @@ void InputData::go_to_next_line (void)
     }
 }
 
-bool InputData::is_line_empty ()
+bool InputData::is_line_empty (void)
 {
   std::istringstream line_stream (_line);
   std::string first_word;
@@ -168,6 +162,5 @@ bool InputData::is_line_empty ()
     {
       return true;
     }
-
   return false;
 }

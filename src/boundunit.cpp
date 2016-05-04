@@ -25,12 +25,25 @@
 //  Constructors/Destructors
 // ==========================
 //
-BoundUnit::BoundUnit (const BindingSite& binding_site)
-  : _binding_site (&binding_site)
-  , _first (binding_site.first())
-  , _last (binding_site.last())
-  , _reading_frame (binding_site.reading_frame())
-  , _location (&(binding_site.location()))
+BoundUnit::BoundUnit (const BindingSite& site)
+  : _initial_reading_frame (site.reading_frame())
+  , _first (site.first())
+  , _last (site.last())
+  , _reading_frame (site.reading_frame())
+  , _location (&site.location())
+  , _binding_site (&site)
+  , _strand (NO_STRAND)
+{
+}
+
+BoundUnit::BoundUnit (ChemicalSequence& location, int first, 
+		      int last, int reading_frame)
+  : _initial_reading_frame (reading_frame)
+  , _first (first)
+  , _last (last)
+  , _reading_frame (reading_frame)
+  , _location (&location)
+  , _binding_site (0)
   , _strand (NO_STRAND)
 {
 }
@@ -43,13 +56,26 @@ BoundUnit::BoundUnit (const BindingSite& binding_site)
 //  Public Methods - Commands
 // ===========================
 //
-void BoundUnit::rebind (const BindingSite& binding_site)
+void BoundUnit::rebind (const BindingSite& site)
 {
-  _binding_site = &binding_site;
-  _first = binding_site.first();
-  _last = binding_site.last();
-  _reading_frame = binding_site.reading_frame();
-  _location = &(binding_site.location());
+  _first = site.first();
+  _last = site.last();
+  _reading_frame = site.reading_frame();
+  _initial_reading_frame = site.reading_frame();
+  _location = &site.location();
+  _binding_site = &site;
+  _strand = NO_STRAND;
+}
+
+void BoundUnit::rebind (ChemicalSequence& location, int first, 
+			int last, int reading_frame)
+{
+  _first = first;
+  _last = last;
+  _reading_frame = reading_frame;
+  _initial_reading_frame = reading_frame;
+  _location = &location;
+  _binding_site = 0;
   _strand = NO_STRAND;
 }
 

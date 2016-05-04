@@ -147,6 +147,16 @@ class SequenceOccupation
    */
   int number_available_sites (int first, int last) const;
 
+  /**
+   * @brief Composition of partial strands.
+   * @return Each entry of the list represents a different strand. Each strand
+   *  is represented by a vector of integers giving the position of the segments
+   *  composing the strand. E.g. {[1 10], [1 5 10 20]} means there are two
+   *  partial strands. Strand 1 is composed of a single segment [1 10], strand
+   *  2 of segments [1 5] and [10 20].
+   */
+  std::list <std::vector <int> > partial_strands (void) const;
+
 private:
   // =================
   //  Private Methods

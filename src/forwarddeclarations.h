@@ -42,10 +42,11 @@ class HybridRateContainerFactory;
 class BackwardReaction;
 class BidirectionalReaction;
 class ChemicalReaction;
+class DoubleStrandLoading;
+class DoubleStrandRecruitment;
 class ForwardReaction;
 class Loading;
 class ProductLoading;
-class DoubleStrandLoading;
 class Reaction;
 class Release;
 class SequenceBinding;
@@ -84,19 +85,20 @@ class LoadingTable;
 class ProductTable;
 class TransformationTable;
 
-// parser, handler and factory classes
+// parser, handler and builder classes
+template <class T> class BaseToken;
+class Builder;
 class EventHandler;
-class EventFactory;
-class Factory;
 template <class T> class Handler;
 class InputData;
+class InputLine;
+class Interpreter;
 class Parser;
-class ReactionFactory;
+class Rule;
 class Simulation;
 class SimulationParams;
 class SimulatorInput;
-class UnitFactory;
-class VolumeHandler;
+class TagToken;
 
 // event classes
 class AddEvent;

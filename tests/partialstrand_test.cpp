@@ -111,6 +111,13 @@ BOOST_AUTO_TEST_CASE (completed_CoveringSegmentsOnEmptyStrand_returnsTrue)
   extend_segment (6, 7);  extend_segment (3, 5);
   BOOST_CHECK_EQUAL (empty_strand.completed(), true);
 }
+
+BOOST_AUTO_TEST_CASE (completed_CoveringSegmentsOnEmptyStrand_returnsTrue2)
+{
+  empty_strand.start_segment (9);
+  for (int i = 8; i >= 0; --i) { empty_strand.extend_segment (i); }
+  BOOST_CHECK_EQUAL (empty_strand.completed(), true);
+}
  
 BOOST_AUTO_TEST_SUITE_END()
  

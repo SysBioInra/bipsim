@@ -35,6 +35,7 @@ libsrc_a_SOURCES += \
 libsrc_a_SOURCES += \
 	backwardreaction.h bidirectionalreaction.h \
 	chemicalreaction.cpp chemicalreaction.h \
+	doublestrandrecruitment.cpp doublestrandrecruitment.h \
 	forwardreaction.h \
 	loading.cpp loading.h \
 	reaction.h \
@@ -77,20 +78,21 @@ libsrc_a_SOURCES += \
 	producttable.h \
 	transformationtable.cpp transformationtable.h
 
-# parser, handler and factory sources
+# parser, handler and builder sources
 libsrc_a_SOURCES += \
+	builder.h \
 	eventhandler.cpp eventhandler.h \
-	eventfactory.cpp eventfactory.h event.h \
-	factory.h \
+	eventbuilder.cpp eventbuilder.h event.h \
+	inputline.h interpreter.h \
 	handler.h \
 	inputdata.cpp inputdata.h \
 	parser.cpp parser.h \
-	reactionfactory.cpp reactionfactory.h \
+	reactantbuilder.cpp reactantbuilder.h \
+	reactionbuilder.cpp reactionbuilder.h \
 	simulation.cpp simulation.h \
 	simulationparams.cpp simulationparams.h \
 	simulatorinput.h \
-	unitfactory.cpp unitfactory.h \
-	volumehandler.cpp volumehandler.h
+	tablebuilder.cpp tablebuilder.h 
 
 # solver sources
 libsrc_a_SOURCES += \

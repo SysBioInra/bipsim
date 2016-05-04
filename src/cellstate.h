@@ -43,9 +43,10 @@ class CellState
   //  Constructors/Destructors
   // ==========================
   //
+  // /* @brief Constructor. */
+  CellState (void);
+
   // Not needed for this class (use of compiler-generated versions)
-  // /* @brief Default constructor. */
-  // CellState ();
   // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor */
   // CellState ( const CellState& other_cell_state );
@@ -66,10 +67,23 @@ class CellState
   void store (SimulatorInput* element, const std::string& name = "");
   
   /**
-   * @brief Set volume.
-   * @param volume New volume value.
+   * @brief Change volume parameters.
+   * @param base_volume Minimal volume value.
+   * @param modifiers Names of chemicals influencing volume (may be empty).
+   * @param modifier_weights Weight of chemicals influencing volume 
+   *  (may be empty).
+   * @details Volume is given by base_volume + 
+   *  sum (modifier_weights_i * modifiers_i->number()).
    */
-  void set_volume (double volume);
+  void set_volume_parameters (double base_volume, 
+			      const std::vector <std::string>& modifiers,
+			      const std::vector <double>& modifier_weights);
+
+  /**
+   * @brief Update volume value according to parameters given.
+   * @return True if volume value changed.
+   */
+  bool update_volume (void);
 
   // ============================
   //  Public Methods - Accessors
@@ -84,6 +98,16 @@ class CellState
   template <class T>
     T* find (const std::string& name) const;
   
+  /**
+   * @brief Fetch element by name.
+   * @tparam Type of element to fetch.
+   * @param name Name of element.
+   * @return Reference to element corresponding to name. Throws a 
+   *  DependencyException if required element is not found
+   */
+  template <typename T>
+    T& fetch (const std::string& name) const;
+
   /**
    * @brief Return the list of reactions.
    * @return List of reactions.
@@ -101,6 +125,8 @@ private:
   //  Private Methods
   // =================
   //
+  /** @brief Compute volume value and update reactions. */
+  void modify_volume (void);
 
   // ============
   //  Attributes
@@ -108,37 +134,36 @@ private:
   //
   /** @brief Handler containing site information. */
   Handler <Site> _site_handler;
-
   /** @brief Handler containing site family information. */
   Handler <SiteFamily> _site_family_handler;
-
   /** @brief Handler containing chemical information. */
   Handler <Chemical> _chemical_handler;
-
   /** @brief Handler containing reaction information. */
   Handler <Reaction> _reaction_handler;
-
   /** @brief Handler containing two-way reaction information. */
   Handler <BidirectionalReaction> _bireaction_handler;
-
   /** @brief Handler containing information about composition tables. */
   Handler <CompositionTable> _composition_table_handler;
-
   /** @brief Handler containing information about loading tables. */
   Handler <LoadingTable> _loading_table_handler;
-
   /** @brief Handler containing information about prdouct tables. */
   Handler <ProductTable> _product_table_handler;
-  
   /** @brief Handler containing information about transformation tables. */
   Handler <TransformationTable> _transformation_table_handler;
+
+  /** @prief Base volume value. */
+  double _base_volume;
+  /** @brief Vector of chemicals modifiying volume.*/
+  std::vector <const Chemical*> _volume_modifiers;
+  /** @brief Vector of modifier weights. */
+  std::vector <double> _volume_weights;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
-#include <typeinfo>
+#include "simulatorexception.h"
 
 #include "site.h"
 #include "sitefamily.h"
@@ -162,7 +187,6 @@ inline int CellState::number_chemicals (void) const
 {
   return _chemical_handler.references().size();
 }
-
 
 template <class T>
 inline T* CellState::find (const std::string& name) const
@@ -196,5 +220,21 @@ inline T* CellState::find (const std::string& name) const
 
   return 0;
 }
+
+template <class T>
+inline T& CellState::fetch (const std::string& name) const
+{
+  T* result = find <T> (name);
+  if (result == 0) { throw DependencyException (name); }
+  return *result;
+}
+
+inline bool CellState::update_volume (void)
+{
+  if (_volume_modifiers.size() == 0) { return false; }
+  modify_volume();
+  return true;
+}
+
 
 #endif // CELL_STATE_H

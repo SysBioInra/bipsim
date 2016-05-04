@@ -26,12 +26,12 @@
 // ==========================
 //
 ChemicalLogger::ChemicalLogger (const std::string& filename,
-				const std::list <const Chemical*>& chemicals,
-				const std::list <std::string>& names, 
+				const std::vector <const Chemical*>& chemicals,
+				const std::vector <std::string>& names, 
 				bool overwrite /*= true*/)
  : _chemicals (chemicals)
 {
-  /** @pre List of names must be as long as list of references. */
+  /** @pre Vector of names must be as long as vector of references. */
   REQUIRE (chemicals.size() == names.size());
   
   // open file
@@ -58,7 +58,7 @@ ChemicalLogger::~ChemicalLogger (void)
 void ChemicalLogger::log (double simulation_time)
 {
   _output << simulation_time;
-  for (std::list <const Chemical*>::iterator chemical_it = _chemicals.begin();
+  for (std::vector <const Chemical*>::iterator chemical_it = _chemicals.begin();
        chemical_it != _chemicals.end(); ++chemical_it)
     {
       _output << "\t" << (*chemical_it)->number();
@@ -71,10 +71,10 @@ void ChemicalLogger::log (double simulation_time)
 //  Private Methods
 // =================
 //
-void ChemicalLogger::write_header (const std::list <std::string>& names)
+void ChemicalLogger::write_header (const std::vector <std::string>& names)
 {
   _output << "time";
-  for (std::list <std::string>::const_iterator name_it = names.begin();
+  for (std::vector <std::string>::const_iterator name_it = names.begin();
        name_it != names.end(); ++name_it)
     {
       _output << "\t" << *name_it;

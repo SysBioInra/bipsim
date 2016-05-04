@@ -123,9 +123,4 @@ inline int FamilyFilter::number (void) const
   return _units.size();
 }
 
-inline double FamilyFilter::total_unbinding_rate (void) const
-{
-  return _units.unbinding_rate();
-}
-
 #endif // FAMILY_FILTER_H

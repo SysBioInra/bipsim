@@ -117,7 +117,6 @@ void DoubleStrandLoading::do_reaction (void)
 	}
       else // go to stalled form
 	{
-	  std::cout << "miiii" << unit.reading_frame() << std::endl;
 	  _loader.remove (unit);
 	  _stalled_form.add (unit);
 	}

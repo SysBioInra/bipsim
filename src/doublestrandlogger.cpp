@@ -1,12 +1,9 @@
 
-
 /**
  * @file doublestrandlogger.cpp
  * @brief Implementation of the DoubleStrandLogger class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -52,9 +49,9 @@ DoubleStrandLogger::~DoubleStrandLogger (void)
 void DoubleStrandLogger::log (double simulation_time)
 {
   _output << simulation_time;
-  _output << " sense";
+  _output << " Sense\n";
   write_sites (_double_strand.sense());
-  _output << " antisense";
+  _output << " Antisense\n";
   write_sites (_double_strand.antisense());
   _output << "\n";
 }
@@ -65,14 +62,16 @@ void DoubleStrandLogger::log (double simulation_time)
 //
 void DoubleStrandLogger::write_sites (const ChemicalSequence& sequence)
 {
-  int current = sequence.number_sites (0, 0);
-  _output << " " << 1 << " " << current;
-  for (int i = 1; i < sequence.length(); ++i)
+  std::list <std::vector <int> > strands = sequence.partial_strands();
+  int id = 1;
+  for (std::list <std::vector <int> >::iterator it = strands.begin();
+       it != strands.end(); ++it, ++id)
     {
-      if (sequence.number_sites (i,i) != current)
+      _output << "Strand " << id << ":";
+      for (int i = 0; i < it->size(); i += 2)
 	{
-	  current = sequence.number_sites (i,i);
-	  _output << " " << i+1 << " " << current;
+	  _output << "[" << (*it)[i] << " " << (*it)[i+1] << "]";
 	}
+      _output << "\n";
     }
 }
