@@ -30,8 +30,6 @@
 // ==================
 //
 #include "chemical.h"
-#include "bindingsitefamily.h"
-#include "freeendbindingsitefactory.h"
 
 /**
  * @brief Class representing double strand sequences.
@@ -98,19 +96,6 @@ private:
 
   /** @brief Antisense strand. */
   ChemicalSequence& _antisense;
-
-  // order is important here
-  /** @brief Family containing sites created by left free ends. */
-  BindingSiteFamily _left_ends;
-  
-  /** @brief Family containing sites created by right free ends. */
-  BindingSiteFamily _right_ends;
-
-  /** @brief Factory used to create free ends properly on sense strand. */
-  FreeEndBindingSiteFactory _sense_factory;
-
-  /** @brief Factory used to create free ends properly on antisense strand. */
-  FreeEndBindingSiteFactory _antisense_factory;
 
   // =================
   //  Private Methods

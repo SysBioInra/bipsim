@@ -52,13 +52,10 @@ public:
    * @param k_off Off rate of unbinding on the site.
    * @param reading_frame Absolute position of the reading frame 
    *  (if applicable, NO_READING_FRAME by default).
-   * @param is_static Parameter specifying if the site remains at the same
-   *  position on the sequence over time (true by default).
    */
   BindingSite (BindingSiteFamily& family, ChemicalSequence& location, 
 	       int first, int last, double k_on, double k_off,
-	       int reading_frame = NO_READING_FRAME,
-	       bool is_static = true);
+	       int reading_frame = NO_READING_FRAME);
 
   
  private:
@@ -67,17 +64,14 @@ public:
   /** @brief Assignment operator (forbidden). */
   BindingSite& operator= (BindingSite other);
  public:
-  
-  /** @brief Destructor */
-  ~BindingSite (void);
+
+  // /* @brief Destructor */
+  // ~BindingSite (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
-  // redefined from Site
-  void move (int step_size);
-
   /**
    * @brief Perform necessary actions when availability of the observed site 
    *  has changed.
@@ -138,6 +132,11 @@ public:
   static const int DEFAULT_ID = -1;
 
  private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+
   // ============
   //  Attributes
   // ============
@@ -153,14 +152,6 @@ public:
 
   /** @brief Identifier to send when an update occurs. */
   int _update_id;
-
-  /** @brief Attribute storing whether site is static or not. */
-  bool _static;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
 };
 
 // ======================
@@ -170,31 +161,19 @@ public:
 #include "macros.h"
 #include "bindingsitefamily.h"
 
-inline void BindingSite::move (int step_size)
+inline void BindingSite::update (void)
 {
-  /** @pre Instance must have been declared as non static. */
-  REQUIRE (_static == false);
-
-  Site::move (step_size);
-  if (_reading_frame != NO_READING_FRAME) { _reading_frame += step_size; }
-  update(); // availability may have changed
-
-  /** @post Reading frame must stay within site limits. */
-  ENSURE ((_reading_frame == NO_READING_FRAME) ||
-	  ((_reading_frame >= first()) && (_reading_frame <= last())));
-}		     
-
+  static_cast <BindingSiteFamily&> (Site::family()).update (_update_id);  
+}
+ 
 inline void BindingSite::set_update_id (int new_id)
 {
-  /** @pre new_id must be positive. */
-  REQUIRE (new_id >= 0);
-
   _update_id = new_id;
 }
 
 inline const BindingSiteFamily& BindingSite::family (void) const
 {
-  return static_cast <const BindingSiteFamily&> (_family);
+  return static_cast <const BindingSiteFamily&> (Site::family());
 }
 
 inline double BindingSite::k_on (void) const

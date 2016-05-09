@@ -45,11 +45,8 @@ class SequenceOccupation
    * @brief Constructor.
    * @param length Length of the sequence whose occupation should be handled.
    * @param number Number of sequences initially present.
-   * @param handler FreeEndHandler used to generate binding sites corresponding
-   *  to free ends on opposite strand.
    */
-  SequenceOccupation (int length, int number, 
-		      const FreeEndHandler& handler);
+  SequenceOccupation (int length, int number);
 
  private:
   // Forbidden
@@ -113,19 +110,7 @@ class SequenceOccupation
    * @brief Register static site.
    * @param site BindingSite to notify when a change happens on the site.
    */
-  void register_site (BindingSite& site);
-
-  /**
-   * @brief Register moving site.
-   * @param site BindingSite to notify when a change happens on the site.
-   */
-  void register_moving_site (BindingSite& site);
-
-  /**
-   * @brief Deregister moving site.
-   * @param site BindingSite to stop watching.
-   */
-  void deregister_moving_site (BindingSite& site);
+  void watch_site (BindingSite& site);
 
   // ============================
   //  Public Methods - Accessors
@@ -225,17 +210,11 @@ private:
   /** @brief Groups of static sites whose availability needs to be checked. */
   std::vector <SiteGroup*> _site_groups;
 
-  /** @brief List of moving sites whose availability needs to be checked. */
-  std::list <BindingSite*> _moving_sites;
-
   /** @brief Vector of partial strands (access by identifier). */
   std::vector <PartialStrand*> _partial_by_index;  
 
   /** @brief List of partial strand identifiers in creation order. */
   std::list <int> _partial_creation_order;  
-
-  /** @brief Free end handler. */
-  const FreeEndHandler& _free_end_handler; 
 };
 
 // ======================

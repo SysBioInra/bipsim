@@ -19,7 +19,7 @@
 // ==================
 //
 #include "boundunit.h"
-#include "chemicalsequence.h"
+#include "bindingsite.h"
 
 // ==========================
 //  Constructors/Destructors

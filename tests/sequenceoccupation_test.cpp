@@ -1,10 +1,9 @@
+
 /**
  * @file sequenceoccupation_test.cpp
  * @brief Unit testing for SequenceOccupation class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -14,15 +13,12 @@
 #define BOOST_TEST_MODULE SequenceOccupation
 #include <boost/test/unit_test.hpp>
 
-#include <iostream>
-
 // ==================
 //  Project Includes
 // ==================
 //
 #include "../src/sequenceoccupation.h"
 #include "../src/doublestrand.h"
-#include "../src/freeendhandler.h"
 #include "sitedispenser.h"
 
 class SOSingleStrandL100
@@ -30,11 +26,8 @@ class SOSingleStrandL100
 public:
   SOSingleStrandL100 (void) 
     : site_dispenser (100)
-    , empty_occupation (100, 0, _empty_handler)
+    , empty_occupation (100, 0)
   {}
-
-private:
-  FreeEndHandler _empty_handler;
 
 public:
   SequenceOccupation empty_occupation;
@@ -127,18 +120,18 @@ BOOST_AUTO_TEST_CASE (number_sites_twoBoundElementsAddedRemoved_reflectsBoundEle
     { BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (i, i), 2); }
 }
 
-BOOST_AUTO_TEST_CASE (register_site_registerOneSite_siteUpdated)
+BOOST_AUTO_TEST_CASE (watch_site_registerOneSite_siteUpdated)
 {
   MockBindingSite& bs = site_dispenser.new_site (10, 20);
   BOOST_REQUIRE (bs.was_updated() == false);
-  empty_occupation.register_site (bs);
+  empty_occupation.watch_site (bs);
   BOOST_CHECK_EQUAL (bs.was_updated(), true);
 }
 
 BOOST_AUTO_TEST_CASE (add_sequence_addTwoSequences_siteUpdated)
 {
   MockBindingSite& bs = site_dispenser.new_site (10, 20);
-  empty_occupation.register_site (bs);
+  empty_occupation.watch_site (bs);
   bs.reset_update(); BOOST_REQUIRE (bs.was_updated() == false);
   empty_occupation.add_sequence (2);
   BOOST_CHECK_EQUAL (bs.was_updated(), true);
@@ -147,7 +140,7 @@ BOOST_AUTO_TEST_CASE (add_sequence_addTwoSequences_siteUpdated)
 BOOST_AUTO_TEST_CASE (remove_sequence_removeOneSequence_siteUpdated)
 {
   MockBindingSite& bs = site_dispenser.new_site (10, 20);
-  empty_occupation.register_site (bs);
+  empty_occupation.watch_site (bs);
   empty_occupation.add_sequence (2);
   bs.reset_update(); BOOST_REQUIRE (bs.was_updated() == false);
   empty_occupation.remove_sequence (1);
@@ -157,11 +150,11 @@ BOOST_AUTO_TEST_CASE (remove_sequence_removeOneSequence_siteUpdated)
 BOOST_AUTO_TEST_CASE (add_sequence_addOneSequenceThreeSites_sitesUpdated)
 {
   MockBindingSite& bs = site_dispenser.new_site (10, 20);
-  empty_occupation.register_site (bs);
+  empty_occupation.watch_site (bs);
   MockBindingSite& bs2 = site_dispenser.new_site (15, 25);
-  empty_occupation.register_site (bs2);
+  empty_occupation.watch_site (bs2);
   MockBindingSite& bs3 = site_dispenser.new_site (30, 40);
-  empty_occupation.register_site (bs3);
+  empty_occupation.watch_site (bs3);
   bs.reset_update(); BOOST_REQUIRE (bs.was_updated() == false);
   bs2.reset_update(); BOOST_REQUIRE (bs2.was_updated() == false);
   bs3.reset_update(); BOOST_REQUIRE (bs3.was_updated() == false);
@@ -178,7 +171,7 @@ class SODoubleStrandL100
 public:
   SODoubleStrandL100 (void) 
     : site_dispenser (100)
-    , empty_occupation (100, 0, _empty_handler)
+    , empty_occupation (100, 0)
   {
   }
 
@@ -190,9 +183,6 @@ public:
       }
     return true;
   }
-
-private:
-  FreeEndHandler _empty_handler;
 
 public:
   SequenceOccupation empty_occupation;
@@ -345,49 +335,36 @@ BOOST_AUTO_TEST_CASE (number_sites_segmentsCoveringWholeSequence_returnsOne)
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, L-1), 1);
 }
 
-BOOST_AUTO_TEST_CASE (register_moving_site_registerOneSite_updatesSite)
-{
-  MockBindingSite& bs = site_dispenser.new_site (10, 20);
-  empty_occupation.register_moving_site (bs);
-  BOOST_CHECK_EQUAL (bs.was_updated(), true);
-}
-
 BOOST_AUTO_TEST_CASE (start_segment_startOnSite_updatesSite)
 {
   MockBindingSite& bs = site_dispenser.new_site (10, 20);
-  MockBindingSite& bs2 = site_dispenser.new_site (10, 20);
-  MockBindingSite& bs3 = site_dispenser.new_site (21, 30);
-  empty_occupation.register_site (bs);
-  empty_occupation.register_moving_site (bs2);
-  empty_occupation.register_site (bs3);
-  bs.reset_update(); bs2.reset_update(); bs3.reset_update();
+  MockBindingSite& bs2 = site_dispenser.new_site (21, 30);
+  empty_occupation.watch_site (bs);
+  empty_occupation.watch_site (bs2);
+  bs.reset_update(); bs2.reset_update();
   empty_occupation.start_segment (10);
   BOOST_CHECK_EQUAL (bs.was_updated(), true);
-  BOOST_CHECK_EQUAL (bs2.was_updated(), true);
-  BOOST_CHECK_EQUAL (bs3.was_updated(), false);
+  BOOST_CHECK_EQUAL (bs2.was_updated(), false);
 }
 
 BOOST_AUTO_TEST_CASE (start_segment_startOnSite_updatesSite2)
 {
   MockBindingSite& bs = site_dispenser.new_site (10, 20);
-  MockBindingSite& bs2 = site_dispenser.new_site (10, 20);
-  MockBindingSite& bs3 = site_dispenser.new_site (21, 30);
-  empty_occupation.register_site (bs);
-  empty_occupation.register_moving_site (bs2);
-  empty_occupation.register_site (bs3);
-  bs.reset_update(); bs2.reset_update(); bs3.reset_update();
+  MockBindingSite& bs2 = site_dispenser.new_site (21, 30);
+  empty_occupation.watch_site (bs);
+  empty_occupation.watch_site (bs2);
+  bs.reset_update(); bs2.reset_update();
   empty_occupation.start_segment (20);
   BOOST_CHECK_EQUAL (bs.was_updated(), true);
-  BOOST_CHECK_EQUAL (bs2.was_updated(), true);
-  BOOST_CHECK_EQUAL (bs3.was_updated(), false);
+  BOOST_CHECK_EQUAL (bs2.was_updated(), false);
 }
 
 BOOST_AUTO_TEST_CASE (extend_segment_extendOnSite_updatesSite)
 {
   MockBindingSite& bs = site_dispenser.new_site (10, 20);
   MockBindingSite& bs2 = site_dispenser.new_site (15, 25);
-  empty_occupation.register_site (bs);
-  empty_occupation.register_moving_site (bs2);
+  empty_occupation.watch_site (bs);
+  empty_occupation.watch_site (bs2);
   bs.reset_update(); bs2.reset_update();
   int strand1 = empty_occupation.start_segment (9);
   BOOST_REQUIRE (empty_occupation.extend_segment (strand1, 10));

@@ -1,12 +1,9 @@
 
-
 /**
  * @file dependencyratemanager.h
  * @brief Header for the DependencyRateManager class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -38,7 +35,6 @@
  * observer: it attaches itself to all reactants it knows and receives updates
  * when concentrations change. All rates that may have changed are stored in a
  * set until user asks to update rates.
- * @sa RateManager
  */
 class DependencyRateManager : public RateManager
 {

@@ -23,7 +23,6 @@
 //
 RateValidity::RateValidity (int number_rates)
   : _invalidated (number_rates, false)
-  , _update_stack (number_rates)
   , _invalidators (number_rates)
 {
   /** @pre number_rates must be positive. */
@@ -46,6 +45,17 @@ RateValidity::~RateValidity (void)
 //  Public Methods - Commands
 // ===========================
 //
+void RateValidity::extend (int extension_size)
+{
+  /** @pre extension_size must be positive. */
+  REQUIRE (extension_size > 0);
+  int old_size = _invalidated.size();
+  int new_size = old_size + extension_size;
+  _invalidated.resize (new_size, false);
+  _invalidators.resize (new_size);
+  for (int i = old_size; i < new_size; ++i)
+    { _invalidators[i] = new RateInvalidator (*this, i); }
+}
 
 // ============================
 //  Public Methods - Accessors

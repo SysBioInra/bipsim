@@ -64,11 +64,6 @@ public:
   //  Public Methods - Commands
   // ===========================
   //
-  /**
-   * @brief Move site along the sequence.
-   * @param step_size Step by which to move the binding site.
-   */
-  virtual void move (int step_size);
 
   // ============================
   //  Public Methods - Accessors
@@ -112,6 +107,22 @@ public:
   bool overlaps (int a, int b) const;   
 
  protected:
+  // ===================
+  //  Protected Methods
+  // ===================
+  //
+  /**
+   * @brief Family accessor (non const version).
+   * @return Reference to family the site belongs to.
+   */
+  SiteFamily& family (void);
+
+ private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+
   // ============
   //  Attributes
   // ============
@@ -127,18 +138,20 @@ public:
   
   /** @brief Last position of site along the sequence. */
   int _last;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+#include "chemicalsequence.h"
+
 inline const SiteFamily& Site::family (void) const
+{
+  return _family;
+}
+
+inline SiteFamily& Site::family (void)
 {
   return _family;
 }
@@ -163,6 +176,11 @@ inline bool Site::overlaps (int a, int b) const
   /** @pre a must be smaller or equal to b. */
   REQUIRE (a <= b);
   return (((_first <= a) && (_last >= a)) || ((_first >= a) && (b >= _first)));
+}
+
+inline int Site::number_available_sites (void) const
+{
+  return _location.number_available_sites (_first, _last);
 }
 
 #endif // SITE_H

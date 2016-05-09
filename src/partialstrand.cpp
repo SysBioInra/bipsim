@@ -1,18 +1,15 @@
 
-
 /**
  * @file partialstrand.cpp
  * @brief Implementation of the PartialStrand class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
 // ==================
 //
-#include <iostream> // std::cout
+#include <limits>
 
 // ==================
 //  Project Includes
@@ -24,80 +21,62 @@
 //  Constructors/Destructors
 // ==========================
 //
-PartialStrand::PartialStrand (int length, 
-			      const FreeEndHandler& free_end_handler)
-: _length (length)
-, _complete (false)
-, _free_end_handler (free_end_handler)
+PartialStrand::PartialStrand (int length)
+  : _length (length)
+  , _complete (false)
 {
   // We place two dummy segments to mark beginning and end of the sequence.
-  // We start with {[S S],[E E]} so nothing is occupied at beginning.
+  // We start with {(-1 0),(L-1 L)} so nothing is occupied at beginning,
+  // because extremities of segment are considered UNOCCUPIED!
   // Dummy segments can be extended and ligated so when
-  // the strand is completed we will be reduced to {[S E]}.
+  // the strand is completed we will be reduced to {(-1 L)}.
   // Using dummy segments simplifies algorithms used in the class
   // (because a lot of potential border effects are removed).
-  _segments.push_back (new Segment (Segment::START, Segment::START,
-				    _free_end_handler));
-  _segments.push_back (new Segment (Segment::END, Segment::END,
-				    _free_end_handler));
+  _segments.push_back (Segment (-1, 0));
+  _segments.push_back (Segment (length-1, length));
   _segment_it = _segments.begin();
 }
-
 
 // Forbidden
 // PartialStrand::PartialStrand (const PartialStrand& other)
 // PartialStrand& PartialStrand::operator= (const PartialStrand& other)
-
-PartialStrand::~PartialStrand (void)
-{
-  // delete segments
-  for (std::list <Segment*>::iterator segment_it = _segments.begin();
-       segment_it != _segments.end(); ++segment_it)
-    { delete *segment_it; }
-}
+// PartialStrand::~PartialStrand (void)
 
 // ===========================
 //  Public Methods - Commands
 // ===========================
 //
-bool PartialStrand::start_segment (int position)
+bool PartialStrand::occupy (int position)
 {
   /** @pre position must be consistent with length provided at construction. */
   REQUIRE ((position >= 0) && (position < _length));
 
-  std::list <Segment*>::iterator result = find (position);
-  // if previous segment spans position, no new segment can be created
-  if ((*result)->last() > position) { return false; }
+  std::list <Segment>::iterator result = find (position);
+  // if position is within an existing segment, no new segment can be created
+  if ((result->first < position) && (result->last > position)) { return false; }
   _segment_it = result;
 
   // if the new segment starts right next to an existing segment, we extend
   // the existing segment, else we create a new one
-  if ((*_segment_it)->first() == position) { extend_left(); }
-  else if ((*_segment_it)->last() == position) { extend_right(); }
-  else // no joining
+  if (_segment_it->first == position) 
     {
-      if (position == 0) // on starting dummy segment
-	{
-	  (*_segment_it)->set_last (1);
-	  // put a free end on the last segment if necessary
-	  if (_segments.back()->first() == Segment::END)
-	    { _segments.back()->set_first (_length-1); }
-	}
-      else if (position == _length-1) // on ending dummy segment
-	{
-	  ++_segment_it;
-	  (*_segment_it)->set_first (_length-2);
-	  // put a free end on the first segment if necessary
-	  if (_segments.front()->last() == Segment::START)
-	    { _segments.front()->set_last (0); }
-	}
-      else
-	{
-	  ++_segment_it;
-	  _segment_it = _segments.insert 
-	    (_segment_it, 
-	     new Segment (position-1, position+1, _free_end_handler));
-	}
+      // extend to the left: first try to fuse with preceding segment
+      --_segment_it;
+      if (!join_right()) { ++_segment_it; --(_segment_it->first); }
+      check_completeness();
+    }
+  else if (_segment_it->last == position) 
+    { 
+      // extend to the right: first try to fuse with following segment
+      if (!join_right()) { ++(_segment_it->last); }
+      check_completeness();
+    }
+  else 
+    {
+      // no joining = new segment
+      ++_segment_it;
+      _segment_it = _segments.insert 
+	(_segment_it, Segment (position-1, position+1));
     }
   return true;
 }
@@ -110,18 +89,13 @@ bool PartialStrand::start_segment (int position)
 std::vector <int> PartialStrand::segments (void) const
 {
   std::vector <int> result;
-  for (std::list <Segment*>::const_iterator it = _segments.begin();
+  for (std::list <Segment>::const_iterator it = _segments.begin();
        it != _segments.end(); ++it)
     {
-      int first = (*it)->first(); int last = (*it)->last();
-      // if not a dummy segment
-      if (first != last)
-	{
-	  if (first == Segment::START) { first = -1; }
-	  if (last == Segment::END) { last = _length; }
-	  if (last > first+1) 
-	    { result.push_back (first+1); result.push_back (last-1); }
-	}
+      int first = it->first; int last = it->last;
+      // print if not a dummy segment
+      if (last > first+1) 
+	{ result.push_back (first+1); result.push_back (last-1); }
     }
   return result;
 }

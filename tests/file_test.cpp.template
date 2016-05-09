@@ -1,10 +1,9 @@
+
 /**
  * @file classname_test.cpp
  * @brief Unit testing for ClassName class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes

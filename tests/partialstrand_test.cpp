@@ -24,25 +24,21 @@
 // ==================
 //
 #include "../src/partialstrand.h"
-#include "../src/freeendhandler.h"
 
 class StrandL10
 {
 public:
   StrandL10 (void) 
-    : empty_strand (10, _fef)
+    : empty_strand (10)
   {
   }
 
   bool extend_segment (int start, int end)
   {
     for (int i = start; i < end; ++i) 
-      { if (!empty_strand.extend_segment (i)) { return false; } }
+      { if (!empty_strand.occupy (i)) { return false; } }
     return true;
   }
-
-private:
-  FreeEndHandler _fef;
 
 public:
   PartialStrand empty_strand;
@@ -56,66 +52,68 @@ BOOST_AUTO_TEST_CASE (completed_emptyStrand_returnsFalse)
   BOOST_CHECK_EQUAL (empty_strand.completed(), false);
 }
 
-BOOST_AUTO_TEST_CASE (extend_emptyStrand_fails)
+BOOST_AUTO_TEST_CASE (occupy_emptyStrand_succeeds)
 {
-  for (int i = 0; i < 10; ++i) 
-    { BOOST_CHECK_EQUAL (empty_strand.extend_segment (i), false); }
+  BOOST_CHECK_EQUAL (empty_strand.occupy (0), true);
 }
 
-BOOST_AUTO_TEST_CASE (start_emptyStrand_succeeds)
+BOOST_AUTO_TEST_CASE (occupy_emptyStrand_succeeds2)
 {
-  for (int i = 0; i < 10; ++i) 
-    { BOOST_CHECK_EQUAL (empty_strand.start_segment (i), true); }
+  BOOST_CHECK_EQUAL (empty_strand.occupy (5), true);
 }
 
-BOOST_AUTO_TEST_CASE (extend_multipleSegmentsOnEmptyStrand_succeeds)
+BOOST_AUTO_TEST_CASE (occupy_emptyStrand_succeeds3)
 {
-  empty_strand.start_segment (7); 
-  BOOST_CHECK_EQUAL (extend_segment (8, 10), true);
+  BOOST_CHECK_EQUAL (empty_strand.occupy (9), true);
+}
+
+BOOST_AUTO_TEST_CASE (occupy_occupyTwiceSamePosition_fails)
+{
+  empty_strand.occupy (0);
+  BOOST_CHECK_EQUAL (empty_strand.occupy (0), false);
+}
+
+BOOST_AUTO_TEST_CASE (occupy_multipleSegmentsOnEmptyStrand_succeeds)
+{
+  BOOST_CHECK_EQUAL (extend_segment (7, 10), true);
   BOOST_CHECK_EQUAL (extend_segment (0, 3), true);
-  empty_strand.start_segment (5); 
-  BOOST_CHECK_EQUAL (extend_segment (6, 7), true);
+  BOOST_CHECK_EQUAL (extend_segment (5, 7), true);
   BOOST_CHECK_EQUAL (extend_segment (3, 5), true);
 }
 
-BOOST_AUTO_TEST_CASE (extend_multipleSegmentsOnEmptyStrand_succeeds2)
+BOOST_AUTO_TEST_CASE (occupy_multipleSegmentsOnEmptyStrand_succeeds2)
 {
-  empty_strand.start_segment (8); 
-  BOOST_CHECK_EQUAL (extend_segment (9, 10), true);
-  empty_strand.start_segment (2); 
-  BOOST_CHECK_EQUAL (extend_segment (3, 5), true);
-  empty_strand.start_segment (6); 
-  BOOST_CHECK_EQUAL (empty_strand.extend_segment (0), true);
-  BOOST_CHECK_EQUAL (empty_strand.extend_segment (1), true);
-  BOOST_CHECK_EQUAL (empty_strand.extend_segment (5), true);
-  BOOST_CHECK_EQUAL (empty_strand.extend_segment (7), true);
+  BOOST_CHECK_EQUAL (extend_segment (8, 10), true);
+  BOOST_CHECK_EQUAL (extend_segment (2, 5), true);
+  empty_strand.occupy (6); 
+  BOOST_CHECK_EQUAL (empty_strand.occupy (0), true);
+  BOOST_CHECK_EQUAL (empty_strand.occupy (1), true);
+  BOOST_CHECK_EQUAL (empty_strand.occupy (5), true);
+  BOOST_CHECK_EQUAL (empty_strand.occupy (7), true);
 }
 
 BOOST_AUTO_TEST_CASE (completed_nonCoveringSegmentsOnEmptyStrand_returnsFalse)
 {
-  empty_strand.start_segment (7); 
+  empty_strand.occupy (7); 
   BOOST_CHECK_EQUAL (empty_strand.completed(), false);
-  extend_segment (7, 10);
+  extend_segment (8, 10);
   BOOST_CHECK_EQUAL (empty_strand.completed(), false);
   extend_segment (0, 3); 
   BOOST_CHECK_EQUAL (empty_strand.completed(), false);
-  empty_strand.start_segment (5); 
-  extend_segment (6, 7);
+  extend_segment (5, 7);
   BOOST_CHECK_EQUAL (empty_strand.completed(), false);
 }
 
 BOOST_AUTO_TEST_CASE (completed_CoveringSegmentsOnEmptyStrand_returnsTrue)
 {
-  empty_strand.start_segment (7); extend_segment (8, 10);
-  extend_segment (0, 3);  empty_strand.start_segment (5); 
-  extend_segment (6, 7);  extend_segment (3, 5);
+  extend_segment (7, 10); extend_segment (0, 3);  
+  extend_segment (5, 7);  extend_segment (3, 5);
   BOOST_CHECK_EQUAL (empty_strand.completed(), true);
 }
 
 BOOST_AUTO_TEST_CASE (completed_CoveringSegmentsOnEmptyStrand_returnsTrue2)
 {
-  empty_strand.start_segment (9);
-  for (int i = 8; i >= 0; --i) { empty_strand.extend_segment (i); }
+  for (int i = 9; i >= 0; --i) { empty_strand.occupy (i); }
   BOOST_CHECK_EQUAL (empty_strand.completed(), true);
 }
  

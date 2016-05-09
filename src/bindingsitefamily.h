@@ -68,12 +68,6 @@ class BindingSiteFamily : public Reactant, public SiteFamily
   void add (BindingSite* site);
 
   /**
-   * @brief Remove binding site from family.
-   * @param site Pointer to the site to remove.
-   */
-  void remove (BindingSite* site);
-
-  /**
    * @brief Update contributions given that a binding site availability has
    *  changed.
    * @param site_index Index of the binding site that has changed.

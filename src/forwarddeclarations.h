@@ -63,8 +63,6 @@ class FreeChemical;
 // site classes
 class BindingSite;
 class BindingSiteFamily;
-class FreeEndBindingSiteFactory;
-class FreeEndHandler;
 class Site;
 class SiteFamily;
 
@@ -72,7 +70,6 @@ class SiteFamily;
 class ChemicalSequence;
 class DoubleStrand;
 class PartialStrand;
-class Segment;
 class SequenceOccupation;
 class SiteGroup;
 
@@ -141,7 +138,6 @@ class RateToken;
 // generic containers
 template <class T> class VectorList;
 template <class T> class VectorQueue;
-template <class T> class VectorStack;
 
 // exceptions
 class DependencyException;

@@ -49,21 +49,11 @@ Site::Site (SiteFamily& family, ChemicalSequence& location, int first, int last)
 //  Public Methods - Commands
 // ===========================
 //
-void Site::move (int step_size)
-{
-  /** @pre Site must stay within location bound. */
-  REQUIRE (!_location.is_out_of_bounds (_first + step_size, _last + step_size));
-  _first += step_size; _last += step_size;
-}
 
 // ============================
 //  Public Methods - Accessors
 // ============================
 //
-int Site::number_available_sites (void) const
-{
-  return _location.number_available_sites (_first, _last);
-}
 // =================
 //  Private Methods
 // =================

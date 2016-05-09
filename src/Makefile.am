@@ -62,10 +62,7 @@ libsrc_a_SOURCES += \
 libsrc_a_SOURCES += \
 	chemicalsequence.cpp chemicalsequence.h \
 	doublestrand.cpp doublestrand.h \
-	freeendbindingsitefactory.cpp freeendbindingsitefactory.h \
-	freeendhandler.h freeendhandler.cpp\
 	partialstrand.cpp partialstrand.h \
-	segment.cpp segment.h \
 	sequenceoccupation.cpp sequenceoccupation.h \
 	sitegroup.cpp sitegroup.h 
 
@@ -121,7 +118,7 @@ libsrc_a_SOURCES += \
 
 # generic containers
 libsrc_a_SOURCES += \
-	vectorqueue.h vectorstack.h vectorlist.h
+	vectorqueue.h vectorlist.h
 
 # exceptions
 libsrc_a_SOURCES += simulatorexception.h

@@ -29,11 +29,9 @@ DoubleStrand::DoubleStrand (ChemicalSequence& sense,
 			    ChemicalSequence& antisense)
   : _sense (sense)
   , _antisense (antisense)
-  , _sense_factory (sense, _left_ends, _right_ends)
-  , _antisense_factory (antisense, _left_ends, _right_ends)
 {
-  sense.set_appariated_sequence (antisense, _sense_factory);
-  antisense.set_appariated_sequence (sense, _antisense_factory);
+  sense.set_appariated_sequence (antisense);
+  antisense.set_appariated_sequence (sense);
 }
 
 // Not needed for this class (use of compiler-generated versions)

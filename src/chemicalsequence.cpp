@@ -1,12 +1,9 @@
 
-
 /**
  * @file chemicalsequence.cpp
  * @brief Implementation of the ChemicalSequence class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -20,8 +17,6 @@
 //
 #include "chemicalsequence.h"
 #include "bindingsite.h"
-#include "freeendbindingsitefactory.h"
-#include "freeendhandler.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -32,24 +27,15 @@ ChemicalSequence::ChemicalSequence (const std::string& sequence,
   : _sequence (sequence)
   , _length (sequence.size())
   , _starting_position (starting_position)
-  , _sequence_occupation (sequence.size(), 0, _free_end_handler)
+  , _sequence_occupation (sequence.size(), 0)
   , _appariated_sequence (0)
-  , _free_end_binding_site_factory (0)
 {
 }
 
 // Not needed for this class (use of compiler-generated versions)
 // ChemicalSequence::ChemicalSequence (ChemicalSequence& other_chemical);
 // ChemicalSequence& ChemicalSequence::operator= (ChemicalSequence& other_chemical);
-
-ChemicalSequence::~ChemicalSequence (void)
-{
-  if (_appariated_sequence) 
-    { 
-      _appariated_sequence->break_pairing(); 
-      break_pairing();
-    }
-}
+// ChemicalSequence::~ChemicalSequence (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -72,20 +58,18 @@ void ChemicalSequence::unbind_unit (int first, int last)
   _sequence_occupation.remove_element (first, last);
 }
 
-int ChemicalSequence::start_appariated_strand (int position)
+int ChemicalSequence::start_strand (int position)
 {
   /** @pre Position must be consistent with sequence length. */
   REQUIRE (is_out_of_bounds (position, position) == false);
-  return _appariated_sequence->_sequence_occupation.start_segment 
-    (complementary (position));
+  return _sequence_occupation.start_segment (position);
 }
 
-bool ChemicalSequence::extend_appariated_strand (int strand_id, int position)
+bool ChemicalSequence::extend_strand (int strand_id, int position)
 {
   /** @pre Position must be consistent with sequence length. */
   REQUIRE (is_out_of_bounds (position, position) == false);
-  return _appariated_sequence->_sequence_occupation.extend_segment 
-    (strand_id, complementary (position));
+  return _sequence_occupation.extend_segment (strand_id, position);
 }
      
 void ChemicalSequence::add (int quantity)
@@ -116,63 +100,22 @@ void ChemicalSequence::add_termination_site (const Site& termination_site)
     { _termination_sites [i].push_back (&termination_site.family()); }
 }
 
-void ChemicalSequence::register_site (BindingSite& site)
+void ChemicalSequence::watch_site (BindingSite& site)
 {
   /** @pre Site must be on sequence. */
   REQUIRE (&site.location() == this);
   REQUIRE (is_out_of_bounds (site.first(), site.last()) == false); 
   
-  _sequence_occupation.register_site (site);
+  _sequence_occupation.watch_site (site);
 }
 
-void ChemicalSequence::set_appariated_sequence 
-(ChemicalSequence& sequence, const FreeEndBindingSiteFactory& factory)
+void ChemicalSequence::set_appariated_sequence (ChemicalSequence& sequence)
 {
   /** @pre Sequences must have equal length. */
   REQUIRE (sequence._length == _length);
   /** @pre A pairing must have not been defined already. */
   REQUIRE (_appariated_sequence == 0);
-
   _appariated_sequence = &sequence;
-  _free_end_binding_site_factory = &factory;
-  _free_end_handler.set_opposite (sequence);
-}
-
-BindingSite& 
-ChemicalSequence::create_left_end_binding_site (int opposite_position)
-{
-  /** @pre An free end binding site factory must have been set. */
-  REQUIRE (_free_end_binding_site_factory != 0);
-  /** @pre An appariated strand must have been set. */
-  REQUIRE (_appariated_sequence != 0);
-
-  BindingSite* site = _free_end_binding_site_factory->create_left 
-    (_appariated_sequence->complementary (opposite_position));
-  _free_end_binding_sites.push_back (site);
-  _sequence_occupation.register_moving_site (*site);
-  return *site;
-}
-
-BindingSite& 
-ChemicalSequence::create_right_end_binding_site (int opposite_position)
-{
-  /** @pre An free end binding site factory must have been set. */
-  REQUIRE (_free_end_binding_site_factory != 0);
-  /** @pre An appariated strand must have been set. */
-  REQUIRE (_appariated_sequence != 0);
-
-  BindingSite* site = _free_end_binding_site_factory->create_right 
-    (_appariated_sequence->complementary (opposite_position));  
-  _free_end_binding_sites.push_back (site);
-  _sequence_occupation.register_moving_site (*site);
-  return *site;
-}
-
-void ChemicalSequence::remove_free_end_binding_site (BindingSite& site)
-{
-  _sequence_occupation.deregister_moving_site (site);
-  _free_end_binding_sites.remove (&site);
-  delete &site;
 }
 
 // ============================
@@ -229,21 +172,4 @@ void ChemicalSequence::print (std::ostream& output) const
 {
   output << "Chemical sequence of length " << _length << " with currently "
 	 << number() << " molecules.";
-}
-
-void ChemicalSequence::break_pairing (void)
-{
-  _appariated_sequence = 0;
-  _free_end_binding_site_factory = 0;
-  _free_end_handler.break_pairing();
-  clean_free_end_binding_sites();
-}
-
-void ChemicalSequence::clean_free_end_binding_sites (void)
-{
-  for (std::list <BindingSite*>::iterator 
-	 site_it = _free_end_binding_sites.begin();
-       site_it != _free_end_binding_sites.end(); ++site_it)
-    { delete *site_it; }
-  _free_end_binding_sites.clear();
 }

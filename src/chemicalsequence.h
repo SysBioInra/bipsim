@@ -29,7 +29,6 @@
 #include "forwarddeclarations.h"
 #include "freechemical.h"
 #include "sequenceoccupation.h"
-#include "freeendhandler.h"
 
 /**
  * @brief This class stores chemicals that can be described by a sequence.
@@ -58,8 +57,8 @@ public:
   ChemicalSequence& operator= (ChemicalSequence& other_chemical);
  public:
   
-  /** @brief Destructor */
-  ~ChemicalSequence (void);
+  // /* @brief Destructor */
+  // ~ChemicalSequence (void);
 
   // ===========================
   //  Public Methods - Commands
@@ -85,26 +84,26 @@ public:
 
   /**
    * @brief Create new strand segment at given position.
-   * @param position Position opposite to which segment should be created.
+   * @param position Position where segment should be created.
    * @return Integer identifier of the strand where segment was created (used
    *  later for extension).
    */
-  int start_appariated_strand (int position);
+  int start_strand (int position);
 
   /**
    * @brief Extend strand at given position.
    * @param strand_id Integer identifier provided at strand creation.
-   * @param position Position opposite to which extension should take place.
+   * @param position Position where extension should take place.
    * @return True if extension worked, false if position already occupied.
    */
-  bool extend_appariated_strand (int strand_id, int position);
+  bool extend_strand (int strand_id, int position);
 
   /**
    * @brief Register binding site to update when its availability changes. 
    * @param site BindingSite to update when availability changes. Its position
    *  is supposed to not change over time.
    */
-  void register_site (BindingSite& site);
+  void watch_site (BindingSite& site);
 
   /**
    * @brief Add termination site on element.
@@ -116,31 +115,8 @@ public:
   /**
    * @brief Declare a sequence to which the sequence is appariated.
    * @param sequence Antisense sequence to which the sequence is appariated.
-   * @param factory Factory used to generate binding sites due to free ends
-   *  in the pairing of sense/antisense sequences.
    */
-  void set_appariated_sequence (ChemicalSequence& sequence, 
-				const FreeEndBindingSiteFactory& factory);
-
-  /**
-   * @brief Create binding site associated with left free end.
-   * @param opposite_position Position facing site on appariated strand.
-   * @return BindingSite created.
-   */
-  BindingSite& create_left_end_binding_site (int opposite_position);
-
-  /**
-   * @brief Create binding site associated with right free end.
-   * @param opposite_position Position facing site on appariated strand.
-   * @return BindingSite created.
-   */
-  BindingSite& create_right_end_binding_site (int opposite_position);
-
-  /**
-   * @brief Remove free end associated site.
-   * @param site BindingSite to remove.
-   */
-  void remove_free_end_binding_site (BindingSite& site);
+  void set_appariated_sequence (ChemicalSequence& sequence);
   
   // ============================
   //  Public Methods - Accessors
@@ -248,12 +224,6 @@ private:
    */
   void print (std::ostream& output) const;
 
-  /** @brief Break pairing with appariated sequence. */
-  void break_pairing (void);
-
-  /** @brief Remove BindingSites associated with free ends. */
-  void clean_free_end_binding_sites (void);
-
   // ============
   //  Attributes
   // ============
@@ -272,15 +242,6 @@ private:
 
   /** @brief Appariated sequence. */
   ChemicalSequence* _appariated_sequence;
-
-  /** @brief List of moving sites whose availability needs to be checked. */
-  std::list <BindingSite*> _free_end_binding_sites;
-
-  /** @brief Factory for free end binding sites. */
-  const FreeEndBindingSiteFactory* _free_end_binding_site_factory;
-
-  /** @brief Handler used to place binding sites on other strand. */
-  FreeEndHandler _free_end_handler;
 
   /** @brief Sequence occupation of the chemical. */
   SequenceOccupation _sequence_occupation;

@@ -54,36 +54,12 @@ void BindingSiteFamily::add (BindingSite* site)
   _binding_sites.push_back (site);
 
   // extend contribution vector
+  _rate_validity->extend (1);
   _rate_contributions.extend (1);
 
-  // configure update identifier to be index in the rate vector
+  // configure update
   site->set_update_id (_rate_contributions.size()-1);
-  // extend ratevalidity size if necessary
-  if (_rate_contributions.size() > _rate_validity_size)
-    {
-      update_rates();
-      _rate_validity_size *= 2;
-      delete _rate_validity;
-      _rate_validity = new RateValidity (_rate_validity_size);
-    }
-}
-
-void BindingSiteFamily::remove (BindingSite* site)
-{
-  /** @pre binding_site must be contained in the family. */
-  REQUIRE (contains (site));
-
-  // find binding site
-  int site_index = 0;
-  while (_binding_sites [site_index] != site) { ++site_index; }
-
-  // swap with last binding site and remove it
-  _rate_contributions.set_rate (site_index,
-				_rate_contributions [_rate_contributions.size()-1]);
-  _binding_sites [site_index] = _binding_sites.back();
-  _binding_sites [site_index]->set_update_id (site_index);
-  _rate_contributions.pop_back();
-  _binding_sites.pop_back();
+  site->location().watch_site (*site);
 }
 
 void BindingSiteFamily::update (int site_index)

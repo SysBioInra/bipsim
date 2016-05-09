@@ -108,10 +108,12 @@ void DoubleStrandLoading::do_reaction (void)
 {
   // select unit weighted by the template read
   BoundUnit& unit = random_unit();
+  /** @pre Bound unit must be bound to a double strand sequence. */
+  REQUIRE (unit.location().appariated_strand() != 0);
   if (unit.strand() != BoundUnit::NO_STRAND)
     {
-      if (unit.location().extend_appariated_strand 
-	  (unit.strand(), unit.reading_frame()))
+      if (unit.location().appariated_strand()->extend_strand 
+	  (unit.strand(), unit.location().complementary (unit.reading_frame())))
 	{ 
 	  load_chemical (unit); 
 	}
@@ -123,8 +125,8 @@ void DoubleStrandLoading::do_reaction (void)
     }
   else // unit.strand() == NO_STRAND
     {
-      unit.set_strand 
-	(unit.location().start_appariated_strand (unit.reading_frame()));
+      unit.set_strand (unit.location().appariated_strand()->start_strand 
+		       (unit.location().complementary (unit.reading_frame())));
       load_chemical (unit);
     }
 }

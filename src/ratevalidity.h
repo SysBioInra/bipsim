@@ -1,12 +1,9 @@
 
-
 /**
  * @file ratevalidity.h
  * @brief Header for the RateValidity class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -17,7 +14,8 @@
 //  General Includes
 // ==================
 //
-#include <vector> //std::vector
+#include <vector> // std::vector
+#include <stack> // std::stack
 
 // ======================
 //  Forward declarations
@@ -25,7 +23,6 @@
 //
 #include "forwarddeclarations.h"
 #include "macros.h"
-#include "vectorstack.h"
 
 /**
  * @brief Class monitoring validity of reaction rates.
@@ -71,6 +68,12 @@ class RateValidity
    */
   void pop (void);
 
+  /**
+   * @brief Extend size of object.
+   * @param extension_size Number of elements to add.
+   */
+  void extend (int extension_size);
+
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -95,6 +98,11 @@ class RateValidity
   RateInvalidator& invalidator (int identifier) const;
 
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+
   // ============
   //  Attributes
   // ============
@@ -104,14 +112,9 @@ private:
 
   /** @brief Invalidators used as observers to invalidate a specific rate. */
   std::vector <RateInvalidator*> _invalidators;
-  
-  /** @brief Stack holding indices of elements to update. */
-  VectorStack <int> _update_stack;
 
-  // =================
-  //  Private Methods
-  // =================
-  //
+  /** @brief Stack holding indices of elements to update. */
+  std::stack <int, std::vector <int> > _update_stack;
 };
 
 // ======================
@@ -131,7 +134,7 @@ inline void RateValidity::pop (void)
 { 
   /** @pre Update stack must not be empty. */
   REQUIRE (!empty());
-  _invalidated [_update_stack.item()] = false;
+  _invalidated [_update_stack.top()] = false;
   _update_stack.pop(); 
 }
 
@@ -139,7 +142,7 @@ inline int RateValidity::front (void) const
 { 
   /** @pre Update stack must not be empty. */
   REQUIRE (!empty());
-  return _update_stack.item();
+  return _update_stack.top();
 }
 
 inline bool RateValidity::empty (void) const

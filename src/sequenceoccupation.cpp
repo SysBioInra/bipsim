@@ -28,12 +28,10 @@
 //  Constructors/Destructors
 // ==========================
 //
-SequenceOccupation::SequenceOccupation (int length, int number,
-					const FreeEndHandler& handler)
+SequenceOccupation::SequenceOccupation (int length, int number)
   : _number_sequences (number)
   , _occupancy (length, 0)
   , _number_segments (length, 0)
-  , _free_end_handler (handler)
 {
 }
 
@@ -116,16 +114,15 @@ int SequenceOccupation::start_segment (int position)
   while (strand_id_it != _partial_creation_order.end())
     {
       strand_id = *strand_id_it;
-      if (_partial_by_index [strand_id]->start_segment (position)) { break; }
+      if (_partial_by_index [strand_id]->occupy (position)) { break; }
       ++strand_id_it;
     }
   if (strand_id_it == _partial_creation_order.end()) 
     { 
       strand_id = next_strand_id();
-      _partial_by_index [strand_id] = 
-	new PartialStrand (_occupancy.size(), _free_end_handler); 
+      _partial_by_index [strand_id] = new PartialStrand (_occupancy.size()); 
       _partial_creation_order.push_back (strand_id);
-      _partial_by_index [strand_id]->start_segment (position);
+      _partial_by_index [strand_id]->occupy (position);
     }
   check_completion (strand_id);
   notify_change (position, position);
@@ -141,7 +138,7 @@ bool SequenceOccupation::extend_segment (int strand_id, int position)
   /** @pre strand_id must be in valid range. */
   REQUIRE ((strand_id >= 0) && (strand_id < _partial_by_index.size()));
 
-  if (_partial_by_index [strand_id]->extend_segment (position))
+  if (_partial_by_index [strand_id]->occupy (position))
     {
       _occupancy [position] -= 1;
       _number_segments [position] += 1;
@@ -152,7 +149,7 @@ bool SequenceOccupation::extend_segment (int strand_id, int position)
   else { return false; }
 }
 
-void SequenceOccupation::register_site (BindingSite& site)
+void SequenceOccupation::watch_site (BindingSite& site)
 {
   // look if site should be added to an existing group
   bool new_group = true;
@@ -181,17 +178,6 @@ void SequenceOccupation::register_site (BindingSite& site)
 
   // send first notification about site availability
   site.update();
-}
-
-void SequenceOccupation::register_moving_site (BindingSite& site)
-{
-  _moving_sites.push_back (&site);
-  site.update();
-}
-
-void SequenceOccupation::deregister_moving_site (BindingSite& site)
-{
-  _moving_sites.remove (&site);
 }
 
 // ============================
@@ -285,7 +271,6 @@ int SequenceOccupation::position_to_group (int position) const
 
 void SequenceOccupation::notify_change (int a, int b) const
 {
-  // update static sites
   if (_site_groups.size() > 0)
     {
       int last_group = position_to_group (b);
@@ -293,25 +278,12 @@ void SequenceOccupation::notify_change (int a, int b) const
       for (int i = position_to_group (a); i <= last_group; ++i)
 	{ _site_groups [i]->update (a, b); }
     }
-
-  // update moving sites
-  for (std::list <BindingSite*>::const_iterator site_it = _moving_sites.begin();
-       site_it != _moving_sites.end(); ++site_it) 
-    {
-      if ((*site_it)->overlaps (a, b)) { (*site_it)->update(); }
-    }
 }
 
 void SequenceOccupation::notify_all_sites (void) const
 {
-  // update static sites
   for (int i = 0; i < _site_groups.size(); ++i)
     { _site_groups [i]->update_all(); }
-
-  // update moving sites
-  for (std::list <BindingSite*>::const_iterator site_it = _moving_sites.begin();
-       site_it != _moving_sites.end(); ++site_it) 
-    { (*site_it)->update(); }
 }
 
 void SequenceOccupation::check_completion (int strand_id)
