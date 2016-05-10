@@ -26,7 +26,7 @@ class SOSingleStrandL100
 public:
   SOSingleStrandL100 (void) 
     : site_dispenser (100)
-    , empty_occupation (100, 0)
+    , empty_occupation (100)
   {}
 
 public:
@@ -171,7 +171,7 @@ class SODoubleStrandL100
 public:
   SODoubleStrandL100 (void) 
     : site_dispenser (100)
-    , empty_occupation (100, 0)
+    , empty_occupation (100)
   {
   }
 

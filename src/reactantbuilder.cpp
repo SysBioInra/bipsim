@@ -76,7 +76,8 @@ DoubleStrandBuilder::DoubleStrandBuilder (CellState& cell_state)
   : Builder (cell_state)
   , _format (TagToken ("DoubleStrandSequence") + StrToken (_name)
 	     + StrToken (_sense_name) + StrToken (_sequence)
-	     + StrToken (_antisense_name) + StrToken (_table_name))
+	     + StrToken (_antisense_name) + StrToken (_table_name)
+	     + StrToken (_circularity))
 {
 }
 
@@ -165,11 +166,18 @@ bool ChemicalSequenceBuilder::match (InputLine& text_input)
 bool DoubleStrandBuilder::match (InputLine& text_input)
 {
   if (!_format.match (text_input)) { return false; }
+  bool circular = false;
+  if (_circularity == "CIRCULAR") { circular = true; }
+  else if (_circularity != "LINEAR")
+    {
+      throw ParserException (_circularity + ": wrong keyword for DoubleStrand"
+			     " circularity, must be CIRCULAR or LINEAR");
+    }
   std::string antisequence = fetch <TransformationTable> (_table_name).
     transform (std::string (_sequence.rbegin(),_sequence.rend()));
-  ChemicalSequence* sense = new ChemicalSequence (_sequence); 
+  ChemicalSequence* sense = new ChemicalSequence (_sequence, 1, circular); 
   store (sense, _sense_name);
-  ChemicalSequence* antisense = new ChemicalSequence (antisequence); 
+  ChemicalSequence* antisense = new ChemicalSequence (antisequence, 1, circular); 
   store (antisense, _antisense_name);
   DoubleStrand* chemical = new DoubleStrand (*sense, *antisense);
   store (chemical, _name);

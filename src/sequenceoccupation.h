@@ -44,9 +44,8 @@ class SequenceOccupation
   /**
    * @brief Constructor.
    * @param length Length of the sequence whose occupation should be handled.
-   * @param number Number of sequences initially present.
    */
-  SequenceOccupation (int length, int number);
+  SequenceOccupation (int length);
 
  private:
   // Forbidden

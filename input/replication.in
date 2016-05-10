@@ -38,7 +38,10 @@ DoubleStrandLoading DNAP_fork dNTP_loading_fork stalled_DNAP_fork
 ChemicalReaction loaded_DNAP_fork -1 PPi 1 translocating_DNAP_fork 1 rates 1 0
 Translocation translocating_DNAP_fork DNAP_fork stalled_DNAP_fork 1 10
 
-DoubleStrandRecruitment DNAP_fork free_DNAP DNAP 0.1
+DoubleStrandRecruitment DNAP_fork free_DNAP DNAP 1000
 DoubleStrandLoading DNAP dNTP_loading stalled_DNAP
 ChemicalReaction loaded_DNAP -1 PPi 1 translocating_DNAP 1 rates 1 0
 Translocation translocating_DNAP DNAP stalled_DNAP 1 10
+
+Release stalled_DNAP free_DNAP 1 rate 1
+Release stalled_DNAP_fork free_DNAP 1 rate 1

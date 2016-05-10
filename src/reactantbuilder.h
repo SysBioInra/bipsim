@@ -167,7 +167,8 @@ class DoubleStrandBuilder : public Builder
  private:
   // format and values read
   Rule _format;
-  std::string _name, _sense_name, _antisense_name, _sequence, _table_name;
+  std::string _name, _sense_name, _antisense_name, 
+    _sequence, _table_name, _circularity;
 };
 
 

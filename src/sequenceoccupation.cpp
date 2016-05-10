@@ -28,8 +28,8 @@
 //  Constructors/Destructors
 // ==========================
 //
-SequenceOccupation::SequenceOccupation (int length, int number)
-  : _number_sequences (number)
+SequenceOccupation::SequenceOccupation (int length)
+  : _number_sequences (0)
   , _occupancy (length, 0)
   , _number_segments (length, 0)
 {
@@ -138,6 +138,7 @@ bool SequenceOccupation::extend_segment (int strand_id, int position)
   /** @pre strand_id must be in valid range. */
   REQUIRE ((strand_id >= 0) && (strand_id < _partial_by_index.size()));
 
+  if (_partial_by_index [strand_id] == 0) { return false; }
   if (_partial_by_index [strand_id]->occupy (position))
     {
       _occupancy [position] -= 1;

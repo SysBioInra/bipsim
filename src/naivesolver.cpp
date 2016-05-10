@@ -81,7 +81,7 @@ void NaiveSolver::schedule_next_reaction (void)
   else
     {
       std::cerr << "Warning: no reactions left to perform "
-		<< "(total reaction rate = "
+		<< "(t =" << time() << ", total reaction rate = "
 		<< _rate_manager->total_rate() << ")." << std::endl;
       _next_reaction = 0;
       _next_reaction_time = INFINITY;

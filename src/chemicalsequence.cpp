@@ -23,11 +23,13 @@
 // ==========================
 //
 ChemicalSequence::ChemicalSequence (const std::string& sequence,
-				    int starting_position /*= 1*/)
+				    int starting_position /*= 1*/,
+				    bool is_circular /* = false */)
   : _sequence (sequence)
   , _length (sequence.size())
   , _starting_position (starting_position)
-  , _sequence_occupation (sequence.size(), 0)
+  , _is_circular (is_circular)
+  , _occupation (sequence.size())
   , _appariated_sequence (0)
 {
 }
@@ -43,33 +45,37 @@ ChemicalSequence::ChemicalSequence (const std::string& sequence,
 //
 void ChemicalSequence::bind_unit (int first, int last)
 {
+  /** @pre first must be smaller than last. */
+  REQUIRE (first <= last);
   /** @pre Unit positions must be consistent with sequence length. */
   REQUIRE (is_out_of_bounds (first, last) == false); 
 
-  _sequence_occupation.add_element (first, last);
+  _occupation.add_element (first, last);
 }
 
 
 void ChemicalSequence::unbind_unit (int first, int last)
 {
+  /** @pre first must be smaller than last. */
+  REQUIRE (first <= last);
   /** @pre Unit positions must be consistent with sequence length. */
   REQUIRE (is_out_of_bounds (first, last) == false); 
   
-  _sequence_occupation.remove_element (first, last);
+  _occupation.remove_element (first, last);
 }
 
 int ChemicalSequence::start_strand (int position)
 {
   /** @pre Position must be consistent with sequence length. */
   REQUIRE (is_out_of_bounds (position, position) == false);
-  return _sequence_occupation.start_segment (position);
+  return _occupation.start_segment (position);
 }
 
 bool ChemicalSequence::extend_strand (int strand_id, int position)
 {
   /** @pre Position must be consistent with sequence length. */
   REQUIRE (is_out_of_bounds (position, position) == false);
-  return _sequence_occupation.extend_segment (strand_id, position);
+  return _occupation.extend_segment (strand_id, position);
 }
      
 void ChemicalSequence::add (int quantity)
@@ -78,7 +84,7 @@ void ChemicalSequence::add (int quantity)
   REQUIRE (quantity >= 0);
 
   Chemical::add (quantity);
-  _sequence_occupation.add_sequence (quantity);
+  _occupation.add_sequence (quantity);
 }
 
 void ChemicalSequence::remove (int quantity)
@@ -87,7 +93,7 @@ void ChemicalSequence::remove (int quantity)
   REQUIRE (quantity > 0);
 
   Chemical::remove (quantity);
-  _sequence_occupation.remove_sequence (quantity);
+  _occupation.remove_sequence (quantity);
 }
 
 void ChemicalSequence::add_termination_site (const Site& termination_site)
@@ -106,7 +112,7 @@ void ChemicalSequence::watch_site (BindingSite& site)
   REQUIRE (&site.location() == this);
   REQUIRE (is_out_of_bounds (site.first(), site.last()) == false); 
   
-  _sequence_occupation.watch_site (site);
+  _occupation.watch_site (site);
 }
 
 void ChemicalSequence::set_appariated_sequence (ChemicalSequence& sequence)

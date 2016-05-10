@@ -1,12 +1,9 @@
 
-
 /**
  * @file simulation.cpp
  * @brief Implementation of the Simulation class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -134,32 +131,34 @@ void Simulation::run (void)
 //
 void Simulation::create_loggers (void)
 {
-  std::vector <std::string> chemical_names = _params.output_entities();
   std::vector <const Chemical*> chemical_refs;
   const DoubleStrand* double_strand = 0;
-  std::vector <std::string>::iterator name_it = chemical_names.begin();
-  while (name_it != chemical_names.end())
+  bool dependency_errors = false;
+  for (std::vector <std::string>::const_iterator 
+	 it = _params.output_entities().begin();
+       it != _params.output_entities().end(); ++it)
     {
-      const Chemical* next_chemical = _cell_state.find <Chemical> (*name_it);
-      if (next_chemical != 0)
-	{ 
-	  chemical_refs.push_back (next_chemical); 
-	  const DoubleStrand* next_ds = 
-	    dynamic_cast <const DoubleStrand*> (next_chemical);
-	  if (next_ds != 0) { double_strand = next_ds; }
-	  ++name_it; 
-	}
-      else
+      try
 	{
-	  std::cerr << "WARNING: unknown chemical " << *name_it
-		    << " will not be logged!\n";
-	  name_it = chemical_names.erase (name_it);
+	  const Chemical* next = &_cell_state.fetch <Chemical> (*it);
+	  chemical_refs.push_back (next); 
+	  const DoubleStrand* next_ds = 
+	    dynamic_cast <const DoubleStrand*> (next);
+	  if (next_ds != 0) { double_strand = next_ds; }
 	}
+      catch (const DependencyException& error)
+	{
+	  dependency_errors = true;
+	  std::cerr << "DEPENDENCY ERROR (parameter file, chemicals to log): " 
+		    << error.what() << "." << std::endl;
+  	}
     }
+  if (dependency_errors) 
+    { throw std::runtime_error ("unresolved dependencies"); }
   if (chemical_refs.size() > 0)
     {
       _logger = new ChemicalLogger (_params.concentration_file(),
-				    chemical_refs, chemical_names);
+				    chemical_refs, _params.output_entities());
     }
   if (double_strand != 0)
     {

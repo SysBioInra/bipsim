@@ -1,18 +1,14 @@
 
-
 /**
  * @file release.cpp
  * @brief Implementation of the DoubleStrandRecruitment class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
 // ==================
 //
-#include <iostream> // std::cerr
 
 // ==================
 //  Project Includes

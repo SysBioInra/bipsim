@@ -1,12 +1,9 @@
 
-
 /**
  * @file chemicalsequence.h
  * @brief Header for the ChemicalSequence class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -32,9 +29,8 @@
 
 /**
  * @brief This class stores chemicals that can be described by a sequence.
- *
- * Usually polymers based on a specific alphabet. Typical examples include DNA,
- * RNA and proteins.
+ * @details Usually polymers based on a specific alphabet. Typical examples 
+ *  include DNA, RNA and proteins.
  */
 class ChemicalSequence : public FreeChemical
 {
@@ -47,8 +43,10 @@ public:
    * @brief Constructor
    * @param sequence Sequence of the chemical
    * @param starting_position Starting position (allows absolute positionning).
+   * @param is_circular Indicates whether sequence is circular or not.
    */
-  ChemicalSequence (const std::string& sequence, int starting_position = 1);
+  ChemicalSequence (const std::string& sequence, int starting_position = 1,
+		    bool is_circular = false);
 
  private:
   /** @brief Copy constructor */
@@ -228,23 +226,26 @@ private:
   //  Attributes
   // ============
   //
-  /** @brief Starting position of the sequence (allows absolute positioning). */
-  int _starting_position;
-
   /** @brief Length of the sequence. */
   int _length;
 
-  /** @brief Termination sites on the sequence. */
-  std::map <int, std::list <const SiteFamily*> > _termination_sites;
+  /** @brief Starting position of the sequence (allows absolute positioning). */
+  int _starting_position;
 
   /** @brief Sequence of the chemical. */
   std::string _sequence;  
+
+  /** @brief Circularity. */
+  bool _is_circular;
+
+  /** @brief Termination sites on the sequence. */
+  std::map <int, std::list <const SiteFamily*> > _termination_sites;
 
   /** @brief Appariated sequence. */
   ChemicalSequence* _appariated_sequence;
 
   /** @brief Sequence occupation of the chemical. */
-  SequenceOccupation _sequence_occupation;
+  SequenceOccupation _occupation;
 };
 
 // ======================
@@ -259,7 +260,7 @@ int ChemicalSequence::number_sites (int first, int last) const
   REQUIRE (first <= last);
   /** @pre first and last must be within sequence bound. */
   REQUIRE (!is_out_of_bounds (first, last));
-  return _sequence_occupation.number_sites (first, last);
+  return _occupation.number_sites (first, last);
 }
 
 inline 
@@ -269,13 +270,13 @@ int ChemicalSequence::number_available_sites (int first, int last) const
   REQUIRE (first <= last);
   /** @pre first and last must be within sequence bound. */
   REQUIRE (!is_out_of_bounds (first, last));
-  return _sequence_occupation.number_available_sites (first, last);
+  return _occupation.number_available_sites (first, last);
 }
 
 inline 
 std::list <std::vector <int> > ChemicalSequence::partial_strands (void) const
 {
-  return _sequence_occupation.partial_strands();
+  return _occupation.partial_strands();
 }
 
 inline int ChemicalSequence::length (void) const
@@ -301,7 +302,7 @@ const std::string ChemicalSequence::sequence (int first, int last) const
   /** @pre first must be smaller than last. */
   REQUIRE (first <= last);
   /** @pre Requested sequence must be within sequence bounds. */
-  REQUIRE (is_out_of_bounds (first, last) == false);
+  REQUIRE (!is_out_of_bounds (first, last));
 
   return _sequence.substr (first, last-first+1);
 }
