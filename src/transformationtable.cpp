@@ -56,7 +56,7 @@ TransformationTable::TransformationTable
 std::string TransformationTable::transform (const std::string& sequence) const
 {
   // check that sequence has valid length
-  if ((sequence.length() % _motif_length) != 0) return "";
+  if ((sequence.length() % _motif_length) != 0) { return ""; }
 
   std::istringstream seq_stream (sequence);
   std::string result;
@@ -65,7 +65,7 @@ std::string TransformationTable::transform (const std::string& sequence) const
   while (seq_stream.get (next_motif, _motif_length+1))
     {
       rule = _rules.find (next_motif);
-      if (rule == _rules.end()) return ""; // unknown input motif
+      if (rule == _rules.end()) { return ""; } // unknown input motif
       result += rule->second;
     }
   return result;

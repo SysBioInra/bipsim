@@ -6,5 +6,5 @@ SUBDIRS = src tests
 
 ACLOCAL_AMFLAGS = -I m4
 
-#boost
+# boost
 EXTRA_DIST = bootstrap

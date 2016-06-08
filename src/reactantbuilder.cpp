@@ -89,11 +89,15 @@ bool BindingSiteBuilder::match (InputLine& text_input)
 {
   if (_format.match (text_input) == false) { return false; }
   ChemicalSequence& location = fetch <ChemicalSequence> (_location_name);
-  check_positions (location);
   if (_rf_format.match (text_input))
-    {  _reading_frame = location.relative (_reading_frame); }
+    {  
+      if (_end < _reading_frame) { _end = _reading_frame; }
+      if (_start > _reading_frame) { throw ParserException ("wtf?"); }
+      _reading_frame = location.relative (_reading_frame);
+    }
   else
     { _reading_frame = BindingSite::NO_READING_FRAME; }
+  check_positions (location);
   store (new BindingSite (fetch_or_create <BindingSiteFamily> (_family_name), 
 			  location, location.relative (_start),
 			  location.relative (_end), _k_on, _k_off, 

@@ -7,6 +7,7 @@ AC_INIT([myBacteria], [1.0] )
 
 # automake initialization
 AM_INIT_AUTOMAKE([subdir-objects])
+AM_SILENT_RULES([yes])
 
 # check if the source folder is correct
 AC_CONFIG_SRCDIR([src/main.cpp])
@@ -44,7 +45,9 @@ AC_C_INLINE
 # files to generate via autotools (.am or .in source files)
 AC_CONFIG_FILES([Makefile
                  src/Makefile
-		 tests/Makefile])
+		 tests/Makefile
+		 tests/unit_tests/Makefile
+		 tests/integration/Makefile])
 
 # Checks for command-line options
 AC_ARG_ENABLE([pre-check],
@@ -59,6 +62,10 @@ AC_ARG_ENABLE([unit-tests],
 	[ --enable-unit-tests	enable unit tests],
 	[unit_tests=${enableval}], [unit_tests=no])
 
+AC_ARG_ENABLE([integration-tests],
+	[ --enable-integration-tests	enable integration tests],
+	[integration_tests=${enableval}], [integration_tests=no])
+
 
 if test "x${pre_check}" = xyes; then
    AC_DEFINE([CHECK_PRECONDITIONS], 1, [Precondition check enabled])
@@ -68,9 +75,14 @@ if test "x${post_check}" = xyes; then
    AC_DEFINE([CHECK_POSTCONDITIONS], 1, [Postcondition check enabled])
 fi
 
-AM_CONDITIONAL([HAVE_UNIT_TESTS], [test "x${unit_tests}" = xyes])	     
+AM_CONDITIONAL([HAVE_UNIT_TESTS], [test "x${unit_tests}" = xyes])
 if test "x${unit_tests}" = xyes; then
-   AC_DEFINE([PERFORM_UNIT_TESTS], 1, [Unit tests enabled])
+   AC_DEFINE([PERFORM_TESTS], 1, [Tests enabled])
+fi
+
+AM_CONDITIONAL([HAVE_INTEGRATION_TESTS], [test "x${integration_tests}" = xyes])
+if test "x${integration_tests}" = xyes; then
+   AC_DEFINE([PERFORM_TESTS], 1, [Tests enabled])
 fi
 
 # generate the final Makefile etc.

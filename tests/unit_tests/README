@@ -1,0 +1,13 @@
+
+This directory contains unit tests. 
+
+CREATE TEST
+-----------
+To create a new unit test you need to
+ 1) create a test either by copying and modifying `file_test.cpp.template` or creating a new cpp file from scratch.
+ 2) add the file as a program to build in `generate_makefile.sh`. DO NOT MODIFY any of the `Makefile/.am/.in` directly!!!
+ 3) Run `sh generate_makefile.sh` to generate proper `Makefile.am` and reconfigure project to generate `Makefile.in` and `Makefile`.
+
+RUN TESTS
+---------
+Type `make check` in this directory or one of the parent directories.

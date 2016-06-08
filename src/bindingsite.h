@@ -76,7 +76,7 @@ public:
    * @brief Perform necessary actions when availability of the observed site 
    *  has changed.
    */
-#ifndef PERFORM_UNIT_TESTS
+#ifndef PERFORM_TESTS
   void update (void);
 #else
   virtual void update (void);

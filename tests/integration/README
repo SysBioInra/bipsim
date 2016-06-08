@@ -1,0 +1,14 @@
+
+This directory contains integration tests. Each test is contained in a different directory. 
+
+CREATE TEST
+-----------
+To create a new test, you should
+ 1) Copy the `test_template` directory or any test close to the test you want to add.
+ 2) Modify the content of directory. The directory should still contain a file named `test.cpp` used to run the simulator and a script `run_test.sh` used to pilot the test.
+ 3) Add directory as a test to build in `generate_makefile.sh`. DO NOT MODIFY any of the `Makefile/.am/.in` directly!!!
+ 4) Run `sh generate_makefile.sh` to generate proper `Makefile.am` and reconfigure roject to generate `Makefile.in` and `Makefile`.
+
+RUN TESTS
+---------
+Type `make integration` in this directory or one of the parent directories.

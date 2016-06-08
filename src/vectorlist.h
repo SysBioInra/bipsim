@@ -79,8 +79,7 @@ class VectorList
    */
   void remove (const T& element)
   {
-    /** @pre List must not be empty. */
-    REQUIRE (_v.size() > 0);
+    if (_v.size() == 0) { return; }
     
     // often the user will want to erase the last element accessed
     if (element == _v [_current]) { erase (_current); return; }
@@ -88,10 +87,6 @@ class VectorList
     // else we just parse the vector until the right element is found.
     for (int i = 0; i < _v.size(); ++ i)
       { if (element == _v[i]) { erase (i); return; } }
-    
-    // element was not found...
-    std::cerr << "WARNING: trying to erase non existent element "
-	      << "from a VectorList." << std::endl;
   }
   
   // ============================

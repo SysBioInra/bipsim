@@ -72,6 +72,13 @@ class Simulation
   //  Public Methods - Accessors
   // ============================
   //
+  /**
+   * @brief Accessor to CellState object.
+   * @return Reference to CellState object holding most proprietes of the cell
+   *  such as reactions and reactants.
+   */
+  const CellState& cell_state (void) const;
+
 private:
   // =================
   //  Private Methods
@@ -119,5 +126,9 @@ private:
 //  Inline declarations
 // ======================
 //
+inline const CellState& Simulation::cell_state (void) const
+{
+  return _cell_state;
+}
 
 #endif // SIMULATION_H

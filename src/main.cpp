@@ -1,7 +1,6 @@
 /**
  * @file main.cpp
  * @brief Contains the main routine of the program.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
 
@@ -11,7 +10,6 @@
 //
 #include <string> // std::string
 #include <iostream> // std::cout
-#include <fstream> // std::ofstream
 #include <sstream> // std::istringstream
 #include <ctime> // clock()
 #include <cstdlib> // EXIT_FAILURE
