@@ -19,7 +19,9 @@ class SimulationFixture
 public:
   SimulationFixture (void)
     : simulation ("input/params.in")
-  {}
+  {
+    simulation.run();
+  }
 
   Simulation simulation;
 };
@@ -28,7 +30,6 @@ BOOST_FIXTURE_TEST_SUITE (BaseTests, SimulationFixture)
  
 BOOST_AUTO_TEST_CASE (TestName)
 {
-  simulation.run();
   // Use any basic boost test such as BOOST_TEST_EQUAL
   // or write any information to file to be used by run_test.sh
 }

@@ -3,7 +3,7 @@ FILE=Makefile.am
 rm -f $FILE
 
 ############################# LINE TO MODIFY ##################################
-TEST_DIRECTORIES=("tRNA_consumption")
+TEST_DIRECTORIES=("tRNA_consumption" "missing_tRNA")
 ###############################################################################
 
 printf "\n" >> $FILE
