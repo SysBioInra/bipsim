@@ -22,6 +22,7 @@ BoundChemical loaded_RNAP
 LoadingTable NTP_loading A ATP loaded_RNAP 1, C CTP loaded_RNAP 1, G GTP loaded_RNAP 1, T UTP loaded_RNAP 1
 BoundChemical stable_RNAP
 BoundChemical stalled_RNAP
+BoundChemical empty_RNAP
 BoundChemical translocating_RNAP
 
 # termination
@@ -52,4 +53,5 @@ ChemicalReaction loaded_RNAP -1 Mg2+ -2 translocating_RNAP 1 PPi 1 Mg2+ 2 rates 
 Translocation translocating_RNAP stable_RNAP stalled_RNAP 1 6 hairpin
 
 # termination
-Release stalled_RNAP NutA -1 NutA 1 RNAP 1 rna 1 rate 1 produces rnas
+Release stalled_RNAP empty_RNAP stable_RNAP rnas 1
+ChemicalReaction empty_RNAP -1 NutA -1 NutA 1 RNAP 1 rna 1 rates 1 0

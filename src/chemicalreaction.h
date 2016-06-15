@@ -93,6 +93,9 @@ public:
   void print (std::ostream& output) const;
 
   static double contribution (int number, int order);
+
+  bool is_forward_reaction_valid (void);
+  bool is_backward_reaction_valid (void);
   
   // ============
   //  Attributes
@@ -112,10 +115,10 @@ public:
   std::vector <CRFree> _free_backward;
   
   /** @brief Bound reactant of the reaction (0 if none). */
-  BoundChemical* _bound_reactant;
+  BoundChemical* _forward_bound;
 
   /** @brief Bound product of the reaction (0 if none). */
-  BoundChemical* _bound_product;
+  BoundChemical* _backward_bound;
   
   /** @brief Forward rate constant k_1. */
   double _k_1;
@@ -141,7 +144,6 @@ public:
 // ======================
 //
 #include <cmath> // pow
-#include "freechemical.h"
 
 inline double 
 ChemicalReaction::contribution (int number, int order)
@@ -156,6 +158,16 @@ inline void ChemicalReaction::handle_volume_change (double volume)
 {
   _forward_constant = _k_1 / pow (volume, _forward_order);
   _backward_constant = _k_m1 / pow (volume, _backward_order);
+}
+
+inline bool ChemicalReaction::is_forward_reaction_valid (void)
+{
+  return (_backward_bound == 0) || (_forward_bound != 0);
+}
+
+inline bool ChemicalReaction::is_backward_reaction_valid (void)
+{
+  return (_forward_bound == 0) || (_backward_bound != 0);
 }
 
 #endif // CHEMICALREACTION_H

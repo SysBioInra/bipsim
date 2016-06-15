@@ -84,11 +84,9 @@ SequenceBindingBuilder::SequenceBindingBuilder (CellState& cell_state)
 
 ReleaseBuilder::ReleaseBuilder (CellState& cell_state)
   : Builder (cell_state)
-  , _format (TagToken ("Release") + StrToken (_unit_to_release)
-	     + Iteration (MemToken <std::string> (_chemical_names) 
-			  + MemToken <int> (_stoichiometries),
-			  TagToken ("rate") + DblToken (_rate)))
-  , _product_format (TagToken ("produces") + StrToken (_table_name))
+  , _format (TagToken ("Release") + StrToken (_releasing_polymerase)
+	     + StrToken (_empty_polymerase) + StrToken (_fail_polymerase)
+	     + StrToken (_product_table) + DblToken (_rate))
 {
 }
 
@@ -175,22 +173,12 @@ bool SequenceBindingBuilder::match (InputLine& text_input)
 
 bool ReleaseBuilder::match (InputLine& text_input)
 {
-  _chemical_names.clear(); _stoichiometries.clear();
   if (!_format.match (text_input)) { return false; }
-  _chemicals.clear(); _orders.clear();
-  for (int i = 0; i < _chemical_names.size(); ++i)
-    {
-      _chemicals.push_back (&(fetch <FreeChemical> (_chemical_names [i])));
-      _orders.push_back (abs (_stoichiometries [i]));
-    }
-	 
-  // get associated product (if applicable)
-  ProductTable* table = 0;
-  if (_product_format.match (text_input))
-    { table = &(fetch <ProductTable> (_table_name)); }
-
-  store (new Release (fetch <BoundChemical> (_unit_to_release), _chemicals, 
-		      _stoichiometries, _orders, _rate, table));
+  
+  store (new Release (fetch <BoundChemical> (_releasing_polymerase), 
+		      fetch <BoundChemical> (_empty_polymerase), 
+		      fetch <BoundChemical> (_fail_polymerase), 
+		      fetch <ProductTable> (_product_table), _rate));
   return true;
 }
 
@@ -284,14 +272,14 @@ parse_chemicals (const std::vector <std::string>& names,
 	  throw ParserException ("A chemical reaction can only contain free "
 				 "chemicals or bound chemicals. It contains"
 				 " at most one bound chemical on each side of"
-				 " the reaction with unitary stoichiometry.");
+				 " the reaction with unitary stoichiometry");
 	}
     }
-  if (((_bound_reactant == 0) && (_bound_product != 0))
-      || ((_bound_reactant != 0) && (_bound_product == 0)))
+  if (((_bound_product != 0) && (_bound_reactant == 0) && (_k_1 > 0))
+      || 
+      ((_bound_reactant != 0) && (_bound_product == 0) && (_k_m1 > 0)))
     {
-      throw ParserException ("If a chemical reaction contains bound elements,"
-			     " it must have exactly one bound reactant and one"
-			     " bound product.");
+      throw ParserException ("A chemical reaction cannot create a bound "
+			     "chemical. Use SequenceBinding instead");
     }
 }

@@ -1,12 +1,9 @@
 
-
 /**
  * @file chemicalreaction.cpp
  * @brief Implementation of the ChemicalReaction class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -24,6 +21,7 @@
 #include "chemicalsequence.h"
 #include "boundchemical.h"
 #include "boundunit.h"
+#include "boundunitfactory.h"
 #include "simulatorexception.h"
 
 // ==========================
@@ -41,8 +39,8 @@ ChemicalReaction::ChemicalReaction (const std::vector<FreeChemical*>& chemicals,
   , _k_m1 (backward_rate_constant)
   , _forward_constant (forward_rate_constant)
   , _backward_constant (backward_rate_constant)    
-  , _bound_reactant (forward_bound)
-  , _bound_product (backward_bound)
+  , _forward_bound (forward_bound)
+  , _backward_bound (backward_bound)
   , _forward_order (0)
   , _backward_order (0)
 {
@@ -55,11 +53,12 @@ ChemicalReaction::ChemicalReaction (const std::vector<FreeChemical*>& chemicals,
   REQUIRE (forward_rate_constant >= 0);
   /** @pre k_-1 must be positive. */
   REQUIRE (backward_rate_constant >= 0);
-  /** @pre There must be exactly two bound chemicals or none. */
-  REQUIRE (((forward_bound == 0) && (backward_bound == 0))
-	   || ((forward_bound != 0) && (backward_bound != 0)));
-
-  // fill in the reactant and stoichiometry vectors with free chemicals
+  /** @pre There can only be a bound product if there is a bound reactant. */
+  REQUIRE ((is_forward_reaction_valid() || (_forward_constant == 0))
+	   &&
+	   (is_backward_reaction_valid() || (_backward_constant == 0)));
+  
+  // fill in reactant and stoichiometry vectors with free chemicals
   CRFree new_free;
   for (int i = 0; i < chemicals.size(); ++i)
     {
@@ -86,12 +85,12 @@ ChemicalReaction::ChemicalReaction (const std::vector<FreeChemical*>& chemicals,
 	}
     }
 
-  if (_bound_reactant != 0) 
+  if (_forward_bound != 0) 
     { 
       ++_forward_order; 
-      _forward_reactants.push_back (_bound_reactant);
+      _forward_reactants.push_back (_forward_bound);
       ++_backward_order; 
-      _backward_reactants.push_back (_bound_product);
+      _backward_reactants.push_back (_backward_bound);
     }
 }
 
@@ -107,7 +106,7 @@ ChemicalReaction::ChemicalReaction (const std::vector<FreeChemical*>& chemicals,
 void ChemicalReaction::perform_forward (void)
 {
   /** @pre There must be enough chemicals left to perform the reaction. */
-  REQUIRE (is_forward_reaction_possible() == true);
+  REQUIRE (is_forward_reaction_valid() && is_forward_reaction_possible());
   
   // update free chemical numbers
   std::vector <CRFree>::iterator it = _free_forward.begin();
@@ -117,18 +116,19 @@ void ChemicalReaction::perform_forward (void)
     { (it->chemical)->add (it->stoichiometry); }
 
   // update bound chemical number (if applicable)
-  if (_bound_reactant != 0)
+  if (_forward_bound != 0)
     {
-      BoundUnit& unit = _bound_reactant->random_unit();
-      _bound_reactant->remove (unit);
-      _bound_product->add (unit);
+      BoundUnit& unit = _forward_bound->random_unit();
+      _forward_bound->remove (unit);
+      if (_backward_bound != 0) { _backward_bound->add (unit); }
+      else { BoundUnitFactory::instance().free(unit); }
     }
 }
 
 void ChemicalReaction::perform_backward (void)
 {
   /** @pre There must be enough chemicals left to perform the reaction. */
-  REQUIRE (is_backward_reaction_possible() == true);
+  REQUIRE (is_backward_reaction_valid() && is_backward_reaction_possible());
   
   // update free chemical numbers
   std::vector <CRFree>::iterator it = _free_forward.begin();
@@ -138,11 +138,12 @@ void ChemicalReaction::perform_backward (void)
   { (it->chemical)->remove (it->stoichiometry); }
 
   // update bound chemical number (if applicable)
-  if (_bound_reactant != 0)
+  if (_forward_bound != 0)
     {
-      BoundUnit& unit = _bound_product->random_unit();
-      _bound_product->remove (unit);
-      _bound_reactant->add (unit);
+      BoundUnit& unit = _backward_bound->random_unit();
+      _backward_bound->remove (unit);
+      if (_forward_bound != 0) { _forward_bound->add (unit); }
+      else { BoundUnitFactory::instance().free(unit); }
     }
 }
 
@@ -157,7 +158,7 @@ bool ChemicalReaction::is_forward_reaction_possible (void) const
   	 it = _free_forward.begin(); it != _free_forward.end(); ++it)
     { if ((it->chemical)->number() < it->stoichiometry) { return false; } }
 
-  if ((_bound_reactant != 0) && (_bound_reactant->number() < 1))
+  if ((_forward_bound != 0) && (_forward_bound->number() < 1))
     { return false; }
   return true;
 }
@@ -168,7 +169,7 @@ bool ChemicalReaction::is_backward_reaction_possible (void) const
   	 it = _free_backward.begin(); it != _free_backward.end(); ++it)
     { if ((it->chemical)->number() < it->stoichiometry) { return false; } }
 
-  if ((_bound_product != 0) && (_bound_product->number() < 1)) 
+  if ((_backward_bound != 0) && (_backward_bound->number() < 1)) 
     { return false; }
   return true;
 }
@@ -193,7 +194,7 @@ double ChemicalReaction::compute_forward_rate (void) const
       rate *= contribution ((it->chemical)->number(), it->order);  
     }
 
-  if (_bound_reactant != 0) { rate *= _bound_reactant->number(); }
+  if (_forward_bound != 0) { rate *= _forward_bound->number(); }
   return rate;
 }
 
@@ -208,6 +209,6 @@ double ChemicalReaction::compute_backward_rate (void) const
       rate *= contribution ((it->chemical)->number(), it->order);  
     }
 
-  if (_bound_product != 0) { rate *= _bound_product->number(); }
+  if (_backward_bound != 0) { rate *= _backward_bound->number(); }
   return rate;
 }

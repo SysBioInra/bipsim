@@ -30,36 +30,27 @@
 //  Constructors/Destructors
 // ==========================
 //
-Release::Release (BoundChemical& unit_to_release,
-		  std::vector<FreeChemical*>& other_components,
-		  std::vector<int>& stoichiometry, 
-		  std::vector<int>& orders, 
-		  double rate,
-		  ProductTable* product_table /*= 0*/)
-  : _side_reaction (other_components, stoichiometry, orders, rate, 0)
-  , _unit_to_release (unit_to_release)
+Release::Release (BoundChemical& releasing_polymerase, 
+		  BoundChemical& empty_polymerase,
+		  BoundChemical& fail_polymerase,
+		  const ProductTable& product_table, double rate)
+  : _releasing_polymerase (releasing_polymerase)
+  , _empty_polymerase (empty_polymerase)
+  , _fail_polymerase (fail_polymerase)
   , _product_table (product_table)
-  , _volume_constant (1)
+  , _rate (rate)
+  , _volume_constant (rate)
 {
   /** @pre Rate must be strictly positive. */
   REQUIRE (rate > 0);
 
-  _reactants.push_back (&_unit_to_release);
+  _reactants.push_back (&_releasing_polymerase);
 
-  // copy components from side reaction into parent component list
-  _reactants.insert (_reactants.end(),
-		     _side_reaction.forward_reactants().begin(),
-		     _side_reaction.forward_reactants().end());
+  _products.push_back (&_empty_polymerase);
+  _products.push_back (&_fail_polymerase);
   _products.insert (_products.end(),
-		    _side_reaction.backward_reactants().begin(),
-		    _side_reaction.backward_reactants().end());
-
-  if (product_table)
-    {
-      _products.insert (_products.end(),
-			product_table->products().begin(),
-			product_table->products().end());
-    }
+		    _product_table.products().begin(),
+		    _product_table.products().end());
 }
 
 // Not needed for this class (use of compiler generated versions)
@@ -78,8 +69,7 @@ Release::Release (BoundChemical& unit_to_release,
 //
 bool Release::is_reaction_possible (void) const
 {
-  return ((_side_reaction.is_forward_reaction_possible())
-	  && (_unit_to_release.number() > 0));
+  return (_releasing_polymerase.number() > 0);
 }
 
 // ===================
@@ -91,36 +81,29 @@ void Release::do_reaction (void)
   /** @pre There must be enough reactants to perform reaction. */
   REQUIRE (is_reaction_possible());
 
-  BoundUnit& unit = _unit_to_release.random_unit();
-  if (_product_table != 0)
-    {
-      ChemicalSequence* product = _product_table->product 
-	(unit.location(),
-	 unit.initial_reading_frame(),
-	 unit.reading_frame() - 1);
+  BoundUnit& unit = _releasing_polymerase.random_unit();
+  ChemicalSequence* product = _product_table.product 
+    (unit.location(), unit.initial_reading_frame(), unit.reading_frame()-1);
 
-      if (product != 0) { product->add (1); }
-      else
-	{
-	  std::cerr << "Unknown product ("
-		    << unit.initial_reading_frame() << ", "
-		    << unit.reading_frame() - 1 << ")";
-	}
+  if (product != 0) 
+    { 
+      _releasing_polymerase.remove (unit);
+      _empty_polymerase.add (unit);
+      product->add (1); 
     }
-
-  _unit_to_release.remove (unit);
-  BoundUnitFactory::instance().free (unit);
-  _side_reaction.perform_forward();
+  else
+    {
+      std::cerr << "Warning: Unknown product ("
+		<< unit.initial_reading_frame() << ", "
+		<< unit.reading_frame() - 1 << ")\n";
+      _releasing_polymerase.remove (unit);
+      _fail_polymerase.add (unit);
+    }
 }
 
 double Release::compute_rate (void) const
 {
-  /**
-   * Forward rate is simply defined by r = k_1 x product ( [reactant_i] ).
-   * It is 0 if there are not enough reactants.
-   */
-  return _volume_constant * 
-    _unit_to_release.number() * _side_reaction.forward_rate();
+  return _volume_constant * _releasing_polymerase.number();
 }
 
 void Release::print (std::ostream& output) const

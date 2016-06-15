@@ -94,6 +94,7 @@ BoundChemical m30S12a
 
 # Bound ribosome variants
 BoundChemical stalled_ribosome
+BoundChemical empty_ribosome
 BoundChemical EFt70S
 BoundChemical 70S
 
@@ -331,7 +332,8 @@ ChemicalReaction t70S_Y_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_Y 1 rates 1 0
 Translocation EFt70S 70S stalled_ribosome 3 200
 
 # ribosome release
-Release stalled_ribosome 30S 1 50S 1 protein 1 RF 1 rate 1 produces proteins
+Release stalled_ribosome empty_ribosome 70S proteins 1 
+ChemicalReaction empty_ribosome -1 30S 1 50S 1 protein 1 RF 1 rates 1 0
 
 # small molecule turnover
 ChemicalReaction EFTud -1 GTP -1 EFTua 1 GDP 1 rates 1 0

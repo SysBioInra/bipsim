@@ -162,11 +162,9 @@ class ReleaseBuilder : public Builder
 
  private:
   // format and values read
-  Rule _format, _product_format;
-  std::string _unit_to_release, _table_name;
-  std::vector <std::string> _chemical_names;
-  std::vector <int> _stoichiometries, _orders;
-  std::vector <FreeChemical*> _chemicals;
+  Rule _format;
+  std::string _releasing_polymerase, _empty_polymerase, 
+    _fail_polymerase, _product_table;
   double _rate;
 };
 

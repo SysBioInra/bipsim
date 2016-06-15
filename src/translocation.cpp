@@ -84,7 +84,7 @@ void Translocation::do_reaction (void)
   int new_first = unit.first() + _step_size;
   int new_last = unit.last() + _step_size;
   if (unit.location().is_out_of_bounds (new_first, new_last))
-    { std::cout << "out of bounds\n"; stall = true; }
+    { std::cerr << "out of bounds\n"; stall = true; }
   else
     {
       unit.location().unbind_unit (unit.first(), unit.last()); 

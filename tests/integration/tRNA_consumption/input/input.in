@@ -40,4 +40,4 @@ BindingSite RBS mRNA 1 1 10 0 1
 SequenceBinding ribosome 70S RBS
 ProductLoading 70S tRNA_loading
 Translocation loaded_70S 70S stalled_ribosome 3 10
-Release stalled_ribosome idle_ribosome 1 rate 1
+ChemicalReaction stalled_ribosome -1 idle_ribosome 1 rates 1 0

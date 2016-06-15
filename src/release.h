@@ -2,10 +2,8 @@
 /**
  * @file release.h
  * @brief Header for the Release class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -30,16 +28,15 @@
 // ===================
 //
 /**
- * @brief Class for representing release reactions.
- *
- * A release reaction is defined by the release of a chemical that has been
- * synthesizing a template. By releasing it, its product is also released.
- * However, note that other components can take part in this reaction. In
- * particular, the reaction should be specify in what form the main chemical is
- * released (it can bea free form of the chemical, but it could also break down
- * into several subparts).
- * This class inherits class Reaction.
- * @sa Reaction
+ * @brief Class representing release reactions.
+ * @details A release reaction is defined by the release of a 
+ *  chemical that has been
+ *  synthesizing a template. By releasing it, its product is also released.
+ *  However, note that other components can take part in this reaction. In
+ *  particular, the reaction should be specify in what form the main chemical is
+ *  released (it can bea free form of the chemical, but it could also break down
+ *  into several subparts).
+ *  This class inherits class Reaction.
  */
 class Release: public Reaction
 {
@@ -51,21 +48,18 @@ public:
   //
   /**
    * @brief Constructor
-   * @param unit_to_release Unit that is released from its template.
-   * @param other_components Vector of other chemicals involved in the reaction.
-   * @param stoichiometry Vector of stoichiometry of the other chemicals, 
-   *  positive for products, negative for reactants.
-   * @param orders Vector of orders of the other chemicals.
+   * @param releasing_polymerase Chemical releasing a product.
+   * @param empty_polymerase Chemical after releasing the product.
+   * @param fail_polymerase Chemical "after release" in case release failed
+   *  (because no product was found in the product table).
+   * @param product_table Table listing molecules produced given binding 
+   *  and release sites.
    * @param rate Reaction rate constant.
-   * @param product_table If bound chemical releases a product, table listing
-   *  molecules it may produce depending on its binding and release sites.
-   * @sa ChemicalReaction
    */
-  Release (BoundChemical& unit_to_release,
-	   std::vector<FreeChemical*>& other_components,
-	   std::vector<int>& stoichiometry, 
-	   std::vector<int>& orders, double rate,
-	   ProductTable* product_table = 0);
+  Release (BoundChemical& releasing_polymerase, 
+	   BoundChemical& empty_polymerase,
+	   BoundChemical& fail_polymerase,
+	   const ProductTable& product_table, double rate);
     
 
   // Not needed for this class (use of compiler-generated versions)
@@ -105,15 +99,17 @@ public:
   //  Attributes
   // ============
   //
-  /** @brief Chemical element to release. */
-  BoundChemical& _unit_to_release;
+  /** @brief Chemical yielding a product. */
+  BoundChemical& _releasing_polymerase;
+  /** @brief Empty chemical obtained after product has been yielded. */
+  BoundChemical& _empty_polymerase;
+  /** @brief Chemical obtained if release failed. */
+  BoundChemical& _fail_polymerase;
+  /** @brief Table of molecules that the released chemical may produce. */
+  const ProductTable& _product_table;
 
-  /** @brief Side reaction representing other components involved. */
-  ChemicalReaction _side_reaction;
-  
-  /** @brief Table of molecules that the released chemical may have produced. */
-  ProductTable* _product_table;
-
+  /** @brief Reaction rate. */
+  double _rate;
   /** @brief Volume constant. */
   double _volume_constant;
 };
@@ -124,7 +120,7 @@ public:
 //
 inline void Release::handle_volume_change (double volume)
 {
-  _volume_constant = 1 / volume;
+  _volume_constant = _rate / volume;
 }
 
 #endif // RELEASE_H
