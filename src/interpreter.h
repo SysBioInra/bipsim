@@ -157,6 +157,27 @@ class TagToken : public Interpreter
 };
 
 /**
+ * @brief Class recognizing end of line.
+ */ 
+class EOLToken : public Interpreter
+{
+ public:
+  /**
+   * @brief Constructor.
+   */
+  EOLToken (void) {}
+
+  // redefined from Interpreter
+  bool match (InputLine& input)
+  {
+    return input.end_of_line();
+  }
+
+  // redefined from Interpreter
+  Interpreter* clone (void) const { return new EOLToken (*this); }
+};
+
+/**
  * @brief Class recognizing and storing tokens of given type.
  * @tparam T Type that input tokens should match.
  */

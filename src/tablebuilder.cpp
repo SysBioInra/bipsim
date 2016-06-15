@@ -82,6 +82,7 @@ bool CompositionTableBuilder::match (InputLine& text_input)
       _chemical_names.clear();
     }
   if (_letters.size() == 0) { text_input.go_to (mark); return false; }
+  if (!text_input.end_of_line()) { text_input.go_to (mark); return false; }
   store (new CompositionTable (_letters, _chemical_lists), _name);
   return true;
 }
@@ -107,6 +108,7 @@ bool LoadingTableBuilder::match (InputLine& text_input)
       _rates.push_back (_rate);
     }
   while (_comma_token.match (text_input)); // quadruplets separated by commas
+  if (!text_input.end_of_line()) { text_input.go_to (mark); return false; }
   store (new LoadingTable (_templates, _bases, _occupied, _rates), _name);  
   return true;
 }
@@ -133,6 +135,7 @@ bool TransformationTableBuilder::match (InputLine& text_input)
       output_motifs.push_back (_output);
     }
   while (_comma_token.match (text_input)); // duplets are separated by commas
+  if (!text_input.end_of_line()) { text_input.go_to (mark); return false; }
   store (new TransformationTable (input_motifs, output_motifs), _name);
   return true;
 }

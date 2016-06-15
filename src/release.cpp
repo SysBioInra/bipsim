@@ -95,7 +95,7 @@ void Release::do_reaction (void)
     {
       std::cerr << "Warning: Unknown product ("
 		<< unit.initial_reading_frame() << ", "
-		<< unit.reading_frame() - 1 << ")\n";
+		<< unit.reading_frame() - 1 << "). ";
       _releasing_polymerase.remove (unit);
       _fail_polymerase.add (unit);
     }

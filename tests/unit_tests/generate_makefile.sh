@@ -7,7 +7,7 @@ PROGRAMS=("biasedwheel_test" "inputdata_test" "randomhandler_test" \
     "compositiontable_test" "ratetree_test" "vectorlist_test" \
     "rategroup_test" "hybridratecontainer_test" "partialstrand_test" \
     "sitegroup_test" "sequenceoccupation_test" "freechemical_test" \
-    "boundchemical_test")
+    "boundchemical_test" "chemicalreaction_test")
 ###############################################################################
 
 printf "\n" >> $FILE

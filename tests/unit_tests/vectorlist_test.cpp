@@ -98,7 +98,6 @@ BOOST_AUTO_TEST_CASE (remove_listSizeTwo_removesCorrectElement2)
 BOOST_AUTO_TEST_CASE (remove_listSizeOneRemoveNonContainedElement_sizeRemainsConstant)
 {
   empty_list.add (0);
-  std::cout << "Warning expected: ";
   empty_list.remove (1);
   BOOST_CHECK_EQUAL (empty_list.size(), 1);
 }

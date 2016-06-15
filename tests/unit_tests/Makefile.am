@@ -12,7 +12,7 @@ AM_LDFLAGS = $(BOOST_LDFLAGS)
 #
 # the programs to build (the names of the final binaries)
 check_PROGRAMS =
-check_PROGRAMS += biasedwheel_test inputdata_test randomhandler_test transformationtable_test producttable_test cellstate_test compositiontable_test ratetree_test vectorlist_test rategroup_test hybridratecontainer_test partialstrand_test sitegroup_test sequenceoccupation_test freechemical_test boundchemical_test
+check_PROGRAMS += biasedwheel_test inputdata_test randomhandler_test transformationtable_test producttable_test cellstate_test compositiontable_test ratetree_test vectorlist_test rategroup_test hybridratecontainer_test partialstrand_test sitegroup_test sequenceoccupation_test freechemical_test boundchemical_test chemicalreaction_test
 
 # declare programs to be part of `make check`
 TESTS = $(check_PROGRAMS)
@@ -65,4 +65,7 @@ freechemical_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(top_srcdir)/src/lib
 
 boundchemical_test_SOURCES = boundchemical_test.cpp
 boundchemical_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(top_srcdir)/src/libsrc.a
+
+chemicalreaction_test_SOURCES = chemicalreaction_test.cpp
+chemicalreaction_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(top_srcdir)/src/libsrc.a
 
