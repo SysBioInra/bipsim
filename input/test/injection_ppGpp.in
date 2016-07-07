@@ -1,6 +1,6 @@
 
 # ppGpp injection
-event 1000 SET ppGpp 10000
+event 1000 SET ppGpp 100000
 
 # GTP purification
 event 1000 SET GTP 0

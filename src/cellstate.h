@@ -1,12 +1,9 @@
 
-
 /**
  * @file cellstate.h
  * @brief Header for the CellState class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //

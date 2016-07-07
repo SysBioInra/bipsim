@@ -27,6 +27,7 @@
 #include "reactant.h"
 #include "sitefamily.h"
 #include "updatedtotalratevector.h"
+// #include "flyratevector.h"
 
 /**
  * @brief Class handling a family of binding sites.
@@ -128,6 +129,7 @@ private:
 
   /** @brief Contribution of each binding site to the binding rate. */
   mutable UpdatedTotalRateVector _rate_contributions;
+  //  mutable FlyRateVector _rate_contributions;
 
   /** @brief RateValidity object monitoring rates to update. */
   mutable RateValidity* _rate_validity;

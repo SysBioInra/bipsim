@@ -1,13 +1,9 @@
 
-
-
 /**
  * @file boundchemical.h
  * @brief Header for the BoundChemical class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //

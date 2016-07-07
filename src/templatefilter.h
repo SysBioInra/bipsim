@@ -26,6 +26,7 @@
 #include "boundunitfilter.h"
 #include "ratevalidity.h"
 #include "updatedtotalratevector.h"
+// #include "flyratevector.h"
 #include "vectorlist.h"
 
 
@@ -111,6 +112,7 @@ private:
 
   /** @brief Loading rates associated with each template. */
   mutable UpdatedTotalRateVector _loading_rates;
+  // mutable FlyRateVector _loading_rates;
 
   /** @brief Object handling rate indices to update. */
   mutable RateValidity _rate_validity;

@@ -53,7 +53,7 @@ class Event
   Event (double time, FreeChemical& target)
     : _time (time)
     , _target (target)
-  { REQUIRE (time>0); /** @pre time must be positive. */ }
+  { REQUIRE (time >= 0); /** @pre time must be positive. */ }
 
   // Not needed for this class (use of compiler-generated versions).
   // (3-0 rule: either define all 3 following or none of them)

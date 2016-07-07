@@ -58,7 +58,7 @@ bool EventBuilder::match (InputLine& text_input)
       _event_handler.store 
 	(new RemoveEvent (_time, fetch <FreeChemical> (_chemical), _quantity)); 
     }
-  else if (_add_format.match (text_input))
+  else if (_set_format.match (text_input))
     { 
       _event_handler.store 
 	(new SetEvent (_time, fetch <FreeChemical> (_chemical), _quantity)); 

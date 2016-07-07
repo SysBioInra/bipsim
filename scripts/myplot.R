@@ -5,7 +5,7 @@ source ("plot_concentrations.R");
 source ("save_concentrations.R");
 source ("add_concentrations.R");
 
-data_dir = "../output/"
+data_dir = "../output/test/"
 data_name = "concentrations.out"
 #data_name = "drawing_algorithm/hybrid/t27e4.txt"
 
@@ -13,9 +13,9 @@ data = load_concentrations (paste (data_dir, data_name, sep = ""));
 #ref = load_concentrations (paste (data_dir, "ref.txt", sep = ""));
 
 min_time = 0;
-max_time = 1000;
+max_time = 2000;
 #toplot = c('');
-toplot = c('protein','rna','50S');
+toplot = c('protein','rna');
 #toplot = c('50S');
 #toplot = colnames (data);
 
@@ -29,7 +29,7 @@ plot_concentrations (filtered_data, toplot);
 #add_concentrations (filtered_data, toplot);
 
 
-output_name = "50S";
-output_tag = "t1000";
+output_name = "Tcn";
+output_tag = "t2000";
 output_file = paste (data_dir, output_name, "_", output_tag, ".pdf", sep = "");
 save_concentrations (data, toplot, output_file);

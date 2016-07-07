@@ -92,7 +92,7 @@
 #
 # An event should have the following format (one event per line):
 # 
-#   TIME EVENT_TAG TARGET QUANTITY
+#   event TIME EVENT_TAG TARGET QUANTITY
 # 
 # where
 #  - TIME is the time at which the event should occur
@@ -104,7 +104,7 @@
 #  - QUANTITY is the quantity to add/remove/etc.
 #
 # example:
-#  100 ADD ATP 1000
+#  event 100 ADD ATP 1000
 # adds 1000 ATP molecules at time t=100.
 #
 #######################################################################

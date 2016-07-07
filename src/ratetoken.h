@@ -1,12 +1,9 @@
 
-
 /**
  * @file ratetoken.h
  * @brief Header for the RateToken class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -18,12 +15,10 @@
 // ==================
 //
 
-
 // ==================
 //  Project Includes
 // ==================
 //
-
 
 // ======================
 //  Forward declarations

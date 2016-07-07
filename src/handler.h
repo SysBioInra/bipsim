@@ -1,12 +1,9 @@
 
-
 /**
  * @file handler.h
  * @brief Header for the Handler class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //

@@ -1,12 +1,9 @@
 
-
 /**
  * @file eventbuilder.h
  * @brief Header for the EventBuilder class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //

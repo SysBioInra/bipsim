@@ -1,12 +1,9 @@
 
-
 /**
  * @file ratenode.h
  * @brief Header for the RateNode, DummyNode, ReactionNode, SumNode classes.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //

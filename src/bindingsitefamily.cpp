@@ -1,12 +1,9 @@
 
-
 /**
  * @file bindingsitefamily.cpp
  * @brief Implementation of the BindingSiteFamily class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -79,6 +76,7 @@ void BindingSiteFamily::update (int site_index)
 //
 bool BindingSiteFamily::is_site_available (void) const
 {
+  update_rates();
   // we loop through sites and return as soon as we find that is available
   int number_sites = _binding_sites.size();
   for (int i = 0; i < number_sites; ++i)

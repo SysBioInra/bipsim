@@ -130,6 +130,24 @@ class ReactionClassification
   static const double ALWAYS_UPDATED = -1;
 
 private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+  /**
+   * @brief Get class from class identifier (const version).
+   * @param class_id Class identifer.
+   * @return Class vector associated with identifier.
+   */
+  const std::vector<Reaction*>& get_class (int class_id) const;
+
+  /**
+   * @brief Get class from class identifier (non const version).
+   * @param class_id Class identifer.
+   * @return Class vector associated with identifier.
+   */
+  std::vector<Reaction*>& get_class (int class_id);
+
   // ============
   //  Attributes
   // ============
@@ -148,24 +166,6 @@ private:
    * @brief Time steps associated with every class.
    */
   std::vector<double> _time_steps;
-
-  // =================
-  //  Private Methods
-  // =================
-  //
-  /**
-   * @brief Get class from class identifier (const version).
-   * @param class_id Class identifer.
-   * @return Class vector associated with identifier.
-   */
-  const std::vector<Reaction*>& get_class (int class_id) const;
-
-  /**
-   * @brief Get class from class identifier (non const version).
-   * @param class_id Class identifer.
-   * @return Class vector associated with identifier.
-   */
-  std::vector<Reaction*>& get_class (int class_id);
 };
 
 // ======================

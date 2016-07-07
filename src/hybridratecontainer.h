@@ -1,12 +1,9 @@
 
-
 /**
  * @file hybridratecontainer.h
  * @brief Header for the HybridRateContainer class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
