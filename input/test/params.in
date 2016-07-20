@@ -20,7 +20,7 @@ INITIAL_TIME 0
 #   FINAL_TIME <real value>
 ################################################################################
 
-FINAL_TIME 2000
+FINAL_TIME 1000
 
 ################################################################################
 # INPUT FILES 
@@ -29,8 +29,9 @@ FINAL_TIME 2000
 #   INPUT_FILES path/to/file1 path/to/file2 etc.
 ################################################################################
 
-INPUT_FILES ../input/test/dna_info.in ../input/test/dna.in ../input/test/rna_info.in ../input/test/rnas.in ../input/test/protein_info.in ../input/test/proteins.in ../input/test/transcription.in ../input/test/metabolites.in ../input/test/translation.in ../input/test/rna_degradation.in ../input/test/replication.in ../input/test/tetracyclin.in
+INPUT_FILES ../input/test/dna_info.in ../input/test/dna.in ../input/test/rna_info.in ../input/test/rnas.in ../input/test/protein_info.in ../input/test/proteins.in ../input/test/transcription.in ../input/test/metabolites.in ../input/test/translation.in ../input/test/rna_degradation.in ../input/test/replication.in 
 
+#../input/test/tetracyclin.in
 #../input/test/injection_ppGpp.in
 
 ################################################################################

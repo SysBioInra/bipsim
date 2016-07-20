@@ -1,10 +1,9 @@
+
 /**
  * @file randomhandler_test.cpp
  * @brief Unit testing for RandomHandler class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -100,7 +99,8 @@ BOOST_AUTO_TEST_CASE (draw_uniform_tenThousandDraws_statisticsCheckOut)
 		     0.01);
 }
 
-double cumulative_exp_1 (double x) { return 1 - exp (-x);}
+double cumulative_exp (double x, double lambda) { return 1 - exp (-lambda*x);}
+double cumulative_exp_1 (double x) { return cumulative_exp (x, 1);}
 
 BOOST_AUTO_TEST_CASE (draw_exponential_tenThousandDrawsLambdaOne_statisticsCheckOut)
 {
@@ -112,56 +112,17 @@ BOOST_AUTO_TEST_CASE (draw_exponential_tenThousandDrawsLambdaOne_statisticsCheck
 		     0.01);
 }
 
+double cumulative_exp_01 (double x) { return cumulative_exp (x, 0.1);}
 
-double cumulative_poisson (int k, double lambda);
-double cumulative_poisson_1 (int k) { return cumulative_poisson (k, 1); }
-
-BOOST_AUTO_TEST_CASE (draw_poisson_tenThousandDrawsLambdaOne_statisticsCheckOut)
+BOOST_AUTO_TEST_CASE (draw_exponential_tenThousandDrawsLambdaZeroOne_statisticsCheckOut)
 {
-  ExperimentalCumulative<int> poisson;
+  ExperimentalCumulative<double> exponential;
   for (int i = 0; i < 10000; ++i)
-    { poisson.add_pick (RandomHandler::instance().draw_poisson (1)); }
-  BOOST_CHECK_SMALL (distance_to_discrete_cumulative (poisson, 
-						      cumulative_poisson_1),
+    { exponential.add_pick (RandomHandler::instance().draw_exponential (0.1)); }
+  BOOST_CHECK_SMALL (distance_to_continuous_cumulative (exponential, 
+							cumulative_exp_01),
 		     0.01);
 }
 
-double cumulative_poisson_13_5 (int k) {return cumulative_poisson (k, 13.5);}
-
-BOOST_AUTO_TEST_CASE (draw_poisson_tenThousandDrawsLambdaThirteenDotFive_statisticsCheckOut)
-{
-  ExperimentalCumulative<int> poisson;
-  for (int i = 0; i < 10000; ++i)
-    { poisson.add_pick (RandomHandler::instance().draw_poisson (13.5)); }
-  BOOST_CHECK_SMALL (distance_to_discrete_cumulative (poisson, 
-						      cumulative_poisson_13_5),
-		     0.01); 
-}
-
-double cumulative_poisson_2000 (int k) {return cumulative_poisson (k, 2000);}
-
-BOOST_AUTO_TEST_CASE (draw_poisson_tenThousandDrawsLambdaTwoThousand_statisticsCheckOut)
-{
-  ExperimentalCumulative<int> poisson;
-  for (int i = 0; i < 10000; ++i)
-    { poisson.add_pick (RandomHandler::instance().draw_poisson (2000)); }
-  BOOST_CHECK_SMALL (distance_to_discrete_cumulative (poisson, 
-						      cumulative_poisson_2000),
-		     0.01);  
-}
-
-double cumulative_poisson (int k, double lambda)
-{
-  // we compute the cumulative in
-  double val = exp (-lambda); // starting value
-  double log_fact_i = 0;
-  double log_lambda = log (lambda);
-  for (int i = 1; i <= k; ++i)
-    {
-      log_fact_i += log(i);
-      val += exp (i*log_lambda - log_fact_i - lambda);
-    }
-  return val;
-}
 
 BOOST_AUTO_TEST_SUITE_END()

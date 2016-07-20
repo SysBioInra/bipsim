@@ -26,9 +26,9 @@ AC_ARG_ENABLE([boost],
 	[boost=${enableval}], [boost=yes])
 AM_CONDITIONAL([HAVE_BOOST], [test "x${boost}" = xyes])
 AM_COND_IF([HAVE_BOOST],
-	   [AX_BOOST_BASE([1.41],[],[AC_MSG_ERROR([Boost was not found in your system, consider configuring without boost functionalities.])])])
+	   [AX_BOOST_BASE([1.41], [], [AC_MSG_ERROR([Boost was not found in your system or is outdated, consider configuring without boost functionalities (option --disable-boost).])])])
 
-AM_COND_IF([HAVE_BOOST],[AX_BOOST_SERIALIZATION])
+# AM_COND_IF([HAVE_BOOST],[AX_BOOST_SERIALIZATION])
 AM_COND_IF([HAVE_BOOST],[AX_BOOST_UNIT_TEST_FRAMEWORK])
 
 # Checks for header files.

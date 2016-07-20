@@ -8,6 +8,9 @@ FreeChemical ppGpp
 FreeChemical PPi
 FreeChemical Pi
 
+#####################
+# Pseudo Metabolism #
+#####################
 ChemicalReaction PPi -1 Pi 2 rates 1 0
 
 ChemicalReaction GDP -1 Pi -1 GTP 1 rates 1 0

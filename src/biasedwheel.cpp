@@ -1,12 +1,9 @@
 
-
 /**
  * @file biasedwheel.cpp
  * @brief Implementation of the BiasedWheel class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes

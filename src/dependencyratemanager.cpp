@@ -3,10 +3,8 @@
 /**
  * @file dependencyratemanager.cpp
  * @brief Implementation of the DependencyRateManager class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes

@@ -2,7 +2,6 @@
 /**
  * @file updatedrategroup.cpp
  * @brief Implementation of the UpdatedRateGroup class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
 
@@ -10,7 +9,7 @@
 //  General Includes
 // ==================
 //
-#include <iostream>
+#include <limits> // std::numeric_limits
 
 // ==================
 //  Project Includes
@@ -25,8 +24,8 @@
 //  Constructors/Destructors
 // ==========================
 //
-const double UpdatedRateGroup::INFINITY = 
-  std::numeric_limits<double>::infinity();
+const double UpdatedRateGroup::INF = 
+    std::numeric_limits<double>::infinity();
 
 UpdatedRateGroup::UpdatedRateGroup (const SimulationParams& params,
 				    const std::vector<Reaction*>& reactions,
@@ -60,7 +59,7 @@ void UpdatedRateGroup::schedule_next_reaction (double current_time)
   else
     {
       _next_reaction = 0;
-      _next_reaction_time = INFINITY;
+      _next_reaction_time = INF;
     }
 }
 

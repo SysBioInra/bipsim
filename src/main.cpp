@@ -23,8 +23,6 @@
 
 /**
  * @brief Program initiation.
- *
- * Initialize simulatior and run.
  */
 int main (int argc, char *argv[])
 { 

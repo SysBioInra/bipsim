@@ -1,12 +1,9 @@
 
-
 /**
  * @file randomhandler.h
  * @brief Header for the RandomHandler class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -17,7 +14,15 @@
 //  General Includes
 // ==================
 //
-#include <boost/random/mersenne_twister.hpp> // boost::mt19937
+#include "config.h"
+#ifdef HAVE_BOOST
+#include <boost/version.hpp> // BOOST_VERSION
+#if BOOST_VERSION >= 104700
+#define CURRENT_BOOST_RANDOM
+#endif // BOOST_VERSION >= 1047000
+#include <boost/random/mersenne_twister.hpp> // mt19937
+#endif // HAVE_BOOST
+
 #include <vector> // std::vector
 
 // ==================
@@ -82,11 +87,11 @@ class RandomHandler
    * @param a First integer of the interval.
    * @param b Last integer of the interval.
    */ 
-  int draw_uniform ( int a, int b );
+  int draw_uniform (int a, int b);
 
   /**
-   * @brief Draw a value uniformly from a real interval [a,b].
-   * @return Random value in interval [a,b].
+   * @brief Draw a value uniformly from a real interval [a,b).
+   * @return Random value in interval [a,b).
    * @param a First value of the interval.
    * @param b Last value of the interval.
    */ 
@@ -98,13 +103,6 @@ class RandomHandler
    * @param lambda Parameter of the exponential distribution.
    */ 
   double draw_exponential (double lambda);
-
-  /**
-   * @brief Draw an integer value from a Poisson distribution.
-   * @return Random non-negative integer.
-   * @param lambda Parameter of the Poisson distribution.
-   */ 
-  int draw_poisson (double lambda);
 
   /**
    * @brief Change seed of the random generator.
@@ -127,10 +125,14 @@ private:
   //  Attributes
   // ============
   //
-  /** 
-   * @brief Original pseudorandom number uniform sequence (Mersenne twister). 
-   */
+#ifdef HAVE_BOOST
+  /** @brief Pseudorandom number uniform sequence (Mersenne twister). */
+#ifdef CURRENT_BOOST_RANDOM
+  boost::random::mt19937 _generator;
+#else // OBSOLETE BOOST
   boost::mt19937 _generator;
+#endif // CURRENT_BOOST_RANDOM
+#endif // HAVE_BOOST 
 
   /** @brief Only instance of the RandomHandler (singleton pattern). */
   static RandomHandler _instance;
@@ -145,14 +147,92 @@ private:
 //  Inline declarations
 // ======================
 //
+#ifdef HAVE_BOOST
+#ifndef CURRENT_BOOST_RANDOM
+#include <boost/random/variate_generator.hpp>
+#endif // CURRENT_BOOST_RANDOM
+#include <boost/random/uniform_int.hpp> // uniform_int
+#include <boost/random/uniform_real.hpp> // uniform_real
+#include <boost/random/exponential_distribution.hpp> // exponential_distribution
+
+#else // not HAVE_BOOST
+#include <cstdlib>
+#include <cmath>
+#endif // HAVE_BOOST
+
+#include "macros.h" // REQUIRE() ENSURE()
+
 inline void RandomHandler::set_seed (int seed)
 {
+#ifdef HAVE_BOOST
   _generator.seed (seed);
+#else
+  srand (seed);
+#endif
 }
 
 inline RandomHandler& RandomHandler::instance (void)
 {
   return _instance;
 }
+
+inline int RandomHandler::draw_uniform (int a, int b)
+{
+  REQUIRE (a <= b); /** @pre a must be smaller or equal to b. */
+
+#ifdef HAVE_BOOST
+#ifdef CURRENT_BOOST_RANDOM
+  boost::random::uniform_int_distribution<> distribution (a, b);
+  return distribution (RandomHandler::_generator);
+#else // OBSOLETE BOOST
+  boost::uniform_int<> distribution (a, b);
+  boost::variate_generator<boost::mt19937&, boost::uniform_int<> > 
+    dice (_generator, distribution);
+  return dice();
+#endif // CURRENT_BOOST_RANDOM
+#else // not HAVE_BOOST
+  // or try: return a + rand() % (b-a);
+  return floor (draw_uniform ((double) a, (double) (b+1)));
+#endif // HAVE_BOOST
+}
+
+inline double RandomHandler::draw_uniform (double a, double b)
+{
+  REQUIRE (a <= b); /** @pre a must be smaller or equal to b. */
+
+#ifdef HAVE_BOOST
+#ifdef CURRENT_BOOST_RANDOM
+  boost::random::uniform_real_distribution<> distribution (a, b);
+  return distribution (RandomHandler::_generator);
+#else // OBSOLETE BOOST
+  boost::uniform_real<> distribution (a, b);
+  boost::variate_generator<boost::mt19937&, boost::uniform_real<> > 
+    dice (_generator, distribution);
+  return dice ();
+#endif // CURRENT_BOOST_RANDOM
+#else // not HAVE_BOOST
+  return a + (b-a) * rand() / ((double) RAND_MAX + 1);  
+#endif // HAVE_BOOST
+}
+
+inline double RandomHandler::draw_exponential (double lambda)
+{
+  REQUIRE (lambda > 0); /** @pre lambda must be positive. */
+
+#ifdef HAVE_BOOST
+#ifdef CURRENT_BOOST_RANDOM
+  boost::random::exponential_distribution<> distribution (lambda);
+  return distribution (_generator);
+#else // OBSOLETE BOOST
+  boost::exponential_distribution<> distribution (lambda);
+  boost::variate_generator<boost::mt19937&, boost::exponential_distribution<> > 
+    dice (_generator, distribution);
+  return dice ();
+#endif // CURRENT_BOOST_RANDOM
+#else // not HAVE_BOOST
+  return (-log (1 - rand() / ((double) RAND_MAX + 1)) / lambda);
+#endif // HAVE_BOOST
+}
+
 
 #endif // RANDOMHANDLER_H

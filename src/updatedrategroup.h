@@ -85,7 +85,7 @@ class UpdatedRateGroup : public ReactionGroup
   // ==================
   //  
   /** @brief Shortcut for double value representing infinity. */
-  static const double INFINITY;
+  static const double INF;
 
 private:
   // =================
