@@ -3,7 +3,6 @@
 #    UNITS   #
 ##############
 #
-
 # initiation
 FreeChemical DnaA_GTP 2
 BoundChemical bound_DnaA
@@ -11,18 +10,18 @@ BindingSite DnaA_BS sensedna 1 1 1000 0 1
 BindingSite DnaA_BS antisensedna 1 1 1000 0 1
 FreeChemical free_DNAP 10
 FreeChemical DnaA_GDP
-BoundChemical DNAP
+BoundChemical DNAP_lagging
 BoundChemical DNAP_fork
 
 # elongation
 BoundChemical loaded_DNAP_fork
-BoundChemical loaded_DNAP
-LoadingTable dNTP_loading_fork A dTTP loaded_DNAP_fork 1, C dGTP loaded_DNAP_fork 1, G dCTP loaded_DNAP_fork 1, T dATP loaded_DNAP_fork 1
-LoadingTable dNTP_loading A dTTP loaded_DNAP 1, C dGTP loaded_DNAP 1, G dCTP loaded_DNAP 1, T dATP loaded_DNAP 1
+BoundChemical loaded_DNAP_lagging
+LoadingTable dNTP_loading_fork A dTTP loaded_DNAP_fork 1e-4, C dGTP loaded_DNAP_fork 1e-4, G dCTP loaded_DNAP_fork 1e-4, T dATP loaded_DNAP_fork 1e-4
+LoadingTable dNTP_loading_lagging A dTTP loaded_DNAP_lagging 1e-4, C dGTP loaded_DNAP_lagging 1e-4, G dCTP loaded_DNAP_lagging 1e-4, T dATP loaded_DNAP_lagging 1e-4
 BoundChemical stalled_DNAP_fork
-BoundChemical stalled_DNAP
+BoundChemical stalled_DNAP_lagging
 BoundChemical translocating_DNAP_fork
-BoundChemical translocating_DNAP
+BoundChemical translocating_DNAP_lagging
 
 ##############
 # REACTIONS  #
@@ -35,13 +34,13 @@ ChemicalReaction free_DNAP -1 bound_DnaA -1 DNAP_fork 1 DnaA_GDP 1 Pi 1 rates 1 
 
 # elongation
 DoubleStrandLoading DNAP_fork dNTP_loading_fork stalled_DNAP_fork
-ChemicalReaction loaded_DNAP_fork -1 PPi 1 translocating_DNAP_fork 1 rates 1 0
-Translocation translocating_DNAP_fork DNAP_fork stalled_DNAP_fork 1 10
+ChemicalReaction loaded_DNAP_fork -1 PPi 1 translocating_DNAP_fork 1 rates 10000 0
+Translocation translocating_DNAP_fork DNAP_fork stalled_DNAP_fork 1 10000
 
-DoubleStrandRecruitment DNAP_fork free_DNAP DNAP 10000
-DoubleStrandLoading DNAP dNTP_loading stalled_DNAP
-ChemicalReaction loaded_DNAP -1 PPi 1 translocating_DNAP 1 rates 1 0
-Translocation translocating_DNAP DNAP stalled_DNAP 1 10
+DoubleStrandRecruitment DNAP_fork free_DNAP DNAP_lagging 1
+DoubleStrandLoading DNAP_lagging dNTP_loading_lagging stalled_DNAP_lagging
+ChemicalReaction loaded_DNAP_lagging -1 PPi 1 translocating_DNAP_lagging 1 rates 10000 0
+Translocation translocating_DNAP_lagging DNAP_lagging stalled_DNAP_lagging 1 10000
 
-ChemicalReaction stalled_DNAP -1 free_DNAP 1 rates 1 0
-ChemicalReaction stalled_DNAP_fork -1 free_DNAP 1 rates 1 0
+ChemicalReaction stalled_DNAP_fork -1 free_DNAP 1 rates 1000 0
+ChemicalReaction stalled_DNAP_lagging -1 free_DNAP 1 rates 1000 0
