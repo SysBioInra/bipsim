@@ -33,10 +33,10 @@
 
 /**
  * @brief Class handling Random Number Generation.
- *
- * ReactionHandler initiates a random number engine and provides various services
- * such as drawing of classical distributions and biased-wheel drawing. It uses
- * a random number engine from boost. It also uses the singleton pattern: only 
+ * @details ReactionHandler initiates a random number engine and provides 
+ * various services
+ * such as drawing of classical distributions and multinomial drawing. 
+ * It uses the singleton pattern: only 
  * one copy of the handler exists at all times and must be accessed through
  * the instance() member.
  */

@@ -9,17 +9,11 @@ TransformationTable rna2protein UUU F, UUC F, UUA L, UUG L, CUU L, CUC L, CUA L,
 ProductTable rnas dna2rna 
 ProductTable proteins rna2protein 
 
-#ChemicalSequence mRNA_A product_of sensedna 150 9459 rnas
-#BindingSite promoter_SigA sensedna 115 151 1 0.1 150
-#TerminationSite hairpin sensedna 9460 9460
-#ChemicalSequence DnaA product_of mRNA_A 410 1747 proteins
-#BindingSite RBS mRNA_A 388 412 1 0.1 410
-
-ChemicalSequence mRNA_A product_of sensedna 17453 22157 rnas
-BindingSite promoter_SigA sensedna 17418 17454 1 0.1 17453
-TerminationSite hairpin sensedna 22158 22158
-ChemicalSequence DacA product_of mRNA_A 17534 18862 proteins
-BindingSite RBS mRNA_A 17517 17536 1 0.1 17534
+ChemicalSequence mRNA_A product_of sensedna 221861 223247 rnas
+BindingSite promoter_SigA sensedna 221826 221862 10 1 221861
+TerminationSite hairpin sensedna 223248 223248
+ChemicalSequence YbdK product_of mRNA_A 221950 222909 proteins
+BindingSite RBS mRNA_A 221929 221952 10 1 221950
 
 ChemicalSequence mRNA_B product_of sensedna 518591 524249 rnas
 BindingSite promoter_SigA sensedna 518556 518592 1 0.1 518591

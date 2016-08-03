@@ -49,7 +49,7 @@ libsrc_a_SOURCES += \
 	boundunitfilter.h \
 	familyfilter.cpp familyfilter.h \
 	templatefilter.cpp templatefilter.h \
-	chemical.h reactant.h
+	freechemical.h chemical.h reactant.h
 
 # site sources
 libsrc_a_SOURCES += \
