@@ -29,7 +29,7 @@ FINAL_TIME 600
 #   INPUT_FILES path/to/file1 path/to/file2 etc.
 ################################################################################
 
-INPUT_FILES ../input/application_note/sequences.in ../input/application_note/dna.in ../input/application_note/transcription.in ../input/application_note/metabolites.in ../input/application_note/translation.in ../input/application_note/replication.in
+INPUT_FILES ../input/application_note/proteins.in ../input/application_note/rnas.in ../input/application_note/dna.in ../input/application_note/transcription.in ../input/application_note/metabolites.in ../input/application_note/translation.in ../input/application_note/replication.in
 
 
 ################################################################################
@@ -55,7 +55,7 @@ OUTPUT_STEP 1
 #   OUTPUT_ENTITIES name1 name2 etc.
 ################################################################################
 
-OUTPUT_ENTITIES mRNA_A mRNA_B YdbK RsbU dATP dCTP dGTP dTTP ATP CTP GTP UTP chromosome
+OUTPUT_ENTITIES U132 U370 YbdK_BSU02010 RsbU_BSU04700 dATP dCTP dGTP dTTP ATP CTP GTP UTP chromosome
 
 
 ################################################################################

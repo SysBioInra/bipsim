@@ -6,8 +6,8 @@
 # initiation
 FreeChemical DnaA_GTP 2
 BoundChemical bound_DnaA
-BindingSite DnaA_BS sensedna 1 1 1000 0 1
-BindingSite DnaA_BS antisensedna 1 1 1000 0 1
+BindingSite DnaA_BS sensedna 1 1 100000 0 1
+BindingSite DnaA_BS antisensedna 1 1 100000 0 1
 FreeChemical free_DNAP 10
 FreeChemical DnaA_GDP
 BoundChemical DNAP_lagging

@@ -15,8 +15,8 @@ data_name = "concentrations.out"
 data = load_concentrations (paste (data_dir, data_name, sep = ""));
 data = data [(data['time']>=time[1]) & (data['time']<=time[2]),];
 
-my_pdf ('mRNAs'); plot_concentrations (data, c('mRNA_A','mRNA_B')); dev.off();
-my_pdf ('proteins'); plot_concentrations (data, c('DacA','RsbU')); dev.off();
+my_pdf ('mRNAs'); plot_concentrations (data, c('U132','U370')); dev.off();
+my_pdf ('proteins'); plot_concentrations (data, c('YbdK_BSU02010','RsbU_BSU04700')); dev.off();
 my_pdf ('dNTPs'); plot_concentrations (data, c('dATP','dCTP','dGTP','dTTP')); dev.off();
 
 data_name = "replication.out"

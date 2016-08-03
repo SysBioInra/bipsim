@@ -2,7 +2,8 @@ SEED: 0
 INITIAL_TIME: 0
 FINAL_TIME: 600
 INPUT_FILES:
-	../input/application_note/sequences.in
+	../input/application_note/proteins.in
+	../input/application_note/rnas.in
 	../input/application_note/dna.in
 	../input/application_note/transcription.in
 	../input/application_note/metabolites.in
