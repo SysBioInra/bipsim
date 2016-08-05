@@ -1,5 +1,5 @@
 
-plot_concentrations = function (data, toplot, filename = "") {
+plot_concentrations = function (data, toplot, filename = "", leg = TRUE) {
     if (filename != "") { pdf (filename, width=7, height=5); }
 
     colors = rainbow (length (toplot))
@@ -11,6 +11,6 @@ plot_concentrations = function (data, toplot, filename = "") {
         for (i in 2:length(toplot))
             lines (t(data ['time']), t(data [toplot[i]]), col=colors[i]);
 
-    legend ("topright", legend=toplot, col=colors, lty=1)
+    if (leg == TRUE) { legend ("topright", legend=toplot, col=colors, lty=1) }
     if (filename != "") { dev.off(); }
 }

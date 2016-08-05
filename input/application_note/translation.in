@@ -1,3 +1,7 @@
+
+# dummy chemical used to count the total number of proteins synthesized
+FreeChemical protein_tracker
+
 #########
 # tRNAs #
 #########
@@ -322,8 +326,11 @@ ChemicalReaction t70S_Y_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_Y 1 rates 150 0
 Translocation EFt70S 70S stalled_ribosome 3 150
 
 # ribosome release
+# this reaction releases the real protein synthesized by the ribosome
 Release stalled_ribosome empty_ribosome 70S proteins 150
-ChemicalReaction empty_ribosome -1 30S 1 50S 1 RF 1 rates 150 0
+# here protein_tracker is just a dummy chemical used to trace the total number
+# of porteins
+ChemicalReaction empty_ribosome -1 protein_tracker 1 30S 1 50S 1 RF 1 rates 150 0
 
 # small molecule turnover
 ChemicalReaction EFP -1 GTP -1 EFPa 1 rates 150 150
