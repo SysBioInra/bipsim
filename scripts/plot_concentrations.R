@@ -5,7 +5,7 @@ plot_concentrations = function (data, toplot, filename = "", leg = TRUE) {
     colors = rainbow (length (toplot))
     plot_range = c(min(data[toplot]), max(data[toplot]))
 
-    plot (t(data ['time']), t(data [toplot[1]]), xlab = "time", ylab = "Number of molecules", type = "l", col = colors[1], ylim = plot_range);
+    plot (t(data ['time']), t(data [toplot[1]]), type = "l", col = colors[1], ylim = plot_range, xlab = "time", ylab = "Number of molecules", );
 
     if (length(toplot) > 1)
         for (i in 2:length(toplot))

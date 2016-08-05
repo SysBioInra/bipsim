@@ -18,8 +18,10 @@ min = data$sense[[1]][2]-10;
 max = data$sense[[1]][2]+1000;
 my_pdf ('DNA_zoom'); plot_linear_DNA (data, min, max); dev.off();
 
-my_pdf ('simulation_results'); 
-par(mfrow=c(2,2))
+my_pdf ('simulation_results', 5, 4); 
+par(mfrow=c(2,2),
+    oma = c(0,0,0,0),	
+    mar = c(1,1,1,0)+1)
 plot_DNA (data); 
 title ("Replication status");
 
