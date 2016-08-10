@@ -5,7 +5,7 @@ plot_DNA = function (dna_info) {
     ## constants and empty plot
     delta_r = 0.05;
     r_0 = 1;
-    x_min = -1.4*r_0 - 4*delta_r; x_max = -x_min;
+    x_min = -1.7*r_0 - 4*delta_r; x_max = -x_min;
     y_min = x_min; y_max = x_max;
     plot (0, 0, type = "n", xlim = c(x_min, x_max), ylim = c(y_min,y_max),
     	  axes = FALSE, xlab = "", ylab = "");
