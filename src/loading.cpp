@@ -1,18 +1,14 @@
 
-
 /**
  * @file loading.cpp
  * @brief Implementation of the Loading class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
 // ==================
 //
-#include <iostream> // std::cout
 
 // ==================
 //  Project Includes

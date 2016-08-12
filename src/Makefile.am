@@ -22,7 +22,9 @@ libsrc_a_SOURCES = \
 	macros.h forwarddeclarations.h \
 	biasedwheel.cpp biasedwheel.h \
 	randomhandler.cpp randomhandler.h \
+	logger.h \
 	chemicallogger.cpp chemicallogger.h \
+	reactionlogger.cpp reactionlogger.h \
 	doublestrandlogger.cpp doublestrandlogger.h
 
 # factories

@@ -42,8 +42,12 @@
 //  Constructors/Destructors
 // ==========================
 //
-ChemicalReactionBuilder::ChemicalReactionBuilder (CellState& cell_state)
+ReactionBuilder::ReactionBuilder (CellState& cell_state)
   : Builder (cell_state)
+{}
+
+ChemicalReactionBuilder::ChemicalReactionBuilder (CellState& cell_state)
+  : ReactionBuilder (cell_state)
   , _format (TagToken ("ChemicalReaction")
 	     + Iteration (MemToken <std::string> (_chemical_names) 
 			  + MemToken <int> (_stoichiometries_read), 
@@ -53,21 +57,21 @@ ChemicalReactionBuilder::ChemicalReactionBuilder (CellState& cell_state)
 }
 
 ProductLoadingBuilder::ProductLoadingBuilder (CellState& cell_state)
-  : Builder (cell_state)
+  : ReactionBuilder (cell_state)
   , _format (TagToken ("ProductLoading") + StrToken (_loader_name) 
 	     + StrToken (_table_name))
 {
 }
 
 DoubleStrandLoadingBuilder::DoubleStrandLoadingBuilder (CellState& cell_state)
-  : Builder (cell_state)
+  : ReactionBuilder (cell_state)
   , _format (TagToken ("DoubleStrandLoading") + StrToken (_loader_name) 
 	     + StrToken (_table_name) + StrToken (_stalled_name))
 {
 }
 
 TranslocationBuilder::TranslocationBuilder (CellState& cell_state)
-  : Builder (cell_state)
+  : ReactionBuilder (cell_state)
   , _format (TagToken ("Translocation") + StrToken (_processive_name)
 	     + StrToken (_step_name) + StrToken (_stalled_name) 
 	     + IntToken (_step_size) + DblToken (_rate)
@@ -76,14 +80,14 @@ TranslocationBuilder::TranslocationBuilder (CellState& cell_state)
 }
 
 SequenceBindingBuilder::SequenceBindingBuilder (CellState& cell_state)
-  : Builder (cell_state)
+  : ReactionBuilder (cell_state)
   , _format (TagToken ("SequenceBinding") + StrToken (_unit_to_bind) 
 	     + StrToken (_bound_unit) + StrToken (_family))
 {
 }
 
 ReleaseBuilder::ReleaseBuilder (CellState& cell_state)
-  : Builder (cell_state)
+  : ReactionBuilder (cell_state)
   , _format (TagToken ("Release") + StrToken (_releasing_polymerase)
 	     + StrToken (_empty_polymerase) + StrToken (_fail_polymerase)
 	     + StrToken (_product_table) + DblToken (_rate))
@@ -91,7 +95,7 @@ ReleaseBuilder::ReleaseBuilder (CellState& cell_state)
 }
 
 DegradationBuilder::DegradationBuilder (CellState& cell_state)
-  : Builder (cell_state)
+  : ReactionBuilder (cell_state)
   , _format (TagToken ("Degradation") + StrToken (_sequence_name) 
 	     + StrToken (_table_name) + DblToken (_rate))
 {
@@ -99,7 +103,7 @@ DegradationBuilder::DegradationBuilder (CellState& cell_state)
 
 DoubleStrandRecruitmentBuilder::
 DoubleStrandRecruitmentBuilder (CellState& cell_state)
-  : Builder (cell_state)
+  : ReactionBuilder (cell_state)
   , _format (TagToken ("DoubleStrandRecruitment") + StrToken (_recruiter) 
 	     + StrToken (_recruit) + StrToken (_bound_recruit) 
 	     + DblToken (_rate))
@@ -120,25 +124,31 @@ bool ChemicalReactionBuilder::match (InputLine& text_input)
     new ChemicalReaction (_free_chemicals, _stoichiometries, _orders,
 			  _k_1, _k_m1, _bound_reactant, _bound_product);
   store (reaction);
-  if (_k_1 > 0) { store (new ForwardReaction (*reaction)); }
-  if (_k_m1 > 0) { store (new BackwardReaction (*reaction)); } 
+  if (_k_1 > 0) 
+    { store_and_name (new ForwardReaction (*reaction), 
+		      "Sense of " + text_input.line()); }
+  if (_k_m1 > 0) 
+    { store_and_name (new BackwardReaction (*reaction),
+		      "Antisense of " + text_input.line()); } 
   return true;
 }
 
 bool ProductLoadingBuilder::match (InputLine& text_input)
 {
   if (!_format.match (text_input)) { return false; }
-  store (new ProductLoading (fetch <BoundChemical> (_loader_name),
-			     fetch <LoadingTable> (_table_name)));
+  store_and_name (new ProductLoading (fetch <BoundChemical> (_loader_name),
+				      fetch <LoadingTable> (_table_name)),
+		  text_input.line());
   return true;
 }
 
 bool DoubleStrandLoadingBuilder::match (InputLine& text_input)
 {
   if (!_format.match (text_input)) { return false; }
-  store (new DoubleStrandLoading (fetch <BoundChemical> (_loader_name),
-				  fetch <LoadingTable> (_table_name), 
-				  fetch <BoundChemical> (_stalled_name)));
+  store_and_name (new DoubleStrandLoading (fetch <BoundChemical> (_loader_name),
+					   fetch <LoadingTable> (_table_name), 
+					   fetch <BoundChemical> (_stalled_name)),
+		  text_input.line());
   return true;
 }
 
@@ -151,10 +161,11 @@ bool TranslocationBuilder::match (InputLine& text_input)
        it != _family_names.end(); ++it)
     { families.push_back (&(fetch <SiteFamily> (*it))); }
 
-  store (new Translocation (fetch <BoundChemical> (_processive_name), 
-			    fetch <BoundChemical> (_step_name), 
-			    fetch <BoundChemical> (_stalled_name),
-			    _step_size, _rate, families));
+  store_and_name (new Translocation (fetch <BoundChemical> (_processive_name), 
+				     fetch <BoundChemical> (_step_name), 
+				     fetch <BoundChemical> (_stalled_name),
+				     _step_size, _rate, families),
+		  text_input.line());
   return true;
 }
 
@@ -166,8 +177,10 @@ bool SequenceBindingBuilder::match (InputLine& text_input)
 			 fetch <BoundChemical> (_bound_unit), 
 			 fetch <BindingSiteFamily> (_family));
   store (reaction);
-  store (new ForwardReaction (*reaction));
-  store (new BackwardReaction (*reaction)); 
+  store_and_name (new ForwardReaction (*reaction), 
+		  "Binding of " + text_input.line());
+  store_and_name (new BackwardReaction (*reaction),
+		  "Unbinding of " + text_input.line()); 
   return true;
 }
 
@@ -175,10 +188,11 @@ bool ReleaseBuilder::match (InputLine& text_input)
 {
   if (!_format.match (text_input)) { return false; }
   
-  store (new Release (fetch <BoundChemical> (_releasing_polymerase), 
-		      fetch <BoundChemical> (_empty_polymerase), 
-		      fetch <BoundChemical> (_fail_polymerase), 
-		      fetch <ProductTable> (_product_table), _rate));
+  store_and_name (new Release (fetch <BoundChemical> (_releasing_polymerase), 
+			       fetch <BoundChemical> (_empty_polymerase), 
+			       fetch <BoundChemical> (_fail_polymerase), 
+			       fetch <ProductTable> (_product_table), _rate),
+		  text_input.line());
   return true;
 }
 
@@ -218,17 +232,19 @@ bool DegradationBuilder::match (InputLine& text_input)
   ChemicalReaction* reaction = 
     new ChemicalReaction (chemicals, stoichiometry, orders, _rate, 0);
   store (reaction);
-  store (new ForwardReaction (*reaction));
+  store_and_name (new ForwardReaction (*reaction), text_input.line());
   return true;
 }
 
 bool DoubleStrandRecruitmentBuilder::match (InputLine& text_input)
 {
   if (!_format.match (text_input)) { return false; }
-  store (new DoubleStrandRecruitment (fetch <BoundChemical> (_recruiter), 
-				      fetch <FreeChemical> (_recruit),
-				      fetch <BoundChemical> (_bound_recruit),
-				      _rate));
+  store_and_name 
+    (new DoubleStrandRecruitment (fetch <BoundChemical> (_recruiter), 
+				  fetch <FreeChemical> (_recruit),
+				  fetch <BoundChemical> (_bound_recruit),
+				  _rate),
+     text_input.line());
   return true;
 }
 

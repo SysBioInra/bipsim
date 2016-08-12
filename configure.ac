@@ -66,6 +66,9 @@ AC_ARG_ENABLE([integration-tests],
 	[ --enable-integration-tests	enable integration tests],
 	[integration_tests=${enableval}], [integration_tests=no])
 
+AC_ARG_ENABLE([warnings],
+	[ --enable-warnings	enable warning display],
+	[warnings=${enableval}], [warnings=no])
 
 if test "x${pre_check}" = xyes; then
    AC_DEFINE([CHECK_PRECONDITIONS], 1, [Precondition check enabled])
@@ -83,6 +86,10 @@ fi
 AM_CONDITIONAL([HAVE_INTEGRATION_TESTS], [test "x${integration_tests}" = xyes])
 if test "x${integration_tests}" = xyes; then
    AC_DEFINE([PERFORM_TESTS], 1, [Tests enabled])
+fi
+
+if test "x${warnings}" = xyes; then
+   AC_DEFINE([DISPLAY_WARNINGS], 1, [Display warning messages])
 fi
 
 # generate the final Makefile etc.

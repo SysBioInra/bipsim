@@ -1,12 +1,9 @@
 
-
 /**
  * @file translocation.cpp
  * @brief Implementation of the Translocation class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -19,6 +16,8 @@
 // ==================
 //
 #include "macros.h" // REQUIRE
+#include "config.h" // DISPLAY_WARNINGS
+
 #include "translocation.h"
 #include "boundchemical.h"
 #include "boundunit.h"
@@ -83,14 +82,16 @@ void Translocation::do_reaction (void)
   // update position on location if it is possible
   int new_first = unit.first() + _step_size;
   int new_last = unit.last() + _step_size;
-  if (unit.location().is_out_of_bounds (new_first, new_last))
-    { std::cerr << "out of bounds\n"; stall = true; }
-  else
+  if (!unit.location().is_out_of_bounds (new_first, new_last))
     {
       unit.location().unbind_unit (unit.first(), unit.last()); 
       unit.move (_step_size);
       unit.location().bind_unit (unit.first(), unit.last());
     }
+#ifdef DISPLAY_WARNINGS
+  else { std::cerr << "out of bounds\n"; stall = true; }
+#endif
+
   
   // check whether the unit has reached a termination site
   if (unit.location().is_termination_site

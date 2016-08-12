@@ -1,12 +1,9 @@
 
-
 /**
  * @file simulation.h
  * @brief Header for the Simulation class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -17,6 +14,7 @@
 //  General Includes
 // ==================
 //
+#include <list> // std::list
 
 // ==================
 //  Project Includes
@@ -29,9 +27,8 @@
 
 /**
  * @brief Class that creates and handles the whole simulation.
- *
- * Simulation is the main object in the simulator. It reads configuration
- * parameters and then creates every object needed.
+ * @details Simulation is the main object in the simulator. It reads 
+ * configuration parameters and then creates every object needed.
  */
 class Simulation
 {
@@ -103,12 +100,10 @@ private:
   CellState _cell_state;
   /** @brief Solver used to integrate system. */
   Solver* _solver;
-  /** @brief Logger used to write to file. */
-  ChemicalLogger* _logger;
-  /** @brief Logger used to write to file. */
-  DoubleStrandLogger* _replication_logger;
   /** @brief Handler reading and performing user-defined events. */
   EventHandler _event_handler;
+  /** @brief List of loggers. */
+  std::list <Logger*> _loggers;
 
   /** @brief Next log time. */
   double _next_log_time;

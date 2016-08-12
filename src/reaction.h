@@ -74,8 +74,15 @@ public:
 
   /**
    * @brief Update computation of rate following a change in volume.
+   * @param volume New volume value.
    */
   virtual void handle_volume_change (double volume) = 0;
+
+  /**
+   * @brief Set reaction name.
+   * @param name New name of reaction.
+   */
+  void set_name (const std::string& name);
 
   // ============================
   //  Public Methods - Accessors
@@ -99,6 +106,18 @@ public:
    * @return True if there are enough reactants, false otherwise.
    */
   virtual bool is_reaction_possible (void) const = 0;
+
+  /**
+   * @brief Accessor to number of times the reaction has been performed.
+   * @return Number of times the reaction has been performed.
+   */
+  long long int number_performed (void) const;
+
+  /**
+   * @brief Accessor to name of reaction
+   * @return Name of reaction (empty string by default).
+   */
+  const std::string& name (void) const;
   
   /**
    * @brief Standard output.
@@ -148,6 +167,10 @@ public:
   //
   /** @brief Reaction rate value computed at last update. */
   double _rate;
+  /** @brief Number of times the reaction has been performed. */
+  long long int _number_performed;
+  /** @brief Name of reaction (optional). */
+  std::string _name;
 };
 
 // ======================
@@ -157,7 +180,7 @@ public:
 #include "macros.h" // ENSURE ()
 
 inline Reaction::Reaction (void)
-  : _rate (0)
+  : _rate (0), _number_performed (0)
 {
 }
 
@@ -166,6 +189,11 @@ inline void Reaction::update_rate (void)
   _rate = compute_rate();
   /** @post Rate must be positive. */
   ENSURE (_rate >= 0);
+}
+
+inline void Reaction::set_name (const std::string& name)
+{
+  _name = name;
 }
 
 inline double Reaction::rate (void) const
@@ -180,6 +208,7 @@ inline const std::vector<Reactant*>& Reaction::reactants (void) const
 
 inline void Reaction::perform (void)
 {
+  ++_number_performed;
   do_reaction();
 }
 
@@ -187,6 +216,16 @@ inline std::ostream& operator<< (std::ostream& output, const Reaction& reaction)
 {
   reaction.print (output);
   return output;
+}
+
+inline long long int Reaction::number_performed (void) const
+{
+  return _number_performed;
+}
+
+inline const std::string& Reaction::name (void) const
+{
+  return _name;
 }
 
 #endif // REACTION_H

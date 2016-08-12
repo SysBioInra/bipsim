@@ -20,7 +20,7 @@ INITIAL_TIME 0
 #   FINAL_TIME <real value>
 ################################################################################
 
-FINAL_TIME 600
+FINAL_TIME 200
 
 ################################################################################
 # INPUT FILES 
@@ -29,7 +29,9 @@ FINAL_TIME 600
 #   INPUT_FILES path/to/file1 path/to/file2 etc.
 ################################################################################
 
-INPUT_FILES ../input/application_note/proteins.in ../input/application_note/rnas.in ../input/application_note/dna.in ../input/application_note/transcription.in ../input/application_note/metabolites.in ../input/application_note/translation.in ../input/application_note/replication.in ../input/application_note/injections.in
+INPUT_FILES ../input/application_note/proteins.in ../input/application_note/rnas.in ../input/application_note/dna.in ../input/application_note/transcription.in ../input/application_note/metabolites.in ../input/application_note/translation.in ../input/application_note/replication.in 
+
+# ../input/application_note/injections.in
 
 
 ################################################################################
@@ -74,5 +76,5 @@ OUTPUT_ENTITIES rna_tracker protein_tracker dATP dCTP dGTP dTTP ATP CTP GTP UTP 
 
 DRAWING_ALGORITHM hybrid
 
-HYBRID_BASE_RATE 1e-6
+HYBRID_BASE_RATE 1e-12
 

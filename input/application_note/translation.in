@@ -5,7 +5,7 @@ FreeChemical protein_tracker
 #########
 # tRNAs #
 #########
-FreeChemical fMet2a 300
+FreeChemical fMet2a 3000
 FreeChemical fMet2d
 FreeChemical fMet2p
 
@@ -78,8 +78,8 @@ FreeChemical EtRNA_Y_ca 2000
 # Ribosome #
 ############
 # Ribosome subunits
-FreeChemical 30S 1000
-FreeChemical 50S 1000
+FreeChemical 30S 20000
+FreeChemical 50S 20000
 FreeChemical 30S1 
 FreeChemical 30S3 
 FreeChemical 30S31
@@ -162,19 +162,19 @@ BoundChemical t70S_Y_cp
 ##################################
 # Translation initiation Factors #
 ##################################
-FreeChemical IF1 100
-FreeChemical IF2 100
+FreeChemical IF1 1000
+FreeChemical IF2 1000
 FreeChemical IF2a
 FreeChemical IF2d
 FreeChemical IF2p
-FreeChemical IF3 100
+FreeChemical IF3 1000
 
 ##################################
 # Translation elongation Factors #
 ##################################
 FreeChemical EFTua 0
 FreeChemical EFTud 
-FreeChemical EFP 100
+FreeChemical EFP 1000
 FreeChemical EFPa 
 FreeChemical EFPd 
 

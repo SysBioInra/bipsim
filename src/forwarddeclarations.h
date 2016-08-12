@@ -17,7 +17,9 @@
 // utility classes
 template <typename T> class BiasedWheel;
 class RandomHandler;
+class Logger;
 class ChemicalLogger;
+class ReactionLogger;
 class DoubleStrandLogger;
 #ifdef HAVE_BOOST_SERIALIZATION
 namespace boost { namespace serialization { class access; }}

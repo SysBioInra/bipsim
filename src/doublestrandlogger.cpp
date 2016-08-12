@@ -9,7 +9,6 @@
 //  General Includes
 // ==================
 //
-#include <iostream>
 
 // ==================
 //  Project Includes
@@ -26,21 +25,14 @@
 DoubleStrandLogger::DoubleStrandLogger (const std::string& filename,
 					const DoubleStrand& double_strand, 
 					bool overwrite /*= true*/)
-  : _double_strand (double_strand)
-{
-  // open file
-  if (overwrite) { _output.open (filename.c_str()); }
-  else { _output.open (filename.c_str(), std::ofstream::app); }
-}
+  : Logger (filename, overwrite)
+  , _double_strand (double_strand)
+{}
 
 // Forbidden
-// DoubleStrandLogger::DoubleStrandLogger (const DoubleStrandLogger& logger);
-// DoubleStrandLogger& DoubleStrandLogger::operator= (const DoubleStrandLogger& other_logger);
-
-DoubleStrandLogger::~DoubleStrandLogger (void)
-{
-  _output.close();
-}
+// DoubleStrandLogger::DoubleStrandLogger (const DoubleStrandLogger& other);
+// DoubleStrandLogger& DoubleStrandLogger::operator= (const DoubleStrandLogger& other);
+// DoubleStrandLogger::~DoubleStrandLogger (void);
 
 // ===========================
 //  Public Methods - Commands
@@ -68,10 +60,8 @@ void DoubleStrandLogger::write_sites (const ChemicalSequence& sequence)
        it != strands.end(); ++it, ++id)
     {
       _output << "Strand " << id << ":";
-      for (int i = 0; i < it->size(); i += 2)
-	{
-	  _output << "[" << (*it)[i] << " " << (*it)[i+1] << "]";
-	}
+      for (int i = 0; i < it->size(); i+=2)
+	{ _output << "[" << (*it)[i] << " " << (*it)[i+1] << "]"; }
       _output << "\n";
     }
 }

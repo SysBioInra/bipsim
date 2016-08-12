@@ -1,12 +1,9 @@
 
-
 /**
  * @file simulationparams.h
  * @brief Header for the SimulationParams class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -93,18 +90,18 @@ class SimulationParams
   { return _input_files; }
   
   /**
+   * @brief Accessor to output directory.
+   * @return Path to output directory.
+   */
+  std::string output_dir (void) const
+    { return _output_dir; }
+
+  /**
    * @brief Accessor to name for concentration output file.
    * @return Output file name.
    */
   std::string concentration_file (void) const 
     { return _output_dir + "/" + _concentration_file; }
-
-  /**
-   * @brief Accessor to name for replication output file.
-   * @return Output file name.
-   */
-  std::string replication_file (void) const
-    { return _output_dir + "/" + _replication_file; }
 
   /**
    * @brief Accessor to name for reaction output file.
@@ -125,13 +122,6 @@ class SimulationParams
    */
   const std::vector <std::string>& output_entities (void) const
   { return _output_entities; }
-
-  /**
-   * @brief Accessor to double strand to output.
-   * @return Empty if none specified.
-   */
-  const std::string& output_double_strand (void) const 
-  { return _output_double_strand; }
 
   /**
    * @brief Accessor to default solver factory.
@@ -212,12 +202,15 @@ private:
   //  Attributes
   // ============
   //
-  // various tags
+  // various tags used to parse file
   static const std::string _seed_tag, _initial_time_tag, _final_time_tag, 
-    _input_files_tag, _output_dir_tag, _concentration_file, _replication_file,
-    _param_file, _reaction_file, _output_step_tag, _output_entities_tag, 
+    _input_files_tag, _output_dir_tag, _output_step_tag, _output_entities_tag, 
     _drawing_algorithm_tag, _hybrid_base_rate_tag, _base_volume_tag, 
     _volume_modifier_tag, _volume_step_tag;
+
+  // names for output files
+  static const std::string _concentration_file, _param_file, _reaction_file;
+
   /** @brief Current line read. */
   std::string _line;
 
@@ -235,10 +228,8 @@ private:
   std::string _output_dir;
   /** @brief Output step. */
   double _output_step;
-  /** @brief Vector of entity names. */
+  /** @brief Vector of names of elements to output. */
   std::vector <std::string> _output_entities;
-  /** @brief Double strand name. */
-  std::string _output_double_strand;
 
   /** @brief Factory for default solver. */
   SolverFactory* _solver_factory;

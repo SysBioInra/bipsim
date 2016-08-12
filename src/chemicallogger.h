@@ -1,12 +1,9 @@
 
-
 /**
  * @file chemicallogger.h
  * @brief Header for the ChemicalLogger class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -17,7 +14,6 @@
 //  General Includes
 // ==================
 //
-#include <fstream> // std::ofstream
 #include <vector> // std::vector
 #include <string> // std::string
 
@@ -26,19 +22,19 @@
 // ==================
 //
 #include "forwarddeclarations.h"
+#include "logger.h"
 
 /**
  * @brief Class that logs chemical concentrations into a file.
- *
- * ChemicalLogger opens an output file and writes all concentration levels
+ * @details ChemicalLogger opens an output file and 
+ * writes all concentration levels
  * to that file when asked to. Names and chemicals to write are read from 
  * a chemical handler at construction, the vector does not change afterwards.
  * User can choose whether an existing file should be overwritten or not.
  */
-class ChemicalLogger
+class ChemicalLogger : public Logger
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================
@@ -64,15 +60,14 @@ class ChemicalLogger
   ChemicalLogger& operator= (const ChemicalLogger& other_chemical_logger);
  public:
 
-  /**
-   * @brief Destructor.
-   */
-  ~ChemicalLogger (void);
+  // /* @brief Destructor. */
+  // ~ChemicalLogger (void);
 
   // ===========================
   //  Public Methods - Commands
   // ===========================
   //
+  // redefined from Logger
   /**
    * @brief Log current concentration levels.
    * @param simulation_time Current simulation time.
@@ -85,16 +80,6 @@ class ChemicalLogger
   //
 
 private:
-  // ============
-  //  Attributes
-  // ============
-  //
-  /** @brief File where output is written. */
-  std::ofstream _output;
-
-  /** @brief Chemicals to log. */
-  std::vector <const Chemical*> _chemicals;
-      
   // =================
   //  Private Methods
   // =================
@@ -107,6 +92,13 @@ private:
    * tab separated fields.
    */
   void write_header (const std::vector <std::string>& names);
+
+  // ============
+  //  Attributes
+  // ============
+  //
+  /** @brief Chemicals to log. */
+  std::vector <const Chemical*> _chemicals;
 };
 
 // ======================

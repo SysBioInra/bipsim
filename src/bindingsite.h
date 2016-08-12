@@ -1,12 +1,9 @@
 
-
 /**
  * @file bindingsite.h
  * @brief Header for the BindingSite class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //

@@ -1,12 +1,9 @@
 
-
 /**
  * @file site.h
  * @brief Header for the Site class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //

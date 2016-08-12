@@ -10,6 +10,7 @@
 // ==================
 //
 #include <string> // std::string
+#include <vector> // std::vector
 #include <iostream> // std::cout
 #include <stdexcept> // std::runtime_error
 
@@ -22,6 +23,7 @@
 #include "chemical.h"
 #include "solverfactory.h"
 #include "chemicallogger.h"
+#include "reactionlogger.h"
 #include "doublestrandlogger.h"
 #include "eventhandler.h"
 #include "inputdata.h"
@@ -36,8 +38,6 @@
 //
 Simulation::Simulation (const std::string& filename)
   : _params (filename)
-  , _logger (0)
-  , _replication_logger (0)
   , _solver (0)
   , _next_log_time (0)
   , _next_timing (0)
@@ -63,7 +63,7 @@ Simulation::Simulation (const std::string& filename)
   // create solver
   _solver = _params.solver_factory().create (_params, _cell_state);
 
-  // create logger
+  // set next log time and create loggers
   _next_log_time = _params.initial_time();
   create_loggers();
 }
@@ -74,8 +74,9 @@ Simulation::Simulation (const std::string& filename)
 
 Simulation::~Simulation (void)
 {
-  delete _replication_logger;
-  delete _logger;
+  for (std::list<Logger*>::iterator it = _loggers.begin();
+       it != _loggers.end(); ++it)
+    { delete *it; }
   delete _solver;
 }
 
@@ -132,8 +133,10 @@ void Simulation::run (void)
 //
 void Simulation::create_loggers (void)
 {
+  // create reactant and doublestrand loggers
   std::vector <const Chemical*> chemical_refs;
-  const DoubleStrand* double_strand = 0;
+  std::vector <const DoubleStrand*> double_strands;
+  std::vector <std::string> ds_names;
   bool dependency_errors = false;
   for (std::vector <std::string>::const_iterator 
 	 it = _params.output_entities().begin();
@@ -145,7 +148,11 @@ void Simulation::create_loggers (void)
 	  chemical_refs.push_back (next); 
 	  const DoubleStrand* next_ds = 
 	    dynamic_cast <const DoubleStrand*> (next);
-	  if (next_ds != 0) { double_strand = next_ds; }
+	  if (next_ds != 0) 
+	    { 
+	      double_strands.push_back (next_ds); 
+	      ds_names.push_back (*it);
+	    }
 	}
       catch (const DependencyException& error)
 	{
@@ -158,14 +165,25 @@ void Simulation::create_loggers (void)
     { throw std::runtime_error ("unresolved dependencies"); }
   if (chemical_refs.size() > 0)
     {
-      _logger = new ChemicalLogger (_params.concentration_file(),
-				    chemical_refs, _params.output_entities());
+      _loggers.push_back 
+	(new ChemicalLogger (_params.concentration_file(),
+			     chemical_refs, _params.output_entities()));
     }
-  if (double_strand != 0)
+  for (int i = 0; i < double_strands.size(); ++i)
     {
-      _replication_logger = 
-	new DoubleStrandLogger (_params.replication_file(), *double_strand);
+      _loggers.push_back 
+	(new DoubleStrandLogger (_params.output_dir() 
+				 + "/" + ds_names[i] + ".out",
+				 *(double_strands[i])));
     }
+  
+  // create reaction logger
+  // convert reactions to unmodifiable reactions
+  // (logger is only supposed to access reactions, nothing more)
+  std::vector <const Reaction*> reactions (_cell_state.reactions().size());
+  for (int i = 0; i < reactions.size(); ++i)
+    { reactions[i] = _cell_state.reactions()[i]; }
+  _loggers.push_back (new ReactionLogger (_params.reaction_file(), reactions));
 }
 
 void Simulation::compute_next_timing (void)
@@ -188,8 +206,9 @@ void Simulation::write_logs (double t)
 {
   while (t >= _next_log_time)
     { 
-      if (_logger) { _logger->log (_next_log_time); }
-      if (_replication_logger) { _replication_logger->log (_next_log_time); }
+      for (std::list <Logger*>::iterator it = _loggers.begin();
+	   it != _loggers.end(); ++it)
+	{ (*it)->log (_next_log_time); }
       _next_log_time += _params.output_step();
     }
 }

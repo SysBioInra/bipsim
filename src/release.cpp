@@ -1,12 +1,9 @@
 
-
 /**
  * @file release.cpp
  * @brief Implementation of the Release class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -19,12 +16,15 @@
 // ==================
 //
 #include "macros.h" // REQUIRE
+#include "config.h" // DISPLAY_WARNINGS
+
 #include "release.h"
 #include "chemical.h"
 #include "boundchemical.h"
 #include "boundunit.h"
 #include "boundunitfactory.h"
 #include "producttable.h"
+
 
 // ==========================
 //  Constructors/Destructors
@@ -91,6 +91,7 @@ void Release::do_reaction (void)
       _empty_polymerase.add (unit);
       product->add (1); 
     }
+#ifdef DISPLAY_WARNINGS
   else
     {
       std::cerr << "Warning: Unknown product ("
@@ -99,6 +100,7 @@ void Release::do_reaction (void)
       _releasing_polymerase.remove (unit);
       _fail_polymerase.add (unit);
     }
+#endif
 }
 
 double Release::compute_rate (void) const

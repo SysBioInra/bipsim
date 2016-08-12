@@ -1,18 +1,14 @@
 
-
 /**
  * @file chemicallogger.cpp
  * @brief Implementation of the ChemicalLogger class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
 // ==================
 //
-#include <iostream>
 
 // ==================
 //  Project Includes
@@ -20,6 +16,7 @@
 //
 #include "chemicallogger.h"
 #include "chemical.h"
+#include "macros.h" // REQUIRE
 
 // ==========================
 //  Constructors/Destructors
@@ -29,14 +26,11 @@ ChemicalLogger::ChemicalLogger (const std::string& filename,
 				const std::vector <const Chemical*>& chemicals,
 				const std::vector <std::string>& names, 
 				bool overwrite /*= true*/)
- : _chemicals (chemicals)
+  : Logger (filename, overwrite) 
+  , _chemicals (chemicals)
 {
   /** @pre Vector of names must be as long as vector of references. */
   REQUIRE (chemicals.size() == names.size());
-  
-  // open file
-  if (overwrite) { _output.open (filename.c_str()); }
-  else { _output.open (filename.c_str(), std::ofstream::app); }
   
   // write header (if necessary)
   if (overwrite) { write_header (names); }
@@ -46,10 +40,7 @@ ChemicalLogger::ChemicalLogger (const std::string& filename,
 // ChemicalLogger::ChemicalLogger (const ChemicalLogger& logger);
 // ChemicalLogger& ChemicalLogger::operator= (const ChemicalLogger& other_logger);
 
-ChemicalLogger::~ChemicalLogger (void)
-{
-  _output.close();
-}
+
 
 // ===========================
 //  Public Methods - Commands

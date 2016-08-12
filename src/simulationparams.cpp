@@ -36,10 +36,6 @@ const std::string SimulationParams::_initial_time_tag = "INITIAL_TIME";
 const std::string SimulationParams::_final_time_tag = "FINAL_TIME";
 const std::string SimulationParams::_input_files_tag = "INPUT_FILES";
 const std::string SimulationParams::_output_dir_tag = "OUTPUT_DIR";
-const std::string SimulationParams::_concentration_file = "concentrations.out";
-const std::string SimulationParams::_replication_file = "replication.out";
-const std::string SimulationParams::_param_file = "params.out";
-const std::string SimulationParams::_reaction_file = "reactions.out";
 const std::string SimulationParams::_output_step_tag = "OUTPUT_STEP";
 const std::string SimulationParams::_output_entities_tag = "OUTPUT_ENTITIES";
 const std::string SimulationParams::_drawing_algorithm_tag = "DRAWING_ALGORITHM";
@@ -47,6 +43,10 @@ const std::string SimulationParams::_hybrid_base_rate_tag = "HYBRID_BASE_RATE";
 const std::string SimulationParams::_base_volume_tag = "BASE_VOLUME";
 const std::string SimulationParams::_volume_modifier_tag = "VOLUME_MODIFIER";
 const std::string SimulationParams::_volume_step_tag = "VOLUME_STEP";
+
+const std::string SimulationParams::_concentration_file = "concentrations.out";
+const std::string SimulationParams::_reaction_file = "reactions.out";
+const std::string SimulationParams::_param_file = "params.out";
 
 // ==========================
 //  Constructors/Destructors
@@ -57,7 +57,6 @@ SimulationParams::SimulationParams (const std::string& filename)
   , _initial_time (0)
   , _final_time (1000)
   , _output_step (1)
-  , _output_double_strand ("chromosome")
   , _solver_factory (new NaiveSolverFactory())
   , _rate_manager_factory (new DependencyRateManagerFactory())
   , _hybrid_base_rate (1)
