@@ -106,24 +106,23 @@ void DoubleStrandLoading::do_reaction (void)
   BoundUnit& unit = random_unit();
   /** @pre Bound unit must be bound to a double strand sequence. */
   REQUIRE (unit.location().appariated_strand() != 0);
-  if (unit.strand() != BoundUnit::NO_STRAND)
-    {
-      if (unit.location().appariated_strand()->extend_strand 
-	  (unit.strand(), unit.location().complementary (unit.reading_frame())))
-	{ 
-	  load_chemical (unit); 
-	}
-      else // go to stalled form
-	{
-	  _loader.remove (unit);
-	  _stalled_form.add (unit);
-	}
-    }
-  else // unit.strand() == NO_STRAND
-    {
-      unit.set_strand (unit.location().appariated_strand()->start_strand 
+
+  // bind to existing partial strand if necessary
+  if (unit.strand() == BoundUnit::NO_STRAND)
+    { 
+      unit.set_strand (unit.location().appariated_strand()->partial_strand_id 
 		       (unit.location().complementary (unit.reading_frame())));
-      load_chemical (unit);
+    }
+     
+  if (unit.location().appariated_strand()->extend_strand 
+      (unit.strand(), unit.location().complementary (unit.reading_frame())))
+    { 
+      load_chemical (unit); 
+    }
+  else // go to stalled form
+    {
+      _loader.remove (unit);
+      _stalled_form.add (unit);
     }
 }
 

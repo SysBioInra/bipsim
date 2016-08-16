@@ -33,6 +33,10 @@ ReactionLogger::ReactionLogger (const std::string& filename,
   , _previous (reactions.size(), 0)
   , _indices (reactions.size(), 0)
 {
+  if (_log_number > reactions.size()) { _log_number = reactions.size(); }
+  /** @post Number of reactions to log is smaller or equal to total number 
+   *   of reactions */
+  ENSURE (_log_number <= reactions.size());
 }
 
 // Forbidden
@@ -70,8 +74,11 @@ void ReactionLogger::log (double simulation_time)
 
   // print output
   for (int i = 1; i <= _log_number; ++i)
-    { _output << "\"" << _reactions[_indices[i]]->name() << "\""
-	      << "\t" << _values [_indices[i]] << "\n"; }
+    { 
+      if (_values [_indices[i]] == 0) { return; }
+      _output << "\"" << _reactions[_indices[i]]->name() << "\""
+	      << "\t" << _values [_indices[i]] << "\n"; 
+    }
 }
 
 // =================

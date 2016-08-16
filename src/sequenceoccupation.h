@@ -1,12 +1,9 @@
 
-
 /**
  * @file sequenceoccupation.h
  * @brief Header for the SequenceOccupation class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -19,6 +16,7 @@
 //
 #include <vector> // std::vector
 #include <list> // std::list
+#include <stack> // std::stack
 
 // ======================
 //  Forward declarations
@@ -28,10 +26,9 @@
 
 /**
  * @brief Class handling occupation levels on ChemicalSequence.
- *
- * SequenceOccupation has two roles: it stores occupation levels at every
- * base of the sequence and the chemicals bound to every position. It also
- * handles SiteAvailability objects that warn BindingSite about change in
+ * @details SequenceOccupation has two roles: it stores occupation levels at 
+ * every base of the sequence and the chemicals bound to every position. It 
+ * also handles SiteAvailability objects that warn BindingSite about change in
  * availability at specific sites.
  */
 class SequenceOccupation
@@ -91,19 +88,18 @@ class SequenceOccupation
   void remove_sequence (int quantity);
 
   /**
-   * @brief Start segment of sequence.
-   * @param position Position where to start the segment.
-   * @return Identifier of the strand on which segment was started.
-   */
-  int start_segment (int position);
-
-  /**
-   * @brief Extend a segment.
+   * @brief Extend strand at given position.
    * @param strand_id Integer identifer of strand to extend.
    * @param position Position where extension should happen.
    * @return True if extension worked.
    */
-  bool extend_segment (int strand_id, int position);
+  bool extend_strand (int strand_id, int position);
+
+  /**
+   * @brief Release id and memory associated with given partial strand.
+   * @param strand_id Integer identifer of strand to release.
+   */
+  void release_strand_id (int strand_id);
 
   /**
    * @brief Register static site.
@@ -130,6 +126,21 @@ class SequenceOccupation
    * @return Number of unoccupied sites.
    */
   int number_available_sites (int first, int last) const;
+
+  /**
+   * @brief Accessor to partial strand at given position.
+   * @param position Position of interest.
+   * @return Integer identifier of the oldest strand not synthesized at
+   *  given position (or new strand).
+   */
+  int partial_strand_id (int position) const;
+
+  /**
+   * @brief Check whether partial strand is completed.
+   * @param strand_id Identifier of strand to check.
+   * @return True if strand is fully polymerized.
+   */
+  bool strand_completed (int strand_id) const;
 
   /**
    * @brief Composition of partial strands.
@@ -181,18 +192,6 @@ private:
    */
   void fuse_groups (int index);
 
-  /**
-   * @brief Check if partial strand is complete and add it to full sequences.
-   * @param strand_id Integer of partial strand to check.
-   */
-  void check_completion (int strand_id);
-
-  /**
-   * @brief Get next available strand identifier.
-   * @return Integer strand identifier.
-   */
-  int next_strand_id (void);
-
   // ============
   //  Attributes
   // ============
@@ -206,19 +205,30 @@ private:
   /** @brief Tracks occupied positions along the sequence. */
   std::vector <int> _occupancy;
 
-  /** @brief Groups of static sites whose availability needs to be checked. */
+  /** @brief Groups of sites whose availability needs to be maintained. */
   std::vector <SiteGroup*> _site_groups;
 
   /** @brief Vector of partial strands (access by identifier). */
-  std::vector <PartialStrand*> _partial_by_index;  
-
+  std::vector <PartialStrand*> _partials;  
   /** @brief List of partial strand identifiers in creation order. */
-  std::list <int> _partial_creation_order;  
+  mutable std::list <int> _partial_creation_order;  
+  /** @brief List of unused partial strands. */
+  mutable std::stack <int, std::vector <int> > _unused_partials;
 };
 
 // ======================
 //  Inline declarations
 // ======================
 //
+#include "macros.h" // REQUIRE
+#include "partialstrand.h"
+
+inline bool SequenceOccupation::strand_completed (int strand_id) const
+{
+  /** @pre strand_id must be a valid id. */
+  REQUIRE ((strand_id >= 0) && (strand_id < _partials.size()));
+  return _partials [strand_id]->completed();
+}
+
 
 #endif // SEQUENCE_OCCUPATION_H

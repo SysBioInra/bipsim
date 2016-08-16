@@ -175,11 +175,11 @@ public:
   {
   }
 
-  bool extend_segment (int strand_id, int start, int end)
+  bool extend_strand (int strand_id, int start, int end)
   {
     for (int i = start; i <= end; ++i) 
       { 
-	if (!empty_occupation.extend_segment (strand_id, i)) { return false; }
+	if (!empty_occupation.extend_strand (strand_id, i)) { return false; }
       }
     return true;
   }
@@ -194,7 +194,8 @@ BOOST_FIXTURE_TEST_SUITE (Segments, SODoubleStrandL100)
 
 BOOST_AUTO_TEST_CASE (number_sites_SegmentSizeOne_reflectsSegmentOverlap)
 {
-  empty_occupation.start_segment (10);
+  int strand_id = empty_occupation.partial_strand_id (10);
+  empty_occupation.extend_strand (strand_id, 10);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, 0), 0);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (9, 9), 0);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (10, 10), 1);
@@ -205,7 +206,8 @@ BOOST_AUTO_TEST_CASE (number_sites_SegmentSizeOne_reflectsSegmentOverlap)
 
 BOOST_AUTO_TEST_CASE (number_sites_SegmentZeroZero_reflectsSegmentOverlap)
 {
-  empty_occupation.start_segment (0);
+  int strand_id = empty_occupation.partial_strand_id (0);
+  empty_occupation.extend_strand (strand_id, 0);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, 0), 1);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (1, 1), 0);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (L-1, L-1), 0);
@@ -214,7 +216,8 @@ BOOST_AUTO_TEST_CASE (number_sites_SegmentZeroZero_reflectsSegmentOverlap)
 
 BOOST_AUTO_TEST_CASE (number_sites_SegmentLastBase_reflectsSegmentOverlap)
 {
-  empty_occupation.start_segment (L-1);
+  int strand_id = empty_occupation.partial_strand_id (L-1);
+  empty_occupation.extend_strand (strand_id, L-1);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, 0), 0);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (L-2, L-2), 0);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (L-1, L-1), 1);
@@ -223,8 +226,8 @@ BOOST_AUTO_TEST_CASE (number_sites_SegmentLastBase_reflectsSegmentOverlap)
 
 BOOST_AUTO_TEST_CASE (number_sites_SegmentSizeEleven_reflectsSegmentOverlap)
 {
-  int strand1 = empty_occupation.start_segment (10); 
-  BOOST_REQUIRE (extend_segment (strand1, 11, 20));
+  int strand1 = empty_occupation.partial_strand_id (10); 
+  BOOST_REQUIRE (extend_strand (strand1, 10, 20));
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (9, 9), 0);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (10, 10), 1);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (11, 11), 1);
@@ -237,8 +240,8 @@ BOOST_AUTO_TEST_CASE (number_sites_SegmentSizeEleven_reflectsSegmentOverlap)
 
 BOOST_AUTO_TEST_CASE (number_sites_oneSegmentOneSequence_reflectsOccupation)
 {
-  int strand1 = empty_occupation.start_segment (10); 
-  BOOST_REQUIRE (extend_segment (strand1, 11, 20));
+  int strand1 = empty_occupation.partial_strand_id (10); 
+  BOOST_REQUIRE (extend_strand (strand1, 10, 20));
   empty_occupation.add_sequence (1);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (9, 9), 1);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (10, 10), 2);
@@ -248,10 +251,10 @@ BOOST_AUTO_TEST_CASE (number_sites_oneSegmentOneSequence_reflectsOccupation)
 
 BOOST_AUTO_TEST_CASE (number_sites_twoOverlappingSegments_reflectsSegmentOverlap)
 {
-  int strand1 = empty_occupation.start_segment (10); 
-  BOOST_REQUIRE (extend_segment (strand1, 11, 30));
-  int strand2 = empty_occupation.start_segment (20); 
-  BOOST_REQUIRE (extend_segment (strand2, 21, 40));
+  int strand1 = empty_occupation.partial_strand_id (10); 
+  BOOST_REQUIRE (extend_strand (strand1, 10, 30));
+  int strand2 = empty_occupation.partial_strand_id (20); 
+  BOOST_REQUIRE (extend_strand (strand2, 20, 40));
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (9, 9), 0);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (10, 10), 1);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (19, 19), 1);
@@ -265,8 +268,8 @@ BOOST_AUTO_TEST_CASE (number_sites_twoOverlappingSegments_reflectsSegmentOverlap
 
 BOOST_AUTO_TEST_CASE (number_sites_oneSegmentOneBoundElement_reflectsOccupation)
 {
-  int strand1 = empty_occupation.start_segment (10); 
-  BOOST_REQUIRE (extend_segment (strand1, 11, 30));
+  int strand1 = empty_occupation.partial_strand_id (10); 
+  BOOST_REQUIRE (extend_strand (strand1, 10, 30));
   empty_occupation.add_element (20, 25);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (19, 19), 1);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (20, 20), 0);
@@ -276,8 +279,8 @@ BOOST_AUTO_TEST_CASE (number_sites_oneSegmentOneBoundElement_reflectsOccupation)
 
 BOOST_AUTO_TEST_CASE (number_sites_oneSegmentTwoBoundElements_reflectsOccupation)
 {
-  int strand1 = empty_occupation.start_segment (10); 
-  BOOST_REQUIRE (extend_segment (strand1, 11, 35));
+  int strand1 = empty_occupation.partial_strand_id (10); 
+  BOOST_REQUIRE (extend_strand (strand1, 11, 35));
   empty_occupation.add_element (15, 25);
   empty_occupation.add_element (20, 30);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (14, 14), 1);
@@ -290,10 +293,10 @@ BOOST_AUTO_TEST_CASE (number_sites_oneSegmentTwoBoundElements_reflectsOccupation
 
 BOOST_AUTO_TEST_CASE (number_sites_twoSegmentsTwoBoundElements_reflectsOccupation)
 {
-  int strand1 = empty_occupation.start_segment (10); 
-  BOOST_REQUIRE (extend_segment (strand1, 11, 60));
-  int strand2 = empty_occupation.start_segment (30); 
-  BOOST_REQUIRE (extend_segment (strand2, 31, 80));
+  int strand1 = empty_occupation.partial_strand_id (10); 
+  BOOST_REQUIRE (extend_strand (strand1, 10, 60));
+  int strand2 = empty_occupation.partial_strand_id (30); 
+  BOOST_REQUIRE (extend_strand (strand2, 30, 80));
   empty_occupation.add_element (20, 50);
   empty_occupation.add_element (40, 70);
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (19, 19), 1);
@@ -312,8 +315,8 @@ BOOST_AUTO_TEST_CASE (number_sites_twoSegmentsTwoBoundElements_reflectsOccupatio
 
 BOOST_AUTO_TEST_CASE (number_sites_oneSegmentTwoBoundElementsAddedAndRemoved_reflectsSegment)
 {
-  int strand1 = empty_occupation.start_segment (10);
-  BOOST_REQUIRE (extend_segment (strand1, 11, 35));
+  int strand1 = empty_occupation.partial_strand_id (10);
+  BOOST_REQUIRE (extend_strand (strand1, 10, 35));
   empty_occupation.add_element (15, 25);
   empty_occupation.add_element (20, 30);
   empty_occupation.remove_element (15, 25);
@@ -326,59 +329,62 @@ BOOST_AUTO_TEST_CASE (number_sites_oneSegmentTwoBoundElementsAddedAndRemoved_ref
 
 BOOST_AUTO_TEST_CASE (number_sites_segmentsCoveringWholeSequence_returnsOne)
 {
-  int strand1 = empty_occupation.start_segment (10); 
-  BOOST_REQUIRE (extend_segment (strand1, 11, 50));
-  int strand2 = empty_occupation.start_segment (90); 
-  BOOST_REQUIRE (extend_segment (strand2, 91, L-1));
-  BOOST_REQUIRE (extend_segment (strand2, 0, 9)); 
-  BOOST_REQUIRE (extend_segment (strand1, 51, 89));
+  int strand1 = empty_occupation.partial_strand_id (10); 
+  BOOST_REQUIRE (extend_strand (strand1, 10, 50));
+  int strand2 = empty_occupation.partial_strand_id (90); 
+  BOOST_REQUIRE (extend_strand (strand2, 90, L-1));
+  BOOST_REQUIRE (extend_strand (strand2, 0, 9)); 
+  BOOST_REQUIRE (extend_strand (strand1, 51, 89));
   BOOST_CHECK_EQUAL (empty_occupation.number_available_sites (0, L-1), 1);
 }
 
-BOOST_AUTO_TEST_CASE (start_segment_startOnSite_updatesSite)
+BOOST_AUTO_TEST_CASE (extend_strand_startOnSite_updatesSite)
 {
   MockBindingSite& bs = site_dispenser.new_site (10, 20);
   MockBindingSite& bs2 = site_dispenser.new_site (21, 30);
   empty_occupation.watch_site (bs);
   empty_occupation.watch_site (bs2);
   bs.reset_update(); bs2.reset_update();
-  empty_occupation.start_segment (10);
+  int strand_id = empty_occupation.partial_strand_id (10);
+  empty_occupation.extend_strand (strand_id, 10);
   BOOST_CHECK_EQUAL (bs.was_updated(), true);
   BOOST_CHECK_EQUAL (bs2.was_updated(), false);
 }
 
-BOOST_AUTO_TEST_CASE (start_segment_startOnSite_updatesSite2)
+BOOST_AUTO_TEST_CASE (extend_strand_startOnSite_updatesSite2)
 {
   MockBindingSite& bs = site_dispenser.new_site (10, 20);
   MockBindingSite& bs2 = site_dispenser.new_site (21, 30);
   empty_occupation.watch_site (bs);
   empty_occupation.watch_site (bs2);
   bs.reset_update(); bs2.reset_update();
-  empty_occupation.start_segment (20);
+  int strand_id = empty_occupation.partial_strand_id (20);
+  empty_occupation.extend_strand (strand_id, 20);
   BOOST_CHECK_EQUAL (bs.was_updated(), true);
   BOOST_CHECK_EQUAL (bs2.was_updated(), false);
 }
 
-BOOST_AUTO_TEST_CASE (extend_segment_extendOnSite_updatesSite)
+BOOST_AUTO_TEST_CASE (extend_strand_extendOnSite_updatesSite)
 {
   MockBindingSite& bs = site_dispenser.new_site (10, 20);
   MockBindingSite& bs2 = site_dispenser.new_site (15, 25);
   empty_occupation.watch_site (bs);
   empty_occupation.watch_site (bs2);
   bs.reset_update(); bs2.reset_update();
-  int strand1 = empty_occupation.start_segment (9);
-  BOOST_REQUIRE (empty_occupation.extend_segment (strand1, 10));
+  int strand1 = empty_occupation.partial_strand_id (9);
+  empty_occupation.extend_strand (strand1, 9);
+  BOOST_REQUIRE (empty_occupation.extend_strand (strand1, 10));
   BOOST_CHECK_EQUAL (bs.was_updated(), true); 
   BOOST_CHECK_EQUAL (bs2.was_updated(), false);
-  BOOST_REQUIRE (extend_segment (strand1, 11, 14));
+  BOOST_REQUIRE (extend_strand (strand1, 11, 14));
   BOOST_CHECK_EQUAL (bs2.was_updated(), false);
   bs.reset_update();
-  BOOST_REQUIRE (empty_occupation.extend_segment (strand1, 15));
+  BOOST_REQUIRE (empty_occupation.extend_strand (strand1, 15));
   BOOST_CHECK_EQUAL (bs.was_updated(), true); 
   BOOST_CHECK_EQUAL (bs2.was_updated(), true);
-  BOOST_REQUIRE (extend_segment (strand1, 16, 20)); 
+  BOOST_REQUIRE (extend_strand (strand1, 16, 20)); 
   bs.reset_update(); bs2.reset_update();
-  BOOST_REQUIRE (empty_occupation.extend_segment (strand1, 21));
+  BOOST_REQUIRE (empty_occupation.extend_strand (strand1, 21));
   BOOST_CHECK_EQUAL (bs.was_updated(), false); 
   BOOST_CHECK_EQUAL (bs2.was_updated(), true);
 }

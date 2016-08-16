@@ -81,15 +81,7 @@ public:
   void unbind_unit (int first, int last);
 
   /**
-   * @brief Create new strand segment at given position.
-   * @param position Position where segment should be created.
-   * @return Integer identifier of the strand where segment was created (used
-   *  later for extension).
-   */
-  int start_strand (int position);
-
-  /**
-   * @brief Extend strand at given position.
+   * @brief Extend partial strand at given position.
    * @param strand_id Integer identifier provided at strand creation.
    * @param position Position where extension should take place.
    * @return True if extension worked, false if position already occupied.
@@ -197,6 +189,14 @@ public:
    *  position.
    */
   int relative (int absolute_position) const;
+
+  /**
+   * @brief Accessor to partial strand.
+   * @param position Position of interest.
+   * @return Integer identifier of the oldest strand not synthesized at
+   *  given position (or new strand).
+   */
+  int partial_strand_id (int position) const;
 
   /**
    * @brief Get chemical's appariated strand.
@@ -310,6 +310,13 @@ const std::string ChemicalSequence::sequence (int first, int last) const
 inline int ChemicalSequence::relative (int absolute_position) const
 { 
   return absolute_position - _starting_position;
+}
+
+inline int ChemicalSequence::partial_strand_id (int position) const
+{
+  /** @pre Position must be consistent with sequence length. */
+  REQUIRE (is_out_of_bounds (position, position) == false);
+  return _occupation.partial_strand_id (position);
 }
 
 inline ChemicalSequence* ChemicalSequence::appariated_strand (void) const

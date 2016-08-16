@@ -64,18 +64,27 @@ void ChemicalSequence::unbind_unit (int first, int last)
   _occupation.remove_element (first, last);
 }
 
-int ChemicalSequence::start_strand (int position)
-{
-  /** @pre Position must be consistent with sequence length. */
-  REQUIRE (is_out_of_bounds (position, position) == false);
-  return _occupation.start_segment (position);
-}
-
 bool ChemicalSequence::extend_strand (int strand_id, int position)
 {
   /** @pre Position must be consistent with sequence length. */
   REQUIRE (is_out_of_bounds (position, position) == false);
-  return _occupation.extend_segment (strand_id, position);
+
+  if (!_occupation.extend_strand (strand_id, position)) { return false; }
+  // extension worked: check whether partial strand was completed
+  if (_occupation.strand_completed (strand_id))
+    {
+      Chemical::add (1);
+      if (!_appariated_sequence)
+	{
+	  _occupation.release_strand_id (strand_id);
+	}
+      else if (_appariated_sequence->_occupation.strand_completed (strand_id))
+	{
+	  _occupation.release_strand_id (strand_id);
+	  _appariated_sequence->_occupation.release_strand_id (strand_id);
+	}
+    }
+  return true;
 }
      
 void ChemicalSequence::add (int quantity)

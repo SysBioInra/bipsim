@@ -2,10 +2,8 @@
 /**
  * @file sequenceoccupation.cpp
  * @brief Implementation of the SequenceOccupation class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -43,8 +41,8 @@ SequenceOccupation::~SequenceOccupation (void)
 {
   for (int i = 0; i < _site_groups.size(); ++i)  { delete _site_groups[i]; }
   for (std::vector <PartialStrand*>::iterator strand_it 
-	 = _partial_by_index.begin();
-       strand_it != _partial_by_index.end(); ++strand_it)
+	 = _partials.begin();
+       strand_it != _partials.end(); ++strand_it)
     { delete *strand_it; }
 }
 
@@ -102,52 +100,35 @@ void SequenceOccupation::remove_sequence (int quantity)
   notify_all_sites();
 }
 
-int SequenceOccupation::start_segment (int position)
-{
-  /** @pre position must be within sequence bound. */
-  REQUIRE ((position >= 0) && (position < _occupancy.size()));
-
-  _occupancy [position] -= 1;
-  _number_segments [position] += 1;
-  int strand_id;
-  std::list <int>::iterator strand_id_it = _partial_creation_order.begin();
-  while (strand_id_it != _partial_creation_order.end())
-    {
-      strand_id = *strand_id_it;
-      if (_partial_by_index [strand_id]->occupy (position)) { break; }
-      ++strand_id_it;
-    }
-  if (strand_id_it == _partial_creation_order.end()) 
-    { 
-      strand_id = next_strand_id();
-      _partial_by_index [strand_id] = new PartialStrand (_occupancy.size()); 
-      _partial_creation_order.push_back (strand_id);
-      _partial_by_index [strand_id]->occupy (position);
-    }
-  check_completion (strand_id);
-  notify_change (position, position);
-  /** @post strand_id must be in valid range. */
-  ENSURE ((strand_id >= 0) && (strand_id < _partial_by_index.size()));
-  return strand_id;
-}
-
-bool SequenceOccupation::extend_segment (int strand_id, int position)
+bool SequenceOccupation::extend_strand (int strand_id, int position)
 {
   /** @pre position must be within sequence bound. */
   REQUIRE ((position >= 0) && (position < _occupancy.size()));
   /** @pre strand_id must be in valid range. */
-  REQUIRE ((strand_id >= 0) && (strand_id < _partial_by_index.size()));
-
-  if (_partial_by_index [strand_id] == 0) { return false; }
-  if (_partial_by_index [strand_id]->occupy (position))
-    {
-      _occupancy [position] -= 1;
-      _number_segments [position] += 1;
-      check_completion (strand_id);
-      notify_change (position, position);
-      return true;
+  REQUIRE (strand_id >= 0);
+  // create new partial strand if necessary
+  for (int i = _partials.size(); i <= strand_id; ++i)
+    { 
+      _partials.push_back (new PartialStrand (_occupancy.size()));
+      _partial_creation_order.push_back (i);
     }
-  else { return false; }
+
+  if (_partials [strand_id]->occupied (position)) { return false; }
+  _partials [strand_id]->occupy (position);
+  _occupancy [position] -= 1;
+  _number_segments [position] += 1;
+  notify_change (position, position);
+  return true;
+}
+
+void SequenceOccupation::release_strand_id (int strand_id)
+{
+  _partials [strand_id]->reset();
+  _partial_creation_order.remove (strand_id);
+  _unused_partials.push (strand_id);
+  ++_number_sequences;
+  for (int i = 0; i < _occupancy.size(); ++i) 
+    { ++_occupancy [i]; _number_segments [i] -= 1; }
 }
 
 void SequenceOccupation::watch_site (BindingSite& site)
@@ -221,13 +202,40 @@ int SequenceOccupation::number_available_sites (int first, int last) const
   return result;
 }
 
+int SequenceOccupation::partial_strand_id (int position) const
+{
+  /** @pre position must be within sequence bound. */
+  REQUIRE ((position >= 0) && (position < _occupancy.size()));
+
+  // test existing strands
+  for (std::list <int>::const_iterator it = _partial_creation_order.begin();
+       it != _partial_creation_order.end(); ++it)
+    {
+      if (_partials [*it]->occupied (position) == false) { return *it; }
+    }
+
+  // segment could not be created on existing strands, give index of
+  // new strand
+  // recycle an existing strand:
+  if (!_unused_partials.empty()) 
+    { 
+      int result = _unused_partials.top();
+      _unused_partials.pop();
+      _partial_creation_order.push_back (result);
+      return result; 
+    }
+  
+  // else return index of next new strand:
+  return _partials.size();
+}
+
 std::list <std::vector <int> > SequenceOccupation::partial_strands (void) const
 {
   std::list <std::vector <int> > result;
   for (std::list <int>::const_iterator it = _partial_creation_order.begin();
        it != _partial_creation_order.end(); ++it)
     {
-      result.push_back (_partial_by_index [*it]->segments());
+      result.push_back (_partials [*it]->segments());
     }
   return result;
 }
@@ -285,28 +293,4 @@ void SequenceOccupation::notify_all_sites (void) const
 {
   for (int i = 0; i < _site_groups.size(); ++i)
     { _site_groups [i]->update_all(); }
-}
-
-void SequenceOccupation::check_completion (int strand_id)
-{
-  if (_partial_by_index [strand_id]->completed()) 
-    {
-      delete _partial_by_index [strand_id];
-      _partial_by_index [strand_id] = 0;
-      _partial_creation_order.remove (strand_id);
-      ++_number_sequences;
-      for (int i = 0; i < _occupancy.size(); ++i) 
-	{ ++_occupancy [i]; _number_segments [i] -= 1; }
-    }
-}
-
-int SequenceOccupation::next_strand_id (void)
-{
-  for (int i = 0; i < _partial_by_index.size(); ++i)
-    { 
-      if (_partial_by_index [i] == 0) { return i; }
-    }
-  int result = _partial_by_index.size();
-  _partial_by_index.resize (result+1, 0);
-  return result;
 }

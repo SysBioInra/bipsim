@@ -4,7 +4,7 @@
 // ==================
 //
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE tRNAConsumption
+#define BOOST_TEST_MODULE missing_tRNA
 #include <boost/test/unit_test.hpp>
 // #include <boost/test/floating_point_comparison.hpp>
 
