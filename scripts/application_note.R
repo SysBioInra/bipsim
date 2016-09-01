@@ -5,13 +5,13 @@ source ("plot_concentrations.R");
 source ("plot_DNA.R");
 
 data_dir = "../output/application_note/"
-time = c(0,600);
+time = c(0,500);
 
 my_pdf = function (filename, w, h) { 
     pdf (paste (data_dir, filename, ".pdf", sep = ""), width=w, height=h);
 }
 
-data_name = "replication.out"
+data_name = "chromosome.out"
 data = load_replication (paste (data_dir, data_name, sep = ""));
 data = data[[time[2]+1]];
 min = data$sense[[1]][2]-10;

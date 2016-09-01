@@ -10,7 +10,7 @@ load_replication = function (filename)
         while ((! is.na (read_empty_line (lines[l])))) { l = l+1; }
         if (l > n_lines) { break; }
         time = read_time_sense (lines[l]);
-        if (is.na (time)) { format_error (lines[l], l); }
+        if (is.na (time)) { format_error (lines[l], l, "expected time"); }
         result_index = result_index + 1;
         if (result_index %% 1000 == 0) { cat (" ", result_index); }
         result [[result_index]] = list();
@@ -26,7 +26,7 @@ load_replication = function (filename)
             strand_no = strand_no + 1;
             l = l+1; if (l > n_lines) { stop ("Invalid end of file."); }
         }
-        if (is.na (read_antisense (lines[l]))) { format_error (lines[l],l); }
+        if (is.na (read_antisense (lines[l]))) { format_error (lines[l],l, "expected antisense"); }
         l = l+1; if (l > n_lines) { break; }
         strand_no = 1;
         repeat {
@@ -85,8 +85,8 @@ read_empty_line= function (line) {
     return (TRUE);
 }
 
-format_error = function (line, line_no) {
-    stop ("Unknown format: ", line, " (line ", line_no, ").");
+format_error = function (line, line_no, msg="") {
+    stop ("Unknown format: ", line, " (line ", line_no, ", ", msg,").");
 }
 
 split_line = function (line) {

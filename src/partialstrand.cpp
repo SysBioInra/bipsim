@@ -53,6 +53,9 @@ std::vector <int> PartialStrand::segments (void) const
       // detect end of segment
       if (!(_occupied [i]) && _occupied [i-1]) { result.push_back (i-1); }
     }
+  if (_occupied [_length-1]) { result.push_back (_length-1); }
+  /** @post Length of result must be a multiple of 2. */
+  ENSURE (result.size() % 2 == 0);
   return result;
 }
 

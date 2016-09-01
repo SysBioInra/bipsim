@@ -162,19 +162,19 @@ BoundChemical t70S_Y_cp
 ##################################
 # Translation initiation Factors #
 ##################################
-FreeChemical IF1 1000
-FreeChemical IF2 1000
+FreeChemical IF1 5000
+FreeChemical IF2 5000
 FreeChemical IF2a
 FreeChemical IF2d
 FreeChemical IF2p
-FreeChemical IF3 1000
+FreeChemical IF3 5000
 
 ##################################
 # Translation elongation Factors #
 ##################################
 FreeChemical EFTua 0
 FreeChemical EFTud 
-FreeChemical EFP 1000
+FreeChemical EFP 15000
 FreeChemical EFPa 
 FreeChemical EFPd 
 
