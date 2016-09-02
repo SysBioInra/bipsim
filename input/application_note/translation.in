@@ -31,55 +31,56 @@ FreeChemical tRNA_V
 FreeChemical tRNA_W 
 FreeChemical tRNA_Y 
 
-FreeChemical tRNA_A_c 
-FreeChemical tRNA_C_c 
-FreeChemical tRNA_D_c 
-FreeChemical tRNA_E_c 
-FreeChemical tRNA_F_c 
-FreeChemical tRNA_G_c 
-FreeChemical tRNA_H_c 
-FreeChemical tRNA_I_c 
-FreeChemical tRNA_K_c 
-FreeChemical tRNA_L_c 
-FreeChemical tRNA_M_c 
+FreeChemical tRNA_A_c
+FreeChemical tRNA_C_c
+FreeChemical tRNA_D_c
+FreeChemical tRNA_E_c
+FreeChemical tRNA_F_c
+FreeChemical tRNA_G_c
+FreeChemical tRNA_H_c
+FreeChemical tRNA_I_c
+FreeChemical tRNA_K_c
+FreeChemical tRNA_L_c
 FreeChemical tRNA_fM_c
-FreeChemical tRNA_N_c 
-FreeChemical tRNA_P_c 
-FreeChemical tRNA_Q_c 
-FreeChemical tRNA_R_c 
-FreeChemical tRNA_S_c 
-FreeChemical tRNA_T_c 
-FreeChemical tRNA_V_c 
-FreeChemical tRNA_W_c 
-FreeChemical tRNA_Y_c 
+FreeChemical tRNA_M_c
+FreeChemical tRNA_N_c
+FreeChemical tRNA_P_c
+FreeChemical tRNA_Q_c
+FreeChemical tRNA_R_c
+FreeChemical tRNA_S_c
+FreeChemical tRNA_T_c
+FreeChemical tRNA_V_c
+FreeChemical tRNA_W_c
+FreeChemical tRNA_Y_c
 
-FreeChemical EtRNA_A_ca 4000
-FreeChemical EtRNA_C_ca 2000
-FreeChemical EtRNA_D_ca 2000
-FreeChemical EtRNA_E_ca 2000
-FreeChemical EtRNA_F_ca 4000
-FreeChemical EtRNA_G_ca 4000
-FreeChemical EtRNA_H_ca 2000
-FreeChemical EtRNA_I_ca 3000
-FreeChemical EtRNA_K_ca 4000
-FreeChemical EtRNA_L_ca 4000
-FreeChemical EtRNA_M_ca 1000
-FreeChemical EtRNA_N_ca 2000
-FreeChemical EtRNA_P_ca 4000
-FreeChemical EtRNA_Q_ca 2000
-FreeChemical EtRNA_R_ca 6000
-FreeChemical EtRNA_S_ca 6000
-FreeChemical EtRNA_T_ca 4000
-FreeChemical EtRNA_V_ca 4000
-FreeChemical EtRNA_W_ca 1000
-FreeChemical EtRNA_Y_ca 2000
+# 4000 tRNAs per codon
+FreeChemical EtRNA_A_ca 16000
+FreeChemical EtRNA_C_ca 8000
+FreeChemical EtRNA_D_ca 8000
+FreeChemical EtRNA_E_ca 8000
+FreeChemical EtRNA_F_ca 8000
+FreeChemical EtRNA_G_ca 16000
+FreeChemical EtRNA_H_ca 8000
+FreeChemical EtRNA_I_ca 12000
+FreeChemical EtRNA_K_ca 8000
+FreeChemical EtRNA_L_ca 24000
+FreeChemical EtRNA_M_ca 4000
+FreeChemical EtRNA_N_ca 8000
+FreeChemical EtRNA_P_ca 16000
+FreeChemical EtRNA_Q_ca 8000
+FreeChemical EtRNA_R_ca 24000
+FreeChemical EtRNA_S_ca 24000
+FreeChemical EtRNA_T_ca 16000
+FreeChemical EtRNA_V_ca 16000
+FreeChemical EtRNA_W_ca 4000
+FreeChemical EtRNA_Y_ca 8000
 
 ############
 # Ribosome #
 ############
 # Ribosome subunits
-FreeChemical 30S 20000
-FreeChemical 50S 20000
+FreeChemical 30S 22000
+FreeChemical 50S 22000
 FreeChemical 30S1 
 FreeChemical 30S3 
 FreeChemical 30S31
@@ -162,17 +163,17 @@ BoundChemical t70S_Y_cp
 ##################################
 # Translation initiation Factors #
 ##################################
-FreeChemical IF1 5000
-FreeChemical IF2 5000
+FreeChemical IF1 5500
+FreeChemical IF2 6600
 FreeChemical IF2a
 FreeChemical IF2d
 FreeChemical IF2p
-FreeChemical IF3 5000
+FreeChemical IF3 4400
 
 ##################################
 # Translation elongation Factors #
 ##################################
-FreeChemical EFTua 0
+FreeChemical EFTua 118000
 FreeChemical EFTud 
 FreeChemical EFP 15000
 FreeChemical EFPa 
@@ -182,13 +183,13 @@ FreeChemical EFPd
 #  Translation Release Factors   #
 ##################################
 
-FreeChemical RF 1000
+FreeChemical RF 4000
 
 ##################
-# Loading table #
+# Loading table  #
 ##################
 
-LoadingTable EtRNA_loading UUU EtRNA_F_ca Et70S_F_ca 5e-3, UUC EtRNA_F_ca Et70S_F_ca 5e-3, UUA EtRNA_L_ca Et70S_L_ca 5e-3, UUG EtRNA_L_ca Et70S_L_ca 5e-3, CUU EtRNA_L_ca Et70S_L_ca 5e-3, CUC EtRNA_L_ca Et70S_L_ca 5e-3, CUA EtRNA_L_ca Et70S_L_ca 5e-3, CUG EtRNA_L_ca Et70S_L_ca 5e-3, AUU EtRNA_I_ca Et70S_I_ca 5e-3, AUC EtRNA_I_ca Et70S_I_ca 5e-3, AUA EtRNA_I_ca Et70S_I_ca 5e-3, AUG EtRNA_M_ca Et70S_M_ca 5e-3, GUU EtRNA_V_ca Et70S_V_ca 5e-3, GUC EtRNA_V_ca Et70S_V_ca 5e-3, GUA EtRNA_V_ca Et70S_V_ca 5e-3, GUG EtRNA_V_ca Et70S_V_ca 5e-3, UCU EtRNA_S_ca Et70S_S_ca 5e-3, UCC EtRNA_S_ca Et70S_S_ca 5e-3, UCA EtRNA_S_ca Et70S_S_ca 5e-3, UCG EtRNA_S_ca Et70S_S_ca 5e-3, CCU EtRNA_P_ca Et70S_P_ca 5e-3, CCC EtRNA_P_ca Et70S_P_ca 5e-3, CCA EtRNA_P_ca Et70S_P_ca 5e-3, CCG EtRNA_P_ca Et70S_P_ca 5e-3, ACU EtRNA_T_ca Et70S_T_ca 5e-3, ACC EtRNA_T_ca Et70S_T_ca 5e-3, ACA EtRNA_T_ca Et70S_T_ca 5e-3, ACG EtRNA_T_ca Et70S_T_ca 5e-3, GCU EtRNA_A_ca Et70S_A_ca 5e-3, GCC EtRNA_A_ca Et70S_A_ca 5e-3, GCA EtRNA_A_ca Et70S_A_ca 5e-3, GCG EtRNA_A_ca Et70S_A_ca 5e-3, UAU EtRNA_Y_ca Et70S_Y_ca 5e-3, UAC EtRNA_Y_ca Et70S_Y_ca 5e-3, CAU EtRNA_H_ca Et70S_H_ca 5e-3, CAC EtRNA_H_ca Et70S_H_ca 5e-3, CAA EtRNA_Q_ca Et70S_Q_ca 5e-3, CAG EtRNA_Q_ca Et70S_Q_ca 5e-3, AAU EtRNA_N_ca Et70S_N_ca 5e-3, AAC EtRNA_N_ca Et70S_N_ca 5e-3, AAA EtRNA_K_ca Et70S_K_ca 5e-3, AAG EtRNA_K_ca Et70S_K_ca 5e-3, GAU EtRNA_D_ca Et70S_D_ca 5e-3, GAC EtRNA_D_ca Et70S_D_ca 5e-3, GAA EtRNA_E_ca Et70S_E_ca 5e-3, GAG EtRNA_E_ca Et70S_E_ca 5e-3, UGU EtRNA_C_ca Et70S_C_ca 5e-3, UGC EtRNA_C_ca Et70S_C_ca 5e-3, UGG EtRNA_W_ca Et70S_W_ca 5e-3, CGU EtRNA_R_ca Et70S_R_ca 5e-3, CGC EtRNA_R_ca Et70S_R_ca 5e-3, CGA EtRNA_R_ca Et70S_R_ca 5e-3, CGG EtRNA_R_ca Et70S_R_ca 5e-3, AGU EtRNA_S_ca Et70S_S_ca 5e-3, AGC EtRNA_S_ca Et70S_S_ca 5e-3, AGA EtRNA_R_ca Et70S_R_ca 5e-3, AGG EtRNA_R_ca Et70S_R_ca 5e-3, GGU EtRNA_G_ca Et70S_G_ca 5e-3, GGC EtRNA_G_ca Et70S_G_ca 5e-3, GGA EtRNA_G_ca Et70S_G_ca 5e-3, GGG EtRNA_G_ca Et70S_G_ca 5e-3, UAA RF stalled_ribosome 5e-3, UAG RF stalled_ribosome 5e-3, UGA RF stalled_ribosome 5e-3
+LoadingTable EtRNA_loading UUU EtRNA_F_ca Et70S_F_ca 1e-3, UUC EtRNA_F_ca Et70S_F_ca 1e-3, UUA EtRNA_L_ca Et70S_L_ca 1e-3, UUG EtRNA_L_ca Et70S_L_ca 1e-3, CUU EtRNA_L_ca Et70S_L_ca 1e-3, CUC EtRNA_L_ca Et70S_L_ca 1e-3, CUA EtRNA_L_ca Et70S_L_ca 1e-3, CUG EtRNA_L_ca Et70S_L_ca 1e-3, AUU EtRNA_I_ca Et70S_I_ca 1e-3, AUC EtRNA_I_ca Et70S_I_ca 1e-3, AUA EtRNA_I_ca Et70S_I_ca 1e-3, AUG EtRNA_M_ca Et70S_M_ca 1e-3, GUU EtRNA_V_ca Et70S_V_ca 1e-3, GUC EtRNA_V_ca Et70S_V_ca 1e-3, GUA EtRNA_V_ca Et70S_V_ca 1e-3, GUG EtRNA_V_ca Et70S_V_ca 1e-3, UCU EtRNA_S_ca Et70S_S_ca 1e-3, UCC EtRNA_S_ca Et70S_S_ca 1e-3, UCA EtRNA_S_ca Et70S_S_ca 1e-3, UCG EtRNA_S_ca Et70S_S_ca 1e-3, CCU EtRNA_P_ca Et70S_P_ca 1e-3, CCC EtRNA_P_ca Et70S_P_ca 1e-3, CCA EtRNA_P_ca Et70S_P_ca 1e-3, CCG EtRNA_P_ca Et70S_P_ca 1e-3, ACU EtRNA_T_ca Et70S_T_ca 1e-3, ACC EtRNA_T_ca Et70S_T_ca 1e-3, ACA EtRNA_T_ca Et70S_T_ca 1e-3, ACG EtRNA_T_ca Et70S_T_ca 1e-3, GCU EtRNA_A_ca Et70S_A_ca 1e-3, GCC EtRNA_A_ca Et70S_A_ca 1e-3, GCA EtRNA_A_ca Et70S_A_ca 1e-3, GCG EtRNA_A_ca Et70S_A_ca 1e-3, UAU EtRNA_Y_ca Et70S_Y_ca 1e-3, UAC EtRNA_Y_ca Et70S_Y_ca 1e-3, CAU EtRNA_H_ca Et70S_H_ca 1e-3, CAC EtRNA_H_ca Et70S_H_ca 1e-3, CAA EtRNA_Q_ca Et70S_Q_ca 1e-3, CAG EtRNA_Q_ca Et70S_Q_ca 1e-3, AAU EtRNA_N_ca Et70S_N_ca 1e-3, AAC EtRNA_N_ca Et70S_N_ca 1e-3, AAA EtRNA_K_ca Et70S_K_ca 1e-3, AAG EtRNA_K_ca Et70S_K_ca 1e-3, GAU EtRNA_D_ca Et70S_D_ca 1e-3, GAC EtRNA_D_ca Et70S_D_ca 1e-3, GAA EtRNA_E_ca Et70S_E_ca 1e-3, GAG EtRNA_E_ca Et70S_E_ca 1e-3, UGU EtRNA_C_ca Et70S_C_ca 1e-3, UGC EtRNA_C_ca Et70S_C_ca 1e-3, UGG EtRNA_W_ca Et70S_W_ca 1e-3, CGU EtRNA_R_ca Et70S_R_ca 1e-3, CGC EtRNA_R_ca Et70S_R_ca 1e-3, CGA EtRNA_R_ca Et70S_R_ca 1e-3, CGG EtRNA_R_ca Et70S_R_ca 1e-3, AGU EtRNA_S_ca Et70S_S_ca 1e-3, AGC EtRNA_S_ca Et70S_S_ca 1e-3, AGA EtRNA_R_ca Et70S_R_ca 1e-3, AGG EtRNA_R_ca Et70S_R_ca 1e-3, GGU EtRNA_G_ca Et70S_G_ca 1e-3, GGC EtRNA_G_ca Et70S_G_ca 1e-3, GGA EtRNA_G_ca Et70S_G_ca 1e-3, GGG EtRNA_G_ca Et70S_G_ca 1e-3, UAA RF stalled_ribosome 1e-3, UAG RF stalled_ribosome 1e-3, UGA RF stalled_ribosome 1e-3
 
 #############
 # reactions #

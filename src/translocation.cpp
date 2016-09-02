@@ -88,9 +88,13 @@ void Translocation::do_reaction (void)
       unit.move (_step_size);
       unit.location().bind_unit (unit.first(), unit.last());
     }
+  else 
+    { 
+      stall = true; 
 #ifdef DISPLAY_WARNINGS
-  else { std::cerr << "out of bounds\n"; stall = true; }
+      std::cerr << "out of bounds\n"; 
 #endif
+    }
 
   
   // check whether the unit has reached a termination site

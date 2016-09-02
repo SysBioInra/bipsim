@@ -49,8 +49,8 @@ private:
   EventHandler& _event_handler;
 
   // format and values read
-  Rule _add_format, _remove_format, _set_format;
-  double _time;
+  Rule _add_format, _remove_format, _set_format, _dosage_format;
+  double _time, _dosage_step, _dosage_end;
   std::string _chemical;
   int _quantity;
 };

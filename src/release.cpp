@@ -91,16 +91,16 @@ void Release::do_reaction (void)
       _empty_polymerase.add (unit);
       product->add (1); 
     }
-#ifdef DISPLAY_WARNINGS
   else
     {
+#ifdef DISPLAY_WARNINGS
       std::cerr << "Warning: Unknown product ("
 		<< unit.initial_reading_frame() << ", "
 		<< unit.reading_frame() - 1 << "). ";
+#endif
       _releasing_polymerase.remove (unit);
       _fail_polymerase.add (unit);
     }
-#endif
 }
 
 double Release::compute_rate (void) const

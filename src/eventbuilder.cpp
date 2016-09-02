@@ -38,6 +38,9 @@ EventBuilder::EventBuilder (CellState& cell_state, EventHandler& event_handler)
 		    + StrToken (_chemical) + IntToken (_quantity))
   , _set_format (TagToken ("event") + DblToken (_time) + TagToken ("SET") 
 		 + StrToken (_chemical) + IntToken (_quantity))
+  , _dosage_format (TagToken ("event") + DblToken (_time) + TagToken ("DOSAGE") 
+		    + DblToken (_dosage_step) + DblToken (_dosage_end)
+		    + StrToken (_chemical) + IntToken (_quantity))
 {
 }
 
@@ -62,6 +65,14 @@ bool EventBuilder::match (InputLine& text_input)
     { 
       _event_handler.store 
 	(new SetEvent (_time, fetch <FreeChemical> (_chemical), _quantity)); 
+    }
+  else if (_dosage_format.match (text_input))
+    {
+      FreeChemical& chemical = fetch <FreeChemical> (_chemical);
+      for (double t = _time; t <= _dosage_end; t += _dosage_step)
+	{
+	  _event_handler.store (new SetEvent (t, chemical, _quantity));
+	}
     }
   else { return false; }
   return true;
