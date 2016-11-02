@@ -29,7 +29,7 @@ FINAL_TIME 1e4
 #   INPUT_FILES path/to/file1 path/to/file2 etc.
 ################################################################################
 
-INPUT_FILES ../input/real4/tables.in ../input/real4/dna.in ../input/real4/BoundChemicals.in ../input/real4/FreeChemicals.in  ../input/real4/SequenceBinding.in ../input/real4/ChemicalReactions.in ../input/real4/HardChemicalReactions.in ../input/real4/HardtRNAs.in  ../input/real4/Release.in ../input/real4/StopCodons.in ../input/real4/Translocation.in ../input/real4/TU_RBS_proteins_hairpin_prom_constitutive.in ../input/real4/HardFreeChemical.in ../input/real4/InitialConditions.in
+INPUT_FILES ../input/real/tables.in ../input/real/dna.in ../input/real/BoundChemicals.in ../input/real/FreeChemicals.in  ../input/real/SequenceBinding.in ../input/real/ChemicalReactions.in ../input/real/HardChemicalReactions.in ../input/real/HardtRNAs.in  ../input/real/Release.in ../input/real/StopCodons.in ../input/real/Translocation.in ../input/real/TU_RBS_proteins_hairpin_prom_constitutive.in ../input/real/HardFreeChemical.in ../input/real/InitialConditions.in
 
 ################################################################################
 # OUTPUT DIRECTORY
@@ -37,7 +37,7 @@ INPUT_FILES ../input/real4/tables.in ../input/real4/dna.in ../input/real4/BoundC
 #   OUTPUT_DIR path/to/output/directory
 ################################################################################
 
-OUTPUT_DIR ../output/real4
+OUTPUT_DIR ../output/real
 
 ################################################################################
 # OUTPUT STEP
