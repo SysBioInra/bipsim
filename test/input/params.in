@@ -24,15 +24,15 @@ FINAL_TIME 1000
 
 ################################################################################
 # INPUT FILES 
-# Path to input files relative to binary. Any number of files can be
-# specified. Format is 
+# Path to input files relative to directory where program is run. Any number of
+# files can be specified. Format is 
 #   INPUT_FILES path/to/file1 path/to/file2 etc.
 ################################################################################
 
-INPUT_FILES ../input/test/dna_info.in ../input/test/dna.in ../input/test/rna_info.in ../input/test/rnas.in ../input/test/protein_info.in ../input/test/proteins.in ../input/test/transcription.in ../input/test/metabolites.in ../input/test/translation.in ../input/test/rna_degradation.in ../input/test/replication.in 
+INPUT_FILES input/dna_info.in input/dna.in input/rna_info.in input/rnas.in input/protein_info.in input/proteins.in input/transcription.in input/metabolites.in input/translation.in input/rna_degradation.in input/replication.in 
 
-#../input/test/tetracyclin.in
-#../input/test/injection_ppGpp.in
+#input/tetracyclin.in
+#input/injection_ppGpp.in
 
 ################################################################################
 # OUTPUT DIRECTORY
@@ -40,7 +40,7 @@ INPUT_FILES ../input/test/dna_info.in ../input/test/dna.in ../input/test/rna_inf
 #   OUTPUT_DIR path/to/output/directory
 ################################################################################
 
-OUTPUT_DIR ../output/test
+OUTPUT_DIR output
 
 ################################################################################
 # OUTPUT STEP
