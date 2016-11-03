@@ -1,0 +1,47 @@
+
+##############
+#    UNITS   #
+##############
+#
+
+# initiation
+FreeChemical DnaA 2
+BoundChemical bound_DnaA
+BindingSite DnaA_BS sensedna 1 1 10 0 1
+BindingSite DnaA_BS antisensedna 1 1 10 0 1
+FreeChemical free_DNAP 10
+FreeChemical used_DnaA
+BoundChemical DNAP
+BoundChemical DNAP_fork
+
+# elongation
+BoundChemical loaded_DNAP_fork
+BoundChemical loaded_DNAP
+LoadingTable dNTP_loading_fork A dTTP loaded_DNAP_fork 1, C dGTP loaded_DNAP_fork 1, G dCTP loaded_DNAP_fork 1, T dATP loaded_DNAP_fork 1
+LoadingTable dNTP_loading A dTTP loaded_DNAP 1, C dGTP loaded_DNAP 1, G dCTP loaded_DNAP 1, T dATP loaded_DNAP 1
+BoundChemical stalled_DNAP_fork
+BoundChemical stalled_DNAP
+BoundChemical translocating_DNAP_fork
+BoundChemical translocating_DNAP
+
+##############
+# REACTIONS  #
+##############
+#
+
+# initiation
+SequenceBinding DnaA bound_DnaA DnaA_BS
+ChemicalReaction free_DNAP -1 bound_DnaA -1 DNAP_fork 1 used_DnaA 1 rates 1 0
+
+# elongation
+DoubleStrandLoading DNAP_fork dNTP_loading_fork stalled_DNAP_fork
+ChemicalReaction loaded_DNAP_fork -1 PPi 1 translocating_DNAP_fork 1 rates 1 0
+Translocation translocating_DNAP_fork DNAP_fork stalled_DNAP_fork 1 10
+
+DoubleStrandRecruitment DNAP_fork free_DNAP DNAP 1000
+DoubleStrandLoading DNAP dNTP_loading stalled_DNAP
+ChemicalReaction loaded_DNAP -1 PPi 1 translocating_DNAP 1 rates 1 0
+Translocation translocating_DNAP DNAP stalled_DNAP 1 10
+
+ChemicalReaction stalled_DNAP -1 free_DNAP 1 rates 1 0
+ChemicalReaction stalled_DNAP_fork -1 free_DNAP 1 rates 1 0

@@ -1,0 +1,49 @@
+
+# dummy chemical used to count the total number of mRNAs synthesized
+FreeChemical rna_tracker
+
+######################
+#       UNITS        #
+######################
+#
+FreeChemical RNAP 1000
+
+# initiation
+FreeChemical SigA 1000
+FreeChemical RNAP_SigA
+BoundChemical bound_RNAP_SigA
+BoundChemical stable_RNAP_SigA
+
+# elongation
+FreeChemical Mg2+ 1000
+BoundChemical loaded_RNAP
+LoadingTable NTP_loading A ATP loaded_RNAP 50e-4, C CTP loaded_RNAP 50e-4, G GTP loaded_RNAP 50e-4, T UTP loaded_RNAP 50e-4
+BoundChemical stable_RNAP
+BoundChemical stalled_RNAP
+BoundChemical empty_RNAP
+BoundChemical translocating_RNAP
+
+# termination
+FreeChemical NutA 100
+
+######################
+#     REACTIONS      #
+######################
+#
+
+# initiation
+ChemicalReaction RNAP -1 SigA -1 RNAP_SigA 1 rates 1 1
+SequenceBinding RNAP_SigA bound_RNAP_SigA promoter_SigA
+ChemicalReaction bound_RNAP_SigA -1 stable_RNAP_SigA 1 rates 1 0
+ChemicalReaction stable_RNAP_SigA -1 stable_RNAP 1 SigA 1 rates 1 0
+
+# elongation
+ProductLoading stable_RNAP NTP_loading
+ChemicalReaction loaded_RNAP -1 Mg2+ -2 translocating_RNAP 1 PPi 1 Mg2+ 2 rates 500 0
+Translocation translocating_RNAP stable_RNAP stalled_RNAP 1 50 hairpin
+
+# termination
+# this reaction releases the real RNA synthesized by the RNAP
+Release stalled_RNAP empty_RNAP stable_RNAP rnas 100
+# rna_tracker is a dummy chemical used to count the total number of rnas
+ChemicalReaction empty_RNAP -1 NutA -1 NutA 1 RNAP 1 rna_tracker 1 rates 100 0

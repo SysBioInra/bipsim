@@ -1,0 +1,29 @@
+
+FreeChemical aa_A 
+FreeChemical aa_C 
+FreeChemical aa_D 
+FreeChemical aa_E 
+FreeChemical aa_F 
+FreeChemical aa_G 
+FreeChemical aa_H 
+FreeChemical aa_I 
+FreeChemical aa_K 
+FreeChemical aa_L 
+FreeChemical aa_M 
+FreeChemical aa_N 
+FreeChemical aa_P 
+FreeChemical aa_Q 
+FreeChemical aa_R 
+FreeChemical aa_S 
+FreeChemical aa_T 
+FreeChemical aa_V 
+FreeChemical aa_W 
+FreeChemical aa_Y 
+
+CompositionTable protein_composition A aa_A, C aa_C, D aa_D, E aa_E, F aa_F, G aa_G, H aa_H, I aa_I, K aa_K, L aa_L, M aa_M, N aa_N, P aa_P, Q aa_Q, R aa_R, S aa_S, T aa_T, V aa_V, W aa_W, Y aa_Y 
+
+TransformationTable rna2protein UUU F, UUC F, UUA L, UUG L, CUU L, CUC L, CUA L, CUG L, AUU I, AUC I, AUA I, AUG M, GUU V, GUC V, GUA V, GUG V, UCU S, UCC S, UCA S, UCG S, CCU P, CCC P, CCA P, CCG P, ACU T, ACC T, ACA T, ACG T, GCU A, GCC A, GCA A, GCG A, UAU Y, UAC Y, CAU H, CAC H, CAA Q, CAG Q, AAU N, AAC N, AAA K, AAG K, GAU D, GAC D, GAA E, GAG E, UGU C, UGC C, UGG W, CGU R, CGC R, CGA R, CGG R, AGU S, AGC S, AGA R, AGG R, GGU G, GGC G, GGA G, GGG G 
+
+ProductTable proteins rna2protein 
+
+TerminationSite stop_codon U1 150 150
