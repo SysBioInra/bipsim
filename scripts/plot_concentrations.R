@@ -1,16 +1,18 @@
 
-plot_concentrations = function (data, toplot, filename = "", leg = TRUE) {
-    if (filename != "") { pdf (filename, width=7, height=5); }
+plot_concentrations = function(time, concentrations, filename = "", leg = "") {
+    if (filename != "") { pdf(filename, width=7, height=5); }
 
-    colors = rainbow (length (toplot))
-    plot_range = c(min(data[toplot]), max(data[toplot]))
+    time = t(time); concentrations = t(concentrations);
+    nb_lines = dim(concentrations)[1];
+    colors = rainbow(nb_lines)
+    plot_range = c(min(concentrations), max(concentrations))
 
-    plot (t(data ['time']), t(data [toplot[1]]), type = "l", col = colors[1], ylim = plot_range, xlab = "time", ylab = "Number of molecules", );
+    plot(time, concentrations[1,], type = "l", col = colors[1], ylim = plot_range, xlab = "time", ylab = "Number of molecules");
 
-    if (length(toplot) > 1)
-        for (i in 2:length(toplot))
-            lines (t(data ['time']), t(data [toplot[i]]), col=colors[i]);
+    if (nb_lines> 1)
+        for (i in 2:nb_lines)
+            lines(time, concentrations[i,], col=colors[i]);
 
-    if (leg == TRUE) { legend ("topright", legend=toplot, col=colors, lty=1) }
+    if (leg != "") { legend("topright", legend=leg, col=colors, lty=1) }
     if (filename != "") { dev.off(); }
 }

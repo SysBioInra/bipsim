@@ -13,7 +13,6 @@ FreeChemical SigA 1000
 FreeChemical RNAP_SigA
 BoundChemical bound_RNAP_SigA
 BoundChemical stable_RNAP_SigA
-FreeChemical SigB 1000
 
 # elongation
 FreeChemical Mg2+ 1000

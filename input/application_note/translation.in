@@ -335,5 +335,5 @@ ChemicalReaction empty_ribosome -1 protein_tracker 1 30S 1 50S 1 RF 1 rates 150 
 
 # small molecule turnover
 ChemicalReaction EFP -1 GTP -1 EFPa 1 rates 1 1
-ChemicalReaction EFP -1 GDP -1 EFPd 1 rates 1 10
+ChemicalReaction EFP -1 GDP -1 EFPd 1 rates 0.1 10
 ChemicalReaction EFTud -1 GTP -1 EFTua 1 GDP 1 rates 1 0
