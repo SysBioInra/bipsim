@@ -29,9 +29,7 @@ FINAL_TIME 600
 #   INPUT_FILES path/to/file1 path/to/file2 etc.
 ################################################################################
 
-INPUT_FILES input/proteins.in input/rnas.in input/dna.in input/transcription.in input/metabolites.in input/translation.in input/replication.in 
-
-# input/injections.in
+INPUT_FILES input/proteins.in input/rnas.in input/dna.in input/transcription.in input/metabolites.in input/translation.in input/replication.in input/injection2.in
 
 
 ################################################################################
@@ -40,7 +38,7 @@ INPUT_FILES input/proteins.in input/rnas.in input/dna.in input/transcription.in 
 #   OUTPUT_DIR path/to/output/directory
 ################################################################################
 
-OUTPUT_DIR output/normal
+OUTPUT_DIR output/injection2
 
 ################################################################################
 # OUTPUT STEP

@@ -3,10 +3,10 @@ FreeChemical Tcn
 BoundChemical 70STcn 
 
 # reactions 
-ChemicalReaction 70S -1 Tcn -1 70STcn 1 rates 5e-3 1
+ChemicalReaction 70S -1 Tcn -1 70STcn 1 rates 1e-3 1
 
 # tetracyclin injection
-event 200 ADD Tcn 2000
+event 200 ADD Tcn 20000
 
 # successive purifications
 event 400 SET Tcn 0
