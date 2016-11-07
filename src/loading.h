@@ -172,7 +172,7 @@ class DoubleStrandLoading: public Loading
 //
 inline void Loading::handle_volume_change (double volume)
 {
-  _volume_constant = 1 / (volume * volume);
+  _volume_constant = 1 / volume;
 }
 
 inline BoundUnit& Loading::random_unit (void) const

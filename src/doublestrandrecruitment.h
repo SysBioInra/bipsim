@@ -105,7 +105,7 @@ class DoubleStrandRecruitment : public Reaction
 //
 inline void DoubleStrandRecruitment::handle_volume_change (double volume)
 {
-  _volume_constant = _rate / (volume * volume);
+  _volume_constant = _rate / volume;
 }
 
 #endif // DOUBLE_STRAND_RECRUITMENT_H

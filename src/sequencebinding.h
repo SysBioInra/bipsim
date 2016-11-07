@@ -125,7 +125,7 @@ public:
 //
 inline void SequenceBinding::handle_volume_change (double volume)
 {
-  _volume_constant = 1 / (volume * volume);
+  _volume_constant = 1 / volume;
 }
 
 #endif // BINDING_H

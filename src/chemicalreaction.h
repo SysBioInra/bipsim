@@ -156,8 +156,8 @@ ChemicalReaction::contribution (int number, int order)
 
 inline void ChemicalReaction::handle_volume_change (double volume)
 {
-  _forward_constant = _k_1 / pow (volume, _forward_order);
-  _backward_constant = _k_m1 / pow (volume, _backward_order);
+  _forward_constant = _k_1 / pow (volume, _forward_order-1);
+  _backward_constant = _k_m1 / pow (volume, _backward_order-1);
 }
 
 inline bool ChemicalReaction::is_forward_reaction_valid (void)

@@ -120,7 +120,7 @@ public:
 //
 inline void Release::handle_volume_change (double volume)
 {
-  _volume_constant = _rate / volume;
+  // no volume dependency: _volume_constant = _rate;
 }
 
 #endif // RELEASE_H

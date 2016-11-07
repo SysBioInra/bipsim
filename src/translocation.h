@@ -134,7 +134,7 @@ inline bool Translocation::is_reaction_possible (void) const
 
 inline void Translocation::handle_volume_change (double volume)
 {
-  _volume_constant = _rate / volume;
+  // no volume dependency: _volume_constant = _rate;
 }
 
 #endif // TRANSLOCATION_H
