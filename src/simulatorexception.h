@@ -2,7 +2,7 @@
 
 /**
  * @file simulatorexception.h
- * @brief Header for the DependencyException class.
+ * @brief Header for the DependencyException and FormatException classes.
  * 
  * @authors Marc Dinh, Stephan Fischer
  */
@@ -47,8 +47,8 @@ class DependencyException : public std::exception
    * @param unknown_reference Name of the reference that could not be found.
    */
   DependencyException (const std::string& unknown_reference)
-    : _reference (unknown_reference)
-    { 
+    : _msg (unknown_reference + " (unknown reference)")
+    {
     }
 
   // Not needed for this class (use of compiler-generated versions)
@@ -77,11 +77,7 @@ class DependencyException : public std::exception
    * @brief Accessor to error message.
    * @return Error message indicating reference that could not be found.
    */
-  virtual const char* what() const throw()
-  {
-    std::string msg = _reference + " (unknown reference)";
-    return msg.c_str();
-  }
+  virtual const char* what() const throw() { return _msg.c_str(); }
 
 private:
   // ============
@@ -89,7 +85,7 @@ private:
   // ============
   //
   /** @brief Reference that was not found. */
-  std::string _reference;
+  std::string _msg;
 
   // =================
   //  Private Methods

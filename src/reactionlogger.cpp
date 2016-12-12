@@ -73,7 +73,7 @@ void ReactionLogger::log (double simulation_time)
   std::sort(_indices.begin(), _indices.end(), CompareValues (_values));
 
   // print output
-  for (int i = 1; i <= _log_number; ++i)
+  for (int i = 0; i < _log_number; ++i)
     { 
       if (_values [_indices[i]] == 0) { return; }
       _output << "\"" << _reactions[_indices[i]]->name() << "\""

@@ -16,18 +16,59 @@
 //  General Includes
 // ==================
 //
+#include <limits> // std::numeric_limits <int>::max()
 
 // ==================
 //  Project Includes
 // ==================
 //
 #include "builder.h"
+#include "interpreter.h"
 
 // ======================
 //  Forward declarations
 // ======================
 //
 #include "forwarddeclarations.h"
+
+/**
+ * @brief Class recognizing optional order in chemical reactions.
+ */ 
+class OrderMemToken : public Interpreter
+{
+ public:
+  /**
+   * @brief Constructor.
+   * @param Vector in which orders are going to be stored.
+   */
+  OrderMemToken (std::vector<int>& orders)
+    : _orders (orders)
+    {}
+
+  // redefined from Interpreter
+  bool match (InputLine& input)
+  {
+    int order_read;
+    Rule order_format (TagToken("order") + IntToken(order_read));
+    // if optional keyword "order" cannot be found, initialize order
+    // to NO_ORDER
+    if (order_format.match (input))
+      {
+	_orders.push_back (order_read); return true;
+      }
+    else
+      { _orders.push_back (NO_ORDER); return true; }
+  }
+
+  // redefined from Interpreter
+  Interpreter* clone (void) const { return new OrderMemToken (*this); }
+
+  static const int NO_ORDER; 
+    
+ private:
+  std::vector<int>& _orders;
+};
+
 
 /**
  * @brief Abstract class creating Reactions from text input.
@@ -70,12 +111,14 @@ class ChemicalReactionBuilder : public ReactionBuilder
  private:
   /** @brief Affect chemicals to free, bound reactant or bound product. */
   void parse_chemicals (const std::vector <std::string>& names, 
-			const std::vector <int>& stoichiometries);
+			const std::vector <int>& stoichiometries,
+			const std::vector <int>& orders);
 
   // format and values read
   Rule _format;
   std::vector <std::string> _chemical_names;
-  std::vector <int> _stoichiometries_read, _stoichiometries, _orders;
+  std::vector <int> _stoichiometries_read, _stoichiometries,
+    _orders_read, _orders;
   std::vector <FreeChemical*> _free_chemicals;
   double _k_1 , _k_m1;
   BoundChemical* _bound_reactant, * _bound_product;

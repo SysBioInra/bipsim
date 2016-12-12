@@ -42,6 +42,8 @@
 //  Constructors/Destructors
 // ==========================
 //
+const int OrderMemToken::NO_ORDER = std::numeric_limits<int>::max();
+
 ReactionBuilder::ReactionBuilder (CellState& cell_state)
   : Builder (cell_state)
 {}
@@ -50,7 +52,8 @@ ChemicalReactionBuilder::ChemicalReactionBuilder (CellState& cell_state)
   : ReactionBuilder (cell_state)
   , _format (TagToken ("ChemicalReaction")
 	     + Iteration (MemToken <std::string> (_chemical_names) 
-			  + MemToken <int> (_stoichiometries_read), 
+			  + MemToken <int> (_stoichiometries_read)
+			  + OrderMemToken (_orders_read), 
 			  TagToken ("rates"))
 	     + DblToken (_k_1) + DblToken (_k_m1))
 {
@@ -116,9 +119,11 @@ DoubleStrandRecruitmentBuilder (CellState& cell_state)
 //
 bool ChemicalReactionBuilder::match (InputLine& text_input)
 {
-  _chemical_names.clear(); _stoichiometries_read.clear(); 
+  _chemical_names.clear(); _stoichiometries_read.clear();
+  _orders_read.clear();
   if (!_format.match (text_input)) { return false; }
-  parse_chemicals (_chemical_names, _stoichiometries_read);
+
+  parse_chemicals (_chemical_names, _stoichiometries_read, _orders_read);
 
   ChemicalReaction* reaction = 
     new ChemicalReaction (_free_chemicals, _stoichiometries, _orders,
@@ -259,21 +264,33 @@ bool DoubleStrandRecruitmentBuilder::match (InputLine& text_input)
 //
 void ChemicalReactionBuilder::
 parse_chemicals (const std::vector <std::string>& names, 
-		 const std::vector <int>& stoichiometries)
+		 const std::vector <int>& stoichiometries,
+		 const std::vector <int>& orders)
 {
   _bound_product = 0; _bound_reactant = 0;
   _free_chemicals.clear(); _stoichiometries.clear(); _orders.clear();
   for (int i = 0; i < names.size(); ++i)
     {
-      int stoichiometry = stoichiometries [i];
-      Chemical* chemical = &(fetch <Chemical> (names [i]));
+      int stoichiometry = stoichiometries[i];
+      int order = orders[i];
+      if ((order != OrderMemToken::NO_ORDER) &&
+	  ((order < 0) || (order > abs(stoichiometry))))
+	{
+	  throw ParserException ("Order of a chemical must be positive and "
+				 "smaller or equal to stoichiometry of the"
+				 " chemical");
+	}
+      Chemical* chemical = &(fetch <Chemical> (names[i]));
       FreeChemical* free_chemical = dynamic_cast <FreeChemical*> (chemical);
       BoundChemical* bound_chemical = dynamic_cast <BoundChemical*> (chemical);
       if (free_chemical)
 	{
 	  _free_chemicals.push_back (free_chemical);
 	  _stoichiometries.push_back (stoichiometry);
-	  _orders.push_back (abs (stoichiometry));
+	  if (order == OrderMemToken::NO_ORDER)
+	    { _orders.push_back (abs(stoichiometry)); }
+	  else
+	    { _orders.push_back (order); }
 	}
       else if (bound_chemical && (stoichiometry == 1) && (_bound_product == 0))
 	{ 
