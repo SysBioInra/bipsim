@@ -5,14 +5,19 @@
 function extract_data
 %% files
 input_file = 'Model_bsub.mat';
+input_dna_file = 'Full_DNA_seq_bsub.mat';
 gene_file = 'genes.txt';
 TU_file = 'TUs.txt';
+dna_file = 'dna.txt';
 
 data = load(input_file);
+dna = load(input_dna_file);
 
 %% extract information
 extract_genes(data, gene_file);
 extract_TUs(data, TU_file);
+output = fopen(dna_file,'w');
+fprintf('%s\n', dna.tab_seq);
 
 %% Secondary functions
 
