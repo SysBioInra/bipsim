@@ -17,7 +17,7 @@ dna = load(input_dna_file);
 extract_genes(data, gene_file);
 extract_TUs(data, TU_file);
 output = fopen(dna_file,'w');
-fprintf('%s\n', dna.tab_seq);
+fprintf(output, '%s\n', dna.tab_seq);
 
 %% Secondary functions
 
