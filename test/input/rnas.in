@@ -31,12 +31,12 @@ TerminationSite hairpin antisensedna 4191740 4191740
 ChemicalSequence U21 product_of sensedna 25657 30363 rnas
 BindingSite promoter_SigA sensedna 25622 25658 10 1 25657
 TerminationSite hairpin sensedna 30364 30364
-ChemicalSequence U24 product_of sensedna 26779 31771 rnas
-BindingSite promoter_SigA sensedna 26744 26780 10 1 26779
-TerminationSite hairpin sensedna 31772 31772
 ChemicalSequence U23 product_of sensedna 26383 30539 rnas
 BindingSite promoter_SigA sensedna 26348 26384 10 1 26383
 TerminationSite hairpin sensedna 30540 30540
+ChemicalSequence U24 product_of sensedna 26779 31771 rnas
+BindingSite promoter_SigA sensedna 26744 26780 10 1 26779
+TerminationSite hairpin sensedna 31772 31772
 ChemicalSequence U25 product_of sensedna 28383 30495 rnas
 BindingSite promoter_SigA sensedna 28348 28384 10 1 28383
 TerminationSite hairpin sensedna 30496 30496
@@ -229,6 +229,9 @@ TerminationSite hairpin antisensedna 4057526 4057526
 ChemicalSequence U109 product_of antisensedna 4055013 4056425 rnas
 BindingSite promoter_SigEF antisensedna 4054978 4055014 10 1 4055013
 TerminationSite hairpin antisensedna 4056426 4056426
+ChemicalSequence U110 product_of sensedna 160675 171580 rnas
+BindingSite promoter_SigA sensedna 160640 160676 10 1 160675
+TerminationSite hairpin sensedna 171581 171581
 ChemicalSequence U111 product_of sensedna 176926 178519 rnas
 BindingSite promoter_SigA sensedna 176891 176927 10 1 176926
 TerminationSite hairpin sensedna 178520 178520
@@ -393,6 +396,9 @@ BindingSite promoter_SigA sensedna 273171 273207 10 1 273206
 TerminationSite hairpin sensedna 277035 277035
 ChemicalSequence U179 product_of sensedna 275603 277034 rnas
 BindingSite promoter_SigA sensedna 275568 275604 10 1 275603
+TerminationSite hairpin sensedna 277035 277035
+ChemicalSequence U180 product_of sensedna 276792 277034 rnas
+BindingSite promoter_SigA sensedna 276757 276793 10 1 276792
 TerminationSite hairpin sensedna 277035 277035
 ChemicalSequence U182 product_of sensedna 278308 279994 rnas
 BindingSite promoter_SigA sensedna 278273 278309 10 1 278308
@@ -891,6 +897,9 @@ BindingSite promoter_SigA sensedna 525662 525698 10 1 525697
 TerminationSite hairpin sensedna 529497 529497
 ChemicalSequence U378 product_of sensedna 527912 530310 rnas
 BindingSite promoter_SigA sensedna 527877 527913 10 1 527912
+TerminationSite hairpin sensedna 530311 530311
+ChemicalSequence U380 product_of sensedna 528616 530310 rnas
+BindingSite promoter_SigA sensedna 528581 528617 10 1 528616
 TerminationSite hairpin sensedna 530311 530311
 ChemicalSequence U381 product_of antisensedna 3684053 3686255 rnas
 BindingSite promoter_SigA antisensedna 3684018 3684054 10 1 3684053
@@ -1594,14 +1603,17 @@ TerminationSite hairpin sensedna 946932 946932
 ChemicalSequence U672 product_of sensedna 945324 946799 rnas
 BindingSite promoter_Sig- sensedna 945289 945325 10 1 945324
 TerminationSite hairpin sensedna 946800 946800
+ChemicalSequence U676 product_of sensedna 951433 954494 rnas
+BindingSite promoter_SigA sensedna 951398 951434 10 1 951433
+TerminationSite hairpin sensedna 954495 954495
+ChemicalSequence U677 product_of sensedna 953196 953311 rnas
+BindingSite promoter_SigA sensedna 953161 953197 10 1 953196
+TerminationSite hairpin sensedna 953312 953312
 ChemicalSequence U679 product_of antisensedna 3261409 3262286 rnas
 BindingSite promoter_SigWXY antisensedna 3261374 3261410 10 1 3261409
 TerminationSite hairpin antisensedna 3262287 3262287
 ChemicalSequence U680 product_of sensedna 954257 954494 rnas
 BindingSite promoter_SigGF sensedna 954222 954258 10 1 954257
-TerminationSite hairpin sensedna 954495 954495
-ChemicalSequence U676 product_of sensedna 951433 954494 rnas
-BindingSite promoter_SigA sensedna 951398 951434 10 1 951433
 TerminationSite hairpin sensedna 954495 954495
 ChemicalSequence U681 product_of antisensedna 3260735 3261054 rnas
 BindingSite promoter_SigEF antisensedna 3260700 3260736 10 1 3260735
@@ -2311,6 +2323,9 @@ TerminationSite hairpin sensedna 1262302 1262302
 ChemicalSequence U966 product_of antisensedna 2952961 2954796 rnas
 BindingSite promoter_SigA antisensedna 2952926 2952962 10 1 2952961
 TerminationSite hairpin antisensedna 2954797 2954797
+ChemicalSequence U967 product_of sensedna 1262721 1264501 rnas
+BindingSite promoter_SigA sensedna 1262686 1262722 10 1 1262721
+TerminationSite hairpin sensedna 1264502 1264502
 ChemicalSequence U970 product_of antisensedna 2950586 2952702 rnas
 BindingSite promoter_SigA antisensedna 2950551 2950587 10 1 2950586
 TerminationSite hairpin antisensedna 2952703 2952703
@@ -3907,9 +3922,9 @@ TerminationSite hairpin antisensedna 2069795 2069795
 ChemicalSequence U1624 product_of sensedna 2148630 2150037 rnas
 BindingSite promoter_SigK sensedna 2148595 2148631 10 1 2148630
 TerminationSite hairpin sensedna 2150038 2150038
-ChemicalSequence U1628 product_of sensedna 2151585 2152045 rnas
+ChemicalSequence U1628 product_of sensedna 2151585 2152029 rnas
 BindingSite promoter_SigK sensedna 2151550 2151586 10 1 2151585
-TerminationSite hairpin sensedna 2152046 2152046
+TerminationSite hairpin sensedna 2152030 2152030
 ChemicalSequence U1629 product_of antisensedna 2063308 2063521 rnas
 BindingSite promoter_SigK antisensedna 2063273 2063309 10 1 2063308
 TerminationSite hairpin antisensedna 2063522 2063522
@@ -3931,18 +3946,18 @@ TerminationSite hairpin sensedna 2158828 2158828
 ChemicalSequence U1634 product_of antisensedna 2056407 2057320 rnas
 BindingSite promoter_SigA antisensedna 2056372 2056408 10 1 2056407
 TerminationSite hairpin antisensedna 2057321 2057321
-ChemicalSequence U1635 product_of antisensedna 2053808 2055626 rnas
+ChemicalSequence U1635 product_of antisensedna 2053808 2054064 rnas
 BindingSite promoter_SigA antisensedna 2053773 2053809 10 1 2053808
-TerminationSite hairpin antisensedna 2055627 2055627
-ChemicalSequence U1642 product_of antisensedna 2028271 2053499 rnas
+TerminationSite hairpin antisensedna 2054065 2054065
+ChemicalSequence U1642 product_of antisensedna 2028271 2050896 rnas
 BindingSite promoter_SigA antisensedna 2028236 2028272 10 1 2028271
-TerminationSite hairpin antisensedna 2053500 2053500
-ChemicalSequence U1644 product_of antisensedna 2027442 2053499 rnas
+TerminationSite hairpin antisensedna 2050897 2050897
+ChemicalSequence U1644 product_of antisensedna 2027442 2050918 rnas
 BindingSite promoter_SigA antisensedna 2027407 2027443 10 1 2027442
-TerminationSite hairpin antisensedna 2053500 2053500
-ChemicalSequence U1647 product_of antisensedna 2024912 2053499 rnas
+TerminationSite hairpin antisensedna 2050919 2050919
+ChemicalSequence U1647 product_of antisensedna 2024912 2050918 rnas
 BindingSite promoter_Sig- antisensedna 2024877 2024913 10 1 2024912
-TerminationSite hairpin antisensedna 2053500 2053500
+TerminationSite hairpin antisensedna 2050919 2050919
 ChemicalSequence U1638 product_of sensedna 2169773 2169959 rnas
 BindingSite promoter_SigK sensedna 2169738 2169774 10 1 2169773
 TerminationSite hairpin sensedna 2169960 2169960
@@ -4051,9 +4066,9 @@ TerminationSite hairpin antisensedna 1943074 1943074
 ChemicalSequence U1695 product_of antisensedna 1938144 1942148 rnas
 BindingSite promoter_SigA antisensedna 1938109 1938145 10 1 1938144
 TerminationSite hairpin antisensedna 1942149 1942149
-ChemicalSequence U1696 product_of antisensedna 1935878 1937814 rnas
+ChemicalSequence U1696 product_of antisensedna 1935878 1938086 rnas
 BindingSite promoter_SigA antisensedna 1935843 1935879 10 1 1935878
-TerminationSite hairpin antisensedna 1937815 1937815
+TerminationSite hairpin antisensedna 1938087 1938087
 ChemicalSequence U1697 product_of sensedna 2279919 2282535 rnas
 BindingSite promoter_SigA sensedna 2279884 2279920 10 1 2279919
 TerminationSite hairpin sensedna 2282536 2282536
@@ -4948,8 +4963,8 @@ TerminationSite hairpin antisensedna 1492841 1492841
 ChemicalSequence U2053 product_of sensedna 2725783 2726751 rnas
 BindingSite promoter_SigA sensedna 2725748 2725784 10 1 2725783
 TerminationSite hairpin sensedna 2726752 2726752
-ChemicalSequence U2056 product_of antisensedna 1482860 1484644 rnas
-BindingSite promoter_SigEF antisensedna 1482825 1482861 10 1 1482860
+ChemicalSequence U2056 product_of antisensedna 1482882 1484644 rnas
+BindingSite promoter_SigEF antisensedna 1482847 1482883 10 1 1482882
 TerminationSite hairpin antisensedna 1484645 1484645
 ChemicalSequence U2057 product_of antisensedna 1482026 1482642 rnas
 BindingSite promoter_SigA antisensedna 1481991 1482027 10 1 1482026
@@ -5284,6 +5299,9 @@ TerminationSite hairpin sensedna 2898748 2898748
 ChemicalSequence U2194 product_of sensedna 2898882 2899766 rnas
 BindingSite promoter_SigB sensedna 2898847 2898883 10 1 2898882
 TerminationSite hairpin sensedna 2899767 2899767
+ChemicalSequence U2195 product_of antisensedna 1315678 1315788 rnas
+BindingSite promoter_SigA antisensedna 1315643 1315679 10 1 1315678
+TerminationSite hairpin antisensedna 1315789 1315789
 ChemicalSequence U2196 product_of antisensedna 1313618 1315788 rnas
 BindingSite promoter_SigA antisensedna 1313583 1313619 10 1 1313618
 TerminationSite hairpin antisensedna 1315789 1315789
@@ -5809,6 +5827,9 @@ TerminationSite hairpin sensedna 3163705 3163705
 ChemicalSequence U2399 product_of antisensedna 1043916 1051872 rnas
 BindingSite promoter_Sig- antisensedna 1043881 1043917 10 1 1043916
 TerminationSite hairpin antisensedna 1051873 1051873
+ChemicalSequence U2401 product_of antisensedna 1036675 1043651 rnas
+BindingSite promoter_SigA antisensedna 1036640 1036676 10 1 1036675
+TerminationSite hairpin antisensedna 1043652 1043652
 ChemicalSequence U2402 product_of sensedna 3179072 3179884 rnas
 BindingSite promoter_SigA sensedna 3179037 3179073 10 1 3179072
 TerminationSite hairpin sensedna 3179885 3179885
@@ -6313,8 +6334,8 @@ TerminationSite hairpin sensedna 3412095 3412095
 ChemicalSequence U2608 product_of antisensedna 800334 803482 rnas
 BindingSite promoter_SigA antisensedna 800299 800335 10 1 800334
 TerminationSite hairpin antisensedna 803483 803483
-ChemicalSequence U2610 product_of antisensedna 797281 800220 rnas
-BindingSite promoter_SigA antisensedna 797246 797282 10 1 797281
+ChemicalSequence U2610 product_of antisensedna 797210 800220 rnas
+BindingSite promoter_SigA antisensedna 797175 797211 10 1 797210
 TerminationSite hairpin antisensedna 800221 800221
 ChemicalSequence U2611 product_of sensedna 3418419 3419421 rnas
 BindingSite promoter_SigA sensedna 3418384 3418420 10 1 3418419
@@ -6403,6 +6424,9 @@ TerminationSite hairpin antisensedna 765876 765876
 ChemicalSequence U2650 product_of antisensedna 760233 765875 rnas
 BindingSite promoter_SigA antisensedna 760198 760234 10 1 760233
 TerminationSite hairpin antisensedna 765876 765876
+ChemicalSequence U2643 product_of antisensedna 764476 764894 rnas
+BindingSite promoter_SigA antisensedna 764441 764477 10 1 764476
+TerminationSite hairpin antisensedna 764895 764895
 ChemicalSequence U2648 product_of antisensedna 760978 764894 rnas
 BindingSite promoter_SigB antisensedna 760943 760979 10 1 760978
 TerminationSite hairpin antisensedna 764895 764895
@@ -6553,6 +6577,9 @@ TerminationSite hairpin antisensedna 673429 673429
 ChemicalSequence U2712 product_of sensedna 3544599 3545831 rnas
 BindingSite promoter_SigK sensedna 3544564 3544600 10 1 3544599
 TerminationSite hairpin sensedna 3545832 3545832
+ChemicalSequence U2713 product_of antisensedna 669595 670030 rnas
+BindingSite promoter_SigA antisensedna 669560 669596 10 1 669595
+TerminationSite hairpin antisensedna 670031 670031
 ChemicalSequence U2715 product_of sensedna 3546188 3546827 rnas
 BindingSite promoter_SigA sensedna 3546153 3546189 10 1 3546188
 TerminationSite hairpin sensedna 3546828 3546828
@@ -6667,24 +6694,24 @@ TerminationSite hairpin antisensedna 591670 591670
 ChemicalSequence U2765 product_of antisensedna 588586 591669 rnas
 BindingSite promoter_SigA antisensedna 588551 588587 10 1 588586
 TerminationSite hairpin antisensedna 591670 591670
-ChemicalSequence U2766 product_of antisensedna 584691 588468 rnas
+ChemicalSequence U2766 product_of antisensedna 584691 588454 rnas
 BindingSite promoter_SigA antisensedna 584656 584692 10 1 584691
-TerminationSite hairpin antisensedna 588469 588469
-ChemicalSequence U2768 product_of antisensedna 584000 588468 rnas
+TerminationSite hairpin antisensedna 588455 588455
+ChemicalSequence U2768 product_of antisensedna 584000 588454 rnas
 BindingSite promoter_SigH antisensedna 583965 584001 10 1 584000
-TerminationSite hairpin antisensedna 588469 588469
-ChemicalSequence U2769 product_of antisensedna 583878 588468 rnas
+TerminationSite hairpin antisensedna 588455 588455
+ChemicalSequence U2769 product_of antisensedna 583878 588454 rnas
 BindingSite promoter_SigEF antisensedna 583843 583879 10 1 583878
-TerminationSite hairpin antisensedna 588469 588469
-ChemicalSequence U2770 product_of antisensedna 580816 588468 rnas
+TerminationSite hairpin antisensedna 588455 588455
+ChemicalSequence U2770 product_of antisensedna 580816 588454 rnas
 BindingSite promoter_SigD antisensedna 580781 580817 10 1 580816
-TerminationSite hairpin antisensedna 588469 588469
-ChemicalSequence U2771 product_of antisensedna 580710 588468 rnas
+TerminationSite hairpin antisensedna 588455 588455
+ChemicalSequence U2771 product_of antisensedna 580710 588454 rnas
 BindingSite promoter_SigA antisensedna 580675 580711 10 1 580710
-TerminationSite hairpin antisensedna 588469 588469
-ChemicalSequence U2773 product_of antisensedna 579597 588468 rnas
+TerminationSite hairpin antisensedna 588455 588455
+ChemicalSequence U2773 product_of antisensedna 579597 588454 rnas
 BindingSite promoter_SigD antisensedna 579562 579598 10 1 579597
-TerminationSite hairpin antisensedna 588469 588469
+TerminationSite hairpin antisensedna 588455 588455
 ChemicalSequence U2775 product_of antisensedna 574506 579561 rnas
 BindingSite promoter_SigD antisensedna 574471 574507 10 1 574506
 TerminationSite hairpin antisensedna 579562 579562
@@ -7399,6 +7426,9 @@ TerminationSite hairpin sensedna 3987886 3987886
 ChemicalSequence U3062 product_of antisensedna 226628 227680 rnas
 BindingSite promoter_SigA antisensedna 226593 226629 10 1 226628
 TerminationSite hairpin antisensedna 227681 227681
+ChemicalSequence U3065 product_of antisensedna 225885 226741 rnas
+BindingSite promoter_SigK antisensedna 225850 225886 10 1 225885
+TerminationSite hairpin antisensedna 226742 226742
 ChemicalSequence U3064 product_of sensedna 3989185 3990044 rnas
 BindingSite promoter_SigA sensedna 3989150 3989186 10 1 3989185
 TerminationSite hairpin sensedna 3990045 3990045
@@ -7450,11 +7480,11 @@ TerminationSite hairpin antisensedna 211320 211320
 ChemicalSequence U3084 product_of antisensedna 209555 211319 rnas
 BindingSite promoter_SigD antisensedna 209520 209556 10 1 209555
 TerminationSite hairpin antisensedna 211320 211320
-ChemicalSequence U3083 product_of sensedna 4005731 4006945 rnas
-BindingSite promoter_SigGF sensedna 4005696 4005732 10 1 4005731
-TerminationSite hairpin sensedna 4006946 4006946
 ChemicalSequence U3082 product_of sensedna 4005513 4006945 rnas
 BindingSite promoter_SigA sensedna 4005478 4005514 10 1 4005513
+TerminationSite hairpin sensedna 4006946 4006946
+ChemicalSequence U3083 product_of sensedna 4005731 4006945 rnas
+BindingSite promoter_SigGF sensedna 4005696 4005732 10 1 4005731
 TerminationSite hairpin sensedna 4006946 4006946
 ChemicalSequence U3085 product_of antisensedna 207885 208620 rnas
 BindingSite promoter_SigWXY antisensedna 207850 207886 10 1 207885
@@ -7771,8 +7801,8 @@ TerminationSite hairpin antisensedna 30727 30727
 ChemicalSequence U3214 product_of sensedna 4185817 4187174 rnas
 BindingSite promoter_SigA sensedna 4185782 4185818 10 1 4185817
 TerminationSite hairpin sensedna 4187175 4187175
-ChemicalSequence U3216 product_of antisensedna 26414 27926 rnas
-BindingSite promoter_SigA antisensedna 26379 26415 10 1 26414
+ChemicalSequence U3216 product_of antisensedna 21464 27926 rnas
+BindingSite promoter_SigA antisensedna 21429 21465 10 1 21464
 TerminationSite hairpin antisensedna 27927 27927
 ChemicalSequence U3217 product_of sensedna 4189369 4189645 rnas
 BindingSite promoter_SigA sensedna 4189334 4189370 10 1 4189369
