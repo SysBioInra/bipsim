@@ -2,14 +2,16 @@
 import csv
 
 class TU:
-    def __init__(self, name, start, end, sense, sigma, genes):
+    def __init__(self, name, position, sequence, sense, sigma, genes):
         self.name = name
-        self.start = start
-        self.end = end
+        self.start = position[0]
+        self.end = position[1]
         self.sense = sense
         self.sigma = sigma
         self.annotation_genes = genes
         self.genes = []
+        self.composition = [sequence.count('t'), sequence.count('g'), \
+                            sequence.count('c'), sequence.count('a')]
 
     def associate_genes(self, genes, log_stream):
         not_found = self.annotation_genes[:]
@@ -51,7 +53,7 @@ class TU:
             + str(self.end) + ']'
 
 class TUReader:
-    def __init__(self, input_stream, dna_length):
+    def __init__(self, input_stream, dna):
         parser = csv.reader(input_stream, delimiter = '\t')
         header = parser.next()
         name_index = header.index('name')
@@ -61,23 +63,33 @@ class TUReader:
         sigma_index = header.index('sigma')
         gene_index = header.index('genes')
         self.TUs = []
+        dna_length = len(dna)
+        c_dna = ''
+        for l in reversed(dna):
+            if l == 'a': c_dna += 't'
+            elif l == 'c': c_dna += 'g'
+            elif l == 'g': c_dna += 'c'
+            elif l == 't': c_dna += 'a'
+            else:
+                print 'DNA invalid...'
         for r in parser:
             name = r[name_index]
-            start = int(r[start_index])
-            end = int(r[end_index])
-            assert(start<end)
+            position = [int(r[start_index]), int(r[end_index])]
+            assert(position[0] < position[1])
             sense = int(r[sense_index])
-            if sense != 1:
-                tmp = dna_length-end+1
-                end = dna_length-start+1
-                start = tmp
-            assert(start<end)
+            if sense == 1:
+                sequence = dna[position[0]-1:position[1]-1]
+            else:
+                tmp = dna_length - position[1] + 1
+                position[1] = dna_length - position[0] + 1
+                position[0] = tmp
+                sequence = c_dna[position[0]-1:position[1]-1]
             sigma = r[sigma_index]
             if (r[gene_index] != ''):
                 genes = map(str.strip, r[gene_index].split(','))
             else:
                 genes = []
-            self.TUs.append(TU(name, start, end, sense, sigma, genes))
+            self.TUs.append(TU(name, position, sequence, sense, sigma, genes))
 
     def associate_genes(self, genes, log_stream = None):        
         # remove orphan genes
@@ -125,39 +137,3 @@ class TUReader:
             if not(found):
                 orphans.append(g)
         return orphans
-                
-    def write_simulator_input(self, TU_stream, protein_stream):
-        k_on = '10'
-        k_off = '1'
-        for TU in self.TUs:
-            # handle TU output
-            if TU.sense == 1:
-                parent = 'sensedna'
-            else:
-                parent = 'antisensedna'
-            lines = 'ChemicalSequence ' + TU.name + \
-                    ' product_of ' + parent + ' ' + \
-                    str(TU.start) + ' ' + str(TU.end) + \
-                    ' rnas\n'
-            promoter_start = TU.start - 35
-            promoter_end = TU.start + 1
-            reading_frame = TU.start
-            lines += 'BindingSite promoter_' + TU.sigma + \
-                     ' ' + parent + ' ' + str(promoter_start) + \
-                     ' ' + str(promoter_end) + ' 10 1 ' + \
-                     str(reading_frame) + '\n'
-            terminator = TU.end + 1
-            lines += 'TerminationSite hairpin ' + parent + \
-                     ' ' + str(terminator) + ' ' + str(terminator) + '\n'
-            TU_stream.write(lines)
-            # handle protein output
-            for g in TU.genes:
-                name = g.name + '_' + g.bsu
-                lines = 'ChemicalSequence ' + name + ' ' \
-                        + 'product_of ' + TU.name + ' ' \
-                        + str(g.start) + ' ' + str(g.end-3) + ' proteins\n'
-                lines += 'BindingSite RBS ' + TU.name + ' ' \
-                         + str(g.rbs_start) + ' ' + str(g.rbs_end) + ' ' \
-                         + k_on + ' ' + k_off + ' ' \
-                         + str(g.start) + '\n'
-                protein_stream.write(lines)
