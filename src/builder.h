@@ -109,6 +109,7 @@ class Builder
   /**
    * @brief Convert next token in line to positive integer.
    * @param text_input InputLine being read.
+   * @return Value read.
    * @throw ParserException Integer read is not positive.
    */
   int read_initial_quantity (InputLine& text_input) const;

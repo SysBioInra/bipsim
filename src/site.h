@@ -100,6 +100,7 @@ public:
    * @brief Check whether site overlaps with a given segment.
    * @param a Start of the segment to check against.
    * @param b End of the segment to check against.
+   * @return True if segment overlaps site.
    */
   bool overlaps (int a, int b) const;   
 

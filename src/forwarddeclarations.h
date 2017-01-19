@@ -67,6 +67,7 @@ class BindingSite;
 class BindingSiteFamily;
 class Site;
 class SiteFamily;
+class Switch;
 
 // sequence related classes
 class ChemicalSequence;

@@ -39,7 +39,7 @@ class OrderMemToken : public Interpreter
  public:
   /**
    * @brief Constructor.
-   * @param Vector in which orders are going to be stored.
+   * @param orders Vector in which orders are going to be stored.
    */
   OrderMemToken (std::vector<int>& orders)
     : _orders (orders)
@@ -53,9 +53,7 @@ class OrderMemToken : public Interpreter
     // if optional keyword "order" cannot be found, initialize order
     // to NO_ORDER
     if (order_format.match (input))
-      {
-	_orders.push_back (order_read); return true;
-      }
+      { _orders.push_back (order_read); return true; }
     else
       { _orders.push_back (NO_ORDER); return true; }
   }
@@ -63,6 +61,7 @@ class OrderMemToken : public Interpreter
   // redefined from Interpreter
   Interpreter* clone (void) const { return new OrderMemToken (*this); }
 
+  /** @brief Value used to indicate that no order was given by user. */
   static const int NO_ORDER; 
     
  private:
@@ -84,7 +83,7 @@ class ReactionBuilder : public Builder
 
   /**
    * @brief Store reaction in cell state and name it.
-   * @param Reaction Reaction to store.
+   * @param reaction Reaction to store.
    * @param name Name of reaction.
    */
   void store_and_name (Reaction* reaction, const std::string& name)

@@ -81,8 +81,9 @@ class TemplateFilter : public BoundUnitFilter
   //
   // redefined from BoundUnitFilter
   /**
-   * Draw a random unit weighted by loading rate associated with its
-   * template. 
+   * @brief Pick random unit weighted by loading rate associated with its
+   * template.
+   * @return Random BoundUnit stored by the filter.
    */
   BoundUnit& random_unit (void) const;
   

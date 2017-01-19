@@ -21,6 +21,7 @@
 #include "site.h"
 #include "bindingsite.h"
 #include "bindingsitefamily.h"
+#include "switch.h"
 
 #include "producttable.h"
 #include "transformationtable.h"
@@ -47,6 +48,20 @@ TerminationSiteBuilder::TerminationSiteBuilder (CellState& cell_state)
   : Builder (cell_state)
   , _format (TagToken ("TerminationSite") + StrToken (_family_name)
 	     + StrToken (_location_name) + IntToken (_start) + IntToken (_end))
+{
+}
+
+SwitchBuilder::SwitchBuilder (CellState& cell_state)
+  : Builder (cell_state)
+  , _format (TagToken ("Switch") + StrToken (_name)
+	     + StrToken (_input) + StrToken (_output))
+{
+}
+
+SwitchSiteBuilder::SwitchSiteBuilder (CellState& cell_state)
+  : Builder (cell_state)
+  , _format (TagToken ("SwitchSite") + StrToken (_location)
+	     + IntToken (_position) + StrToken (_switch_name))
 {
 }
 
@@ -114,6 +129,26 @@ bool TerminationSiteBuilder::match (InputLine& text_input)
 			 location.relative (_end));
   location.add_termination_site (*site);
   store (site);
+  return true;
+}
+
+bool SwitchBuilder::match (InputLine& text_input)
+{
+  if (_format.match (text_input) == false) { return false; }
+  BoundChemical& input = fetch <BoundChemical> (_input);
+  BoundChemical& output = fetch <BoundChemical> (_output);
+  Switch* switch_ = new Switch (input, output);
+  store (switch_, _name);
+  input.add_switch (*switch_);
+  return true;
+}
+
+bool SwitchSiteBuilder::match (InputLine& text_input)
+{
+  if (_format.match (text_input) == false) { return false; }
+  ChemicalSequence& location = fetch <ChemicalSequence> (_location);
+  Switch& switch_ = fetch <Switch> (_switch_name);
+  location.add_switch_site (location.relative (_position), switch_.id());
   return true;
 }
 

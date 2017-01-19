@@ -79,6 +79,49 @@ class TerminationSiteBuilder : public Builder
 };
 
 /**
+ * @brief Class creating Switch from text input.
+ */
+class SwitchBuilder : public Builder
+{
+ public:
+  /**
+   * @brief Constructor.
+   * @param cell_state Object in which entities are stored and fetched from.
+   */
+  SwitchBuilder (CellState& cell_state);
+
+  // redefined from Builder
+  bool match (InputLine& text_input);
+
+ private:
+  // format and values read
+  Rule _format; 
+  std::string _name, _input, _output;
+};
+
+/**
+ * @brief Class creating a SwitchSite from text input.
+ */
+class SwitchSiteBuilder : public Builder
+{
+ public:
+  /**
+   * @brief Constructor.
+   * @param cell_state Object in which entities are stored and fetched from.
+   */
+  SwitchSiteBuilder (CellState& cell_state);
+
+  // redefined from Builder
+  bool match (InputLine& text_input);
+
+ private:
+  // format and values read
+  Rule _format; 
+  std::string _location, _switch_name;
+  int _position;
+};
+
+/**
  * @brief Class creating FreeChemical from text input.
  */
 class FreeChemicalBuilder : public Builder

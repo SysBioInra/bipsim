@@ -37,7 +37,7 @@ class ReactionLogger : public Logger
   /**
    * @brief Constructor.
    * @param filename File where output should be written.
-   * @param reaction Reactionss to log.
+   * @param reactions Reactionss to log.
    * @param overwrite True if existing file should be overwritten 
    *  (true by default).
    */

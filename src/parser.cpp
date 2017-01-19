@@ -36,6 +36,8 @@ Parser::Parser (CellState& cell_state, EventHandler& event_handler)
   // reactant builder
   _builders.push_back (new BindingSiteBuilder (cell_state));
   _builders.push_back (new TerminationSiteBuilder (cell_state));
+  _builders.push_back (new SwitchBuilder (cell_state));
+  _builders.push_back (new SwitchSiteBuilder (cell_state));
   _builders.push_back (new FreeChemicalBuilder (cell_state));
   _builders.push_back (new BoundChemicalBuilder (cell_state));
   _builders.push_back (new ChemicalSequenceBuilder (cell_state));

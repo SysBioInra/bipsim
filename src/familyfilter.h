@@ -31,8 +31,7 @@
 
 /**
  * @brief Class filtering bound units belonging to a specific BindingSiteFamily.
- *
- * FamilyFilter only stores bound units belonging to a specific 
+ * @details FamilyFilter only stores bound units belonging to a specific 
  * BindingSiteFamily. It inherits BoundUnitFilter.
  */
 class FamilyFilter : public BoundUnitFilter

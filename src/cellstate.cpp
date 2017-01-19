@@ -45,6 +45,7 @@ void CellState::store (SimulatorInput* element,
   // try to store element
   if (not (_site_handler.store (element, name)
 	   || _site_family_handler.store (element, name)
+	   || _switch_handler.store (element, name)
 	   || _chemical_handler.store (element, name)
 	   || _reaction_handler.store (element, name)
 	   || _bireaction_handler.store (element, name)

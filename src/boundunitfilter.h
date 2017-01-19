@@ -76,7 +76,8 @@ class BoundUnitFilter
   // ============================
   //
   /**
-   * @brief Pick random unit according to filter criteria
+   * @brief Pick random unit according to filter criteria.
+   * @return Random BoundUnit stored by the filter.
    */
   virtual BoundUnit& random_unit (void) const = 0;
 

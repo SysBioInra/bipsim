@@ -3,7 +3,6 @@
 /**
  * @file boundchemical.cpp
  * @brief Implementation of the BoundChemical class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
 
@@ -22,7 +21,7 @@
 #include "bindingsite.h"
 #include "boundunit.h"
 #include "boundunitfilter.h"
-
+#include "switch.h"
 
 // ==========================
 //  Constructors/Destructors
@@ -44,6 +43,19 @@ BoundChemical::BoundChemical (void)
 
 void BoundChemical::add (BoundUnit& unit)
 {
+  // before adding, check if unit is on a switch
+  for (std::list <Switch*>::iterator switch_it = _switches.begin();
+       switch_it != _switches.end(); ++switch_it)
+    {
+      if (unit.location().is_switch_site (unit.reading_frame(), (*switch_it)->id()))
+	  {
+	    // apply switch and return
+	    (*switch_it)->output().add (unit);
+	    return;
+	  }
+    }
+
+  // no switching happened: add unit to collection
   Chemical::add (1);
   { _units.add (&unit); }
   for (std::list <BoundUnitFilter*>::iterator filter_it = _filters.begin();
@@ -58,6 +70,14 @@ void BoundChemical::remove (BoundUnit& unit)
   for (std::list <BoundUnitFilter*>::iterator filter_it = _filters.begin();
        filter_it != _filters.end(); ++filter_it)
     { (*filter_it)->remove (unit); }
+}
+
+void BoundChemical::add_switch (Switch& switch_)
+{
+  /** @pre Input of switch must be current BoundChemical. */
+  REQUIRE (&switch_.input() == this);
+  
+  _switches.push_back (&switch_);
 }
 
 // ============================

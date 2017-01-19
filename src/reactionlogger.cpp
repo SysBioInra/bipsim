@@ -48,10 +48,23 @@ ReactionLogger::ReactionLogger (const std::string& filename,
 //  Public Methods - Commands
 // ===========================
 //
+/**
+ * @brief Convenience class used to sort vectors.
+ */
 class CompareValues
 {
 public:
+  /**
+   * @brief Constructor.
+   * @param v Vector to sort.
+   */
   CompareValues (const std::vector <long long>& v) : _v (v) {}
+  /**
+   * @brief Method used to sort.
+   * @param i Index of first value.
+   * @param j Index of second value.
+   * @return True if value with index i is greater than value with index j.
+   */
   bool operator() (int i, int j) { return _v[i] > _v[j]; }
 private:
   const std::vector <long long>& _v;

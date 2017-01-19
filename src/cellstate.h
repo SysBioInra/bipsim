@@ -133,6 +133,8 @@ private:
   Handler <Site> _site_handler;
   /** @brief Handler containing site family information. */
   Handler <SiteFamily> _site_family_handler;
+  /** @brief Handler containing switch information. */
+  Handler <Switch> _switch_handler;
   /** @brief Handler containing chemical information. */
   Handler <Chemical> _chemical_handler;
   /** @brief Handler containing reaction information. */
@@ -164,6 +166,7 @@ private:
 
 #include "site.h"
 #include "sitefamily.h"
+#include "switch.h"
 
 #include "chemical.h"
 
@@ -193,6 +196,9 @@ inline T* CellState::find (const std::string& name) const
 
   SiteFamily* sf = _site_family_handler.find (name);
   if (sf != 0) { return dynamic_cast <T*> (sf); }
+
+  Switch* sw = _switch_handler.find (name);
+  if (sw != 0) { return dynamic_cast <T*> (sw); }
 
   Chemical* c = _chemical_handler.find (name);
   if (c != 0) { return dynamic_cast <T*> (c); }

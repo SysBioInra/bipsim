@@ -98,6 +98,7 @@ class Rule : public Interpreter
   /**
    * @brief Assignment operator.
    * @param other Rule to copy.
+   * @return Copy of Rule instance provided.
    */
   Rule& operator= (const Rule& other) 
     {
@@ -290,6 +291,7 @@ class Iteration : public Interpreter
   /**
    * @brief Assignment operator.
    * @param other Iteration to copy.
+   * @return Copy of Iteration instance provided.
    */
   Iteration& operator= (const Iteration& other) 
     {

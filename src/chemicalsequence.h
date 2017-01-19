@@ -103,6 +103,13 @@ public:
   void add_termination_site (const Site& termination_site);
 
   /**
+   * @brief Add switching site on sequence.
+   * @param position Position of the switch site.
+   * @param identifier Identifier of the Switch.
+   */
+  void add_switch_site (int position, int identifier);
+
+  /**
    * @brief Declare a sequence to which the sequence is appariated.
    * @param sequence Antisense sequence to which the sequence is appariated.
    */
@@ -159,6 +166,14 @@ public:
   bool is_termination_site 
     (int position, 
      const std::vector <const SiteFamily*>& termination_site_families) const;
+
+  /**
+   * @brief Returns whether there is a switch site at given position.
+   * @param position Relative position to look at.
+   * @param identifier Identifier of a Switch.
+   * @return True if position is a switch site associated with given Switch.
+   */
+  bool is_switch_site (int position, int identifier) const;
 
   /**
    * @brief Returns length of sequence.
@@ -240,6 +255,9 @@ private:
 
   /** @brief Termination sites on the sequence. */
   std::map <int, std::list <const SiteFamily*> > _termination_sites;
+
+  /** @brief Switch sites on the sequence. */
+  std::map <int, std::list <int> > _switch_sites;
 
   /** @brief Appariated sequence. */
   ChemicalSequence* _appariated_sequence;

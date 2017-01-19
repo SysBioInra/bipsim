@@ -91,7 +91,7 @@ class RateManager
   //
   /**
    * @brief Accessor to total reaction rate.
-   * @brief Total reaction rate (as of last update).
+   * @return Total reaction rate (as of last update).
    */
   double total_rate (void) const;
 

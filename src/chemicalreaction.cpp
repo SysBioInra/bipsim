@@ -62,11 +62,11 @@ ChemicalReaction::ChemicalReaction (const std::vector<FreeChemical*>& chemicals,
   CRFree new_free;
   for (int i = 0; i < chemicals.size(); ++i)
     {
-      /** @pre Stoichiometries must be nonzero. */
-      REQUIRE (stoichiometry [i] != 0);
       /** @pre Orders must be positive. */
       REQUIRE (orders [i] >= 0);
-
+      // ignore chemicals with zero stoichiometry
+      if (stoichiometry[i] == 0) { continue; }
+      
       new_free.chemical = chemicals[i];
       new_free.order = orders[i];
       if (stoichiometry [i] < 0)
@@ -74,14 +74,16 @@ ChemicalReaction::ChemicalReaction (const std::vector<FreeChemical*>& chemicals,
 	  new_free.stoichiometry = -stoichiometry[i];
 	  _free_forward.push_back (new_free);
 	  _forward_order += orders[i];
-	  _forward_reactants.push_back (chemicals[i]);
+	  if (orders[i] != 0)
+	    { _forward_reactants.push_back (chemicals[i]); }
 	}
       else
 	{
 	  new_free.stoichiometry = stoichiometry[i];
 	  _free_backward.push_back (new_free);
 	  _backward_order += orders[i];
-	  _backward_reactants.push_back (chemicals[i]);
+	  if (orders[i] != 0)
+	    { _backward_reactants.push_back (chemicals[i]); }
 	}
     }
 
@@ -105,8 +107,8 @@ ChemicalReaction::ChemicalReaction (const std::vector<FreeChemical*>& chemicals,
 //
 void ChemicalReaction::perform_forward (void)
 {
-  /** @pre There must be enough chemicals left to perform the reaction. */
-  REQUIRE (is_forward_reaction_valid() && is_forward_reaction_possible());
+  // if there are not enough reactants, do nothing
+  if (!is_forward_reaction_possible()) { return; }
   
   // update free chemical numbers
   std::vector <CRFree>::iterator it = _free_forward.begin();
@@ -121,14 +123,18 @@ void ChemicalReaction::perform_forward (void)
       BoundUnit& unit = _forward_bound->random_unit();
       _forward_bound->remove (unit);
       if (_backward_bound != 0) { _backward_bound->add (unit); }
-      else { BoundUnitFactory::instance().free(unit); }
+      else
+	{
+	  unit.location().unbind_unit (unit.first(), unit.last());
+	  BoundUnitFactory::instance().free(unit);
+	}
     }
 }
 
 void ChemicalReaction::perform_backward (void)
 {
-  /** @pre There must be enough chemicals left to perform the reaction. */
-  REQUIRE (is_backward_reaction_valid() && is_backward_reaction_possible());
+  // if there are not enough reactants, do nothing
+  if (!is_backward_reaction_possible()) { return; }
   
   // update free chemical numbers
   std::vector <CRFree>::iterator it = _free_forward.begin();
@@ -143,7 +149,11 @@ void ChemicalReaction::perform_backward (void)
       BoundUnit& unit = _backward_bound->random_unit();
       _backward_bound->remove (unit);
       if (_forward_bound != 0) { _forward_bound->add (unit); }
-      else { BoundUnitFactory::instance().free(unit); }
+      else
+	{
+	  unit.location().unbind_unit (unit.first(), unit.last());
+	  BoundUnitFactory::instance().free(unit);
+	}
     }
 }
 

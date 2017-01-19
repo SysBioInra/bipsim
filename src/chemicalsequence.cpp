@@ -112,7 +112,12 @@ void ChemicalSequence::add_termination_site (const Site& termination_site)
   int first = termination_site.first();
   int last = termination_site.last();
   for (int i = first; i <= last; i++)
-    { _termination_sites [i].push_back (&termination_site.family()); }
+    { _termination_sites[i].push_back (&termination_site.family()); }
+}
+
+void ChemicalSequence::add_switch_site (int position, int identifier)
+{
+  _switch_sites[position].push_back (identifier);
 }
 
 void ChemicalSequence::watch_site (BindingSite& site)
@@ -176,6 +181,27 @@ bool ChemicalSequence::is_termination_site
     }
 
   // if we arrive here, all the tests were non conclusive
+  return false;
+}
+
+bool ChemicalSequence::is_switch_site (int position, int identifier) const
+{
+  /** @pre Position must be within sequence. */
+  REQUIRE (is_out_of_bounds (position, position) == false); 
+  
+  const std::map <int, std::list<int> >::const_iterator 
+    local_sites = _switch_sites.find (position);
+
+  // no switch site on current position
+  if (local_sites == _switch_sites.end()) { return false; }
+
+  // loop through switch sites on current position and check id
+  const std::list<int>& id_list = local_sites->second;
+  for (std::list<int>::const_iterator id_it = id_list.begin();
+       id_it != id_list.end(); id_it++)
+    {
+      if (*id_it == identifier) { return true; }
+    }
   return false;
 }
 

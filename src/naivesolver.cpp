@@ -85,5 +85,5 @@ void NaiveSolver::schedule_next_reaction (void)
 		<< _rate_manager->total_rate() << ")." << std::endl;
       _next_reaction = 0;
       _next_reaction_time = INFINITY;
-    }  
+    }
 }

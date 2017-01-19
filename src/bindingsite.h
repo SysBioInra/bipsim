@@ -89,7 +89,10 @@ public:
   //  Public Methods - Accessors
   // ============================
   //
-  // Redefined from Site
+  /**
+   * @brief Family accessor.
+   * @return Reference to BindingSiteFamily the site belongs to.
+   */
   const BindingSiteFamily& family (void) const;
 
   /**

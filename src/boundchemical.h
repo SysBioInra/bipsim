@@ -80,6 +80,12 @@ public:
    */
   void remove_filter (BoundUnitFilter& filter);
 
+  /**
+   * @brief Add switch.
+   * @param switch_ Switch changing a bound chemical's nature.
+   */
+  void add_switch (Switch& switch_);
+
   // ============================
   //  Public Methods - Accessors
   // ============================
@@ -107,6 +113,9 @@ public:
 
   /** @brief Filters used to organize units. */
   std::list <BoundUnitFilter*> _filters;    
+
+  /** @brief Switch that can be applied on units. */
+  std::list <Switch*> _switches;
 };
 
 // ======================
