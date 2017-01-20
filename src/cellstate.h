@@ -130,9 +130,9 @@ private:
   // ============
   //
   /** @brief Handler containing site information. */
-  Handler <Site> _site_handler;
+  Handler <BindingSite> _site_handler;
   /** @brief Handler containing site family information. */
-  Handler <SiteFamily> _site_family_handler;
+  Handler <BindingSiteFamily> _site_family_handler;
   /** @brief Handler containing switch information. */
   Handler <Switch> _switch_handler;
   /** @brief Handler containing chemical information. */
@@ -164,8 +164,8 @@ private:
 //
 #include "simulatorexception.h"
 
-#include "site.h"
-#include "sitefamily.h"
+#include "bindingsite.h"
+#include "bindingsitefamily.h"
 #include "switch.h"
 
 #include "chemical.h"
@@ -191,10 +191,10 @@ inline int CellState::number_chemicals (void) const
 template <class T>
 inline T* CellState::find (const std::string& name) const
 {
-  Site* s = _site_handler.find (name);
+  BindingSite* s = _site_handler.find (name);
   if (s != 0) { return dynamic_cast <T*> (s); }
 
-  SiteFamily* sf = _site_family_handler.find (name);
+  BindingSiteFamily* sf = _site_family_handler.find (name);
   if (sf != 0) { return dynamic_cast <T*> (sf); }
 
   Switch* sw = _switch_handler.find (name);

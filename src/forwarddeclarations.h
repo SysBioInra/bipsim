@@ -1,9 +1,9 @@
 
-/*! \file forwarddeclarations.h
- * \authors Marc Dinh, Stephan Fischer
- * \brief Contains forward declarations of all project classes.
- * 
- * This file contains all forward declarations of type class
+/**
+ * @file forwarddeclarations.h
+ * @authors Marc Dinh, Stephan Fischer
+ * @brief Contains forward declarations of all project classes.
+ * @details This file contains all forward declarations of type class
  * ExampleClass;. It should be included in every project class, 
  * it allows for mutual inclusions (A is an attribute of B and B an attribute
  * of A) in a clean way without the need for additional code.
@@ -65,8 +65,6 @@ class FreeChemical;
 // site classes
 class BindingSite;
 class BindingSiteFamily;
-class Site;
-class SiteFamily;
 class Switch;
 
 // sequence related classes

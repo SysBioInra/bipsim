@@ -18,7 +18,6 @@
 //
 #include "reactantbuilder.h"
 
-#include "site.h"
 #include "bindingsite.h"
 #include "bindingsitefamily.h"
 #include "switch.h"
@@ -41,13 +40,6 @@ BindingSiteBuilder::BindingSiteBuilder (CellState& cell_state)
 	     + StrToken (_location_name) + IntToken (_start) + IntToken (_end)
 	     + DblToken (_k_on) + DblToken (_k_off))
   , _rf_format (_reading_frame)
-{
-}
-
-TerminationSiteBuilder::TerminationSiteBuilder (CellState& cell_state)
-  : Builder (cell_state)
-  , _format (TagToken ("TerminationSite") + StrToken (_family_name)
-	     + StrToken (_location_name) + IntToken (_start) + IntToken (_end))
 {
 }
 
@@ -117,18 +109,6 @@ bool BindingSiteBuilder::match (InputLine& text_input)
 			  location, location.relative (_start),
 			  location.relative (_end), _k_on, _k_off, 
 			  _reading_frame));
-  return true;
-}
-
-bool TerminationSiteBuilder::match (InputLine& text_input)
-{
-  if (_format.match (text_input) == false) { return false; }
-  ChemicalSequence& location = fetch <ChemicalSequence> (_location_name);
-  Site* site = new Site (fetch_or_create <SiteFamily> (_family_name), 
-			 location, location.relative (_start), 
-			 location.relative (_end));
-  location.add_termination_site (*site);
-  store (site);
   return true;
 }
 

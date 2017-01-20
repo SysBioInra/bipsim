@@ -24,7 +24,7 @@
 //  Constructors/Destructors
 // ==========================
 //
-const double UpdatedRateGroup::INF = 
+const double UpdatedRateGroup::NO_REACTIONS_LEFT = 
     std::numeric_limits<double>::infinity();
 
 UpdatedRateGroup::UpdatedRateGroup (const SimulationParams& params,
@@ -59,7 +59,7 @@ void UpdatedRateGroup::schedule_next_reaction (double current_time)
   else
     {
       _next_reaction = 0;
-      _next_reaction_time = INF;
+      _next_reaction_time = NO_REACTIONS_LEFT;
     }
 }
 

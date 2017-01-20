@@ -30,14 +30,12 @@
 Translocation::Translocation (BoundChemical& processive_chemical,
 			      BoundChemical& chemical_after_step,
 			      BoundChemical& stalled_form,
-			      int step_size, double rate,
-			      const std::vector <const SiteFamily*>& families)
+			      int step_size, double rate)
   : _processive_chemical (processive_chemical)
   , _chemical_after_step (chemical_after_step)
   , _stalled_form (stalled_form)
   , _step_size (step_size)
   , _rate (rate)
-  , _termination_sites (families)
   , _volume_constant (rate)
 {
   /** @pre Rate must be positive. */
@@ -95,13 +93,7 @@ void Translocation::do_reaction (void)
       std::cerr << "out of bounds\n"; 
 #endif
     }
-
   
-  // check whether the unit has reached a termination site
-  if (unit.location().is_termination_site
-      (unit.reading_frame(), _termination_sites)) 
-    { stall = true; }
-
   // replace the chemical with its stalled form or its form after step
   _processive_chemical.remove (unit);
   if (stall == false) { _chemical_after_step.add (unit); }

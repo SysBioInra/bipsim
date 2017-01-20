@@ -77,8 +77,7 @@ TranslocationBuilder::TranslocationBuilder (CellState& cell_state)
   : ReactionBuilder (cell_state)
   , _format (TagToken ("Translocation") + StrToken (_processive_name)
 	     + StrToken (_step_name) + StrToken (_stalled_name) 
-	     + IntToken (_step_size) + DblToken (_rate)
-	     + Iteration (MemToken <std::string> (_family_names)))
+	     + IntToken (_step_size) + DblToken (_rate))
 {
 }
 
@@ -159,17 +158,11 @@ bool DoubleStrandLoadingBuilder::match (InputLine& text_input)
 
 bool TranslocationBuilder::match (InputLine& text_input)
 {
-  _family_names.clear();
   if (!_format.match (text_input)) { return false; }
-  std::vector <const SiteFamily*> families;
-  for (std::vector <std::string>::iterator it = _family_names.begin();
-       it != _family_names.end(); ++it)
-    { families.push_back (&(fetch <SiteFamily> (*it))); }
-
   store_and_name (new Translocation (fetch <BoundChemical> (_processive_name), 
 				     fetch <BoundChemical> (_step_name), 
 				     fetch <BoundChemical> (_stalled_name),
-				     _step_size, _rate, families),
+				     _step_size, _rate),
 		  text_input.line());
   return true;
 }

@@ -3,7 +3,6 @@
 /**
  * @file naivesolver.h
  * @brief Header for the NaiveSolver class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
 
@@ -112,7 +111,7 @@ inline double NaiveSolver::next_reaction_time (void) const
 inline Reaction& NaiveSolver::next_reaction (void) const
 {
   /** @pre A reaction must be scheduled (i.e. next reaction time is finite). */
-  REQUIRE (_next_reaction_time != INFINITY);
+  REQUIRE (_next_reaction_time != NO_REACTION_LEFT);
   return *_next_reaction;
 }
 

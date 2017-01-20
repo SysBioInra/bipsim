@@ -15,20 +15,21 @@
 // ==================
 //
 #include <vector> // std::vector
+#include <string> // std::string
 #include <map> // std::map
 
-// ======================
-//  Forward declarations
-// ======================
+// ==================
+//  Project Includes
+// ==================
 //
+#include "simulatorexception.h"
 #include "forwarddeclarations.h"
 #include "macros.h"
 
 /**
  * @brief Generic class for storing elements.
  * @tparam T Type of objects to store (must derive from SimulatorInput).
- *
- * Handler stores elements created on the heap with their
+ * @details Handler stores elements created on the heap with their
  * user defined name (optional). They are automatically destroyed
  * when the handler is destroyed. Elements can be accessed by name
  * or with an integer identifier that is automatically assigned at
@@ -80,8 +81,9 @@ class Handler
   {
     if (_name_to_id.find (name) != _name_to_id.end())
       {
-	// TODO throw error
-	std::cerr << "CREATION ERROR: identifier " << name << " already used.\n";
+	std::string msg = "CREATION ERROR: identifier "
+	  + name + " already used.\n";
+	throw ParserException(msg);
       }
     
     // see if this type can be handled

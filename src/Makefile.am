@@ -57,9 +57,7 @@ libsrc_a_SOURCES += \
 libsrc_a_SOURCES += \
 	bindingsite.cpp bindingsite.h \
 	bindingsitefamily.cpp bindingsitefamily.h \
-	site.cpp site.h \
-	switch.h \
-	sitefamily.h
+	switch.h
 
 # sequence related sources
 libsrc_a_SOURCES += \

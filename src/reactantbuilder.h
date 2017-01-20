@@ -1,7 +1,7 @@
 
 /**
  * @file reactantbuilder.h
- * @brief Header for the BindingSiteBuilder, TerminationSiteBuilder,
+ * @brief Header for the BindingSiteBuilder, SwitchBuilder, SwitchSiteBuilder,
  *  FreeChemicalBuilder, BoundChemicalBuilder, ChemicalSequenceBuilder,
  *  DoubleStrandBuilder classes.
  * @authors Marc Dinh, Stephan Fischer
@@ -54,28 +54,6 @@ class BindingSiteBuilder : public Builder
   std::string _family_name, _location_name;
   int _start, _end, _reading_frame;
   double _k_on, _k_off; 
-};
-
-/**
- * @brief Class creating TerminationSite from text input.
- */
-class TerminationSiteBuilder : public Builder
-{
- public:
-  /**
-   * @brief Constructor.
-   * @param cell_state Object in which entities are stored and fetched from.
-   */
-  TerminationSiteBuilder (CellState& cell_state);
-
-  // redefined from Builder
-  bool match (InputLine& text_input);
-
- private:
-  // format and values read
-  Rule _format; 
-  std::string _family_name, _location_name;
-  int _start, _end;
 };
 
 /**

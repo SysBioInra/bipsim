@@ -1,12 +1,9 @@
 
-
 /**
  * @file simulatorexception.h
  * @brief Header for the DependencyException and FormatException classes.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -29,8 +26,8 @@
 
 /**
  * @brief Exception class used to indicate dependency issues.
- *
- * DependencyException should be raised whenever a dependency (to another unit
+ * @details DependencyException should be raised whenever a dependency 
+ * (to another unit
  * or reaction) cannot be resolved, as the unit or reaction does not seem to
  * exist.
  */
@@ -96,14 +93,12 @@ private:
 
 /**
  * @brief Exception class for parsing related errors.
- *
- * ParserException defines generic exceptions for parsing issues. User can
- * specify any message he wants as the message error.
+ * @details ParserException defines generic exceptions for parsing issues.
+ * User can specify any message he wants as the message error.
  */
 class ParserException : public std::exception
 {
  public:
-
   // ==========================
   //  Constructors/Destructors
   // ==========================

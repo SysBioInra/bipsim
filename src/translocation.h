@@ -1,12 +1,9 @@
 
-
 /**
  * @file translocation.h
  * @authors Marc Dinh, Stephan Fischer
  * @brief Header for the Translocation class.
- * 
  */
-
 
 // Multiple include protection
 //
@@ -46,17 +43,14 @@ class Translocation : public Reaction
    * @param processive_chemical Polymerase that does the translocation.
    * @param chemical_after_step Chemical after translocation.
    * @param stalled_form BoundChemical that results when the translocating 
-   *  chemical encounters a termination site or end of sequence.
+   *  chemical encounters end of sequence.
    * @param step_size Number of bases processed at each translocation step.
    * @param rate Translocation rate (in step/s).
-   * @param families List of SiteFamily recognized by the translocating 
-   *  chemical as termination sites.
    */
   Translocation (BoundChemical& processive_chemical,
 		 BoundChemical& chemical_after_step,
 		 BoundChemical& stalled_form,
-		 int step_size, double rate,
-		 const std::vector <const SiteFamily*>& families);
+		 int step_size, double rate);
 
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
@@ -98,25 +92,15 @@ class Translocation : public Reaction
   //
   /** @brief Form that translocates. */
   BoundChemical& _processive_chemical;
-
   /** @brief Form after translocation. */
   BoundChemical& _chemical_after_step;
-
-  /**
-   * @brief Form if translocation reached termination site or end of 
-   *  sequence. 
-   */
+  /** @brief Form if translocation reached end of sequence. */
   BoundChemical& _stalled_form;
 
   /** @brief Number of bases processed at each translocation step. */
   int _step_size;
-
   /** @brief Translocation rate (in s^-1). */
   double _rate;
-
-  /** @brief The list of termination sites the chemical recognizes. */
-  std::vector <const SiteFamily*> _termination_sites;
-
   /** @brief Volume constant. */
   double _volume_constant;
 };

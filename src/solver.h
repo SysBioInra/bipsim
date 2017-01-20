@@ -2,7 +2,6 @@
 /**
  * @file solver.h
  * @brief Header for the Solver class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
 
@@ -25,8 +24,8 @@
 
 /**
  * @brief Solver class for integrating reactions.
- *
- * The Solver class is a pure abstract class storing a list of reactions,
+ * @details The Solver class is a pure abstract class storing a list of 
+ * reactions,
  * computing their rate and performing them in a random order as specified
  * by classes inheriting the Solver class.
  */
@@ -85,7 +84,7 @@ class Solver
 
   /**
    * @brief Accessor to next reaction time.
-   * @return Time of next scheduled reaction or INFINITY if none.
+   * @return Time of next scheduled reaction or NO_REACTION_LEFT if none.
    */
   virtual double next_reaction_time (void) const = 0;
 
@@ -101,7 +100,7 @@ class Solver
   // ==================
   //  
   /** @brief Shortcut for double value representing infinity. */
-  static const double INFINITY;
+  static const double NO_REACTION_LEFT;
   
  private:
   // =================

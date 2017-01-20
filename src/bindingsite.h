@@ -22,16 +22,16 @@
 #include "forwarddeclarations.h"
 #include "config.h"
 #include "macros.h"
-#include "site.h"
+#include "simulatorinput.h"
 
 /**
  * @brief Class that represents binding sites on chemical sequences.
- *
- * The BindingSite class contains two types of information. Each instance
+ * @details The BindingSite class contains two types of information. 
+ * Each instance
  * belongs to a family of binding sites (e.g. Ribosome Binding Site) but also
  * has a specific location along a specific chemical sequence.
  */
-class BindingSite : public Site
+class BindingSite : public SimulatorInput
 {
 public:
 
@@ -48,7 +48,8 @@ public:
    * @param k_on On rate of binding on the site.
    * @param k_off Off rate of unbinding on the site.
    * @param reading_frame Absolute position of the reading frame 
-   *  (if applicable, NO_READING_FRAME by default).
+   *  (NO_READING_FRAME by default). If NO_READING_FRAME is provided,
+   *  reading frame is arbitrarily placed on first base of site.
    */
   BindingSite (BindingSiteFamily& family, ChemicalSequence& location, 
 	       int first, int last, double k_on, double k_off,
@@ -90,6 +91,31 @@ public:
   // ============================
   //
   /**
+   * @brief Site location.
+   * @return ChemicalSequence that carries the site.
+   */
+  ChemicalSequence& location (void) const;
+
+  /**
+   * @brief Accessor to starting position on sequence.
+   * @return First position of site on sequence.
+   */
+  int first (void) const;
+ 
+  /**
+   * @brief Accessor to ending position on sequence.
+   * @return Last position of site on sequence.
+   */
+  int last (void) const;   
+
+  /**
+   * @brief Reading frame accessor.
+   * @return Reading frame on the binding site, BindingSite::NO_READING_FRAME 
+   *  if there is none.
+   */
+  int reading_frame (void) const;
+
+  /**
    * @brief Family accessor.
    * @return Reference to BindingSiteFamily the site belongs to.
    */
@@ -114,11 +140,18 @@ public:
   double binding_rate (void) const;
 
   /**
-   * @brief Reading frame accessor.
-   * @return Reading frame on the binding site, BindingSite::NO_READING_FRAME 
-   *  if there is none.
+   * @brief Accessor to number of available sites.
+   * @return Number of sites currently available.
    */
-  int reading_frame (void) const;
+  int number_available_sites (void) const;
+
+  /**
+   * @brief Check whether site overlaps with a given segment.
+   * @param a Start of the segment to check against.
+   * @param b End of the segment to check against.
+   * @return True if segment overlaps site.
+   */
+  bool overlaps (int a, int b) const;   
   
   // ==================
   //  Public Constants
@@ -141,14 +174,21 @@ public:
   //  Attributes
   // ============
   //
-  /** @brief On-rate constant of the motif. */
-  double _k_on;
-  
-  /** @brief Off-rate constant of the motif. */
-  double _k_off;
-
+  /** @brief Chemical on which the site is located. */
+  ChemicalSequence& _location;
+  /** @brief First position of the site along the sequence. */
+  int _first;
+  /** @brief Last position of site along the sequence. */
+  int _last;
   /** @brief Reading frame position (NO_READING_FRAME if there is none). */
   int _reading_frame;
+
+  /** @brief Family to which the site belongs */
+  BindingSiteFamily& _family;
+  /** @brief On-rate constant of the motif. */
+  double _k_on;
+  /** @brief Off-rate constant of the motif. */
+  double _k_off;
 
   /** @brief Identifier to send when an update occurs. */
   int _update_id;
@@ -160,20 +200,31 @@ public:
 //
 #include "macros.h"
 #include "bindingsitefamily.h"
+#include "chemicalsequence.h"
 
-inline void BindingSite::update (void)
+inline ChemicalSequence& BindingSite::location (void) const
 {
-  static_cast <BindingSiteFamily&> (Site::family()).update (_update_id);  
+  return _location;
 }
- 
-inline void BindingSite::set_update_id (int new_id)
+
+inline int BindingSite::first (void) const
 {
-  _update_id = new_id;
+  return _first;
+}
+
+inline int BindingSite::last (void) const
+{
+  return _last;
+}
+
+inline int BindingSite::reading_frame (void) const
+{
+  return _reading_frame;
 }
 
 inline const BindingSiteFamily& BindingSite::family (void) const
 {
-  return static_cast <const BindingSiteFamily&> (Site::family());
+  return _family;
 }
 
 inline double BindingSite::k_on (void) const
@@ -186,14 +237,32 @@ inline double BindingSite::k_off (void) const
   return _k_off;
 }
 
+inline bool BindingSite::overlaps (int a, int b) const
+{
+  /** @pre a must be smaller or equal to b. */
+  REQUIRE (a <= b);
+  return (((_first <= a) && (_last >= a)) || ((_first >= a) && (b >= _first)));
+}
+
+inline int BindingSite::number_available_sites (void) const
+{
+  return _location.number_available_sites (_first, _last);
+}
+
+inline void BindingSite::update (void)
+{
+  _family.update (_update_id);  
+}
+ 
+inline void BindingSite::set_update_id (int new_id)
+{
+  _update_id = new_id;
+
+}
+
 inline double BindingSite::binding_rate (void) const
 {
   return _k_on * number_available_sites();
-}
-
-inline int BindingSite::reading_frame (void) const
-{
-  return _reading_frame;
 }
 
 

@@ -1,12 +1,9 @@
 
-
 /**
  * @file bindingsitefamily.h
  * @brief Header for the BindingSiteFamily class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -25,7 +22,7 @@
 //
 #include "forwarddeclarations.h"
 #include "reactant.h"
-#include "sitefamily.h"
+#include "simulatorinput.h"
 #include "updatedtotalratevector.h"
 // #include "flyratevector.h"
 
@@ -37,7 +34,7 @@
  * the contribution to binding rates of each site depending on their
  * occupation and affinity.
  */
-class BindingSiteFamily : public Reactant, public SiteFamily
+class BindingSiteFamily : public Reactant, public SimulatorInput
 {
  public:
   // ==========================

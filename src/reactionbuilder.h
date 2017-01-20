@@ -184,7 +184,6 @@ class TranslocationBuilder : public ReactionBuilder
   // format and values read
   Rule _format;
   std::string _processive_name, _step_name, _stalled_name;
-  std::vector <std::string> _family_names;
   int _step_size;
   double _rate;
 };

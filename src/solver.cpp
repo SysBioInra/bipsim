@@ -1,12 +1,9 @@
 
-
 /**
  * @file solver.cpp
  * @brief Implementation of the Solver class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -28,7 +25,8 @@
 //  Constructors/Destructors
 // ==========================
 //
-const double Solver::INFINITY = std::numeric_limits<double>::infinity();
+const double Solver::NO_REACTION_LEFT =
+  std::numeric_limits<double>::infinity();
 
 Solver::Solver (const SimulationParams& params)
   : _t (params.initial_time())
@@ -54,7 +52,7 @@ void Solver::solve (double time_step)
 
 void Solver::perform_next_reaction (void)
 {
-  REQUIRE (next_reaction_time() != INFINITY);
+  REQUIRE (next_reaction_time() != NO_REACTION_LEFT);
   // perform next reaction
   _t = next_reaction_time(); 
   next_reaction().perform();

@@ -74,7 +74,7 @@ class ReactionGroup
   //
   /**
    * @brief Return the next scheduled reaction time.
-   * @return Next reaction time (INFINITY if no reaction left).
+   * @return Next reaction time (NO_REACTION_LEFT if no reaction left).
    */
   virtual double next_reaction_time (void) const = 0;
 

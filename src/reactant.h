@@ -1,12 +1,9 @@
 
-
 /**
  * @file reactant.h
  * @brief Header for the Reactant class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //

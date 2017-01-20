@@ -1,12 +1,9 @@
 
-
 /**
  * @file manualdispatchsolver.cpp
  * @brief Implementation of the ManualDispatchSolver class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // ==================
 //  General Includes
@@ -32,7 +29,7 @@ ManualDispatchSolver (const SimulationParams& params,
 		      const ReactionClassification& classification)
   : Solver (params)
   , _next_reaction (0)
-  , _next_reaction_time (INFINITY)
+  , _next_reaction_time (NO_REACTION_LEFT)
 {
   int number_groups = classification.number_classes();
 
@@ -160,7 +157,7 @@ void ManualDispatchSolver::update_variable_event (void)
   if (it != _event_list.end()) { _event_list.erase (it); }
   
   // we update variable rate groups and keep an event for the next reaction
-  _variable_event.time = INFINITY;
+  _variable_event.time = NO_REACTION_LEFT;
   for (std::vector <UpdatedRateGroup*>::iterator 
 	 it = _updated_rate_groups.begin();
        it != _updated_rate_groups.end(); ++it)

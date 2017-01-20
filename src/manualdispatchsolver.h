@@ -2,7 +2,6 @@
 /**
  * @file manualdispatchsolver.h
  * @brief Header for the ManualDispatchSolver class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
 
@@ -149,7 +148,7 @@ inline double ManualDispatchSolver::next_reaction_time (void) const
 inline Reaction& ManualDispatchSolver::next_reaction (void) const
 {
   /** @pre A reaction must be scheduled (i.e. next reaction time is finite). */
-  REQUIRE (_next_reaction_time != INFINITY);
+  REQUIRE (_next_reaction_time != NO_REACTION_LEFT);
   return *_next_reaction;
 }
 

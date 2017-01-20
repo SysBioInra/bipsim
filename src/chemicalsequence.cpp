@@ -105,16 +105,6 @@ void ChemicalSequence::remove (int quantity)
   _occupation.remove_sequence (quantity);
 }
 
-void ChemicalSequence::add_termination_site (const Site& termination_site)
-{
-  // as a first approximation, we consider that reaching any base of the
-  // termination site sends a termination signal
-  int first = termination_site.first();
-  int last = termination_site.last();
-  for (int i = first; i <= last; i++)
-    { _termination_sites[i].push_back (&termination_site.family()); }
-}
-
 void ChemicalSequence::add_switch_site (int position, int identifier)
 {
   _switch_sites[position].push_back (identifier);
@@ -142,48 +132,6 @@ void ChemicalSequence::set_appariated_sequence (ChemicalSequence& sequence)
 //  Public Methods - Accessors
 // ============================
 //
-bool ChemicalSequence::is_termination_site 
-(int position,
- const std::vector <const SiteFamily*>& termination_site_families) const
-{
-  /** @pre Position must be within sequence. */
-  REQUIRE (is_out_of_bounds (position, position) == false); 
-
-  // if there is no site to check or no termination site at the position 
-  // to enquire
-  if (termination_site_families.size() == 0) { return false; }
-  const std::map <int, std::list <const SiteFamily*> >::const_iterator 
-    local_sites = _termination_sites.find (position);
-  if (local_sites == _termination_sites.end()) { return false; }
-  
-  // we loop through the vector of termination sites to inspect
-  // we place ourselves at the beginnig of the vector
-  std::vector <const SiteFamily*>::const_iterator
-    family_it = termination_site_families.begin();
-  // we get start and end iterator to the list of sites at the current position
-  // on the sequence
-  std::list <const SiteFamily*>::const_iterator
-    local_sites_begin_it = local_sites->second.begin();
-  std::list <const SiteFamily*>::const_iterator
-    local_sites_end_it = local_sites->second.end();
-  // we check whether one of the local sites corresponds to one of the sites to 
-  // inspect
-  while (family_it != termination_site_families.end())
-    {
-      std::list <const SiteFamily*>::const_iterator 
-	local_site = local_sites_begin_it;
-      while (local_site != local_sites_end_it)
-	{
-	  if (*family_it == *local_site) { return true; }
-	  ++local_site;
-	}
-      ++family_it;
-    }
-
-  // if we arrive here, all the tests were non conclusive
-  return false;
-}
-
 bool ChemicalSequence::is_switch_site (int position, int identifier) const
 {
   /** @pre Position must be within sequence. */

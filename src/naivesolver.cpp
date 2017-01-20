@@ -35,7 +35,7 @@ NaiveSolver::NaiveSolver (const SimulationParams& params,
   : Solver (params)
   , _rate_manager (0)
   , _next_reaction (0)
-  , _next_reaction_time (INFINITY)
+  , _next_reaction_time (NO_REACTION_LEFT)
 {
   _rate_manager = params.rate_manager_factory().create (params, reactions);
   schedule_next_reaction();
@@ -84,6 +84,6 @@ void NaiveSolver::schedule_next_reaction (void)
 		<< "(t = " << time() << ", total reaction rate = "
 		<< _rate_manager->total_rate() << ")." << std::endl;
       _next_reaction = 0;
-      _next_reaction_time = INFINITY;
+      _next_reaction_time = NO_REACTION_LEFT;
     }
 }

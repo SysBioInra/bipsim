@@ -96,13 +96,6 @@ public:
   void watch_site (BindingSite& site);
 
   /**
-   * @brief Add termination site on element.
-   * @param termination_site
-   *  Termination site located on sequence.
-   */
-  void add_termination_site (const Site& termination_site);
-
-  /**
    * @brief Add switching site on sequence.
    * @param position Position of the switch site.
    * @param identifier Identifier of the Switch.
@@ -154,19 +147,6 @@ public:
    */
   bool is_out_of_bounds (int first, int last) const;
     
-  /**
-   * @brief Returns whether a specific termination site can be found at a given 
-   *  position.
-   * @param position Relative position to look at.
-   * @param termination_site_families 
-   *  List of termination sites to look for.
-   * @return True if a requested termination site is present at requested
-   *  position.
-   */
-  bool is_termination_site 
-    (int position, 
-     const std::vector <const SiteFamily*>& termination_site_families) const;
-
   /**
    * @brief Returns whether there is a switch site at given position.
    * @param position Relative position to look at.
@@ -252,9 +232,6 @@ private:
 
   /** @brief Circularity. */
   bool _is_circular;
-
-  /** @brief Termination sites on the sequence. */
-  std::map <int, std::list <const SiteFamily*> > _termination_sites;
 
   /** @brief Switch sites on the sequence. */
   std::map <int, std::list <int> > _switch_sites;

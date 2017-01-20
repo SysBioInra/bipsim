@@ -58,9 +58,9 @@ class UpdatedRateGroup : public ReactionGroup
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
-  // UpdatedRateGroup (const UpdatedRateGroup& other_update_rate_group);
+  // UpdatedRateGroup (const UpdatedRateGroup& other);
   // /* @brief Assignment operator. */
-  // UpdatedRateGroup& operator= (const UpdatedRateGroup& other_update_rate_group);
+  // UpdatedRateGroup& operator= (const UpdatedRateGroup& other);
   // /* @brief Destructor. */
   // ~UpdatedRateGroup (void);
 
@@ -85,7 +85,7 @@ class UpdatedRateGroup : public ReactionGroup
   // ==================
   //  
   /** @brief Shortcut for double value representing infinity. */
-  static const double INF;
+  static const double NO_REACTIONS_LEFT;
 
 private:
   // =================
