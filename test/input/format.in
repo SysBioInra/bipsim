@@ -2,20 +2,21 @@
 # List of formats. Elements provided by user are capitalized, keywords
 # contain lower-case characters. Simulator checks for types at parsing:
 # if a BOUND_CHEMICAL should be provided, then it expects the name of an
-# entity defined by `unit BoundChemical NAME`. Often the names of the 
+# entity defined by `BoundChemical NAME`. Often the names of the 
 # elements to provide refer to entities whose format is described in
 # another section.
 #
 
 #######################################################################
-#                             SITE FORMAT                             #
+#                        SITE AND SWITCH FORMAT                       #
 #######################################################################
 #
 # Binding sites:
-#     BindingSite FAMILY LOCATION START STOP K_ON K_OFF READING_FRAME
+#     BindingSite FAMILY_NAME LOCATION START STOP K_ON K_OFF READING_FRAME
 #
-# Termination sites:
-#     TerminationSite FAMILY LOCATION START STOP
+# Switches for bound chemicals on specific SwitchSites:
+#     Switch NAME INPUT_BOUND_CHEMICAL OUTPUT_BOUND_CHEMICAL
+#     SwitchSite CHEMICAL_SEQUENCE POSITION SWITCH_NAME
 #
 #######################################################################
 
@@ -28,7 +29,7 @@
 # them, which will be released during degradation):
 #     CompositionTable NAME LETTER_1 [CHEMICAL_]^N_1[, LETTER_i [CHEMICAL_i]^N_i]^M
 #
-# Decoding table (associates templates with bases to load, e.g. codon
+# Loading table (associates templates with bases to load, e.g. codon
 # to tRNA table):
 #     LoadingTable NAME TEMPLATE_1 ELEMENT_TO_LOAD_1 LOADED_POLYMERASE_1 LOADING_RATE_1[, TEMPLATE_i ELEMENT_TO_LOAD_i LOADED_POLYMERASE_i LOADING_RATE_i]^N
 #

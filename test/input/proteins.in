@@ -2354,14 +2354,6 @@ ChemicalSequence ycxA_BSU03530 product_of U269 403217 404440 proteins
 BindingSite RBS U269 403201 403219 10 1 403217
 ChemicalSequence ycxB_BSU03540 product_of U271 3810592 3811146 proteins
 BindingSite RBS U271 3810569 3810594 10 1 3810592
-ChemicalSequence sfp_BSU03569 product_of U273 3807980 3808144 proteins
-BindingSite RBS U273 3807959 3807982 10 1 3807980
-ChemicalSequence sfp_BSU03570 product_of U273 3807472 3807966 proteins
-BindingSite RBS U273 3807455 3807474 10 1 3807472
-ChemicalSequence sfp_BSU03569 product_of U274 3807980 3808144 proteins
-BindingSite RBS U274 3807959 3807982 10 1 3807980
-ChemicalSequence sfp_BSU03570 product_of U274 3807472 3807966 proteins
-BindingSite RBS U274 3807455 3807474 10 1 3807472
 ChemicalSequence yczE_BSU03580 product_of U274 3806720 3807364 proteins
 BindingSite RBS U274 3806703 3806722 10 1 3806720
 ChemicalSequence tcyC_BSU03590 product_of U275 3805656 3806396 proteins
@@ -2912,8 +2904,6 @@ ChemicalSequence aseR_BSU05330 product_of U412 579541 579873 proteins
 BindingSite RBS U412 579525 579543 10 1 579541
 ChemicalSequence ydfA_BSU05340 product_of U412 579889 581193 proteins
 BindingSite RBS U412 579880 579891 10 1 579889
-ChemicalSequence ydzS_BSU05344 product_of U412 581341 581451 proteins
-BindingSite RBS U412 581320 581343 10 1 581341
 ChemicalSequence ydfE_BSU05380 product_of U414 3629829 3630449 proteins
 BindingSite RBS U414 3629811 3629831 10 1 3629829
 ChemicalSequence ydfF_BSU05390 product_of U415 585868 586545 proteins
@@ -3034,8 +3024,6 @@ ChemicalSequence gmuF_BSU05870 product_of U455 631808 632752 proteins
 BindingSite RBS U455 631787 631810 10 1 631808
 ChemicalSequence gmuG_BSU05880 product_of U455 632774 633859 proteins
 BindingSite RBS U455 632757 632776 10 1 632774
-ChemicalSequence ydhU_BSU05890 product_of U456 3580956 3581681 proteins
-BindingSite RBS U456 3580935 3580958 10 1 3580956
 ChemicalSequence thiL_BSU05900 product_of U460 640662 641636 proteins
 BindingSite RBS U460 640644 640664 10 1 640662
 ChemicalSequence ydiB_BSU05910 product_of U460 641654 642127 proteins
@@ -3080,8 +3068,6 @@ ChemicalSequence ydiM_BSU06040 product_of U468 653432 653809 proteins
 BindingSite RBS U468 653415 653434 10 1 653432
 ChemicalSequence ydzU_BSU06048 product_of U468 654071 654340 proteins
 BindingSite RBS U468 654070 654073 10 1 654071
-ChemicalSequence ydzV_BSU06049 product_of U468 654333 654689 proteins
-BindingSite RBS U468 654098 654335 10 1 654333
 ChemicalSequence ydiO_BSU06060 product_of U468 655223 656503 proteins
 BindingSite RBS U468 655207 655225 10 1 655223
 ChemicalSequence ydiP_BSU06070 product_of U468 656528 657694 proteins
@@ -3094,8 +3080,6 @@ ChemicalSequence ydiM_BSU06040 product_of U466 653432 653809 proteins
 BindingSite RBS U466 653415 653434 10 1 653432
 ChemicalSequence ydzU_BSU06048 product_of U466 654071 654340 proteins
 BindingSite RBS U466 654070 654073 10 1 654071
-ChemicalSequence ydzV_BSU06049 product_of U466 654333 654689 proteins
-BindingSite RBS U466 654098 654335 10 1 654333
 ChemicalSequence ydiO_BSU06060 product_of U466 655223 656503 proteins
 BindingSite RBS U466 655207 655225 10 1 655223
 ChemicalSequence ydiP_BSU06070 product_of U466 656528 657694 proteins
@@ -3104,18 +3088,6 @@ ChemicalSequence ydiO_BSU06060 product_of U469 655223 656503 proteins
 BindingSite RBS U469 655207 655225 10 1 655223
 ChemicalSequence ydiP_BSU06070 product_of U469 656528 657694 proteins
 BindingSite RBS U469 656511 656530 10 1 656528
-ChemicalSequence ydzW_BSU06073 product_of U471 3557545 3557811 proteins
-BindingSite RBS U471 3557524 3557547 10 1 3557545
-ChemicalSequence ydzW_BSU06077 product_of U471 3556849 3556989 proteins
-BindingSite RBS U471 3556828 3556851 10 1 3556849
-ChemicalSequence ydzW_BSU06078 product_of U471 3556597 3556791 proteins
-BindingSite RBS U471 3556576 3556599 10 1 3556597
-ChemicalSequence ydzW_BSU06073 product_of U472 3557545 3557811 proteins
-BindingSite RBS U472 3557524 3557547 10 1 3557545
-ChemicalSequence ydzW_BSU06077 product_of U472 3556849 3556989 proteins
-BindingSite RBS U472 3556828 3556851 10 1 3556849
-ChemicalSequence ydzW_BSU06078 product_of U472 3556597 3556791 proteins
-BindingSite RBS U472 3556576 3556599 10 1 3556597
 ChemicalSequence ydiR_BSU06090 product_of U473 659623 660561 proteins
 BindingSite RBS U473 659606 659625 10 1 659623
 ChemicalSequence ydiS_BSU06100 product_of U473 660596 661624 proteins
@@ -3358,8 +3330,6 @@ ChemicalSequence yetG_BSU07150 product_of U539 3430117 3430491 proteins
 BindingSite RBS U539 3430096 3430119 10 1 3430117
 ChemicalSequence yetH_BSU07160 product_of U539 3429702 3430061 proteins
 BindingSite RBS U539 3429685 3429704 10 1 3429702
-ChemicalSequence yetI_BSU07180 product_of U541 787264 787557 proteins
-BindingSite RBS U541 787243 787266 10 1 787264
 ChemicalSequence yezD_BSU07190 product_of U542 787715 787879 proteins
 BindingSite RBS U542 787697 787717 10 1 787715
 ChemicalSequence yetJ_BSU07200 product_of U542 787992 788633 proteins
@@ -3890,8 +3860,6 @@ ChemicalSequence yhcW_BSU09240 product_of U726 997724 998383 proteins
 BindingSite RBS U726 997707 997726 10 1 997724
 ChemicalSequence yhcX_BSU09250 product_of U726 998402 999940 proteins
 BindingSite RBS U726 998381 998404 10 1 998402
-ChemicalSequence yhzG_BSU09259 product_of U726 1000027 1000215 proteins
-BindingSite RBS U726 1000006 1000029 10 1 1000027
 ChemicalSequence yhxA_BSU09260 product_of U727 1000364 1001713 proteins
 BindingSite RBS U727 1000362 1000366 10 1 1000364
 ChemicalSequence glpP_BSU09270 product_of U727 1001744 1002319 proteins
@@ -4512,8 +4480,6 @@ ChemicalSequence appD_BSU11360 product_of U913 1211477 1212460 proteins
 BindingSite RBS U913 1211462 1211479 10 1 1211477
 ChemicalSequence appF_BSU11370 product_of U913 1212460 1213446 proteins
 BindingSite RBS U913 1212439 1212462 10 1 1212460
-ChemicalSequence appA_BSU11382 product_of U913 1214001 1215164 proteins
-BindingSite RBS U913 1213980 1214003 10 1 1214001
 ChemicalSequence appB_BSU11390 product_of U913 1215243 1216190 proteins
 BindingSite RBS U913 1215226 1215245 10 1 1215243
 ChemicalSequence appC_BSU11400 product_of U913 1216210 1217118 proteins
@@ -4522,16 +4488,12 @@ ChemicalSequence appD_BSU11360 product_of U916 1211477 1212460 proteins
 BindingSite RBS U916 1211462 1211479 10 1 1211477
 ChemicalSequence appF_BSU11370 product_of U916 1212460 1213446 proteins
 BindingSite RBS U916 1212439 1212462 10 1 1212460
-ChemicalSequence appA_BSU11382 product_of U916 1214001 1215164 proteins
-BindingSite RBS U916 1213980 1214003 10 1 1214001
 ChemicalSequence appB_BSU11390 product_of U916 1215243 1216190 proteins
 BindingSite RBS U916 1215226 1215245 10 1 1215243
 ChemicalSequence appC_BSU11400 product_of U916 1216210 1217118 proteins
 BindingSite RBS U916 1216189 1216212 10 1 1216210
 ChemicalSequence yjbA_BSU11410 product_of U916 1217326 1218075 proteins
 BindingSite RBS U916 1217309 1217328 10 1 1217326
-ChemicalSequence appA_BSU11382 product_of U917 1214001 1215164 proteins
-BindingSite RBS U917 1213980 1214003 10 1 1214001
 ChemicalSequence appB_BSU11390 product_of U917 1215243 1216190 proteins
 BindingSite RBS U917 1215226 1215245 10 1 1215243
 ChemicalSequence appC_BSU11400 product_of U917 1216210 1217118 proteins
@@ -7818,8 +7780,6 @@ ChemicalSequence ymfI_BSU16870 product_of U1349 1759655 1760380 proteins
 BindingSite RBS U1349 1759639 1759657 10 1 1759655
 ChemicalSequence ymfJ_BSU16880 product_of U1349 1760464 1760718 proteins
 BindingSite RBS U1349 1760447 1760466 10 1 1760464
-ChemicalSequence ymfK_BSU16900 product_of U1349 1761302 1761637 proteins
-BindingSite RBS U1349 1761281 1761304 10 1 1761302
 ChemicalSequence ymfM_BSU16910 product_of U1349 1761707 1762570 proteins
 BindingSite RBS U1349 1761643 1761709 10 1 1761707
 ChemicalSequence pgsA_BSU16920 product_of U1349 1762623 1763201 proteins
@@ -7838,12 +7798,8 @@ ChemicalSequence spoVS_BSU16980 product_of U1349 1769935 1770192 proteins
 BindingSite RBS U1349 1769919 1769937 10 1 1769935
 ChemicalSequence ymfJ_BSU16880 product_of U1351 1760464 1760718 proteins
 BindingSite RBS U1351 1760447 1760466 10 1 1760464
-ChemicalSequence ymfK_BSU16900 product_of U1351 1761302 1761637 proteins
-BindingSite RBS U1351 1761281 1761304 10 1 1761302
 ChemicalSequence ymfM_BSU16910 product_of U1351 1761707 1762570 proteins
 BindingSite RBS U1351 1761643 1761709 10 1 1761707
-ChemicalSequence ymfK_BSU16900 product_of U1353 1761302 1761637 proteins
-BindingSite RBS U1353 1761281 1761304 10 1 1761302
 ChemicalSequence ymfM_BSU16910 product_of U1353 1761707 1762570 proteins
 BindingSite RBS U1353 1761643 1761709 10 1 1761707
 ChemicalSequence pgsA_BSU16920 product_of U1353 1762623 1763201 proteins
@@ -8028,8 +7984,6 @@ ChemicalSequence aprX_BSU17260 product_of U1376 2352895 2354220 proteins
 BindingSite RBS U1376 2352878 2352897 10 1 2352895
 ChemicalSequence aprX_BSU17260 product_of U1377 2352895 2354220 proteins
 BindingSite RBS U1377 2352878 2352897 10 1 2352895
-ChemicalSequence ymzE_BSU17267 product_of U1378 1862992 1863165 proteins
-BindingSite RBS U1378 1862971 1862994 10 1 1862992
 ChemicalSequence ymaC_BSU17270 product_of U1378 1863448 1864152 proteins
 BindingSite RBS U1378 1863431 1863450 10 1 1863448
 ChemicalSequence ymaD_BSU17280 product_of U1378 1864225 1864674 proteins
@@ -8200,8 +8154,6 @@ ChemicalSequence yncE_BSU17650 product_of U1410 1899589 1900047 proteins
 BindingSite RBS U1410 1899573 1899591 10 1 1899589
 ChemicalSequence yncF_BSU17660 product_of U1410 1900080 1900511 proteins
 BindingSite RBS U1410 1900065 1900082 10 1 1900080
-ChemicalSequence ynzJ_BSU17678 product_of U1410 1901612 1901734 proteins
-BindingSite RBS U1410 1901591 1901614 10 1 1901612
 ChemicalSequence thyA_BSU17680 product_of U1410 1902219 1903055 proteins
 BindingSite RBS U1410 1902201 1902221 10 1 1902219
 ChemicalSequence cotU_BSU17670 product_of U1412 2314230 2314487 proteins
@@ -8542,12 +8494,8 @@ ChemicalSequence yobI_BSU18970 product_of U1536 2146578 2150180 proteins
 BindingSite RBS U1536 2146560 2146580 10 1 2146578
 ChemicalSequence yobI_BSU18970 product_of U1537 2146578 2150180 proteins
 BindingSite RBS U1537 2146560 2146580 10 1 2146578
-ChemicalSequence yoyA_BSU18979 product_of U1537 2146046 2146342 proteins
-BindingSite RBS U1537 2146025 2146048 10 1 2146046
 ChemicalSequence yobI_BSU18970 product_of U1541 2146578 2150180 proteins
 BindingSite RBS U1541 2146560 2146580 10 1 2146578
-ChemicalSequence yoyA_BSU18979 product_of U1541 2146046 2146342 proteins
-BindingSite RBS U1541 2146025 2146048 10 1 2146046
 ChemicalSequence yobJ_BSU18980 product_of U1541 2144521 2145360 proteins
 BindingSite RBS U1541 2144504 2144523 10 1 2144521
 ChemicalSequence yobJ_BSU18980 product_of U1542 2144521 2145360 proteins
@@ -9476,10 +9424,6 @@ ChemicalSequence yokB_BSU21650 product_of U1700 1931039 1931746 proteins
 BindingSite RBS U1700 1931024 1931041 10 1 1931039
 ChemicalSequence yokA_BSU21660 product_of U1701 2284771 2286405 proteins
 BindingSite RBS U1701 2284753 2284773 10 1 2284771
-ChemicalSequence ypqP_BSU21670 product_of U1701 2286448 2287050 proteins
-BindingSite RBS U1701 2286427 2286450 10 1 2286448
-ChemicalSequence ypqP_BSU21670 product_of U1702 2286448 2287050 proteins
-BindingSite RBS U1702 2286427 2286450 10 1 2286448
 ChemicalSequence msrB_BSU21680 product_of U1704 1928079 1928507 proteins
 BindingSite RBS U1704 1928058 1928081 10 1 1928079
 ChemicalSequence msrA_BSU21690 product_of U1704 1927545 1928075 proteins
@@ -11436,8 +11380,6 @@ ChemicalSequence yqeB_BSU25740 product_of U2005 2651632 2652351 proteins
 BindingSite RBS U2005 2651619 2651634 10 1 2651632
 ChemicalSequence nucB_BSU25750 product_of U2006 1562810 1563217 proteins
 BindingSite RBS U2006 1562793 1562812 10 1 1562810
-ChemicalSequence spoIVCB_BSU25760 product_of U2007 2652993 2653460 proteins
-BindingSite RBS U2007 2652979 2652995 10 1 2652993
 ChemicalSequence spoIVCA_BSU25770 product_of U2008 1560734 1562233 proteins
 BindingSite RBS U2008 1560716 1560736 10 1 1560734
 ChemicalSequence spoIVCA_BSU25770 product_of U2009 1560734 1562233 proteins
@@ -11504,10 +11446,6 @@ ChemicalSequence yqaE_BSU26350 product_of U2031 2698893 2699240 proteins
 BindingSite RBS U2031 2698876 2698895 10 1 2698893
 ChemicalSequence yqaB_BSU26380 product_of U2033 2700838 2701353 proteins
 BindingSite RBS U2033 2700820 2700840 10 1 2700838
-ChemicalSequence spoIIIC_BSU26390 product_of U2033 2701338 2701751 proteins
-BindingSite RBS U2033 2701317 2701340 10 1 2701338
-ChemicalSequence spoIIIC_BSU26390 product_of U2035 2701338 2701751 proteins
-BindingSite RBS U2035 2701317 2701340 10 1 2701338
 ChemicalSequence yrkS_BSU26400 product_of U2036 1513464 1513625 proteins
 BindingSite RBS U2036 1513443 1513466 10 1 1513464
 ChemicalSequence yrkP_BSU26430 product_of U2037 1510477 1511169 proteins
@@ -11550,14 +11488,8 @@ ChemicalSequence yrkE_BSU26540 product_of U2045 1501805 1502284 proteins
 BindingSite RBS U2045 1501789 1501807 10 1 1501805
 ChemicalSequence yrkD_BSU26550 product_of U2045 1501467 1501655 proteins
 BindingSite RBS U2045 1501446 1501469 10 1 1501467
-ChemicalSequence yrzM_BSU26558 product_of U2045 1501059 1501373 proteins
-BindingSite RBS U2045 1501038 1501061 10 1 1501059
 ChemicalSequence yrkD_BSU26550 product_of U2046 1501467 1501655 proteins
 BindingSite RBS U2046 1501446 1501469 10 1 1501467
-ChemicalSequence yrzM_BSU26558 product_of U2046 1501059 1501373 proteins
-BindingSite RBS U2046 1501038 1501061 10 1 1501059
-ChemicalSequence yrzN_BSU26559 product_of U2046 1500802 1501014 proteins
-BindingSite RBS U2046 1500781 1500804 10 1 1500802
 ChemicalSequence yrkC_BSU26560 product_of U2046 1500114 1500671 proteins
 BindingSite RBS U2046 1500097 1500116 10 1 1500114
 ChemicalSequence yrkC_BSU26560 product_of U2049 1500114 1500671 proteins
@@ -11584,8 +11516,6 @@ ChemicalSequence gltR_BSU26670 product_of U2053 2725837 2726724 proteins
 BindingSite RBS U2053 2725822 2725839 10 1 2725837
 ChemicalSequence cypA_BSU26740 product_of U2056 1483268 1484497 proteins
 BindingSite RBS U2056 1483250 1483270 10 1 1483268
-ChemicalSequence yrdD_BSU26748 product_of U2056 1483060 1483215 proteins
-BindingSite RBS U2056 1483039 1483062 10 1 1483060
 ChemicalSequence yrdC_BSU26760 product_of U2057 1482064 1482624 proteins
 BindingSite RBS U2057 1482047 1482066 10 1 1482064
 ChemicalSequence yrdC_BSU26760 product_of U2058 1482064 1482624 proteins
@@ -11636,8 +11566,6 @@ ChemicalSequence yraB_BSU27000 product_of U2077 1459803 1460222 proteins
 BindingSite RBS U2077 1459786 1459805 10 1 1459803
 ChemicalSequence yraB_BSU27000 product_of U2078 1459803 1460222 proteins
 BindingSite RBS U2078 1459786 1459805 10 1 1459803
-ChemicalSequence yrzP_BSU27009 product_of U2076 2755987 2756178 proteins
-BindingSite RBS U2076 2755969 2755989 10 1 2755987
 ChemicalSequence adhA_BSU27010 product_of U2076 2756312 2757358 proteins
 BindingSite RBS U2076 2756296 2756314 10 1 2756312
 ChemicalSequence yraA_BSU27020 product_of U2076 2757492 2757998 proteins
@@ -13842,8 +13770,6 @@ ChemicalSequence yusV_BSU32940 product_of U2581 835668 836492 proteins
 BindingSite RBS U2581 835654 835670 10 1 835668
 ChemicalSequence yusW_BSU32950 product_of U2581 835013 835447 proteins
 BindingSite RBS U2581 834996 835015 10 1 835013
-ChemicalSequence yusY_BSU32960 product_of U2582 833395 834900 proteins
-BindingSite RBS U2582 833374 833397 10 1 833395
 ChemicalSequence yusZ_BSU32980 product_of U2583 3382633 3383472 proteins
 BindingSite RBS U2583 3382618 3382635 10 1 3382633
 ChemicalSequence mrgA_BSU32990 product_of U2583 3383565 3384023 proteins
@@ -14554,22 +14480,10 @@ ChemicalSequence yvkB_BSU35200 product_of U2759 3618364 3618930 proteins
 BindingSite RBS U2759 3618346 3618366 10 1 3618364
 ChemicalSequence minJ_BSU35220 product_of U2760 594068 595258 proteins
 BindingSite RBS U2760 594049 594070 10 1 594068
-ChemicalSequence swrAA_BSU35230 product_of U2760 593651 593986 proteins
-BindingSite RBS U2760 593635 593653 10 1 593651
-ChemicalSequence swrAA_BSU35239 product_of U2760 593560 593673 proteins
-BindingSite RBS U2760 593539 593562 10 1 593560
 ChemicalSequence minJ_BSU35220 product_of U2761 594068 595258 proteins
 BindingSite RBS U2761 594049 594070 10 1 594068
-ChemicalSequence swrAA_BSU35230 product_of U2761 593651 593986 proteins
-BindingSite RBS U2761 593635 593653 10 1 593651
-ChemicalSequence swrAA_BSU35239 product_of U2761 593560 593673 proteins
-BindingSite RBS U2761 593539 593562 10 1 593560
 ChemicalSequence minJ_BSU35220 product_of U2762 594068 595258 proteins
 BindingSite RBS U2762 594049 594070 10 1 594068
-ChemicalSequence swrAA_BSU35230 product_of U2762 593651 593986 proteins
-BindingSite RBS U2762 593635 593653 10 1 593651
-ChemicalSequence swrAA_BSU35239 product_of U2762 593560 593673 proteins
-BindingSite RBS U2762 593539 593562 10 1 593560
 ChemicalSequence ctpB_BSU35240 product_of U2762 591809 593248 proteins
 BindingSite RBS U2762 591791 591811 10 1 591809
 ChemicalSequence ftsX_BSU35250 product_of U2763 590779 591666 proteins
@@ -14736,8 +14650,6 @@ ChemicalSequence tuaC_BSU35590 product_of U2786 558852 560018 proteins
 BindingSite RBS U2786 558831 558854 10 1 558852
 ChemicalSequence tuaB_BSU35600 product_of U2786 557404 558852 proteins
 BindingSite RBS U2786 557388 557406 10 1 557404
-ChemicalSequence tuaA_BSU35609 product_of U2786 557199 557345 proteins
-BindingSite RBS U2786 557178 557201 10 1 557199
 ChemicalSequence lytC_BSU35620 product_of U2788 554998 556485 proteins
 BindingSite RBS U2788 554981 555000 10 1 554998
 ChemicalSequence lytB_BSU35630 product_of U2788 552842 554956 proteins
@@ -14750,28 +14662,14 @@ ChemicalSequence mnaA_BSU35660 product_of U2790 550224 551363 proteins
 BindingSite RBS U2790 550207 550226 10 1 550224
 ChemicalSequence gtaB_BSU35670 product_of U2791 3665629 3666504 proteins
 BindingSite RBS U2791 3665613 3665631 10 1 3665629
-ChemicalSequence yvzH_BSU35679 product_of U2793 548591 548671 proteins
-BindingSite RBS U2793 548570 548593 10 1 548591
 ChemicalSequence ggaB_BSU35680 product_of U2793 545696 548395 proteins
 BindingSite RBS U2793 545678 545698 10 1 545696
 ChemicalSequence ggaA_BSU35690 product_of U2793 544232 545569 proteins
 BindingSite RBS U2793 544216 544234 10 1 544232
-ChemicalSequence yvzI_BSU35698 product_of U2793 543985 544188 proteins
-BindingSite RBS U2793 543964 543987 10 1 543985
-ChemicalSequence yvzH_BSU35679 product_of U2794 548591 548671 proteins
-BindingSite RBS U2794 548570 548593 10 1 548591
 ChemicalSequence ggaB_BSU35680 product_of U2794 545696 548395 proteins
 BindingSite RBS U2794 545678 545698 10 1 545696
 ChemicalSequence ggaA_BSU35690 product_of U2794 544232 545569 proteins
 BindingSite RBS U2794 544216 544234 10 1 544232
-ChemicalSequence yvzI_BSU35698 product_of U2794 543985 544188 proteins
-BindingSite RBS U2794 543964 543987 10 1 543985
-ChemicalSequence yvzE_BSU35699 product_of U2796 3672929 3673522 proteins
-BindingSite RBS U2796 3672908 3672931 10 1 3672929
-ChemicalSequence yvzE_BSU35699 product_of U2795 3672929 3673522 proteins
-BindingSite RBS U2795 3672908 3672931 10 1 3672929
-ChemicalSequence yvzE_BSU35699 product_of U2792 3672929 3673522 proteins
-BindingSite RBS U2792 3672908 3672931 10 1 3672929
 ChemicalSequence tagH_BSU35700 product_of U2797 540460 542040 proteins
 BindingSite RBS U2797 540443 540462 10 1 540460
 ChemicalSequence tagG_BSU35710 product_of U2797 539613 540437 proteins
@@ -15080,10 +14978,6 @@ ChemicalSequence ureB_BSU36650 product_of U2879 446813 447184 proteins
 BindingSite RBS U2879 446792 446815 10 1 446813
 ChemicalSequence ureA_BSU36660 product_of U2879 446499 446813 proteins
 BindingSite RBS U2879 446482 446501 10 1 446499
-ChemicalSequence ywzE_BSU36668 product_of U2879 446154 446315 proteins
-BindingSite RBS U2879 446133 446156 10 1 446154
-ChemicalSequence ywzF_BSU36669 product_of U2879 445799 445978 proteins
-BindingSite RBS U2879 445778 445801 10 1 445799
 ChemicalSequence ywnA_BSU36630 product_of U2881 449028 449426 proteins
 BindingSite RBS U2881 449009 449030 10 1 449028
 ChemicalSequence ureC_BSU36640 product_of U2881 447184 448890 proteins
@@ -15092,10 +14986,6 @@ ChemicalSequence ureB_BSU36650 product_of U2881 446813 447184 proteins
 BindingSite RBS U2881 446792 446815 10 1 446813
 ChemicalSequence ureA_BSU36660 product_of U2881 446499 446813 proteins
 BindingSite RBS U2881 446482 446501 10 1 446499
-ChemicalSequence ywzE_BSU36668 product_of U2881 446154 446315 proteins
-BindingSite RBS U2881 446133 446156 10 1 446154
-ChemicalSequence ywzF_BSU36669 product_of U2881 445799 445978 proteins
-BindingSite RBS U2881 445778 445801 10 1 445799
 ChemicalSequence csbD_BSU36670 product_of U2881 445315 445500 proteins
 BindingSite RBS U2881 445297 445317 10 1 445315
 ChemicalSequence ywnA_BSU36630 product_of U2882 449028 449426 proteins
@@ -15106,10 +14996,6 @@ ChemicalSequence ureB_BSU36650 product_of U2882 446813 447184 proteins
 BindingSite RBS U2882 446792 446815 10 1 446813
 ChemicalSequence ureA_BSU36660 product_of U2882 446499 446813 proteins
 BindingSite RBS U2882 446482 446501 10 1 446499
-ChemicalSequence ywzE_BSU36668 product_of U2882 446154 446315 proteins
-BindingSite RBS U2882 446133 446156 10 1 446154
-ChemicalSequence ywzF_BSU36669 product_of U2882 445799 445978 proteins
-BindingSite RBS U2882 445778 445801 10 1 445799
 ChemicalSequence csbD_BSU36670 product_of U2882 445315 445500 proteins
 BindingSite RBS U2882 445297 445317 10 1 445315
 ChemicalSequence ywmF_BSU36680 product_of U2882 444742 445239 proteins
@@ -15960,10 +15846,6 @@ ChemicalSequence yxjA_BSU39020 product_of U3082 4005752 4006942 proteins
 BindingSite RBS U3082 4005736 4005754 10 1 4005752
 ChemicalSequence yxjA_BSU39020 product_of U3083 4005752 4006942 proteins
 BindingSite RBS U3083 4005736 4005754 10 1 4005752
-ChemicalSequence yxiT_BSU39029 product_of U3085 208192 208617 proteins
-BindingSite RBS U3085 208171 208194 10 1 208192
-ChemicalSequence yxiT_BSU39030 product_of U3085 207949 208188 proteins
-BindingSite RBS U3085 207932 207951 10 1 207949
 ChemicalSequence yxiS_BSU39040 product_of U3086 207514 207801 proteins
 BindingSite RBS U3086 207497 207516 10 1 207514
 ChemicalSequence yxiS_BSU39040 product_of U3087 207514 207801 proteins
@@ -15996,8 +15878,6 @@ ChemicalSequence deaD_BSU39110 product_of U3097 198181 199617 proteins
 BindingSite RBS U3097 198165 198183 10 1 198181
 ChemicalSequence yxiM_BSU39120 product_of U3097 196951 198096 proteins
 BindingSite RBS U3097 196934 196953 10 1 196951
-ChemicalSequence yxzI_BSU39129 product_of U3097 196633 196818 proteins
-BindingSite RBS U3097 196612 196635 10 1 196633
 ChemicalSequence yxzJ_BSU39139 product_of U3097 196471 196599 proteins
 BindingSite RBS U3097 196013 196473 10 1 196471
 ChemicalSequence yxiK_BSU39140 product_of U3097 195998 196456 proteins
@@ -16454,10 +16334,6 @@ ChemicalSequence yybO_BSU40570 product_of U3202 4170045 4171349 proteins
 BindingSite RBS U3202 4170024 4170047 10 1 4170045
 ChemicalSequence yybO_BSU40570 product_of U3201 4170045 4171349 proteins
 BindingSite RBS U3201 4170024 4170047 10 1 4170045
-ChemicalSequence yyzK_BSU40578 product_of U3206 43202 43345 proteins
-BindingSite RBS U3206 43181 43204 10 1 43202
-ChemicalSequence yyzL_BSU40579 product_of U3206 43071 43217 proteins
-BindingSite RBS U3206 43050 43073 10 1 43071
 ChemicalSequence yybN_BSU40580 product_of U3205 4173114 4173548 proteins
 BindingSite RBS U3205 4173097 4173116 10 1 4173114
 ChemicalSequence yybM_BSU40590 product_of U3205 4173665 4174417 proteins
