@@ -1,0 +1,10 @@
+FreeChemical A_free 1000
+ChemicalSequence dummy_sequence sequence AAAA 1000
+BindingSite bs dummy_sequence 1 1 10 0
+BoundChemical A_bound
+BoundChemical B
+FreeChemical C
+
+SequenceBinding A_free A_bound bs
+ChemicalReaction A_bound -1 B 1 C 1 rates 1 0
+
