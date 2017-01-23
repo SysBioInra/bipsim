@@ -10,8 +10,8 @@ class TU:
         self.sigma = sigma
         self.annotation_genes = genes
         self.genes = []
-        self.composition = [sequence.count('t'), sequence.count('g'), \
-                            sequence.count('c'), sequence.count('a')]
+        self.composition = [sequence.count('a'), sequence.count('c'), \
+                            sequence.count('g'), sequence.count('t')]
 
     def associate_genes(self, genes, log_stream):
         not_found = self.annotation_genes[:]
