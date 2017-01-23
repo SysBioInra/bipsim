@@ -1,3 +1,13 @@
+#######################
+# General information #
+#######################
+CompositionTable rna_composition A AMP, C CMP, G GMP, U UMP
+TransformationTable dna2rna A U, C G, G C, T A
+ProductTable rnas dna2rna
+
+########################
+# Sequence information #
+########################
 ChemicalSequence U1 product_of sensedna 150 9459 rnas
 BindingSite promoter_SigA sensedna 115 151 10 1 150
 ChemicalSequence U4 product_of sensedna 3169 9459 rnas
