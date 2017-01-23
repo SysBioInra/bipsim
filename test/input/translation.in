@@ -7,7 +7,7 @@ FreeChemical IF1 100
 FreeChemical IF2 400
 FreeChemical IF3 100
 FreeChemical EFTud 60000
-FreeChemical EFP 100
+FreeChemical EFG 100
 FreeChemical RF 1000
 FreeChemical tRNA_fM 300
 FreeChemical tRNA_A 4000
@@ -32,7 +32,7 @@ FreeChemical tRNA_W 1000
 FreeChemical tRNA_Y 2000
 
 # not a real chemical, used to count production
-FreeChemical protein
+FreeChemical protein_tracker
 
 ###################
 # tRNA activation #
@@ -82,27 +82,27 @@ FreeChemical EtRNA_V_ca
 FreeChemical EtRNA_W_ca
 FreeChemical EtRNA_Y_ca
 
-ChemicalReaction tRNA_fM -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_fM_c 1 rates 1 0
-ChemicalReaction tRNA_A -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_A_c 1 rates 1 0
-ChemicalReaction tRNA_C -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_C_c 1 rates 1 0
-ChemicalReaction tRNA_D -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_D_c 1 rates 1 0
-ChemicalReaction tRNA_E -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_E_c 1 rates 1 0
-ChemicalReaction tRNA_F -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_F_c 1 rates 1 0
-ChemicalReaction tRNA_G -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_G_c 1 rates 1 0
-ChemicalReaction tRNA_H -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_H_c 1 rates 1 0
-ChemicalReaction tRNA_I -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_I_c 1 rates 1 0
-ChemicalReaction tRNA_K -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_K_c 1 rates 1 0
-ChemicalReaction tRNA_L -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_L_c 1 rates 1 0
-ChemicalReaction tRNA_M -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_M_c 1 rates 1 0
-ChemicalReaction tRNA_N -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_N_c 1 rates 1 0
-ChemicalReaction tRNA_P -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_P_c 1 rates 1 0
-ChemicalReaction tRNA_Q -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_Q_c 1 rates 1 0
-ChemicalReaction tRNA_R -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_R_c 1 rates 1 0
-ChemicalReaction tRNA_S -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_S_c 1 rates 1 0
-ChemicalReaction tRNA_T -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_T_c 1 rates 1 0
-ChemicalReaction tRNA_V -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_V_c 1 rates 1 0
-ChemicalReaction tRNA_W -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_W_c 1 rates 1 0
-ChemicalReaction tRNA_Y -1 ATP -1 AMP 1 PPi 1 H+ 1 tRNA_Y_c 1 rates 1 0
+ChemicalReaction tRNA_fM -1 ATP -1 AMP 1 PPi 1 tRNA_fM_c 1 rates 1 0
+ChemicalReaction tRNA_A -1 ATP -1 AMP 1 PPi 1 tRNA_A_c 1 rates 1 0
+ChemicalReaction tRNA_C -1 ATP -1 AMP 1 PPi 1 tRNA_C_c 1 rates 1 0
+ChemicalReaction tRNA_D -1 ATP -1 AMP 1 PPi 1 tRNA_D_c 1 rates 1 0
+ChemicalReaction tRNA_E -1 ATP -1 AMP 1 PPi 1 tRNA_E_c 1 rates 1 0
+ChemicalReaction tRNA_F -1 ATP -1 AMP 1 PPi 1 tRNA_F_c 1 rates 1 0
+ChemicalReaction tRNA_G -1 ATP -1 AMP 1 PPi 1 tRNA_G_c 1 rates 1 0
+ChemicalReaction tRNA_H -1 ATP -1 AMP 1 PPi 1 tRNA_H_c 1 rates 1 0
+ChemicalReaction tRNA_I -1 ATP -1 AMP 1 PPi 1 tRNA_I_c 1 rates 1 0
+ChemicalReaction tRNA_K -1 ATP -1 AMP 1 PPi 1 tRNA_K_c 1 rates 1 0
+ChemicalReaction tRNA_L -1 ATP -1 AMP 1 PPi 1 tRNA_L_c 1 rates 1 0
+ChemicalReaction tRNA_M -1 ATP -1 AMP 1 PPi 1 tRNA_M_c 1 rates 1 0
+ChemicalReaction tRNA_N -1 ATP -1 AMP 1 PPi 1 tRNA_N_c 1 rates 1 0
+ChemicalReaction tRNA_P -1 ATP -1 AMP 1 PPi 1 tRNA_P_c 1 rates 1 0
+ChemicalReaction tRNA_Q -1 ATP -1 AMP 1 PPi 1 tRNA_Q_c 1 rates 1 0
+ChemicalReaction tRNA_R -1 ATP -1 AMP 1 PPi 1 tRNA_R_c 1 rates 1 0
+ChemicalReaction tRNA_S -1 ATP -1 AMP 1 PPi 1 tRNA_S_c 1 rates 1 0
+ChemicalReaction tRNA_T -1 ATP -1 AMP 1 PPi 1 tRNA_T_c 1 rates 1 0
+ChemicalReaction tRNA_V -1 ATP -1 AMP 1 PPi 1 tRNA_V_c 1 rates 1 0
+ChemicalReaction tRNA_W -1 ATP -1 AMP 1 PPi 1 tRNA_W_c 1 rates 1 0
+ChemicalReaction tRNA_Y -1 ATP -1 AMP 1 PPi 1 tRNA_Y_c 1 rates 1 0
 
 ChemicalReaction EFTud -1 GTP -1 EFTua 1 GDP 1 rates 1 0
 
@@ -144,7 +144,7 @@ BoundChemical m30S31
 BoundChemical m30S312a
 BoundChemical m30S312d
 BoundChemical m30S12a
-BoundChemical EFt70S
+BoundChemical translocating_70S
 FreeChemical IF2a
 FreeChemical IF2d
 FreeChemical IF2p
@@ -162,147 +162,68 @@ ChemicalReaction IF2p -1 tRNA_fM_c -1 fMet2p 1 rates 1 1
 ChemicalReaction fMet2a -1 m30S31 -1 m30S312a 1 rates 1 0
 ChemicalReaction fMet2d -1 m30S31 -1 m30S312d 1 rates 1 10
 ChemicalReaction m30S312a -1 IF3 1 m30S12a 1 rates 1 0
-ChemicalReaction m30S12a -1 50S -1 EFt70S 1 IF1 1 IF2d 1 Pi 1 H2O 1 tRNA_fM 1 rates 1 0
+ChemicalReaction m30S12a -1 50S -1 translocating_70S 1 IF1 1 IF2d 1 Pi 1 tRNA_fM 1 rates 1 0
 
 ##########################
 # Translation elongation #
 ##########################
 BoundChemical stalled_ribosome
 BoundChemical 70S
-BoundChemical Et70S_A_ca
-BoundChemical Et70S_C_ca
-BoundChemical Et70S_D_ca
-BoundChemical Et70S_E_ca
-BoundChemical Et70S_F_ca
-BoundChemical Et70S_G_ca
-BoundChemical Et70S_H_ca
-BoundChemical Et70S_I_ca
-BoundChemical Et70S_K_ca
-BoundChemical Et70S_L_ca
-BoundChemical Et70S_M_ca
-BoundChemical Et70S_N_ca
-BoundChemical Et70S_P_ca
-BoundChemical Et70S_Q_ca
-BoundChemical Et70S_R_ca
-BoundChemical Et70S_S_ca
-BoundChemical Et70S_T_ca
-BoundChemical Et70S_V_ca
-BoundChemical Et70S_W_ca
-BoundChemical Et70S_Y_ca
-BoundChemical t70S_A_c
-BoundChemical t70S_C_c
-BoundChemical t70S_D_c
-BoundChemical t70S_E_c
-BoundChemical t70S_F_c
-BoundChemical t70S_G_c
-BoundChemical t70S_H_c
-BoundChemical t70S_I_c
-BoundChemical t70S_K_c
-BoundChemical t70S_L_c
-BoundChemical t70S_M_c
-BoundChemical t70S_N_c
-BoundChemical t70S_P_c
-BoundChemical t70S_Q_c
-BoundChemical t70S_R_c
-BoundChemical t70S_S_c
-BoundChemical t70S_T_c
-BoundChemical t70S_V_c
-BoundChemical t70S_W_c
-BoundChemical t70S_Y_c
-BoundChemical t70S_A_cp
-BoundChemical t70S_C_cp
-BoundChemical t70S_D_cp
-BoundChemical t70S_E_cp
-BoundChemical t70S_F_cp
-BoundChemical t70S_G_cp
-BoundChemical t70S_H_cp
-BoundChemical t70S_I_cp
-BoundChemical t70S_K_cp
-BoundChemical t70S_L_cp
-BoundChemical t70S_M_cp
-BoundChemical t70S_N_cp
-BoundChemical t70S_P_cp
-BoundChemical t70S_Q_cp
-BoundChemical t70S_R_cp
-BoundChemical t70S_S_cp
-BoundChemical t70S_T_cp
-BoundChemical t70S_V_cp
-BoundChemical t70S_W_cp
-BoundChemical t70S_Y_cp
-FreeChemical EFPa
-FreeChemical EFPd
+BoundChemical pre_translocation_70S
+BoundChemical Et70S_A
+BoundChemical Et70S_C
+BoundChemical Et70S_D
+BoundChemical Et70S_E
+BoundChemical Et70S_F
+BoundChemical Et70S_G
+BoundChemical Et70S_H
+BoundChemical Et70S_I
+BoundChemical Et70S_K
+BoundChemical Et70S_L
+BoundChemical Et70S_M
+BoundChemical Et70S_N
+BoundChemical Et70S_P
+BoundChemical Et70S_Q
+BoundChemical Et70S_R
+BoundChemical Et70S_S
+BoundChemical Et70S_T
+BoundChemical Et70S_V
+BoundChemical Et70S_W
+BoundChemical Et70S_Y
+FreeChemical EFGa
+FreeChemical EFGd
 
 # translocation
-Translocation EFt70S 70S stalled_ribosome 3 200
+ChemicalReaction EFG -1 GTP -1 EFGa 1 rates 1 1
+ChemicalReaction EFG -1 GDP -1 EFGd 1 rates 0.1 10
+ChemicalReaction pre_translocation_70S -1 EFGa -1 translocating_70S 1 EFGd 1 Pi 1 rates 200 0 
+Translocation translocating_70S 70S stalled_ribosome 3 200
 
 # tRNA loading
-LoadingTable EtRNA_loading GCA EtRNA_A_ca Et70S_A_ca 1, GCC EtRNA_A_ca Et70S_A_ca 1, GCG EtRNA_A_ca Et70S_A_ca 1, GCU EtRNA_A_ca Et70S_A_ca 1, UGC EtRNA_C_ca Et70S_C_ca 1, UGU EtRNA_C_ca Et70S_C_ca 1, GAC EtRNA_D_ca Et70S_D_ca 1, GAU EtRNA_D_ca Et70S_D_ca 1, GAA EtRNA_E_ca Et70S_E_ca 1, GAG EtRNA_E_ca Et70S_E_ca 1, UUC EtRNA_F_ca Et70S_F_ca 1, UUU EtRNA_F_ca Et70S_F_ca 1, GGA EtRNA_G_ca Et70S_G_ca 1, GGC EtRNA_G_ca Et70S_G_ca 1, GGG EtRNA_G_ca Et70S_G_ca 1, GGU EtRNA_G_ca Et70S_G_ca 1, CAC EtRNA_H_ca Et70S_H_ca 1, CAU EtRNA_H_ca Et70S_H_ca 1, AUA EtRNA_I_ca Et70S_I_ca 1, AUC EtRNA_I_ca Et70S_I_ca 1, AUU EtRNA_I_ca Et70S_I_ca 1, AAA EtRNA_K_ca Et70S_K_ca 1, AAG EtRNA_K_ca Et70S_K_ca 1, UUA EtRNA_L_ca Et70S_L_ca 1, UUG EtRNA_L_ca Et70S_L_ca 1, CUA EtRNA_L_ca Et70S_L_ca 1, CUC EtRNA_L_ca Et70S_L_ca 1, CUG EtRNA_L_ca Et70S_L_ca 1, CUU EtRNA_L_ca Et70S_L_ca 1, AUG EtRNA_M_ca Et70S_M_ca 1, AAC EtRNA_N_ca Et70S_N_ca 1, AAU EtRNA_N_ca Et70S_N_ca 1, CCA EtRNA_P_ca Et70S_P_ca 1, CCC EtRNA_P_ca Et70S_P_ca 1, CCG EtRNA_P_ca Et70S_P_ca 1, CCU EtRNA_P_ca Et70S_P_ca 1, CAA EtRNA_Q_ca Et70S_Q_ca 1, CAG EtRNA_Q_ca Et70S_Q_ca 1, CGA EtRNA_R_ca Et70S_R_ca 1, CGC EtRNA_R_ca Et70S_R_ca 1, CGG EtRNA_R_ca Et70S_R_ca 1, CGU EtRNA_R_ca Et70S_R_ca 1, AGA EtRNA_R_ca Et70S_R_ca 1, AGG EtRNA_R_ca Et70S_R_ca 1, UCA EtRNA_S_ca Et70S_S_ca 1, UCC EtRNA_S_ca Et70S_S_ca 1, UCG EtRNA_S_ca Et70S_S_ca 1, UCU EtRNA_S_ca Et70S_S_ca 1, AGC EtRNA_S_ca Et70S_S_ca 1, AGU EtRNA_S_ca Et70S_S_ca 1, ACA EtRNA_T_ca Et70S_T_ca 1, ACC EtRNA_T_ca Et70S_T_ca 1, ACG EtRNA_T_ca Et70S_T_ca 1, ACU EtRNA_T_ca Et70S_T_ca 1, GUA EtRNA_V_ca Et70S_V_ca 1, GUC EtRNA_V_ca Et70S_V_ca 1, GUG EtRNA_V_ca Et70S_V_ca 1, GUU EtRNA_V_ca Et70S_V_ca 1, UGG EtRNA_W_ca Et70S_W_ca 1, UAC EtRNA_Y_ca Et70S_Y_ca 1, UAU EtRNA_Y_ca Et70S_Y_ca 1, UAA RF stalled_ribosome 1, UAG RF stalled_ribosome 1, UGA RF stalled_ribosome 1
+LoadingTable EtRNA_loading GCA EtRNA_A_ca Et70S_A 1, GCC EtRNA_A_ca Et70S_A 1, GCG EtRNA_A_ca Et70S_A 1, GCU EtRNA_A_ca Et70S_A 1, UGC EtRNA_C_ca Et70S_C 1, UGU EtRNA_C_ca Et70S_C 1, GAC EtRNA_D_ca Et70S_D 1, GAU EtRNA_D_ca Et70S_D 1, GAA EtRNA_E_ca Et70S_E 1, GAG EtRNA_E_ca Et70S_E 1, UUC EtRNA_F_ca Et70S_F 1, UUU EtRNA_F_ca Et70S_F 1, GGA EtRNA_G_ca Et70S_G 1, GGC EtRNA_G_ca Et70S_G 1, GGG EtRNA_G_ca Et70S_G 1, GGU EtRNA_G_ca Et70S_G 1, CAC EtRNA_H_ca Et70S_H 1, CAU EtRNA_H_ca Et70S_H 1, AUA EtRNA_I_ca Et70S_I 1, AUC EtRNA_I_ca Et70S_I 1, AUU EtRNA_I_ca Et70S_I 1, AAA EtRNA_K_ca Et70S_K 1, AAG EtRNA_K_ca Et70S_K 1, UUA EtRNA_L_ca Et70S_L 1, UUG EtRNA_L_ca Et70S_L 1, CUA EtRNA_L_ca Et70S_L 1, CUC EtRNA_L_ca Et70S_L 1, CUG EtRNA_L_ca Et70S_L 1, CUU EtRNA_L_ca Et70S_L 1, AUG EtRNA_M_ca Et70S_M 1, AAC EtRNA_N_ca Et70S_N 1, AAU EtRNA_N_ca Et70S_N 1, CCA EtRNA_P_ca Et70S_P 1, CCC EtRNA_P_ca Et70S_P 1, CCG EtRNA_P_ca Et70S_P 1, CCU EtRNA_P_ca Et70S_P 1, CAA EtRNA_Q_ca Et70S_Q 1, CAG EtRNA_Q_ca Et70S_Q 1, CGA EtRNA_R_ca Et70S_R 1, CGC EtRNA_R_ca Et70S_R 1, CGG EtRNA_R_ca Et70S_R 1, CGU EtRNA_R_ca Et70S_R 1, AGA EtRNA_R_ca Et70S_R 1, AGG EtRNA_R_ca Et70S_R 1, UCA EtRNA_S_ca Et70S_S 1, UCC EtRNA_S_ca Et70S_S 1, UCG EtRNA_S_ca Et70S_S 1, UCU EtRNA_S_ca Et70S_S 1, AGC EtRNA_S_ca Et70S_S 1, AGU EtRNA_S_ca Et70S_S 1, ACA EtRNA_T_ca Et70S_T 1, ACC EtRNA_T_ca Et70S_T 1, ACG EtRNA_T_ca Et70S_T 1, ACU EtRNA_T_ca Et70S_T 1, GUA EtRNA_V_ca Et70S_V 1, GUC EtRNA_V_ca Et70S_V 1, GUG EtRNA_V_ca Et70S_V 1, GUU EtRNA_V_ca Et70S_V 1, UGG EtRNA_W_ca Et70S_W 1, UAC EtRNA_Y_ca Et70S_Y 1, UAU EtRNA_Y_ca Et70S_Y 1, UAA RF stalled_ribosome 1, UAG RF stalled_ribosome 1, UGA RF stalled_ribosome 1
 ProductLoading 70S EtRNA_loading
 
 # transpeptidation
-ChemicalReaction EFP -1 GTP -1 EFPa 1 rates 1 1
-ChemicalReaction EFP -1 GDP -1 EFPd 1 rates 0.1 10
-
-ChemicalReaction Et70S_A_ca -1 t70S_A_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_A_c -1 EFPa -1 t70S_A_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_A_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_A 1 rates 1 0 
-ChemicalReaction Et70S_C_ca -1 t70S_C_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_C_c -1 EFPa -1 t70S_C_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_C_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_C 1 rates 1 0 
-ChemicalReaction Et70S_D_ca -1 t70S_D_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_D_c -1 EFPa -1 t70S_D_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_D_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_D 1 rates 1 0 
-ChemicalReaction Et70S_E_ca -1 t70S_E_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_E_c -1 EFPa -1 t70S_E_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_E_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_E 1 rates 1 0 
-ChemicalReaction Et70S_F_ca -1 t70S_F_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_F_c -1 EFPa -1 t70S_F_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_F_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_F 1 rates 1 0 
-ChemicalReaction Et70S_G_ca -1 t70S_G_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_G_c -1 EFPa -1 t70S_G_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_G_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_G 1 rates 1 0 
-ChemicalReaction Et70S_H_ca -1 t70S_H_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_H_c -1 EFPa -1 t70S_H_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_H_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_H 1 rates 1 0 
-ChemicalReaction Et70S_I_ca -1 t70S_I_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_I_c -1 EFPa -1 t70S_I_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_I_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_I 1 rates 1 0 
-ChemicalReaction Et70S_K_ca -1 t70S_K_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_K_c -1 EFPa -1 t70S_K_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_K_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_K 1 rates 1 0 
-ChemicalReaction Et70S_L_ca -1 t70S_L_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_L_c -1 EFPa -1 t70S_L_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_L_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_L 1 rates 1 0 
-ChemicalReaction Et70S_M_ca -1 t70S_M_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_M_c -1 EFPa -1 t70S_M_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_M_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_M 1 rates 1 0 
-ChemicalReaction Et70S_N_ca -1 t70S_N_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_N_c -1 EFPa -1 t70S_N_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_N_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_N 1 rates 1 0 
-ChemicalReaction Et70S_P_ca -1 t70S_P_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_P_c -1 EFPa -1 t70S_P_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_P_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_P 1 rates 1 0 
-ChemicalReaction Et70S_Q_ca -1 t70S_Q_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_Q_c -1 EFPa -1 t70S_Q_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_Q_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_Q 1 rates 1 0 
-ChemicalReaction Et70S_R_ca -1 t70S_R_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_R_c -1 EFPa -1 t70S_R_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_R_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_R 1 rates 1 0 
-ChemicalReaction Et70S_S_ca -1 t70S_S_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_S_c -1 EFPa -1 t70S_S_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_S_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_S 1 rates 1 0 
-ChemicalReaction Et70S_T_ca -1 t70S_T_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_T_c -1 EFPa -1 t70S_T_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_T_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_T 1 rates 1 0 
-ChemicalReaction Et70S_V_ca -1 t70S_V_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_V_c -1 EFPa -1 t70S_V_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_V_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_V 1 rates 1 0 
-ChemicalReaction Et70S_W_ca -1 t70S_W_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_W_c -1 EFPa -1 t70S_W_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_W_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_W 1 rates 1 0 
-ChemicalReaction Et70S_Y_ca -1 t70S_Y_c 1 EFTud 1 Pi 1 rates 1 0
-ChemicalReaction t70S_Y_c -1 EFPa -1 t70S_Y_cp 1 EFPd 1 Pi 1 rates 1 0 
-ChemicalReaction t70S_Y_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_Y 1 rates 1 0 
+ChemicalReaction Et70S_A -1 pre_translocation_70S 1 tRNA_A 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_C -1 pre_translocation_70S 1 tRNA_C 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_D -1 pre_translocation_70S 1 tRNA_D 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_E -1 pre_translocation_70S 1 tRNA_E 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_F -1 pre_translocation_70S 1 tRNA_F 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_G -1 pre_translocation_70S 1 tRNA_G 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_H -1 pre_translocation_70S 1 tRNA_H 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_I -1 pre_translocation_70S 1 tRNA_I 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_K -1 pre_translocation_70S 1 tRNA_K 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_L -1 pre_translocation_70S 1 tRNA_L 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_M -1 pre_translocation_70S 1 tRNA_M 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_N -1 pre_translocation_70S 1 tRNA_N 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_P -1 pre_translocation_70S 1 tRNA_P 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_Q -1 pre_translocation_70S 1 tRNA_Q 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_R -1 pre_translocation_70S 1 tRNA_R 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_S -1 pre_translocation_70S 1 tRNA_S 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_T -1 pre_translocation_70S 1 tRNA_T 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_V -1 pre_translocation_70S 1 tRNA_V 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_W -1 pre_translocation_70S 1 tRNA_W 1 EFTud 1 Pi 1 rates 1 0
+ChemicalReaction Et70S_Y -1 pre_translocation_70S 1 tRNA_Y 1 EFTud 1 Pi 1 rates 1 0
 
 ###########################
 # Translation termination #
@@ -310,5 +231,5 @@ ChemicalReaction t70S_Y_cp -1 GTP -1 EFt70S 1 GDP 1 Pi 1 tRNA_Y 1 rates 1 0
 BoundChemical empty_ribosome
 
 Release stalled_ribosome empty_ribosome 70S proteins 1
-ChemicalReaction empty_ribosome -1 30S 1 50S 1 protein 1 RF 1 rates 1 0
+ChemicalReaction empty_ribosome -1 30S 1 50S 1 protein_tracker 1 RF 1 rates 1 0
 

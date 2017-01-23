@@ -16,7 +16,7 @@ FreeChemical Sig-
 FreeChemical Mg2+ 1000
 FreeChemical NutA 100
 # not a real chemical: only used to count production.
-FreeChemical rna
+FreeChemical rna_tracker
 
 ################################
 # Transcription pre-initiation #
@@ -59,7 +59,7 @@ BoundChemical loaded_RNAP
 BoundChemical stalled_RNAP
 BoundChemical translocating_RNAP
 
-LoadingTable NTP_loading A ATP loaded_RNAP 1, C CTP loaded_RNAP 1, G GTP loaded_RNAP 1, T UTP loaded_RNAP 1
+LoadingTable NTP_loading A UTP loaded_RNAP 1, C GTP loaded_RNAP 1, G CTP loaded_RNAP 1, T ATP loaded_RNAP 1
 ProductLoading stable_RNAP NTP_loading
 ChemicalReaction loaded_RNAP -1 Mg2+ -2 translocating_RNAP 1 PPi 1 Mg2+ 2 rates 1 0
 Translocation translocating_RNAP stable_RNAP stalled_RNAP 1 6
@@ -69,8 +69,10 @@ Translocation translocating_RNAP stable_RNAP stalled_RNAP 1 6
 #############################
 BoundChemical empty_RNAP
 BoundChemical terminating_RNAP
+BoundChemical continuing_RNAP
 
 Switch hairpin stable_RNAP terminating_RNAP
-Release terminating_RNAP empty_RNAP stable_RNAP rnas 1
-ChemicalReaction empty_RNAP -1 NutA -1 NutA 1 RNAP 1 rna 1 rates 1 0
+Release terminating_RNAP empty_RNAP continuing_RNAP rnas 1
+ChemicalReaction empty_RNAP -1 NutA -1 NutA 1 RNAP 1 rna_tracker 1 rates 1 0
+ProductLoading continuing_RNAP NTP_loading
 

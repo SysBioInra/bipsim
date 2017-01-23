@@ -1,20 +1,57 @@
-
-###################
-# Small Chemicals #
-###################
-FreeChemical H2O 1000
-FreeChemical H+ 
-FreeChemical ppGpp
-FreeChemical PPi
+###############
+# Metabolites #
+###############
+FreeChemical dATP 10000000.0
+FreeChemical dAMP
+FreeChemical dCTP 10000000.0
+FreeChemical dCMP
+FreeChemical dGTP 10000000.0
+FreeChemical dGMP
+FreeChemical dTTP 10000000.0
+FreeChemical dTMP
+FreeChemical ATP 1200000.0
+FreeChemical ADP
+FreeChemical AMP
+FreeChemical CTP 1000000.0
+FreeChemical CDP
+FreeChemical CMP
+FreeChemical GTP 1000000.0
+FreeChemical GDP
+FreeChemical GMP
+FreeChemical UTP 1000000.0
+FreeChemical UDP
+FreeChemical UMP
+FreeChemical aa_A
+FreeChemical aa_C
+FreeChemical aa_D
+FreeChemical aa_E
+FreeChemical aa_F
+FreeChemical aa_G
+FreeChemical aa_H
+FreeChemical aa_I
+FreeChemical aa_K
+FreeChemical aa_L
+FreeChemical aa_M
+FreeChemical aa_N
+FreeChemical aa_P
+FreeChemical aa_Q
+FreeChemical aa_R
+FreeChemical aa_S
+FreeChemical aa_T
+FreeChemical aa_V
+FreeChemical aa_W
+FreeChemical aa_Y
 FreeChemical Pi
+FreeChemical PPi
+FreeChemical ppGpp
 
 #####################
-# Pseudo Metabolism #
+# Pseudo metabolism #
 #####################
 ChemicalReaction PPi -1 Pi 2 rates 1 0
-
 ChemicalReaction GDP -1 Pi -1 GTP 1 rates 1 0
-ChemicalReaction AMP -1 Pi -2 ATP 1 rates 1 0 
-ChemicalReaction GMP -1 Pi -2 GTP 1 rates 1 0 
-ChemicalReaction UMP -1 Pi -2 UTP 1 rates 1 0 
-ChemicalReaction CMP -1 Pi -2 CTP 1 rates 1 0 
+ChemicalReaction AMP -1 Pi -2 ATP 1 rates 1 0
+ChemicalReaction CMP -1 Pi -2 ATP 1 rates 1 0
+ChemicalReaction GMP -1 Pi -2 ATP 1 rates 1 0
+ChemicalReaction UMP -1 Pi -2 ATP 1 rates 1 0
+
