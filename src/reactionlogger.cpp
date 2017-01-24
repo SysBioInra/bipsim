@@ -29,6 +29,7 @@ ReactionLogger::ReactionLogger (const std::string& filename,
   : Logger (filename, overwrite) 
   , _reactions (reactions)
   , _log_number (10)
+  , _total_number_reactions (0)
   , _values (reactions.size(), 0)
   , _previous (reactions.size(), 0)
   , _indices (reactions.size(), 0)
@@ -72,11 +73,12 @@ private:
 
 void ReactionLogger::log (double simulation_time)
 {
-  _output << simulation_time << "\n";
-
   // update number of reactions performed since last log
+  long long int _previous_total = _total_number_reactions;
+  _total_number_reactions = 0;
   for (int i = 0; i < _reactions.size(); ++i)
     {
+      _total_number_reactions += _reactions[i]->number_performed();
       _values[i] = _reactions[i]->number_performed() - _previous[i];
       _previous[i] = _reactions[i]->number_performed();
     }
@@ -86,11 +88,16 @@ void ReactionLogger::log (double simulation_time)
   std::sort(_indices.begin(), _indices.end(), CompareValues (_values));
 
   // print output
+  long long int number_reactions = _total_number_reactions - _previous_total;
+  _output << "\nt = " << simulation_time
+	  << " (" << number_reactions << " reactions)\n";
   for (int i = 0; i < _log_number; ++i)
     { 
       if (_values [_indices[i]] == 0) { return; }
       _output << "\"" << _reactions[_indices[i]]->name() << "\""
-	      << "\t" << _values [_indices[i]] << "\n"; 
+	      << "\t" << _values[_indices[i]]
+	      << " (" << 100 * _values[_indices[i]] / number_reactions
+	      << "\%)\n"; 
     }
 }
 

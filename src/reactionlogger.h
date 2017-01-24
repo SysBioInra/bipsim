@@ -87,7 +87,9 @@ private:
 
   /** @brief Number of reactions to log. */
   int _log_number;
-  
+
+  /** @brief Total number of reactions. */
+  long long int _total_number_reactions;
   /** @brief Values to log. */
   std::vector <long long int> _values;
   /** @brief Values as of last log. */

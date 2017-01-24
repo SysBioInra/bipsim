@@ -81,8 +81,7 @@ class Handler
   {
     if (_name_to_id.find (name) != _name_to_id.end())
       {
-	std::string msg = "CREATION ERROR: identifier "
-	  + name + " already used.\n";
+	std::string msg = "identifier " + name + " already used";
 	throw ParserException(msg);
       }
     
