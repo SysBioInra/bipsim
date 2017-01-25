@@ -60,6 +60,7 @@ SwitchSiteBuilder::SwitchSiteBuilder (CellState& cell_state)
 FreeChemicalBuilder::FreeChemicalBuilder (CellState& cell_state)
   : Builder (cell_state)
   , _format (TagToken ("FreeChemical") + StrToken (_name))
+  , _constant_tag ("CONSTANT")
 {
 }
 
@@ -134,10 +135,11 @@ bool SwitchSiteBuilder::match (InputLine& text_input)
 
 bool FreeChemicalBuilder::match (InputLine& text_input)
 {
-  if (!_format.match (text_input)) { return false; } 
+  if (!_format.match (text_input)) { return false; }
   FreeChemical* chemical = new FreeChemical;
   store (chemical, _name);
   chemical->add (read_initial_quantity (text_input));
+  chemical->set_constant (_constant_tag.match (text_input));
   return true;
 }
 

@@ -117,6 +117,7 @@ class FreeChemicalBuilder : public Builder
  private:
   // format and values read
   Rule _format;
+  TagToken _constant_tag;
   std::string _name;
 };
 

@@ -86,7 +86,7 @@ void Release::do_reaction (void)
     (unit.location(), unit.initial_reading_frame(), unit.reading_frame()-1);
 
   if (product != 0) 
-    { 
+    {
       _releasing_polymerase.remove (unit);
       _empty_polymerase.add (unit);
       product->add (1); 

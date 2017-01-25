@@ -3,10 +3,8 @@
 /**
  * @file event.h
  * @brief Header for the Event, AddEvent, SetEvent and RemoveEvent classes.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -32,8 +30,7 @@
 
 /**
  * @brief Abstract class representing simulation events.
- *
- * Event is an abstract class used for user-defined events that happen
+ * @details Event is an abstract class used for user-defined events that happen
  * throughout simulation, such as adding/removing a given amount of a
  * target chemical at some point in time.
  */
@@ -309,19 +306,31 @@ private:
 //
 #include "freechemical.h"
 
-inline void AddEvent::perform (void) { target().add (_quantity); }
+inline void AddEvent::perform (void)
+{
+  bool is_constant = target().is_constant();
+  target().set_constant (false);
+  target().add (_quantity);
+  target().set_constant (is_constant);
+}
 
 inline void SetEvent::perform (void)
 {
+  bool is_constant = target().is_constant();
+  target().set_constant (false);
   int difference = _quantity - target().number();
   if (difference > 0) { target().add (difference); }
   else if (difference < 0) { target().remove (-difference); }
+  target().set_constant (is_constant);
 }
 
 inline void RemoveEvent::perform (void)
 {
+  bool is_constant = target().is_constant();
+  target().set_constant (false);
   if (_quantity < target().number()) { target().remove (_quantity); }
   else { target().remove (target().number()); }
+  target().set_constant (is_constant);
 }
 
 

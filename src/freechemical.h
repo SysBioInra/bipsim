@@ -2,7 +2,6 @@
 /**
  * @file freechemical.h
  * @brief Header for the ClassName class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
 
@@ -16,23 +15,15 @@
 // ==================
 //
 
-
 // ==================
 //  Project Includes
 // ==================
 //
 #include "chemical.h"
-
-// ======================
-//  Forward declarations
-// ======================
-//
 #include "forwarddeclarations.h"
 
 /**
  * @brief Class for chemicals diffusing freely in the cytosol.
- *
- *
  */
 class FreeChemical : public Chemical
 {
@@ -42,8 +33,9 @@ class FreeChemical : public Chemical
   // ==========================
   //
   // Not needed for this class (use of compiler-generated versions)
-  /** @brief Constructor. */
-  // FreeChemical (void);
+  /** @brief Default constructor. */
+  FreeChemical (void) : _constant (false) {}
+
   // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
   // FreeChemical (const FreeChemical& other_chemical);
@@ -56,15 +48,27 @@ class FreeChemical : public Chemical
   //  Public Methods - Commands
   // ===========================
   //
-  // makes the protected methods from Chemical public
-  using Chemical::add;
-  using Chemical::remove;
+  // redefined from Chemical  
+  void add (int quantity) { if (!_constant) Chemical::add (quantity); }
+  void remove (int quantity) { if (!_constant) Chemical::remove (quantity); }
+  
+  /** 
+   * @brief Specify whether chemical's concentration should change over time. 
+   * @param is_constant If set to true, all add and remove 
+   *  commands will be ignored.
+   */
+  void set_constant (bool is_constant) { _constant = is_constant; }
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
-
+  /** 
+   * @brief Specify whether chemical's concentration should change over time. 
+   * @param is_constant If set to true, all add and remove 
+   *  commands will be ignored.
+   */
+  bool is_constant (void) const { return _constant; }
 
 private:
   // =================
@@ -75,7 +79,9 @@ private:
   // ============
   //  Attributes
   // ============
-  //  
+  //
+  /** @brief Whether chemical has constant concentration or not. */
+  bool _constant;
 };
 
 // ======================
