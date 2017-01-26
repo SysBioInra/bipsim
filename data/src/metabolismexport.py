@@ -17,7 +17,8 @@ class MetabolismExport(ProcessExport):
         self.gdp_recycling = 1
         self.nmp_recycling = 1
 
-    def set_AN_detailed_parameters(self):
+    def set_AN_parameters(self):
+        self.set_test_parameters()
         # initial values
         self.dNTPs = [1e8]*4
         self.NTPs = [4.2e6, 0.12e6, 3e6, 0.3e6]

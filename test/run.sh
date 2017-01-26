@@ -7,3 +7,5 @@ EXE_NAME=simulator
 PARAMS_IN=input/params.in
 
 ${SRC_PATH}/${EXE_NAME} ${PARAMS_IN}
+# valgrind --tool=callgrind ${SRC_PATH}/${EXE_NAME} ${PARAMS_IN}
+#valgrind --leak-check=full --show-leak-kinds=all ${SRC_PATH}/${EXE_NAME} ${PARAMS_IN}

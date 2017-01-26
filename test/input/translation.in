@@ -190,13 +190,9 @@ BoundChemical Et70S_T
 BoundChemical Et70S_V
 BoundChemical Et70S_W
 BoundChemical Et70S_Y
-FreeChemical EFGa
-FreeChemical EFGd
 
 # translocation
-ChemicalReaction EFG -1 GTP -1 EFGa 1 rates 1 1
-ChemicalReaction EFG -1 GDP -1 EFGd 1 rates 0.1 10
-ChemicalReaction pre_translocation_70S -1 EFGa -1 translocating_70S 1 EFGd 1 Pi 1 rates 200 0 
+ChemicalReaction pre_translocation_70S -1 EFG -1 GTP -1 translocating_70S 1 EFG 1 GDP 1 Pi 1 rates 200 0 
 Translocation translocating_70S 70S stalled_ribosome 3 200
 
 # tRNA loading

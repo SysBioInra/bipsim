@@ -1,46 +1,45 @@
-
-##############
-#    UNITS   #
-##############
-#
-# initiation
+#####################
+# Replication input #
+#####################
 FreeChemical DnaA_GTP 2
-BoundChemical bound_DnaA
-BindingSite DnaA_BS sensedna 1 1 100000 0 1
-BindingSite DnaA_BS antisensedna 1 1 100000 0 1
 FreeChemical free_DNAP 10
+
+##########################
+# Replication initiation #
+##########################
 FreeChemical DnaA_GDP
-BoundChemical DNAP_lagging
+BoundChemical bound_DnaA
 BoundChemical DNAP_fork
 
-# elongation
-BoundChemical loaded_DNAP_fork
-BoundChemical loaded_DNAP_lagging
-LoadingTable dNTP_loading_fork A dTTP loaded_DNAP_fork 1e-3, C dGTP loaded_DNAP_fork 1e-3, G dCTP loaded_DNAP_fork 1e-3, T dATP loaded_DNAP_fork 1e-3
-LoadingTable dNTP_loading_lagging A dTTP loaded_DNAP_lagging 1e-3, C dGTP loaded_DNAP_lagging 1e-3, G dCTP loaded_DNAP_lagging 1e-3, T dATP loaded_DNAP_lagging 1e-3
-BoundChemical stalled_DNAP_fork
-BoundChemical stalled_DNAP_lagging
-BoundChemical translocating_DNAP_fork
-BoundChemical translocating_DNAP_lagging
+BindingSite DnaA_BS sensedna 1 1 100000 0 1
+BindingSite DnaA_BS antisensedna 1 1 100000 0 1
 
-##############
-# REACTIONS  #
-##############
-#
-
-# initiation
 SequenceBinding DnaA_GTP bound_DnaA DnaA_BS
 ChemicalReaction free_DNAP -1 bound_DnaA -1 DNAP_fork 1 DnaA_GDP 1 Pi 1 rates 1 0
 
-# elongation
+##########################
+# Replication elongation #
+##########################
+BoundChemical DNAP_lagging
+BoundChemical loaded_DNAP_fork
+BoundChemical translocating_DNAP_fork
+BoundChemical stalled_DNAP_fork
+BoundChemical loaded_DNAP_lagging
+BoundChemical translocating_DNAP_lagging
+BoundChemical stalled_DNAP_lagging
+
+# Leading strand
+LoadingTable dNTP_loading_fork A dTTP loaded_DNAP_fork 0.001, C dGTP loaded_DNAP_fork 0.001, G dCTP loaded_DNAP_fork 0.001, T dATP loaded_DNAP_fork 0.001
 DoubleStrandLoading DNAP_fork dNTP_loading_fork stalled_DNAP_fork
 ChemicalReaction loaded_DNAP_fork -1 PPi 1 translocating_DNAP_fork 1 rates 10000 0
 Translocation translocating_DNAP_fork DNAP_fork stalled_DNAP_fork 1 750
-
-DoubleStrandRecruitment DNAP_fork free_DNAP DNAP_lagging 5
-DoubleStrandLoading DNAP_lagging dNTP_loading_lagging stalled_DNAP_lagging
-ChemicalReaction loaded_DNAP_lagging -1 PPi 1 translocating_DNAP_lagging 1 rates 100000 0
-Translocation translocating_DNAP_lagging DNAP_lagging stalled_DNAP_lagging 1 750
-
 ChemicalReaction stalled_DNAP_fork -1 free_DNAP 1 rates 1000 0
+
+# Lagging strand
+DoubleStrandRecruitment DNAP_fork free_DNAP DNAP_lagging 5
+LoadingTable dNTP_loading_lagging A dTTP loaded_DNAP_lagging 0.001, C dGTP loaded_DNAP_lagging 0.001, G dCTP loaded_DNAP_lagging 0.001, T dATP loaded_DNAP_lagging 0.001
+DoubleStrandLoading DNAP_lagging dNTP_loading_lagging stalled_DNAP_lagging
+ChemicalReaction loaded_DNAP_lagging -1 PPi 1 translocating_DNAP_lagging 1 rates 10000 0
+Translocation translocating_DNAP_lagging DNAP_lagging stalled_DNAP_lagging 1 750
 ChemicalReaction stalled_DNAP_lagging -1 free_DNAP 1 rates 1000 0
+

@@ -2,8 +2,7 @@
 from processexport import *
 
 class TranslationExport(ProcessExport):
-    def __init__(self, TUs):
-        self._TUs = TUs
+    def __init__(self):
         self._aas = ['A','C','D','E','F','G','H','I','K','L','M','N', \
                     'P','Q','R','S','T','V','W','Y']
         self._genetic_code = {}
@@ -49,8 +48,11 @@ class TranslationExport(ProcessExport):
         self.translocation = 200
         self.transpeptidation = 1
         self.release = 1
-
-    def set_AN_detailed_parameters(self):
+        self.agregation_rate = 1
+        self.degradation = -1
+        
+    def set_AN_parameters(self):
+        self.set_test_parameters()
         # initial values
         self.nb_ribosomes = 22000
         self.IF_123 = [5500, 6600, 4400]
@@ -65,6 +67,13 @@ class TranslationExport(ProcessExport):
         self.translocation = 150
         self.transpeptidation = 150
         self.release = 150
+        self.agregation_rate = 8
+        self.degradation = -1
+
+    def set_paulsson_parameters(self):
+        set_AN_parameters()
+        # equal to growth rate 40min-1 = 2400s-1
+        self.degradation = 2400
 
     def write_input(self, output_stream):
         lines = self._header('Translation input')
@@ -141,13 +150,10 @@ class TranslationExport(ProcessExport):
         lines += self._bound_chemical(['stalled_ribosome', '70S', \
                                        'pre_translocation_70S'])
         lines += self._bound_chemical(['Et70S_' + aa for aa in self._aas])
-        lines += self._free_chemical(['EFGa','EFGd'])
         lines += '\n'
         lines += '# translocation\n'
-        lines += 'ChemicalReaction EFG -1 GTP -1 EFGa 1 rates 1 1\n'
-        lines += 'ChemicalReaction EFG -1 GDP -1 EFGd 1 rates 0.1 10\n'
-        lines += 'ChemicalReaction pre_translocation_70S -1 EFGa -1 ' \
-                 + 'translocating_70S 1 EFGd 1 Pi 1 rates ' \
+        lines += 'ChemicalReaction pre_translocation_70S -1 EFG -1 GTP -1 ' \
+                 + 'translocating_70S 1 EFG 1 GDP 1 Pi 1 rates ' \
                  + str(self.translocation) + ' 0 \n'
         lines += 'Translocation translocating_70S 70S stalled_ribosome 3 ' \
                  + str(self.translocation) + '\n'
@@ -170,11 +176,23 @@ class TranslationExport(ProcessExport):
         lines += '\n'
         output_stream.write(lines)
 
-    def write_agregated_elongation(self, output_stream):
+    def write_termination(self, output_stream):        
+        lines = self._header('Translation termination')
+        lines += self._bound_chemical(['empty_ribosome'])
+        lines += '\n'
+        lines += 'Release stalled_ribosome empty_ribosome 70S proteins ' \
+                 + str(self.release) + '\n'
+        lines += 'ChemicalReaction empty_ribosome -1 30S 1 50S 1 ' \
+                 + 'protein_tracker 1 RF 1 rates ' + str(self.release) + ' 0\n'
+        lines += '\n'
+        output_stream.write(lines)
+
+    def write_agregated_elongation(self, output_stream, TUs):
+        if len(TUs) == 0: return
         lines = self._header('Agregated translation elongation')
         output_stream.write(lines)
         known_70S = []
-        for TU in self._TUs:
+        for TU in TUs:
             parent = TU.name
             for g in TU.genes:
                 name = g.name + '_' + g.bsu
@@ -197,29 +215,16 @@ class TranslationExport(ProcessExport):
                     lines += 'Translocation ' + name_70S + ' ' + \
                              active_70S + ' ' + active_70S + ' 50 1\n'
                     # rest of elongation
+                    rate = float(self.agregation_rate) / sum(g.aa_composition)
                     lines += 'ChemicalReaction ' + active_70S + ' -1 ' \
                             + self._protein_reactants(g) + ' ' \
                             + '30S 1 50S 1 ' + name + ' 1 ' \
-                            + 'protein_tracker 1 rates 1 0\n'
+                            + 'protein_tracker 1 rates ' + str(rate) + ' 0\n'
                 lines += '\n'
                 output_stream.write(lines)
 
-    def write_termination(self, output_stream):        
-        lines = self._header('Translation termination')
-        lines += self._bound_chemical(['empty_ribosome'])
-        lines += '\n'
-        lines += 'Release stalled_ribosome empty_ribosome 70S proteins ' \
-                 + str(self.release) + '\n'
-        lines += 'ChemicalReaction empty_ribosome -1 30S 1 50S 1 ' \
-                 + 'protein_tracker 1 RF 1 rates ' + str(self.release) + ' 0\n'
-        lines += '\n'
-        output_stream.write(lines)
-
-    def write_proteins(self, output_stream):
+    def write_proteins(self, output_stream, TUs):
         lines = self._header('General information')
-        lines += 'CompositionTable protein_composition ' \
-                 + ', '.join([aa + ' aa_' + aa for aa in self._aas]) \
-                 + '\n'
         codon_aa = []
         for aa in self._aas:
             for codon in self._genetic_code[aa]:
@@ -229,7 +234,7 @@ class TranslationExport(ProcessExport):
         lines += '\n'
         lines += self._header('Sequence information')
         output_stream.write(lines)
-        for TU in self._TUs:
+        for TU in TUs:
             for g in TU.genes:
                 name = g.name + '_' + g.bsu
                 lines = 'ChemicalSequence ' + name + ' ' \
@@ -239,8 +244,28 @@ class TranslationExport(ProcessExport):
                          + str(g.rbs_start) + ' ' + str(g.rbs_end) + ' ' \
                          + str(self.k_on) + ' ' + str(self.k_off) + ' ' \
                          + str(g.start) + '\n'
-                output_stream.write(lines)
-            
+                output_stream.write(lines)            
+        lines = '\n'
+        output_stream.write(lines)
+
+    def write_degradation(self, output_stream, TUs):
+        if self.degradation <= 0: return
+        lines = self._header('Degradation')
+        lines += 'CompositionTable protein_composition ' \
+                 + ', '.join([aa + ' aa_' + aa for aa in self._aas]) \
+                 + '\n'
+        lines += '\n'
+        alread_treated = []
+        for TU in TUs:
+            for g in TU.genes:
+                if not(g.name in already_treated):
+                    already_treated.append(g.name)
+                    lines += 'Degradation ' + g.name + ' protein_composition ' \
+                             + str(self.degradation) + '\n'
+        lines += '\n'
+        output_stream.write(lines)
+
+                
     def _protein_reactants(self, gene):
         nb_bases = sum(gene.aa_composition)
         reaction = ''

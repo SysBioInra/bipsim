@@ -2,7 +2,7 @@
 from processexport import *
 
 class ReplicationExport(ProcessExport):
-    def __init__(self, TUs):
+    def __init__(self):
         self.set_test_parameters()
 
     def set_test_parameters(self):
@@ -16,9 +16,11 @@ class ReplicationExport(ProcessExport):
         self.release = 1
 
     def set_AN_parameters(self):
+        self.set_test_parameters()
         # initial values
         # rates
         self.loading = 1e-3
+        self.ligation = 10000
         self.translocation = 750
         self.recruitment = 5
         self.release = 1000

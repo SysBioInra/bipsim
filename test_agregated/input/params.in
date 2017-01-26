@@ -30,7 +30,7 @@ FINAL_TIME 1000
 ################################################################################
 
 INPUT_FILES input/dna.in input/rnas.in input/proteins.in input/transcription.in input/metabolites.in input/translation.in input/replication.in
-#input/rna_degradation.in
+
 #input/tetracyclin.in
 #input/injection_ppGpp.in
 
@@ -49,7 +49,7 @@ OUTPUT_DIR output
 #   OUTPUT_STEP <real value>
 ################################################################################
 
-OUTPUT_STEP 10
+OUTPUT_STEP 100
 
 ################################################################################
 # OUTPUT ENTITIES
