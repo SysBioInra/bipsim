@@ -36,12 +36,14 @@ def export_simulation_data(data_set, agregation_level):
                  translation_export, metabolism_export]
 
     # set parameters
+    write_replication = True
     if data_set.upper() == "TEST":
         for obj in exporters: obj.set_test_parameters()
     elif data_set.upper() == "AN":
         for obj in exporters: obj.set_AN_parameters()
     elif data_set.upper() == "PAULSSON":
         for obj in exporters: obj.set_paulsson_parameters()
+        write_replication = False
     else:
         print 'UNKNOWN DATA SET: please choose one of the following:'
         print '\tTEST, AN, PAULSSON,'
@@ -62,9 +64,10 @@ def export_simulation_data(data_set, agregation_level):
     
     # write files
     f = open('output/replication.in','w')
-    replication_export.write_input(f)
-    replication_export.write_initiation(f)
-    replication_export.write_elongation(f)
+    if write_replication:
+        replication_export.write_input(f)
+        replication_export.write_initiation(f)
+        replication_export.write_elongation(f)
     f.close()
     f = open('output/rnas.in','w')
     transcription_export.write_TUs(f, TUs)

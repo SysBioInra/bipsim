@@ -25,6 +25,9 @@ class ReplicationExport(ProcessExport):
         self.recruitment = 5
         self.release = 1000
 
+    def set_paulsson_parameters(self):
+        self.set_AN_parameters()
+
     def write_input(self, output_stream):
         lines = self._header('Replication input')
         lines += self._free_chemical(['DnaA_GTP'], [2])

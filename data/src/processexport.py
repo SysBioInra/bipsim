@@ -4,7 +4,7 @@ class ProcessExport:
         line = '#' * (len(title)+4) + '\n'
         return line + '# ' + title + ' #\n' + line
 
-    def _free_chemical(self, molecules, numbers = None):
+    def _free_chemical(self, molecules, numbers = None, constant = False):
         if numbers:
             assert(len(molecules) == len(numbers))
         lines = ''
@@ -12,6 +12,8 @@ class ProcessExport:
             lines += 'FreeChemical ' + molecules[i]
             if numbers:
                 lines += ' ' + str(numbers[i])
+            if constant:
+                lines += ' CONSTANT'
             lines += '\n'
         return lines
 

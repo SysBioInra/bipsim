@@ -1,0 +1,39 @@
+###############
+# Metabolites #
+###############
+FreeChemical ATP 4200000.0 CONSTANT
+FreeChemical ADP
+FreeChemical AMP
+FreeChemical CTP 120000.0 CONSTANT
+FreeChemical CDP
+FreeChemical CMP
+FreeChemical GTP 3000000.0 CONSTANT
+FreeChemical GDP
+FreeChemical GMP
+FreeChemical UTP 300000.0 CONSTANT
+FreeChemical UDP
+FreeChemical UMP
+FreeChemical aa_A
+FreeChemical aa_C
+FreeChemical aa_D
+FreeChemical aa_E
+FreeChemical aa_F
+FreeChemical aa_G
+FreeChemical aa_H
+FreeChemical aa_I
+FreeChemical aa_K
+FreeChemical aa_L
+FreeChemical aa_M
+FreeChemical aa_N
+FreeChemical aa_P
+FreeChemical aa_Q
+FreeChemical aa_R
+FreeChemical aa_S
+FreeChemical aa_T
+FreeChemical aa_V
+FreeChemical aa_W
+FreeChemical aa_Y
+FreeChemical Pi
+FreeChemical PPi
+FreeChemical ppGpp
+

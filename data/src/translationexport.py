@@ -71,7 +71,7 @@ class TranslationExport(ProcessExport):
         self.degradation = -1
 
     def set_paulsson_parameters(self):
-        set_AN_parameters()
+        self.set_AN_parameters()
         # equal to growth rate 40min-1 = 2400s-1
         self.degradation = 2400
 
@@ -255,12 +255,13 @@ class TranslationExport(ProcessExport):
                  + ', '.join([aa + ' aa_' + aa for aa in self._aas]) \
                  + '\n'
         lines += '\n'
-        alread_treated = []
+        already_treated = []
         for TU in TUs:
             for g in TU.genes:
-                if not(g.name in already_treated):
-                    already_treated.append(g.name)
-                    lines += 'Degradation ' + g.name + ' protein_composition ' \
+                name = g.name + '_' + g.bsu
+                if not(name in already_treated):
+                    already_treated.append(name)
+                    lines += 'Degradation ' + name + ' protein_composition ' \
                              + str(self.degradation) + '\n'
         lines += '\n'
         output_stream.write(lines)

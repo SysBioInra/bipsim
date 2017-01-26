@@ -1,5 +1,6 @@
 
 from processexport import *
+import math
 
 class TranscriptionExport(ProcessExport):
     def __init__(self):
@@ -42,7 +43,7 @@ class TranscriptionExport(ProcessExport):
     def set_paulsson_parameters(self):
         self.set_AN_parameters()
         # half life of 2.6min = 156s
-        self.degradation = log(2) / 156
+        self.degradation = math.log(2) / 156
 
     def write_input(self, output_stream):
         lines = self._header('Transcription input')
