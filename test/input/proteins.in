@@ -16479,6 +16479,4 @@ ChemicalSequence rnpA_BSU41050 product_of U3242 504 851 proteins
 BindingSite RBS U3242 487 506 10 1 504
 ChemicalSequence rpmH_BSU41060 product_of U3242 218 349 proteins
 BindingSite RBS U3242 200 220 10 1 218
-ChemicalSequence rpmH_BSU41060 product_of U3242 218 349 proteins
-BindingSite RBS U3242 200 220 10 1 218
 

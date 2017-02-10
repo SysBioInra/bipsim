@@ -2,6 +2,8 @@ Genes with no RBS info, RBS was set at 21 bases from start codon: recF, dck, rec
 
 Genes with invalid RBS info, RBS was set at 21 bases from start codon: mapA, ybgF, ubiX, cshA, ydfH, ydhK, tatCY, ydjB, swrC, yesK, yesP, rhgT, yesW, yesX, yetK, ygaB, ygaD, senS, yhbB, yhbJ, yhcR, ygxB, khtS, yisN, yisP, yisU, yitL, yjbB, pepF, ctaO, xkdO, dppE, ykfA, ykoV, ykoX, mtnW, glcT, sirC, ribC, ebrB, yncM, ppsE, proH, yoaD, yojN, yoqS, yprB, hepT, ypuI, yqbJ, infC, ytrC, yukF, fadN, fhuB, yvaA, araR, epsB, yvdB, yvcA, rbsK, ywrK, ptkA, ywmF, maeA, fbp, yybO, oxaAA.
 
+Genes with RBS far away from gene, RBS was set at 21 bases from start codon: holB, pabC, mrnC, ybaS, glnJ, ycgQ, yclK, ydaC, yddE, ydzV, ltaSA, acoC, yjcD, ykoW, rsgI, pbpH, fadG, ymfM, xylR, yobN, ypqE, ypjA, comGC, trmK, glyQ, ytnJ, ackA, ytnP, bioD, bioK, mrpA, fadE, sigO, sdpB, ywqC, bacE, ywcD, yxzJ, abnB, tetL.
+
 Genes with invalid stop codon (they were excluded): .
 
 Genes with invalid start codon: nucA, yjbB, xkdO, yotK, nrdIB, yorY, yorM, yoqL, youA, sda, infC.
@@ -70,7 +72,7 @@ U103 [154838:155916]: gene ybaJ [155141:155923] is not fully included on TU. Ext
 U105 [156081:157258]: gene cwlD [156596:157325] is not fully included on TU. Extending TU to match gene size.
 U106 [156574:157280]: gene cwlD [156596:157325] is not fully included on TU. Extending TU to match gene size.
 U111 [176926:178510]: gene ybaR [177066:178519] is not fully included on TU. Extending TU to match gene size.
-U112 [178598:179566]: gene ybaS [178610:179585] is not fully included on TU. Extending TU to match gene size.
+U112 [178598:179566]: gene ybaS [178644:179585] is not fully included on TU. Extending TU to match gene size.
 U114 [4032246:4035987]: gene ybbA [4035239:4036012] is not fully included on TU. Extending TU to match gene size.
 U115 [4030551:4035987]: gene ybbA [4035239:4036012] is not fully included on TU. Extending TU to match gene size.
 U117 [4021535:4025228]: gene ybbF [4024433:4025817] is not fully included on TU. Extending TU to match gene size.
@@ -150,8 +152,8 @@ U242 [347029:349801]: gene ycgP [348708:349959] is not fully included on TU. Ext
 U241 [346589:348569]: gene ycgO [347129:348571] is not fully included on TU. Extending TU to match gene size.
 U240 [346478:349779]: gene ycgP [348708:349959] is not fully included on TU. Extending TU to match gene size.
 U243 [348694:349933]: gene ycgP [348708:349959] is not fully included on TU. Extending TU to match gene size.
-U245 [3863813:3865598]: gene ycgQ [3863848:3865611] is not fully included on TU. Extending TU to match gene size.
-U246 [3862872:3865268]: gene ycgQ [3863848:3865611] is not fully included on TU. Extending TU to match gene size.
+U245 [3863813:3865598]: gene ycgQ [3864733:3865611] is not fully included on TU. Extending TU to match gene size.
+U246 [3862872:3865268]: gene ycgQ [3864733:3865611] is not fully included on TU. Extending TU to match gene size.
 U250 [3859966:3861704]: gene nasF [3860240:3861707] is not fully included on TU. Extending TU to match gene size.
 U251 [3857387:3861704]: gene nasF [3860240:3861707] is not fully included on TU. Extending TU to match gene size.
 U252 [3852791:3861704]: gene nasF [3860240:3861707] is not fully included on TU. Extending TU to match gene size.
@@ -196,7 +198,7 @@ U318 [463169:466932]: gene ycsN [466026:466944] is not fully included on TU. Ext
 U320 [463903:469198]: gene mtlR [467113:469214] is not fully included on TU. Extending TU to match gene size.
 U323 [469369:470848]: gene ydaB [469410:470937] is not fully included on TU. Extending TU to match gene size.
 U322 [469275:470805]: gene ydaB [469410:470937] is not fully included on TU. Extending TU to match gene size.
-U324 [3744024:3744617]: gene ydaC [3744033:3744650] is not fully included on TU. Extending TU to match gene size.
+U324 [3744024:3744617]: gene ydaC [3744084:3744650] is not fully included on TU. Extending TU to match gene size.
 U330 [474698:476964]: gene topB [476541:478741] is not fully included on TU. Extending TU to match gene size.
 U332 [3739689:3740019]: gene ydzA [3739716:3740023] is not fully included on TU. Extending TU to match gene size.
 U333 [476021:478724]: gene topB [476541:478741] is not fully included on TU. Extending TU to match gene size.
@@ -305,7 +307,7 @@ U543 [787948:789606]: gene yetK [788615:789628] is not fully included on TU. Ext
 U544 [3425419:3425507]: gene yetL [3425434:3425955] is not fully included on TU. Extending TU to match gene size.
 U545 [3423018:3424121]: gene yetN [3423057:3424145] is not fully included on TU. Extending TU to match gene size.
 U546 [792642:795810]: gene yetO [792667:795867] is not fully included on TU. Extending TU to match gene size.
-U547 [795959:798230]: gene ltaSA [796255:798233] is not fully included on TU. Extending TU to match gene size.
+U547 [795959:798230]: gene ltaSA [796293:798233] is not fully included on TU. Extending TU to match gene size.
 U549 [798340:803268]: gene yfnD [802330:803286] is not fully included on TU. Extending TU to match gene size.
 U550 [801046:803268]: gene yfnD [802330:803286] is not fully included on TU. Extending TU to match gene size.
 U552 [3411014:3412285]: gene yfnC [3411044:3412290] is not fully included on TU. Extending TU to match gene size.
@@ -549,7 +551,7 @@ U940 [1236562:1239333]: gene yjbO [1238502:1239374] is not fully included on TU.
 U941 [1240278:1248551]: gene fabI [1247769:1248564] is not fully included on TU. Extending TU to match gene size.
 U944 [1247728:1248969]: gene cotO [1248655:1249348] is not fully included on TU. Extending TU to match gene size.
 U954 [2963042:2964934]: gene cotX [2964416:2964951] is not fully included on TU. Extending TU to match gene size.
-U961 [2959567:2961876]: gene yjcD [2959597:2961894] is not fully included on TU. Extending TU to match gene size.
+U961 [2959567:2961876]: gene yjcD [2959720:2961894] is not fully included on TU. Extending TU to match gene size.
 U960 [1255943:1256339]: gene yjzE [1256093:1256363] is not fully included on TU. Extending TU to match gene size.
 U966 [2952961:2954792]: gene yjcK [2954232:2954796] is not fully included on TU. Extending TU to match gene size.
 U969 [1265007:1267383]: gene yjcQ [1267108:1267413] is not fully included on TU. Extending TU to match gene size.
@@ -625,7 +627,7 @@ U1076 [1398133:1398749]: gene ykoM [1398482:1398960] is not fully included on TU
 U1082 [1401697:1404469]: gene ykoT [1403458:1404492] is not fully included on TU. Extending TU to match gene size.
 U1083 [2808334:2811040]: gene ykoU [2809233:2811089] is not fully included on TU. Extending TU to match gene size.
 U1083 [2808334:2811089]: gene ykoV [2808294:2809250] is not fully included on TU. Extending TU to match gene size.
-U1084 [2805826:2808246]: gene ykoW [2805857:2808278] is not fully included on TU. Extending TU to match gene size.
+U1084 [2805826:2808246]: gene ykoW [2806008:2808278] is not fully included on TU. Extending TU to match gene size.
 U1085 [1409881:1411619]: gene ykoY [1410635:1411628] is not fully included on TU. Extending TU to match gene size.
 U1087 [1410607:1411619]: gene ykoY [1410635:1411628] is not fully included on TU. Extending TU to match gene size.
 U1089 [1411861:1415887]: gene htpX [1414980:1415893] is not fully included on TU. Extending TU to match gene size.
@@ -782,7 +784,7 @@ U1347 [1754744:1756705]: gene ymfD [1755632:1756857] is not fully included on TU
 U1348 [1755585:1756815]: gene ymfD [1755632:1756857] is not fully included on TU. Extending TU to match gene size.
 U1350 [1757013:1760706]: gene ymfJ [1760447:1760721] is not fully included on TU. Extending TU to match gene size.
 U1349 [1756968:1770191]: gene spoVS [1769919:1770195] is not fully included on TU. Extending TU to match gene size.
-U1351 [1760417:1762533]: gene ymfM [1761643:1762573] is not fully included on TU. Extending TU to match gene size.
+U1351 [1760417:1762533]: gene ymfM [1761686:1762573] is not fully included on TU. Extending TU to match gene size.
 U1353 [1760797:1770191]: gene spoVS [1769919:1770195] is not fully included on TU. Extending TU to match gene size.
 U1354 [1761830:1770191]: gene spoVS [1769919:1770195] is not fully included on TU. Extending TU to match gene size.
 U1355 [1764601:1770191]: gene spoVS [1769919:1770195] is not fully included on TU. Extending TU to match gene size.
@@ -816,7 +818,7 @@ U1394 [1877931:1882827]: gene ynaC [1882024:1882831] is not fully included on TU
 U1396 [1880043:1882827]: gene ynaC [1882024:1882831] is not fully included on TU. Extending TU to match gene size.
 U1397 [1881406:1883663]: gene ynaD [1883150:1883678] is not fully included on TU. Extending TU to match gene size.
 U1401 [1884169:1886523]: gene ynaI [1886042:1886527] is not fully included on TU. Extending TU to match gene size.
-U1405 [2323864:2325092]: gene xylR [2323924:2325095] is not fully included on TU. Extending TU to match gene size.
+U1405 [2323864:2325092]: gene xylR [2324022:2325095] is not fully included on TU. Extending TU to match gene size.
 U1407 [2319548:2319834]: gene yncB [2319577:2320229] is not fully included on TU. Extending TU to match gene size.
 U1408 [1896225:1897831]: gene yncC [1896414:1897839] is not fully included on TU. Extending TU to match gene size.
 U1412 [2314199:2314489]: gene cotU [2314213:2314490] is not fully included on TU. Extending TU to match gene size.
@@ -878,7 +880,6 @@ U1532 [2062097:2063378]: gene phrK [2063241:2063384] is not fully included on TU
 U1533 [2063006:2063378]: gene phrK [2063241:2063384] is not fully included on TU. Extending TU to match gene size.
 U1534 [2064984:2065270]: gene yozM [2065023:2065377] is not fully included on TU. Extending TU to match gene size.
 U1541 [2144494:2150173]: gene yobI [2146560:2150183] is not fully included on TU. Extending TU to match gene size.
-U1543 [2074310:2079152]: gene yobN [2074261:2075779] is not fully included on TU. Extending TU to match gene size.
 U1550 [2132551:2136379]: gene csaA [2136044:2136393] is not fully included on TU. Extending TU to match gene size.
 U1548 [2133123:2133277]: gene yobT [2133134:2133854] is not fully included on TU. Extending TU to match gene size.
 U1551 [2131561:2131693]: gene yobV [2131582:2132540] is not fully included on TU. Extending TU to match gene size.
@@ -967,7 +968,6 @@ U1740 [1883497:1888117]: gene ypvA [1886175:1888119] is not fully included on TU
 U1742 [1882397:1888117]: gene ypvA [1886175:1888119] is not fully included on TU. Extending TU to match gene size.
 U1744 [1878745:1888117]: gene ypvA [1886175:1888119] is not fully included on TU. Extending TU to match gene size.
 U1745 [1878107:1888117]: gene ypvA [1886175:1888119] is not fully included on TU. Extending TU to match gene size.
-U1745 [1878107:1888119]: gene ypqE [1878100:1878674] is not fully included on TU. Extending TU to match gene size.
 U1741 [1882553:1885521]: gene ypsC [1884358:1885532] is not fully included on TU. Extending TU to match gene size.
 U1749 [1876402:1876765]: gene yppE [1876409:1876798] is not fully included on TU. Extending TU to match gene size.
 U1750 [1876105:1876765]: gene yppE [1876409:1876798] is not fully included on TU. Extending TU to match gene size.
@@ -1248,8 +1248,7 @@ U2272 [1206751:1217289]: gene ytoI [1216970:1218306] is not fully included on TU
 U2271 [3008846:3009858]: gene ytlI [3008922:3009864] is not fully included on TU. Extending TU to match gene size.
 U2275 [1200547:1201075]: gene moaB [1200565:1201093] is not fully included on TU. Extending TU to match gene size.
 U2276 [1199204:1201075]: gene moaB [1200565:1201093] is not fully included on TU. Extending TU to match gene size.
-U2276 [1199204:1201093]: gene ackA [1199184:1200496] is not fully included on TU. Extending TU to match gene size.
-U2277 [1199073:1200239]: gene ackA [1199184:1200496] is not fully included on TU. Extending TU to match gene size.
+U2277 [1199073:1200239]: gene ackA [1199288:1200496] is not fully included on TU. Extending TU to match gene size.
 U2280 [1196737:1198831]: gene ytxK [1197954:1198961] is not fully included on TU. Extending TU to match gene size.
 U2281 [1196122:1198105]: gene ytxK [1197954:1198961] is not fully included on TU. Extending TU to match gene size.
 U2282 [1194519:1196059]: gene yteJ [1195559:1196074] is not fully included on TU. Extending TU to match gene size.
@@ -1276,7 +1275,6 @@ U2312 [1166106:1167426]: gene murC [1166115:1167430] is not fully included on TU
 U2317 [1159261:1160341]: gene ytoP [1159271:1160360] is not fully included on TU. Extending TU to match gene size.
 U2319 [1157019:1158757]: gene malS [1157041:1158758] is not fully included on TU. Extending TU to match gene size.
 U2320 [1156117:1158757]: gene malS [1157041:1158758] is not fully included on TU. Extending TU to match gene size.
-U2320 [1156117:1158758]: gene ytnP [1156114:1156976] is not fully included on TU. Extending TU to match gene size.
 U2321 [1155384:1156051]: gene trmB [1155400:1156060] is not fully included on TU. Extending TU to match gene size.
 U2323 [1153983:1156051]: gene trmB [1155400:1156060] is not fully included on TU. Extending TU to match gene size.
 U2324 [1150111:1156051]: gene trmB [1155400:1156060] is not fully included on TU. Extending TU to match gene size.
@@ -1413,7 +1411,7 @@ U2571 [849063:853837]: gene metN [852995:853840] is not fully included on TU. Ex
 U2572 [848645:853837]: gene metN [852995:853840] is not fully included on TU. Extending TU to match gene size.
 U2570 [849525:850999]: gene yusG [849522:849776] is not fully included on TU. Extending TU to match gene size.
 U2574 [843142:850999]: gene fadN [843114:845582] is not fully included on TU. Extending TU to match gene size.
-U2576 [841436:848557]: gene fadE [845594:848567] is not fully included on TU. Extending TU to match gene size.
+U2576 [841436:848557]: gene fadE [846762:848567] is not fully included on TU. Extending TU to match gene size.
 U2575 [3372563:3374322]: gene yuzL [3372552:3372715] is not fully included on TU. Extending TU to match gene size.
 U2575 [3372552:3374322]: gene yusN [3373980:3374333] is not fully included on TU. Extending TU to match gene size.
 U2577 [3374426:3376566]: gene yusP [3374935:3376581] is not fully included on TU. Extending TU to match gene size.
@@ -1431,7 +1429,7 @@ U2598 [815202:816502]: gene yvqJ [815228:816515] is not fully included on TU. Ex
 U2600 [3404795:3405607]: gene yvrD [3404819:3405626] is not fully included on TU. Extending TU to match gene size.
 U2603 [806144:806364]: gene rsoA [806128:806388] is not fully included on TU. Extending TU to match gene size.
 U2604 [805605:806364]: gene rsoA [806128:806388] is not fully included on TU. Extending TU to match gene size.
-U2604 [805605:806388]: gene sigO [805556:806145] is not fully included on TU. Extending TU to match gene size.
+U2604 [805605:806388]: gene sigO [805594:806145] is not fully included on TU. Extending TU to match gene size.
 U2605 [805550:806386]: gene rsoA [806128:806388] is not fully included on TU. Extending TU to match gene size.
 U2607 [3410379:3412093]: gene yvrL [3411668:3412094] is not fully included on TU. Extending TU to match gene size.
 U2606 [3410151:3412093]: gene yvrL [3411668:3412094] is not fully included on TU. Extending TU to match gene size.
@@ -1563,7 +1561,6 @@ U2834 [487405:491167]: gene ywqL [490450:491187] is not fully included on TU. Ex
 U2836 [484763:486107]: gene ywqF [484781:486119] is not fully included on TU. Extending TU to match gene size.
 U2837 [484636:486107]: gene ywqF [484781:486119] is not fully included on TU. Extending TU to match gene size.
 U2838 [482292:484149]: gene ywqE [483821:484602] is not fully included on TU. Extending TU to match gene size.
-U2838 [482292:484602]: gene ywqC [481955:483082] is not fully included on TU. Extending TU to match gene size.
 U2842 [481465:482081]: gene ywzD [481938:482102] is not fully included on TU. Extending TU to match gene size.
 U2840 [3733802:3738202]: gene ywqA [3735428:3738217] is not fully included on TU. Extending TU to match gene size.
 U2849 [471373:472334]: gene mscL [471932:472340] is not fully included on TU. Extending TU to match gene size.
@@ -1780,7 +1777,6 @@ U3212 [31655:32926]: gene yybB [32291:32971] is not fully included on TU. Extend
 U3211 [4183945:4184695]: gene yyaS [4184439:4185065] is not fully included on TU. Extending TU to match gene size.
 U3214 [4185817:4186983]: gene yyaP [4186592:4187174] is not fully included on TU. Extending TU to match gene size.
 U3216 [26414:27888]: gene tetB [26533:27926] is not fully included on TU. Extending TU to match gene size.
-U3216 [26414:27926]: gene tetL [21464:26516] is not fully included on TU. Extending TU to match gene size.
 U3218 [4189777:4189931]: gene yyaN [4189783:4190212] is not fully included on TU. Extending TU to match gene size.
 U3219 [4191163:4193231]: gene yyaL [4191182:4193267] is not fully included on TU. Extending TU to match gene size.
 U3221 [21399:22300]: gene yyaK [21421:22343] is not fully included on TU. Extending TU to match gene size.

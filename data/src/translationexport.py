@@ -3,6 +3,7 @@ from processexport import *
 
 class TranslationExport(ProcessExport):
     def __init__(self):
+        super(TranslationExport, self).__init__()
         self._aas = ['A','C','D','E','F','G','H','I','K','L','M','N', \
                     'P','Q','R','S','T','V','W','Y']
         self._genetic_code = {}
@@ -37,11 +38,11 @@ class TranslationExport(ProcessExport):
         # initial values
         self.nb_ribosomes = 1000
         self.IF_123 = [100, 400, 100]
-        self.EF_Tu_G_RF = [60000, 100, 1000]
+        self.EFTu = 60000
+        self.EF_G_RF = [100, 1000]
         self.fMet = 300
         self.nb_tRNAs = 1000
         # rates
-        self.EFTu_activation = 1
         self.k_on = 10
         self.k_off = 1
         self.loading = 1
@@ -56,11 +57,11 @@ class TranslationExport(ProcessExport):
         # initial values
         self.nb_ribosomes = 22000
         self.IF_123 = [5500, 6600, 4400]
-        self.EF_Tu_G_RF = [118000, 15000, 4000]
+        self.EFTu = 118000
+        self.EF_G_RF = [15000, 4000]
         self.fMet = 3000
         self.nb_tRNAs = 4000
         # rates
-        self.EFTu_activation = 1
         self.k_on = 1
         self.k_off = 0.1
         self.loading = 1e-3
@@ -73,18 +74,21 @@ class TranslationExport(ProcessExport):
     def set_paulsson_parameters(self):
         self.set_AN_parameters()
         # equal to growth rate 40min-1 = 2400s-1
-        self.degradation = 2400
+        self.degradation = 1.0/2400
 
     def write_input(self, output_stream):
         lines = self._header('Translation input')
         lines += self._free_chemical(['30S','50S'], \
                                      [self.nb_ribosomes]*2)
         lines += self._free_chemical(['IF1','IF2','IF3'], self.IF_123)
-        lines += self._free_chemical(['EFTud','EFG','RF'], \
-                                     self.EF_Tu_G_RF)
-        lines += self._free_chemical(['tRNA_fM'], [self.fMet])
-        lines += self._free_chemical(['tRNA_' + aa for aa in self._aas], \
-                                     [self.nb_tRNAs*i for i in self._nb_codons])
+        lines += self._free_chemical(['EFG','RF'], self.EF_G_RF)
+        if self.cut_slow_reactions:
+            lines += self._free_chemical(['tRNA_fM_c'], [0], True)
+        else:
+            lines += self._free_chemical(['tRNA_fM_c'], [self.fMet])
+        lines += self._free_chemical(['EtRNA_' + aa + '_ca' for aa in self._aas], \
+                                     [self.nb_tRNAs*i for i in self._nb_codons], \
+                                     self.cut_slow_reactions)
         lines += '\n'
         lines += '# not a real chemical, used to count production\n'
         lines += self._free_chemical(['protein_tracker'])
@@ -94,22 +98,47 @@ class TranslationExport(ProcessExport):
     def write_tRNA_activation(self, output_stream):
         aas_fMet = ['fM'] + self._aas
         lines = self._header('tRNA activation')
-        lines += self._free_chemical(['tRNA_' + aa + '_c' for aa in aas_fMet])
+        lines += self._free_chemical(['tRNA_' + aa for aa in aas_fMet], \
+                                     [0] * len(aas_fMet), self.cut_slow_reactions)
+        if not(self.cut_slow_reactions):
+            lines += self._free_chemical(['tRNA_' + aa + '_c' for aa in self._aas])
         lines += '\n'
-        lines += self._free_chemical(['EFTua'])
+        lines += self._free_chemical(['EFTud'], [0], self.cut_slow_reactions)
+        if not(self.cut_slow_reactions):
+            lines += self._free_chemical(['EFTua'], [self.EFTu])
         lines += '\n'
-        lines += self._free_chemical(['EtRNA_' + aa + '_ca' for aa in self._aas])
-        lines += '\n'
+        if self.cut_slow_reactions:
+            lines += '# RNAs were set to act as constant chemicals, we skip\n'
+            lines += '# tRNA activation reactions.\n'
+            lines += '\n'
+            output_stream.write(lines)
+            return
+        if self.agregate_slow_reactions:
+            stoichio = '100 order 1'
+        else:
+            stoichio = '1'
         for aa in aas_fMet:
-            lines += 'ChemicalReaction tRNA_' + aa + ' -1 ATP -1 ' \
-                     + 'AMP 1 PPi 1 tRNA_' + aa + '_c 1 rates 1 0\n'
+            lines += 'ChemicalReaction tRNA_' + aa + ' -' + stoichio \
+                     + ' ATP -' + stoichio + ' AMP ' + stoichio \
+                     + ' PPi ' + stoichio + ' tRNA_' + aa + '_c ' \
+                     + stoichio + ' rates 1 0\n'
         lines += '\n'
-        lines += 'ChemicalReaction EFTud -1 GTP -1 EFTua 1 GDP 1 rates ' \
-                 + str(self.EFTu_activation) + ' 0\n'
+        if self.agregate_slow_reactions:
+            stoichio = '1000 order 1'
+        else:
+            stoichio = '1'
+        lines += 'ChemicalReaction EFTud -' + stoichio \
+                 + ' GTP -' + stoichio + ' EFTua ' + stoichio \
+                 + ' GDP ' + stoichio + ' rates 1 0\n'
         lines += '\n'
+        if self.agregate_slow_reactions:
+            stoichio = '100 order 1'
+        else:
+            stoichio = '1'
         for aa in self._aas:
-            lines += 'ChemicalReaction tRNA_' + aa + '_c -1 EFTua -1 ' \
-                     + 'EtRNA_' + aa + '_ca 1 rates 1 0\n'
+            lines += 'ChemicalReaction tRNA_' + aa + '_c -' + stoichio \
+                     + ' EFTua -' + stoichio + ' EtRNA_' + aa + '_ca ' \
+                     + stoichio + ' rates 1 0\n'
         lines += '\n'
         output_stream.write(lines)
 
@@ -124,18 +153,23 @@ class TranslationExport(ProcessExport):
 
     def write_initiation(self, output_stream):
         lines = self._header('Translation initiation')
-        lines += self._bound_chemical(['m30S31','m30S312a','m30S312d', \
+        if self.cut_slow_reactions:
+            lines += self._free_chemical(['IF2d','fMet2a','fMet2d'], \
+                                         [0, self.fMet, 0], True)
+        else:
+            lines += self._free_chemical(['IF2a', 'IF2d', 'IF2p'])
+            lines += self._free_chemical(['fMet2a','fMet2d', 'fMet2p'])
+        lines += self._bound_chemical(['m30S31','m30S312a', 'm30S312d', \
                                        'm30S12a', 'translocating_70S'])
-        lines += self._free_chemical(['IF2a', 'IF2d', 'IF2p'])
-        lines += self._free_chemical(['fMet2a','fMet2d', 'fMet2p'])
         lines += '\n'
         lines += 'SequenceBinding 30S31 m30S31 RBS\n'
-        lines += 'ChemicalReaction IF2 -1 GTP -1 IF2a 1 rates 1 1\n'
-        lines += 'ChemicalReaction IF2a -1 tRNA_fM_c -1 fMet2a 1 rates 1 1\n'
-        lines += 'ChemicalReaction IF2 -1 GDP -1 IF2d 1 rates 1 10\n'
-        lines += 'ChemicalReaction IF2d -1 tRNA_fM_c -1 fMet2d 1 rates 1 10\n'
-        lines += 'ChemicalReaction IF2 -1 ppGpp -1 IF2p 1 rates 1 1\n'
-        lines += 'ChemicalReaction IF2p -1 tRNA_fM_c -1 fMet2p 1 rates 1 1\n'
+        if not(self.cut_slow_reactions):
+            lines += 'ChemicalReaction IF2 -1 GTP -1 IF2a 1 rates 1 1\n'
+            lines += 'ChemicalReaction IF2a -1 tRNA_fM_c -1 fMet2a 1 rates 1 1\n'
+            lines += 'ChemicalReaction IF2 -1 GDP -1 IF2d 1 rates 1 10\n'
+            lines += 'ChemicalReaction IF2d -1 tRNA_fM_c -1 fMet2d 1 rates 1 10\n'
+            lines += 'ChemicalReaction IF2 -1 ppGpp -1 IF2p 1 rates 1 1\n'
+            lines += 'ChemicalReaction IF2p -1 tRNA_fM_c -1 fMet2p 1 rates 1 1\n'
         lines += 'ChemicalReaction fMet2a -1 m30S31 -1 m30S312a 1 rates 1 0\n'
         lines += 'ChemicalReaction fMet2d -1 m30S31 -1 m30S312d 1 rates 1 10\n'
         lines += 'ChemicalReaction m30S312a -1 IF3 1 m30S12a 1 rates 1 0\n'

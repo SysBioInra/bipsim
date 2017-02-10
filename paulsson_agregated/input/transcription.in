@@ -9996,7 +9996,7 @@ ChemicalReaction transcribing_RNAP_U1542 -1 ATP -1411 order 0 CTP -554 order 0 G
 BoundChemical RNAP_U1543
 BoundChemical transcribing_RNAP_U1543
 Switch U1543_translation stable_RNAP RNAP_U1543
-SwitchSite sensedna 2074261 U1543_translation
+SwitchSite sensedna 2074310 U1543_translation
 # arbitrary translocation inside TU.
 Translocation RNAP_U1543 transcribing_RNAP_U1543 transcribing_RNAP_U1543 50 1
 ChemicalReaction transcribing_RNAP_U1543 -1 ATP -1511 order 0 CTP -962 order 0 GTP -963 order 0 UTP -1406 order 0 Mg2+ -2 order 0 PPi 4842 Mg2+ 2 RNAP 1 SigEF 1 U1543 1 rna_tracker 1 rates 0.0103263114416 0
@@ -11268,7 +11268,7 @@ ChemicalReaction transcribing_RNAP_U1744 -1 ATP -2923 order 0 CTP -1783 order 0 
 BoundChemical RNAP_U1745
 BoundChemical transcribing_RNAP_U1745
 Switch U1745_translation stable_RNAP RNAP_U1745
-SwitchSite antisensedna 1878100 U1745_translation
+SwitchSite antisensedna 1878107 U1745_translation
 # arbitrary translocation inside TU.
 Translocation RNAP_U1745 transcribing_RNAP_U1745 transcribing_RNAP_U1745 50 1
 ChemicalReaction transcribing_RNAP_U1745 -1 ATP -3131 order 0 CTP -1890 order 0 GTP -2409 order 0 UTP -2580 order 0 Mg2+ -2 order 0 PPi 10010 Mg2+ 2 RNAP 1 SigA 1 U1745 1 rna_tracker 1 rates 0.004995004995 0
@@ -14748,7 +14748,7 @@ ChemicalReaction transcribing_RNAP_U2275 -1 ATP -163 order 0 CTP -111 order 0 GT
 BoundChemical RNAP_U2276
 BoundChemical transcribing_RNAP_U2276
 Switch U2276_translation stable_RNAP RNAP_U2276
-SwitchSite antisensedna 1199184 U2276_translation
+SwitchSite antisensedna 1199204 U2276_translation
 # arbitrary translocation inside TU.
 Translocation RNAP_U2276 transcribing_RNAP_U2276 transcribing_RNAP_U2276 50 1
 ChemicalReaction transcribing_RNAP_U2276 -1 ATP -568 order 0 CTP -389 order 0 GTP -453 order 0 UTP -461 order 0 Mg2+ -2 order 0 PPi 1871 Mg2+ 2 RNAP 1 SigA 1 U2276 1 rna_tracker 1 rates 0.026723677178 0
@@ -15076,7 +15076,7 @@ ChemicalReaction transcribing_RNAP_U2319 -1 ATP -499 order 0 CTP -357 order 0 GT
 BoundChemical RNAP_U2320
 BoundChemical transcribing_RNAP_U2320
 Switch U2320_translation stable_RNAP RNAP_U2320
-SwitchSite antisensedna 1156114 U2320_translation
+SwitchSite antisensedna 1156117 U2320_translation
 # arbitrary translocation inside TU.
 Translocation RNAP_U2320 transcribing_RNAP_U2320 transcribing_RNAP_U2320 50 1
 ChemicalReaction transcribing_RNAP_U2320 -1 ATP -774 order 0 CTP -543 order 0 GTP -704 order 0 UTP -619 order 0 Mg2+ -2 order 0 PPi 2640 Mg2+ 2 RNAP 1 SigA 1 U2320 1 rna_tracker 1 rates 0.0189393939394 0
@@ -16932,7 +16932,7 @@ ChemicalReaction transcribing_RNAP_U2603 -1 ATP -80 order 0 CTP -33 order 0 GTP 
 BoundChemical RNAP_U2604
 BoundChemical transcribing_RNAP_U2604
 Switch U2604_translation stable_RNAP RNAP_U2604
-SwitchSite antisensedna 805556 U2604_translation
+SwitchSite antisensedna 805594 U2604_translation
 # arbitrary translocation inside TU.
 Translocation RNAP_U2604 transcribing_RNAP_U2604 transcribing_RNAP_U2604 50 1
 ChemicalReaction transcribing_RNAP_U2604 -1 ATP -264 order 0 CTP -136 order 0 GTP -176 order 0 UTP -183 order 0 Mg2+ -2 order 0 PPi 759 Mg2+ 2 RNAP 1 SigA 1 U2604 1 rna_tracker 1 rates 0.0658761528327 0
@@ -18396,7 +18396,7 @@ ChemicalReaction transcribing_RNAP_U2837 -1 ATP -422 order 0 CTP -309 order 0 GT
 BoundChemical RNAP_U2838
 BoundChemical transcribing_RNAP_U2838
 Switch U2838_translation stable_RNAP RNAP_U2838
-SwitchSite antisensedna 481955 U2838_translation
+SwitchSite antisensedna 482292 U2838_translation
 # arbitrary translocation inside TU.
 Translocation RNAP_U2838 transcribing_RNAP_U2838 transcribing_RNAP_U2838 50 1
 ChemicalReaction transcribing_RNAP_U2838 -1 ATP -591 order 0 CTP -407 order 0 GTP -427 order 0 UTP -432 order 0 Mg2+ -2 order 0 PPi 1857 Mg2+ 2 RNAP 1 SigA 1 U2838 1 rna_tracker 1 rates 0.0269251480883 0
@@ -20884,7 +20884,7 @@ ChemicalReaction transcribing_RNAP_U3214 -1 ATP -430 order 0 CTP -179 order 0 GT
 BoundChemical RNAP_U3216
 BoundChemical transcribing_RNAP_U3216
 Switch U3216_translation stable_RNAP RNAP_U3216
-SwitchSite antisensedna 21464 U3216_translation
+SwitchSite antisensedna 26414 U3216_translation
 # arbitrary translocation inside TU.
 Translocation RNAP_U3216 transcribing_RNAP_U3216 transcribing_RNAP_U3216 50 1
 ChemicalReaction transcribing_RNAP_U3216 -1 ATP -391 order 0 CTP -258 order 0 GTP -326 order 0 UTP -499 order 0 Mg2+ -2 order 0 PPi 1474 Mg2+ 2 RNAP 1 SigA 1 U3216 1 rna_tracker 1 rates 0.033921302578 0

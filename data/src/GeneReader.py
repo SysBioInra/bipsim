@@ -41,6 +41,7 @@ class GeneReader:
         self.genes = []
         no_RBS = []
         invalid_RBS = []
+        long_RBS = []
         invalid_start = []
         invalid_stop = []
         invalid_sequence = []
@@ -66,6 +67,9 @@ class GeneReader:
                     self._invert_position(rbs, dna_length)
                 if rbs[0] > position[0]:
                     invalid_RBS.append(name)
+                    rbs[0] = position[0] - 21
+                if rbs[0] < position[0] - 50:
+                    long_RBS.append(name)
                     rbs[0] = position[0] - 21
             rbs[1] = position[0] + 2
             
@@ -103,6 +107,9 @@ class GeneReader:
             msg = 'Genes with invalid RBS info, RBS was set' \
                   + ' at 21 bases from start codon: '
             log_stream.write(msg + ', '.join(invalid_RBS) + '.\n\n')
+            msg = 'Genes with RBS far away from gene, RBS was set' \
+                  + ' at 21 bases from start codon: '
+            log_stream.write(msg + ', '.join(long_RBS) + '.\n\n')            
             msg = 'Genes with invalid stop codon (they were excluded): '
             log_stream.write(msg + ', '.join(invalid_stop) + '.\n\n')
             msg = 'Genes with invalid start codon: '

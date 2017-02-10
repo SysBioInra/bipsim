@@ -4,6 +4,7 @@ import math
 
 class TranscriptionExport(ProcessExport):
     def __init__(self):
+        super(TranscriptionExport, self).__init__()
         self.set_test_parameters()
 
     def set_test_parameters(self):

@@ -52,9 +52,17 @@ def export_simulation_data(data_set, agregation_level):
     agregated_TUs = []
     if agregation_level.upper() == "AGREGATED":
         agregated_TUs = TUs
+        if data_set.upper() == "PAULSSON":
+            for obj in exporters: obj.cut_slow_reactions = True
+        else:
+            for obj in exporters: obj.agregate_slow_reactions = True
     elif agregation_level.upper() == "HYBRID":
         # pick last 95% of TUs and agregate them
         agregated_TUs = TUs[(5*len(TUs)/100):]
+        if data_set.upper() == "PAULSSON":
+            for obj in exporters: obj.cut_slow_reactions = True
+        else:
+            for obj in exporters: obj.agregate_slow_reactions = True
     elif agregation_level.upper() == "DETAILED":
         pass
     else:

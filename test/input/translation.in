@@ -6,30 +6,29 @@ FreeChemical 50S 1000
 FreeChemical IF1 100
 FreeChemical IF2 400
 FreeChemical IF3 100
-FreeChemical EFTud 60000
 FreeChemical EFG 100
 FreeChemical RF 1000
-FreeChemical tRNA_fM 300
-FreeChemical tRNA_A 4000
-FreeChemical tRNA_C 2000
-FreeChemical tRNA_D 2000
-FreeChemical tRNA_E 2000
-FreeChemical tRNA_F 2000
-FreeChemical tRNA_G 4000
-FreeChemical tRNA_H 2000
-FreeChemical tRNA_I 3000
-FreeChemical tRNA_K 2000
-FreeChemical tRNA_L 6000
-FreeChemical tRNA_M 1000
-FreeChemical tRNA_N 2000
-FreeChemical tRNA_P 4000
-FreeChemical tRNA_Q 2000
-FreeChemical tRNA_R 6000
-FreeChemical tRNA_S 6000
-FreeChemical tRNA_T 4000
-FreeChemical tRNA_V 4000
-FreeChemical tRNA_W 1000
-FreeChemical tRNA_Y 2000
+FreeChemical tRNA_fM_c 300
+FreeChemical EtRNA_A_ca 4000
+FreeChemical EtRNA_C_ca 2000
+FreeChemical EtRNA_D_ca 2000
+FreeChemical EtRNA_E_ca 2000
+FreeChemical EtRNA_F_ca 2000
+FreeChemical EtRNA_G_ca 4000
+FreeChemical EtRNA_H_ca 2000
+FreeChemical EtRNA_I_ca 3000
+FreeChemical EtRNA_K_ca 2000
+FreeChemical EtRNA_L_ca 6000
+FreeChemical EtRNA_M_ca 1000
+FreeChemical EtRNA_N_ca 2000
+FreeChemical EtRNA_P_ca 4000
+FreeChemical EtRNA_Q_ca 2000
+FreeChemical EtRNA_R_ca 6000
+FreeChemical EtRNA_S_ca 6000
+FreeChemical EtRNA_T_ca 4000
+FreeChemical EtRNA_V_ca 4000
+FreeChemical EtRNA_W_ca 1000
+FreeChemical EtRNA_Y_ca 2000
 
 # not a real chemical, used to count production
 FreeChemical protein_tracker
@@ -37,7 +36,27 @@ FreeChemical protein_tracker
 ###################
 # tRNA activation #
 ###################
-FreeChemical tRNA_fM_c
+FreeChemical tRNA_fM 0
+FreeChemical tRNA_A 0
+FreeChemical tRNA_C 0
+FreeChemical tRNA_D 0
+FreeChemical tRNA_E 0
+FreeChemical tRNA_F 0
+FreeChemical tRNA_G 0
+FreeChemical tRNA_H 0
+FreeChemical tRNA_I 0
+FreeChemical tRNA_K 0
+FreeChemical tRNA_L 0
+FreeChemical tRNA_M 0
+FreeChemical tRNA_N 0
+FreeChemical tRNA_P 0
+FreeChemical tRNA_Q 0
+FreeChemical tRNA_R 0
+FreeChemical tRNA_S 0
+FreeChemical tRNA_T 0
+FreeChemical tRNA_V 0
+FreeChemical tRNA_W 0
+FreeChemical tRNA_Y 0
 FreeChemical tRNA_A_c
 FreeChemical tRNA_C_c
 FreeChemical tRNA_D_c
@@ -59,28 +78,8 @@ FreeChemical tRNA_V_c
 FreeChemical tRNA_W_c
 FreeChemical tRNA_Y_c
 
-FreeChemical EFTua
-
-FreeChemical EtRNA_A_ca
-FreeChemical EtRNA_C_ca
-FreeChemical EtRNA_D_ca
-FreeChemical EtRNA_E_ca
-FreeChemical EtRNA_F_ca
-FreeChemical EtRNA_G_ca
-FreeChemical EtRNA_H_ca
-FreeChemical EtRNA_I_ca
-FreeChemical EtRNA_K_ca
-FreeChemical EtRNA_L_ca
-FreeChemical EtRNA_M_ca
-FreeChemical EtRNA_N_ca
-FreeChemical EtRNA_P_ca
-FreeChemical EtRNA_Q_ca
-FreeChemical EtRNA_R_ca
-FreeChemical EtRNA_S_ca
-FreeChemical EtRNA_T_ca
-FreeChemical EtRNA_V_ca
-FreeChemical EtRNA_W_ca
-FreeChemical EtRNA_Y_ca
+FreeChemical EFTud 0
+FreeChemical EFTua 60000
 
 ChemicalReaction tRNA_fM -1 ATP -1 AMP 1 PPi 1 tRNA_fM_c 1 rates 1 0
 ChemicalReaction tRNA_A -1 ATP -1 AMP 1 PPi 1 tRNA_A_c 1 rates 1 0
@@ -140,17 +139,17 @@ ChemicalReaction 30S3 -1 IF1 -1 30S31 1 rates 1 1
 ##########################
 # Translation initiation #
 ##########################
-BoundChemical m30S31
-BoundChemical m30S312a
-BoundChemical m30S312d
-BoundChemical m30S12a
-BoundChemical translocating_70S
 FreeChemical IF2a
 FreeChemical IF2d
 FreeChemical IF2p
 FreeChemical fMet2a
 FreeChemical fMet2d
 FreeChemical fMet2p
+BoundChemical m30S31
+BoundChemical m30S312a
+BoundChemical m30S312d
+BoundChemical m30S12a
+BoundChemical translocating_70S
 
 SequenceBinding 30S31 m30S31 RBS
 ChemicalReaction IF2 -1 GTP -1 IF2a 1 rates 1 1

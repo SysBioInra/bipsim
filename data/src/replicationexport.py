@@ -3,6 +3,7 @@ from processexport import *
 
 class ReplicationExport(ProcessExport):
     def __init__(self):
+        super(ReplicationExport, self).__init__()
         self.set_test_parameters()
 
     def set_test_parameters(self):

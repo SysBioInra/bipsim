@@ -1,5 +1,9 @@
 
-class ProcessExport:
+class ProcessExport(object):
+    def __init__(self):
+        self.agregate_slow_reactions = False
+        self.cut_slow_reactions = False
+    
     def _header(self, title):
         line = '#' * (len(title)+4) + '\n'
         return line + '# ' + title + ' #\n' + line

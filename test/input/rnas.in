@@ -7873,9 +7873,6 @@ SwitchSite antisensedna 2408 hairpin
 ChemicalSequence U3242 product_of antisensedna 102 2407 rnas
 BindingSite promoter_SigA antisensedna 67 103 10 1 102
 SwitchSite antisensedna 2408 hairpin
-ChemicalSequence U3242 product_of antisensedna 102 2407 rnas
-BindingSite promoter_SigA antisensedna 67 103 10 1 102
-SwitchSite antisensedna 2408 hairpin
 
 ###############
 # Degradation #
