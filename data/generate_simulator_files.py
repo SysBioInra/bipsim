@@ -5,7 +5,7 @@ from src.transcriptionexport import *
 from src.translationexport import *
 from src.metabolismexport import *
 
-def export_simulation_data(data_set, agregation_level):
+def export_simulation_data(data_set, process_agregation, metab_agregation):
     # open global log file
     log_file = open('log.txt', 'w')
         
@@ -50,24 +50,29 @@ def export_simulation_data(data_set, agregation_level):
         return
 
     agregated_TUs = []
-    if agregation_level.upper() == "AGREGATED":
+    if process_agregation.upper() == "AGREGATED":
         agregated_TUs = TUs
-        if data_set.upper() == "PAULSSON":
-            for obj in exporters: obj.cut_slow_reactions = True
-        else:
-            for obj in exporters: obj.agregate_slow_reactions = True
-    elif agregation_level.upper() == "HYBRID":
+    elif process_agregation.upper() == "HYBRID":
         # pick last 95% of TUs and agregate them
         agregated_TUs = TUs[(5*len(TUs)/100):]
-        if data_set.upper() == "PAULSSON":
-            for obj in exporters: obj.cut_slow_reactions = True
-        else:
-            for obj in exporters: obj.agregate_slow_reactions = True
-    elif agregation_level.upper() == "DETAILED":
+    elif process_agregation.upper() == "DETAILED":
         pass
     else:
-        print 'UNKNWON AGREGATION LEVEL: please choos one of the following:'
-        print '\tDETAILED, HYBRID, AGREGATED,'
+        print('UNKNWON AGREGATION LEVEL FOR PROCESSES: ' + process_agregation
+              + ', please choose one of the following:\n'
+              '\tDETAILED, HYBRID, AGREGATED')
+        return
+
+    if metab_agregation.upper() == 'CONSTANT':
+        for obj in exporters: obj.cut_slow_reactions = True
+    elif metab_agregation.upper() == 'STACKED':
+        for obj in exporters: obj.agregate_slow_reactions = True
+    elif metab_agregation == 'DETAILED':
+        pass
+    else:
+        print('UNKNWON AGREGATION METHOD FOR METABOLISM: ' + metab_agregation
+              + ', please choose one of the following:\n'
+              '\tCONSTANT, STACKED, DETAILED')
         return
     
     # write files
@@ -109,9 +114,10 @@ def export_simulation_data(data_set, agregation_level):
     
 if __name__ == '__main__':
     import sys
-    if len(sys.argv) > 2:
-        export_simulation_data(sys.argv[1], sys.argv[2])
+    if len(sys.argv) == 4:
+        export_simulation_data(sys.argv[1], sys.argv[2], sys.argv[3])
     else:
-        print 'ERROR: run program with arguments: DATA_SET AGREGATION_LEVEL'
+        print('ERROR: run program with arguments: '
+              '\tDATA_SET PROCESS_AGREGATION_LEVEL METABOLISM_AGREGATION_LEVEL')
 
 
