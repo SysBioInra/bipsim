@@ -67,7 +67,7 @@ def export_simulation_data(data_set, process_agregation, metab_agregation):
         for obj in exporters: obj.cut_slow_reactions = True
     elif metab_agregation.upper() == 'STACKED':
         for obj in exporters: obj.agregate_slow_reactions = True
-    elif metab_agregation == 'DETAILED':
+    elif metab_agregation.upper() == 'DETAILED':
         pass
     else:
         print('UNKNWON AGREGATION METHOD FOR METABOLISM: ' + metab_agregation

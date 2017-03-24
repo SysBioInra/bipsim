@@ -3727,8 +3727,8 @@ SwitchSite antisensedna 2150184 hairpin
 ChemicalSequence U1542 product_of antisensedna 2142011 2145817 rnas
 BindingSite promoter_SigA antisensedna 2141976 2142012 1 0.1 2142011
 SwitchSite antisensedna 2145818 hairpin
-ChemicalSequence U1543 product_of sensedna 2074261 2079152 rnas
-BindingSite promoter_SigEF sensedna 2074226 2074262 1 0.1 2074261
+ChemicalSequence U1543 product_of sensedna 2074310 2079152 rnas
+BindingSite promoter_SigEF sensedna 2074275 2074311 1 0.1 2074310
 SwitchSite sensedna 2079153 hairpin
 ChemicalSequence U1545 product_of sensedna 2076113 2079174 rnas
 BindingSite promoter_SigH sensedna 2076078 2076114 1 0.1 2076113
@@ -4204,8 +4204,8 @@ SwitchSite antisensedna 1888120 hairpin
 ChemicalSequence U1744 product_of antisensedna 1878745 1888119 rnas
 BindingSite promoter_SigA antisensedna 1878710 1878746 1 0.1 1878745
 SwitchSite antisensedna 1888120 hairpin
-ChemicalSequence U1745 product_of antisensedna 1878100 1888119 rnas
-BindingSite promoter_SigA antisensedna 1878065 1878101 1 0.1 1878100
+ChemicalSequence U1745 product_of antisensedna 1878107 1888119 rnas
+BindingSite promoter_SigA antisensedna 1878072 1878108 1 0.1 1878107
 SwitchSite antisensedna 1888120 hairpin
 ChemicalSequence U1738 product_of sensedna 2329803 2330032 rnas
 BindingSite promoter_SigGF sensedna 2329768 2329804 1 0.1 2329803
@@ -5509,8 +5509,8 @@ SwitchSite antisensedna 1205696 hairpin
 ChemicalSequence U2275 product_of antisensedna 1200547 1201093 rnas
 BindingSite promoter_SigA antisensedna 1200512 1200548 1 0.1 1200547
 SwitchSite antisensedna 1201094 hairpin
-ChemicalSequence U2276 product_of antisensedna 1199184 1201093 rnas
-BindingSite promoter_SigA antisensedna 1199149 1199185 1 0.1 1199184
+ChemicalSequence U2276 product_of antisensedna 1199204 1201093 rnas
+BindingSite promoter_SigA antisensedna 1199169 1199205 1 0.1 1199204
 SwitchSite antisensedna 1201094 hairpin
 ChemicalSequence U2277 product_of antisensedna 1199073 1200496 rnas
 BindingSite promoter_SigGF antisensedna 1199038 1199074 1 0.1 1199073
@@ -5632,8 +5632,8 @@ SwitchSite sensedna 3056797 hairpin
 ChemicalSequence U2319 product_of antisensedna 1157019 1158758 rnas
 BindingSite promoter_SigB antisensedna 1156984 1157020 1 0.1 1157019
 SwitchSite antisensedna 1158759 hairpin
-ChemicalSequence U2320 product_of antisensedna 1156114 1158758 rnas
-BindingSite promoter_SigA antisensedna 1156079 1156115 1 0.1 1156114
+ChemicalSequence U2320 product_of antisensedna 1156117 1158758 rnas
+BindingSite promoter_SigA antisensedna 1156082 1156118 1 0.1 1156117
 SwitchSite antisensedna 1158759 hairpin
 ChemicalSequence U2321 product_of antisensedna 1155384 1156060 rnas
 BindingSite promoter_SigA antisensedna 1155349 1155385 1 0.1 1155384
@@ -6328,8 +6328,8 @@ SwitchSite sensedna 3405627 hairpin
 ChemicalSequence U2603 product_of antisensedna 806128 806388 rnas
 BindingSite promoter_SigB antisensedna 806093 806129 1 0.1 806128
 SwitchSite antisensedna 806389 hairpin
-ChemicalSequence U2604 product_of antisensedna 805556 806388 rnas
-BindingSite promoter_SigA antisensedna 805521 805557 1 0.1 805556
+ChemicalSequence U2604 product_of antisensedna 805594 806388 rnas
+BindingSite promoter_SigA antisensedna 805559 805595 1 0.1 805594
 SwitchSite antisensedna 806389 hairpin
 ChemicalSequence U2605 product_of antisensedna 805550 806388 rnas
 BindingSite promoter_SigA antisensedna 805515 805551 1 0.1 805550
@@ -6877,8 +6877,8 @@ SwitchSite antisensedna 486120 hairpin
 ChemicalSequence U2837 product_of antisensedna 484636 486119 rnas
 BindingSite promoter_SigA antisensedna 484601 484637 1 0.1 484636
 SwitchSite antisensedna 486120 hairpin
-ChemicalSequence U2838 product_of antisensedna 481955 484602 rnas
-BindingSite promoter_SigA antisensedna 481920 481956 1 0.1 481955
+ChemicalSequence U2838 product_of antisensedna 482292 484602 rnas
+BindingSite promoter_SigA antisensedna 482257 482293 1 0.1 482292
 SwitchSite antisensedna 484603 hairpin
 ChemicalSequence U2839 product_of antisensedna 481873 482147 rnas
 BindingSite promoter_Sig- antisensedna 481838 481874 1 0.1 481873
@@ -7810,8 +7810,8 @@ SwitchSite antisensedna 30727 hairpin
 ChemicalSequence U3214 product_of sensedna 4185817 4187174 rnas
 BindingSite promoter_SigA sensedna 4185782 4185818 1 0.1 4185817
 SwitchSite sensedna 4187175 hairpin
-ChemicalSequence U3216 product_of antisensedna 21464 27926 rnas
-BindingSite promoter_SigA antisensedna 21429 21465 1 0.1 21464
+ChemicalSequence U3216 product_of antisensedna 26414 27926 rnas
+BindingSite promoter_SigA antisensedna 26379 26415 1 0.1 26414
 SwitchSite antisensedna 27927 hairpin
 ChemicalSequence U3217 product_of sensedna 4189369 4189645 rnas
 BindingSite promoter_SigA sensedna 4189334 4189370 1 0.1 4189369

@@ -8,27 +8,27 @@ FreeChemical IF2 6600
 FreeChemical IF3 4400
 FreeChemical EFG 15000
 FreeChemical RF 4000
-FreeChemical tRNA_fM_c 3000
-FreeChemical EtRNA_A_ca 16000
-FreeChemical EtRNA_C_ca 8000
-FreeChemical EtRNA_D_ca 8000
-FreeChemical EtRNA_E_ca 8000
-FreeChemical EtRNA_F_ca 8000
-FreeChemical EtRNA_G_ca 16000
-FreeChemical EtRNA_H_ca 8000
-FreeChemical EtRNA_I_ca 12000
-FreeChemical EtRNA_K_ca 8000
-FreeChemical EtRNA_L_ca 24000
-FreeChemical EtRNA_M_ca 4000
-FreeChemical EtRNA_N_ca 8000
-FreeChemical EtRNA_P_ca 16000
-FreeChemical EtRNA_Q_ca 8000
-FreeChemical EtRNA_R_ca 24000
-FreeChemical EtRNA_S_ca 24000
-FreeChemical EtRNA_T_ca 16000
-FreeChemical EtRNA_V_ca 16000
-FreeChemical EtRNA_W_ca 4000
-FreeChemical EtRNA_Y_ca 8000
+FreeChemical tRNA_fM_c 0 CONSTANT
+FreeChemical EtRNA_A_ca 16000 CONSTANT
+FreeChemical EtRNA_C_ca 8000 CONSTANT
+FreeChemical EtRNA_D_ca 8000 CONSTANT
+FreeChemical EtRNA_E_ca 8000 CONSTANT
+FreeChemical EtRNA_F_ca 8000 CONSTANT
+FreeChemical EtRNA_G_ca 16000 CONSTANT
+FreeChemical EtRNA_H_ca 8000 CONSTANT
+FreeChemical EtRNA_I_ca 12000 CONSTANT
+FreeChemical EtRNA_K_ca 8000 CONSTANT
+FreeChemical EtRNA_L_ca 24000 CONSTANT
+FreeChemical EtRNA_M_ca 4000 CONSTANT
+FreeChemical EtRNA_N_ca 8000 CONSTANT
+FreeChemical EtRNA_P_ca 16000 CONSTANT
+FreeChemical EtRNA_Q_ca 8000 CONSTANT
+FreeChemical EtRNA_R_ca 24000 CONSTANT
+FreeChemical EtRNA_S_ca 24000 CONSTANT
+FreeChemical EtRNA_T_ca 16000 CONSTANT
+FreeChemical EtRNA_V_ca 16000 CONSTANT
+FreeChemical EtRNA_W_ca 4000 CONSTANT
+FreeChemical EtRNA_Y_ca 8000 CONSTANT
 
 # not a real chemical, used to count production
 FreeChemical protein_tracker
@@ -36,95 +36,32 @@ FreeChemical protein_tracker
 ###################
 # tRNA activation #
 ###################
-FreeChemical tRNA_fM 0
-FreeChemical tRNA_A 0
-FreeChemical tRNA_C 0
-FreeChemical tRNA_D 0
-FreeChemical tRNA_E 0
-FreeChemical tRNA_F 0
-FreeChemical tRNA_G 0
-FreeChemical tRNA_H 0
-FreeChemical tRNA_I 0
-FreeChemical tRNA_K 0
-FreeChemical tRNA_L 0
-FreeChemical tRNA_M 0
-FreeChemical tRNA_N 0
-FreeChemical tRNA_P 0
-FreeChemical tRNA_Q 0
-FreeChemical tRNA_R 0
-FreeChemical tRNA_S 0
-FreeChemical tRNA_T 0
-FreeChemical tRNA_V 0
-FreeChemical tRNA_W 0
-FreeChemical tRNA_Y 0
-FreeChemical tRNA_A_c
-FreeChemical tRNA_C_c
-FreeChemical tRNA_D_c
-FreeChemical tRNA_E_c
-FreeChemical tRNA_F_c
-FreeChemical tRNA_G_c
-FreeChemical tRNA_H_c
-FreeChemical tRNA_I_c
-FreeChemical tRNA_K_c
-FreeChemical tRNA_L_c
-FreeChemical tRNA_M_c
-FreeChemical tRNA_N_c
-FreeChemical tRNA_P_c
-FreeChemical tRNA_Q_c
-FreeChemical tRNA_R_c
-FreeChemical tRNA_S_c
-FreeChemical tRNA_T_c
-FreeChemical tRNA_V_c
-FreeChemical tRNA_W_c
-FreeChemical tRNA_Y_c
+FreeChemical tRNA_fM 0 CONSTANT
+FreeChemical tRNA_A 0 CONSTANT
+FreeChemical tRNA_C 0 CONSTANT
+FreeChemical tRNA_D 0 CONSTANT
+FreeChemical tRNA_E 0 CONSTANT
+FreeChemical tRNA_F 0 CONSTANT
+FreeChemical tRNA_G 0 CONSTANT
+FreeChemical tRNA_H 0 CONSTANT
+FreeChemical tRNA_I 0 CONSTANT
+FreeChemical tRNA_K 0 CONSTANT
+FreeChemical tRNA_L 0 CONSTANT
+FreeChemical tRNA_M 0 CONSTANT
+FreeChemical tRNA_N 0 CONSTANT
+FreeChemical tRNA_P 0 CONSTANT
+FreeChemical tRNA_Q 0 CONSTANT
+FreeChemical tRNA_R 0 CONSTANT
+FreeChemical tRNA_S 0 CONSTANT
+FreeChemical tRNA_T 0 CONSTANT
+FreeChemical tRNA_V 0 CONSTANT
+FreeChemical tRNA_W 0 CONSTANT
+FreeChemical tRNA_Y 0 CONSTANT
 
-FreeChemical EFTud 0
-FreeChemical EFTua 118000
+FreeChemical EFTud 0 CONSTANT
 
-ChemicalReaction tRNA_fM -1 ATP -1 AMP 1 PPi 1 tRNA_fM_c 1 rates 1 0
-ChemicalReaction tRNA_A -1 ATP -1 AMP 1 PPi 1 tRNA_A_c 1 rates 1 0
-ChemicalReaction tRNA_C -1 ATP -1 AMP 1 PPi 1 tRNA_C_c 1 rates 1 0
-ChemicalReaction tRNA_D -1 ATP -1 AMP 1 PPi 1 tRNA_D_c 1 rates 1 0
-ChemicalReaction tRNA_E -1 ATP -1 AMP 1 PPi 1 tRNA_E_c 1 rates 1 0
-ChemicalReaction tRNA_F -1 ATP -1 AMP 1 PPi 1 tRNA_F_c 1 rates 1 0
-ChemicalReaction tRNA_G -1 ATP -1 AMP 1 PPi 1 tRNA_G_c 1 rates 1 0
-ChemicalReaction tRNA_H -1 ATP -1 AMP 1 PPi 1 tRNA_H_c 1 rates 1 0
-ChemicalReaction tRNA_I -1 ATP -1 AMP 1 PPi 1 tRNA_I_c 1 rates 1 0
-ChemicalReaction tRNA_K -1 ATP -1 AMP 1 PPi 1 tRNA_K_c 1 rates 1 0
-ChemicalReaction tRNA_L -1 ATP -1 AMP 1 PPi 1 tRNA_L_c 1 rates 1 0
-ChemicalReaction tRNA_M -1 ATP -1 AMP 1 PPi 1 tRNA_M_c 1 rates 1 0
-ChemicalReaction tRNA_N -1 ATP -1 AMP 1 PPi 1 tRNA_N_c 1 rates 1 0
-ChemicalReaction tRNA_P -1 ATP -1 AMP 1 PPi 1 tRNA_P_c 1 rates 1 0
-ChemicalReaction tRNA_Q -1 ATP -1 AMP 1 PPi 1 tRNA_Q_c 1 rates 1 0
-ChemicalReaction tRNA_R -1 ATP -1 AMP 1 PPi 1 tRNA_R_c 1 rates 1 0
-ChemicalReaction tRNA_S -1 ATP -1 AMP 1 PPi 1 tRNA_S_c 1 rates 1 0
-ChemicalReaction tRNA_T -1 ATP -1 AMP 1 PPi 1 tRNA_T_c 1 rates 1 0
-ChemicalReaction tRNA_V -1 ATP -1 AMP 1 PPi 1 tRNA_V_c 1 rates 1 0
-ChemicalReaction tRNA_W -1 ATP -1 AMP 1 PPi 1 tRNA_W_c 1 rates 1 0
-ChemicalReaction tRNA_Y -1 ATP -1 AMP 1 PPi 1 tRNA_Y_c 1 rates 1 0
-
-ChemicalReaction EFTud -1 GTP -1 EFTua 1 GDP 1 rates 1 0
-
-ChemicalReaction tRNA_A_c -1 EFTua -1 EtRNA_A_ca 1 rates 1 0
-ChemicalReaction tRNA_C_c -1 EFTua -1 EtRNA_C_ca 1 rates 1 0
-ChemicalReaction tRNA_D_c -1 EFTua -1 EtRNA_D_ca 1 rates 1 0
-ChemicalReaction tRNA_E_c -1 EFTua -1 EtRNA_E_ca 1 rates 1 0
-ChemicalReaction tRNA_F_c -1 EFTua -1 EtRNA_F_ca 1 rates 1 0
-ChemicalReaction tRNA_G_c -1 EFTua -1 EtRNA_G_ca 1 rates 1 0
-ChemicalReaction tRNA_H_c -1 EFTua -1 EtRNA_H_ca 1 rates 1 0
-ChemicalReaction tRNA_I_c -1 EFTua -1 EtRNA_I_ca 1 rates 1 0
-ChemicalReaction tRNA_K_c -1 EFTua -1 EtRNA_K_ca 1 rates 1 0
-ChemicalReaction tRNA_L_c -1 EFTua -1 EtRNA_L_ca 1 rates 1 0
-ChemicalReaction tRNA_M_c -1 EFTua -1 EtRNA_M_ca 1 rates 1 0
-ChemicalReaction tRNA_N_c -1 EFTua -1 EtRNA_N_ca 1 rates 1 0
-ChemicalReaction tRNA_P_c -1 EFTua -1 EtRNA_P_ca 1 rates 1 0
-ChemicalReaction tRNA_Q_c -1 EFTua -1 EtRNA_Q_ca 1 rates 1 0
-ChemicalReaction tRNA_R_c -1 EFTua -1 EtRNA_R_ca 1 rates 1 0
-ChemicalReaction tRNA_S_c -1 EFTua -1 EtRNA_S_ca 1 rates 1 0
-ChemicalReaction tRNA_T_c -1 EFTua -1 EtRNA_T_ca 1 rates 1 0
-ChemicalReaction tRNA_V_c -1 EFTua -1 EtRNA_V_ca 1 rates 1 0
-ChemicalReaction tRNA_W_c -1 EFTua -1 EtRNA_W_ca 1 rates 1 0
-ChemicalReaction tRNA_Y_c -1 EFTua -1 EtRNA_Y_ca 1 rates 1 0
+# RNAs were set to act as constant chemicals, we skip
+# tRNA activation reactions.
 
 ##############################
 # Translation pre-initiation #
@@ -139,12 +76,9 @@ ChemicalReaction 30S3 -1 IF1 -1 30S31 1 rates 1 1
 ##########################
 # Translation initiation #
 ##########################
-FreeChemical IF2a
-FreeChemical IF2d
-FreeChemical IF2p
-FreeChemical fMet2a
-FreeChemical fMet2d
-FreeChemical fMet2p
+FreeChemical IF2d 0 CONSTANT
+FreeChemical fMet2a 3000 CONSTANT
+FreeChemical fMet2d 0 CONSTANT
 BoundChemical m30S31
 BoundChemical m30S312a
 BoundChemical m30S312d
@@ -152,12 +86,6 @@ BoundChemical m30S12a
 BoundChemical translocating_70S
 
 SequenceBinding 30S31 m30S31 RBS
-ChemicalReaction IF2 -1 GTP -1 IF2a 1 rates 1 1
-ChemicalReaction IF2a -1 tRNA_fM_c -1 fMet2a 1 rates 1 1
-ChemicalReaction IF2 -1 GDP -1 IF2d 1 rates 1 10
-ChemicalReaction IF2d -1 tRNA_fM_c -1 fMet2d 1 rates 1 10
-ChemicalReaction IF2 -1 ppGpp -1 IF2p 1 rates 1 1
-ChemicalReaction IF2p -1 tRNA_fM_c -1 fMet2p 1 rates 1 1
 ChemicalReaction fMet2a -1 m30S31 -1 m30S312a 1 rates 1 0
 ChemicalReaction fMet2d -1 m30S31 -1 m30S312d 1 rates 1 10
 ChemicalReaction m30S312a -1 IF3 1 m30S12a 1 rates 1 0

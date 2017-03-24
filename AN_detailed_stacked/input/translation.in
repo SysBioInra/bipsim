@@ -81,50 +81,50 @@ FreeChemical tRNA_Y_c
 FreeChemical EFTud 0
 FreeChemical EFTua 118000
 
-ChemicalReaction tRNA_fM -1 ATP -1 AMP 1 PPi 1 tRNA_fM_c 1 rates 1 0
-ChemicalReaction tRNA_A -1 ATP -1 AMP 1 PPi 1 tRNA_A_c 1 rates 1 0
-ChemicalReaction tRNA_C -1 ATP -1 AMP 1 PPi 1 tRNA_C_c 1 rates 1 0
-ChemicalReaction tRNA_D -1 ATP -1 AMP 1 PPi 1 tRNA_D_c 1 rates 1 0
-ChemicalReaction tRNA_E -1 ATP -1 AMP 1 PPi 1 tRNA_E_c 1 rates 1 0
-ChemicalReaction tRNA_F -1 ATP -1 AMP 1 PPi 1 tRNA_F_c 1 rates 1 0
-ChemicalReaction tRNA_G -1 ATP -1 AMP 1 PPi 1 tRNA_G_c 1 rates 1 0
-ChemicalReaction tRNA_H -1 ATP -1 AMP 1 PPi 1 tRNA_H_c 1 rates 1 0
-ChemicalReaction tRNA_I -1 ATP -1 AMP 1 PPi 1 tRNA_I_c 1 rates 1 0
-ChemicalReaction tRNA_K -1 ATP -1 AMP 1 PPi 1 tRNA_K_c 1 rates 1 0
-ChemicalReaction tRNA_L -1 ATP -1 AMP 1 PPi 1 tRNA_L_c 1 rates 1 0
-ChemicalReaction tRNA_M -1 ATP -1 AMP 1 PPi 1 tRNA_M_c 1 rates 1 0
-ChemicalReaction tRNA_N -1 ATP -1 AMP 1 PPi 1 tRNA_N_c 1 rates 1 0
-ChemicalReaction tRNA_P -1 ATP -1 AMP 1 PPi 1 tRNA_P_c 1 rates 1 0
-ChemicalReaction tRNA_Q -1 ATP -1 AMP 1 PPi 1 tRNA_Q_c 1 rates 1 0
-ChemicalReaction tRNA_R -1 ATP -1 AMP 1 PPi 1 tRNA_R_c 1 rates 1 0
-ChemicalReaction tRNA_S -1 ATP -1 AMP 1 PPi 1 tRNA_S_c 1 rates 1 0
-ChemicalReaction tRNA_T -1 ATP -1 AMP 1 PPi 1 tRNA_T_c 1 rates 1 0
-ChemicalReaction tRNA_V -1 ATP -1 AMP 1 PPi 1 tRNA_V_c 1 rates 1 0
-ChemicalReaction tRNA_W -1 ATP -1 AMP 1 PPi 1 tRNA_W_c 1 rates 1 0
-ChemicalReaction tRNA_Y -1 ATP -1 AMP 1 PPi 1 tRNA_Y_c 1 rates 1 0
+ChemicalReaction tRNA_fM -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_fM_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_A -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_A_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_C -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_C_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_D -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_D_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_E -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_E_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_F -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_F_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_G -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_G_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_H -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_H_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_I -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_I_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_K -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_K_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_L -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_L_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_M -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_M_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_N -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_N_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_P -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_P_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_Q -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_Q_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_R -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_R_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_S -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_S_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_T -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_T_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_V -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_V_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_W -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_W_c 100 order 1 rates 1 0
+ChemicalReaction tRNA_Y -100 order 1 ATP -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_Y_c 100 order 1 rates 1 0
 
-ChemicalReaction EFTud -1 GTP -1 EFTua 1 GDP 1 rates 1 0
+ChemicalReaction EFTud -1000 order 1 GTP -1000 order 1 EFTua 1000 order 1 GDP 1000 order 1 rates 1 0
 
-ChemicalReaction tRNA_A_c -1 EFTua -1 EtRNA_A_ca 1 rates 1 0
-ChemicalReaction tRNA_C_c -1 EFTua -1 EtRNA_C_ca 1 rates 1 0
-ChemicalReaction tRNA_D_c -1 EFTua -1 EtRNA_D_ca 1 rates 1 0
-ChemicalReaction tRNA_E_c -1 EFTua -1 EtRNA_E_ca 1 rates 1 0
-ChemicalReaction tRNA_F_c -1 EFTua -1 EtRNA_F_ca 1 rates 1 0
-ChemicalReaction tRNA_G_c -1 EFTua -1 EtRNA_G_ca 1 rates 1 0
-ChemicalReaction tRNA_H_c -1 EFTua -1 EtRNA_H_ca 1 rates 1 0
-ChemicalReaction tRNA_I_c -1 EFTua -1 EtRNA_I_ca 1 rates 1 0
-ChemicalReaction tRNA_K_c -1 EFTua -1 EtRNA_K_ca 1 rates 1 0
-ChemicalReaction tRNA_L_c -1 EFTua -1 EtRNA_L_ca 1 rates 1 0
-ChemicalReaction tRNA_M_c -1 EFTua -1 EtRNA_M_ca 1 rates 1 0
-ChemicalReaction tRNA_N_c -1 EFTua -1 EtRNA_N_ca 1 rates 1 0
-ChemicalReaction tRNA_P_c -1 EFTua -1 EtRNA_P_ca 1 rates 1 0
-ChemicalReaction tRNA_Q_c -1 EFTua -1 EtRNA_Q_ca 1 rates 1 0
-ChemicalReaction tRNA_R_c -1 EFTua -1 EtRNA_R_ca 1 rates 1 0
-ChemicalReaction tRNA_S_c -1 EFTua -1 EtRNA_S_ca 1 rates 1 0
-ChemicalReaction tRNA_T_c -1 EFTua -1 EtRNA_T_ca 1 rates 1 0
-ChemicalReaction tRNA_V_c -1 EFTua -1 EtRNA_V_ca 1 rates 1 0
-ChemicalReaction tRNA_W_c -1 EFTua -1 EtRNA_W_ca 1 rates 1 0
-ChemicalReaction tRNA_Y_c -1 EFTua -1 EtRNA_Y_ca 1 rates 1 0
+ChemicalReaction tRNA_A_c -100 order 1 EFTua -100 order 1 EtRNA_A_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_C_c -100 order 1 EFTua -100 order 1 EtRNA_C_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_D_c -100 order 1 EFTua -100 order 1 EtRNA_D_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_E_c -100 order 1 EFTua -100 order 1 EtRNA_E_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_F_c -100 order 1 EFTua -100 order 1 EtRNA_F_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_G_c -100 order 1 EFTua -100 order 1 EtRNA_G_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_H_c -100 order 1 EFTua -100 order 1 EtRNA_H_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_I_c -100 order 1 EFTua -100 order 1 EtRNA_I_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_K_c -100 order 1 EFTua -100 order 1 EtRNA_K_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_L_c -100 order 1 EFTua -100 order 1 EtRNA_L_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_M_c -100 order 1 EFTua -100 order 1 EtRNA_M_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_N_c -100 order 1 EFTua -100 order 1 EtRNA_N_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_P_c -100 order 1 EFTua -100 order 1 EtRNA_P_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_Q_c -100 order 1 EFTua -100 order 1 EtRNA_Q_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_R_c -100 order 1 EFTua -100 order 1 EtRNA_R_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_S_c -100 order 1 EFTua -100 order 1 EtRNA_S_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_T_c -100 order 1 EFTua -100 order 1 EtRNA_T_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_V_c -100 order 1 EFTua -100 order 1 EtRNA_V_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_W_c -100 order 1 EFTua -100 order 1 EtRNA_W_ca 100 order 1 rates 1 0
+ChemicalReaction tRNA_Y_c -100 order 1 EFTua -100 order 1 EtRNA_Y_ca 100 order 1 rates 1 0
 
 ##############################
 # Translation pre-initiation #
@@ -139,17 +139,17 @@ ChemicalReaction 30S3 -1 IF1 -1 30S31 1 rates 1 1
 ##########################
 # Translation initiation #
 ##########################
-BoundChemical m30S31
-BoundChemical m30S312a
-BoundChemical m30S312d
-BoundChemical m30S12a
-BoundChemical translocating_70S
 FreeChemical IF2a
 FreeChemical IF2d
 FreeChemical IF2p
 FreeChemical fMet2a
 FreeChemical fMet2d
 FreeChemical fMet2p
+BoundChemical m30S31
+BoundChemical m30S312a
+BoundChemical m30S312d
+BoundChemical m30S12a
+BoundChemical translocating_70S
 
 SequenceBinding 30S31 m30S31 RBS
 ChemicalReaction IF2 -1 GTP -1 IF2a 1 rates 1 1

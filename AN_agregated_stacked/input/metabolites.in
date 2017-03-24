@@ -10,17 +10,17 @@ FreeChemical dGMP
 FreeChemical dTTP 100000000.0
 FreeChemical dTMP
 FreeChemical ATP 4200000.0 CONSTANT
-FreeChemical ADP 0 CONSTANT
-FreeChemical AMP 0 CONSTANT
+FreeChemical ADP 0
+FreeChemical AMP 0
 FreeChemical CTP 120000.0 CONSTANT
-FreeChemical CDP 0 CONSTANT
-FreeChemical CMP 0 CONSTANT
+FreeChemical CDP 0
+FreeChemical CMP 0
 FreeChemical GTP 3000000.0 CONSTANT
-FreeChemical GDP 0 CONSTANT
-FreeChemical GMP 0 CONSTANT
+FreeChemical GDP 0
+FreeChemical GMP 0
 FreeChemical UTP 300000.0 CONSTANT
-FreeChemical UDP 0 CONSTANT
-FreeChemical UMP 0 CONSTANT
+FreeChemical UDP 0
+FreeChemical UMP 0
 FreeChemical aa_A
 FreeChemical aa_C
 FreeChemical aa_D
@@ -41,7 +41,17 @@ FreeChemical aa_T
 FreeChemical aa_V
 FreeChemical aa_W
 FreeChemical aa_Y
-FreeChemical Pi 0 CONSTANT
-FreeChemical PPi 0 CONSTANT
-FreeChemical ppGpp 0 CONSTANT
+FreeChemical Pi 0
+FreeChemical PPi 0
+FreeChemical ppGpp 0
+
+#####################
+# Pseudo metabolism #
+#####################
+ChemicalReaction PPi -1000 order 1 Pi 2000 order 2 rates 1 0
+ChemicalReaction GDP -1000 order 1 Pi -1000 order 1 GTP 1000 order 1 rates 1 0
+ChemicalReaction AMP -1000 order 1 Pi -2000 order 2 ATP 1000 order 1 rates 1 0
+ChemicalReaction CMP -1000 order 1 Pi -2000 order 2 CTP 1000 order 1 rates 1 0
+ChemicalReaction GMP -1000 order 1 Pi -2000 order 2 GTP 1000 order 1 rates 1 0
+ChemicalReaction UMP -1000 order 1 Pi -2000 order 2 UTP 1000 order 1 rates 1 0
 

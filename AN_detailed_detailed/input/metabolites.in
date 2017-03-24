@@ -9,16 +9,16 @@ FreeChemical dGTP 100000000.0
 FreeChemical dGMP
 FreeChemical dTTP 100000000.0
 FreeChemical dTMP
-FreeChemical ATP 4200000.0
+FreeChemical ATP 4200000.0 CONSTANT
 FreeChemical ADP 0
 FreeChemical AMP 0
-FreeChemical CTP 120000.0
+FreeChemical CTP 120000.0 CONSTANT
 FreeChemical CDP 0
 FreeChemical CMP 0
-FreeChemical GTP 3000000.0
+FreeChemical GTP 3000000.0 CONSTANT
 FreeChemical GDP 0
 FreeChemical GMP 0
-FreeChemical UTP 300000.0
+FreeChemical UTP 300000.0 CONSTANT
 FreeChemical UDP 0
 FreeChemical UMP 0
 FreeChemical aa_A

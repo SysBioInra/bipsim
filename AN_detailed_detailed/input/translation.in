@@ -139,17 +139,17 @@ ChemicalReaction 30S3 -1 IF1 -1 30S31 1 rates 1 1
 ##########################
 # Translation initiation #
 ##########################
-BoundChemical m30S31
-BoundChemical m30S312a
-BoundChemical m30S312d
-BoundChemical m30S12a
-BoundChemical translocating_70S
 FreeChemical IF2a
 FreeChemical IF2d
 FreeChemical IF2p
 FreeChemical fMet2a
 FreeChemical fMet2d
 FreeChemical fMet2p
+BoundChemical m30S31
+BoundChemical m30S312a
+BoundChemical m30S312d
+BoundChemical m30S12a
+BoundChemical translocating_70S
 
 SequenceBinding 30S31 m30S31 RBS
 ChemicalReaction IF2 -1 GTP -1 IF2a 1 rates 1 1

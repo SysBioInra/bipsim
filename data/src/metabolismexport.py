@@ -36,8 +36,7 @@ class MetabolismExport(ProcessExport):
                 lines += self._free_chemical(['d' + n + 'TP'], [num])
                 lines += self._free_chemical(['d' + n + 'MP'])
         for n, num in zip(self._nucleotides, self.NTPs):
-            lines += self._free_chemical([n + 'TP'], [num], \
-                                         self.cut_slow_reactions)
+            lines += self._free_chemical([n + 'TP'], [num], True)
             lines += self._free_chemical([n + 'DP'], [0], \
                                          self.cut_slow_reactions)
             lines += self._free_chemical([n + 'MP'], [0], \
