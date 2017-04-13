@@ -55,7 +55,7 @@ class TranslationExport(ProcessExport):
     def set_AN_parameters(self):
         self.set_test_parameters()
         # initial values
-        self.nb_ribosomes = 22000
+        self.nb_ribosomes = 18000
         self.IF_123 = [5500, 6600, 4400]
         self.EFTu = 118000
         self.EF_G_RF = [15000, 4000]
@@ -64,11 +64,11 @@ class TranslationExport(ProcessExport):
         # rates
         self.k_on = 1
         self.k_off = 0.1
-        self.loading = 1e-3
+        self.loading = 2e-3
         self.translocation = 150
         self.transpeptidation = 150
         self.release = 150
-        self.agregation_rate = 8
+        self.agregation_rate = 20 # 8
         self.degradation = -1
 
     def set_paulsson_parameters(self):

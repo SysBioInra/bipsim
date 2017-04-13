@@ -2,9 +2,11 @@
 #!/bin/sh
 
 SRC_PATH=/home/sfischer/simulateur/myBacteria/src
+SCRIPT=/home/sfischer/simulations/scripts
 EXE_NAME=simulator
 
 PARAMS_IN="input/params.in"
+OUTPUT=output
 
 LOG_FILE=log.txt
 
@@ -14,4 +16,4 @@ do
     ${SRC_PATH}/${EXE_NAME} ${FILE} | tee -a $LOG_FILE
 done
 
-Rscript post_treatment.R | tee -a $LOG_FILE
+Rscript ${SCRIPT} ${OUTPUT} | tee -a $LOG_FILE
