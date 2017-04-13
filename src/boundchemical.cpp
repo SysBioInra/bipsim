@@ -44,20 +44,25 @@ BoundChemical::BoundChemical (void)
 void BoundChemical::add (BoundUnit& unit)
 {
   // before adding, check if unit is on a switch
-  for (std::list <Switch*>::iterator switch_it = _switches.begin();
-       switch_it != _switches.end(); ++switch_it)
+  const std::list<int>* local_switches
+    = unit.location().switch_sites (unit.reading_frame());
+  // if some local switch applies to unit, apply and return
+  if (local_switches)
+  {
+    for (std::list <int>::const_iterator switch_it = local_switches->begin();
+	 switch_it != local_switches->end(); ++switch_it)
     {
-      if (unit.location().is_switch_site (unit.reading_frame(), (*switch_it)->id()))
-	  {
-	    // apply switch and return
-	    (*switch_it)->output().add (unit);
-	    return;
-	  }
+      std::map <int, Switch*>::iterator result = _switches.find(*switch_it);
+      if (result != _switches.end())
+      {
+	result->second->output().add (unit); return;
+      }
     }
-
+  }
+  
   // no switching happened: add unit to collection
   Chemical::add (1);
-  { _units.add (&unit); }
+  _units.add (unit);
   for (std::list <BoundUnitFilter*>::iterator filter_it = _filters.begin();
        filter_it != _filters.end(); ++filter_it)
     { (*filter_it)->add (unit); }
@@ -66,7 +71,7 @@ void BoundChemical::add (BoundUnit& unit)
 void BoundChemical::remove (BoundUnit& unit)
 {
   Chemical::remove (1);
-  { _units.remove (&unit); }
+  _units.remove (unit);
   for (std::list <BoundUnitFilter*>::iterator filter_it = _filters.begin();
        filter_it != _filters.end(); ++filter_it)
     { (*filter_it)->remove (unit); }
@@ -77,7 +82,7 @@ void BoundChemical::add_switch (Switch& switch_)
   /** @pre Input of switch must be current BoundChemical. */
   REQUIRE (&switch_.input() == this);
   
-  _switches.push_back (&switch_);
+  _switches[switch_.id()] = &switch_;
 }
 
 // ============================

@@ -15,6 +15,7 @@
 // ==================
 //
 #include <list>  // std::list
+#include <map> // std::map
 
 // ==================
 //  Project Includes
@@ -22,7 +23,7 @@
 //
 #include "forwarddeclarations.h"
 #include "chemical.h"
-#include "vectorlist.h"
+#include "boundunitlist.h"
 
 
 /**
@@ -109,13 +110,11 @@ public:
   // ============
   //  
   /** @brief Units belonging to species. */
-  VectorList <BoundUnit*> _units;
-
+  BoundUnitList _units;
   /** @brief Filters used to organize units. */
   std::list <BoundUnitFilter*> _filters;    
-
   /** @brief Switch that can be applied on units. */
-  std::list <Switch*> _switches;
+  std::map <int, Switch*> _switches;
 };
 
 // ======================
@@ -136,7 +135,7 @@ inline BoundUnit& BoundChemical::random_unit (void) const
 {
   /** @pre There must be at least one unit stored. */
   REQUIRE (_units.size() > 0);
-  return *(_units.random_element());
+  return _units.random_unit();
 }
 
 #endif // BOUNDCHEMICAL_H

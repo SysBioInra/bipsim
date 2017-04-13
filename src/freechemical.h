@@ -52,7 +52,7 @@ class FreeChemical : public Chemical
   void add (int quantity) { if (!_constant) Chemical::add (quantity); }
   void remove (int quantity) { if (!_constant) Chemical::remove (quantity); }
   
-  /** 
+  /**
    * @brief Specify whether chemical's concentration should change over time. 
    * @param is_constant If set to true, all add and remove 
    *  commands will be ignored.
@@ -63,10 +63,10 @@ class FreeChemical : public Chemical
   //  Public Methods - Accessors
   // ============================
   //
-  /** 
-   * @brief Specify whether chemical's concentration should change over time. 
-   * @param is_constant If set to true, all add and remove 
-   *  commands will be ignored.
+  /**
+   * @brief Accessor to flag specifying if chemical has constant concentration. 
+   * @return True if chemical has constant concentartion (i.e. it ignores all
+   *  add and remove commands).
    */
   bool is_constant (void) const { return _constant; }
 

@@ -45,14 +45,14 @@ inline void FamilyFilter::add (BoundUnit& unit)
   if ((unit.binding_site() != 0)
       && (&(unit.binding_site()->family()) == _family)
       && (unit.binding_site()->first() == unit.first())) 
-    { _units.add (&unit); }
+    { _units.add (unit); }
 }
 
 inline void FamilyFilter::remove (BoundUnit& unit)
 {
   if ((unit.binding_site() != 0)
       && (&(unit.binding_site()->family()) == _family))
-    { _units.remove (&unit); }
+    { _units.remove (unit); }
 }
 
 

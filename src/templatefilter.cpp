@@ -61,7 +61,7 @@ void TemplateFilter::add (BoundUnit& unit)
   if (template_index != LoadingTable::UNKNOWN_TEMPLATE) 
     {
       // update unit map
-      _unit_map [template_index].add (&unit);
+      _unit_map [template_index].add (unit);
       _rate_validity.invalidate (template_index);
     }
   else // invalid template
@@ -84,7 +84,7 @@ void TemplateFilter::remove (BoundUnit& unit)
   if (template_index != LoadingTable::UNKNOWN_TEMPLATE) 
     {
       // remove the unit from the map
-      _unit_map [template_index].remove (&unit);
+      _unit_map [template_index].remove (unit);
       _rate_validity.invalidate (template_index);
     }
   // else there is nothing to do, nothing was written into the table at creation

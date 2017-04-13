@@ -56,6 +56,7 @@ class Translocation;
 class Reactant;
 class BoundChemical;
 class BoundUnit;
+class BoundUnitList;
 class BoundUnitFilter;
 class FamilyFilter;
 class TemplateFilter;
@@ -137,7 +138,6 @@ class RateGroup;
 class RateToken;
 
 // generic containers
-template <class T> class VectorList;
 template <class T> class VectorQueue;
 
 // exceptions

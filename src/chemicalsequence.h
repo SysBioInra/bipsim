@@ -148,12 +148,12 @@ public:
   bool is_out_of_bounds (int first, int last) const;
     
   /**
-   * @brief Returns whether there is a switch site at given position.
+   * @brief Returns list of switch site identifiers at given position.
    * @param position Relative position to look at.
-   * @param identifier Identifier of a Switch.
-   * @return True if position is a switch site associated with given Switch.
+   * @return Pointer to list of intergers representing switch identifiers.
+   * Null pointer if there aren't any switch sites at given position.
    */
-  bool is_switch_site (int position, int identifier) const;
+  const std::list<int>* switch_sites (int position) const;
 
   /**
    * @brief Returns length of sequence.
@@ -329,6 +329,22 @@ inline int ChemicalSequence::complementary (int position) const
   ENSURE (!_appariated_sequence->is_out_of_bounds (_length-position-1,
 						   _length-position-1));
   return _length-position-1;
+}
+
+inline void ChemicalSequence::add_switch_site (int position, int identifier)
+{
+  _switch_sites[position].push_back (identifier);
+}
+
+inline const std::list<int>* ChemicalSequence::switch_sites (int position) const
+{
+  /** @pre Position must be within sequence. */
+  REQUIRE (is_out_of_bounds (position, position) == false); 
+  
+  const std::map <int, std::list<int> >::const_iterator 
+    local_sites = _switch_sites.find (position);
+  if (local_sites == _switch_sites.end()) { return 0; }
+  else { return &(local_sites->second); }
 }
 
 

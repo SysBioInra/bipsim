@@ -21,7 +21,7 @@
 // ==================
 //
 #include "boundunitfilter.h"
-#include "vectorlist.h"
+#include "boundunitlist.h"
 
 // ======================
 //  Forward declarations
@@ -98,7 +98,7 @@ private:
   const BindingSiteFamily* _family;
 
   /** @brief Units bounded to family provided at construction. */
-  VectorList <BoundUnit*> _units;
+  BoundUnitList _units;
 };
 
 // ======================
@@ -111,7 +111,7 @@ inline BoundUnit& FamilyFilter::random_unit (void) const
 {
   /** @pre Filter must not be empty. */
   REQUIRE (number() > 0);
-  return *(_units.random_element());
+  return _units.random_unit();
 }
 
 inline int FamilyFilter::number (void) const

@@ -1,12 +1,9 @@
 
-
 /**
  * @file templatefilter.h
  * @brief Header for the TemplateFilter class.
- * 
  * @authors Marc Dinh, Stephan Fischer
  */
-
 
 // Multiple include protection
 //
@@ -27,7 +24,7 @@
 #include "ratevalidity.h"
 #include "updatedtotalratevector.h"
 // #include "flyratevector.h"
-#include "vectorlist.h"
+#include "boundunitlist.h"
 
 
 // ======================
@@ -38,8 +35,8 @@
 
 /**
  * @brief Class filtering bound units according to template they are reading.
- *
- * TemplateFilter is a filter class for bound units. It is used by Loading
+ * @details TemplateFilter is a filter class for bound units. It is used by 
+ * Loading
  * reactions to select a unit according to the template it is reading and
  * its associated loading rate. TemplateFilter inherits BoundUnitFilter.
  */
@@ -73,7 +70,6 @@ class TemplateFilter : public BoundUnitFilter
   // redefined from BoundUnitFilter
   void add (BoundUnit& unit);
   void remove (BoundUnit& unit);
-
 
   // ============================
   //  Public Methods - Accessors
@@ -109,7 +105,7 @@ private:
   const LoadingTable& _table;
 
   /** @brief Unit lists indexed by template they are reading. */
-  std::vector <VectorList <BoundUnit*> > _unit_map;
+  std::vector <BoundUnitList> _unit_map;
 
   /** @brief Loading rates associated with each template. */
   mutable UpdatedTotalRateVector _loading_rates;
@@ -127,7 +123,7 @@ inline BoundUnit& TemplateFilter::random_unit (void) const
 {
   update_rates(); 
   _loading_rates.update_cumulates();
-  return *(_unit_map [_loading_rates.random_index()].random_element());
+  return _unit_map [_loading_rates.random_index()].random_unit();
 }
 
 inline double TemplateFilter::loading_rate (void) const

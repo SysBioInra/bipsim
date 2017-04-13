@@ -17,7 +17,7 @@
 //  General Includes
 // ==================
 //
-
+#include <vector> // std::vector
 
 // ==================
 //  Project Includes
@@ -26,6 +26,21 @@
 #include "macros.h"
 
 #include "forwarddeclarations.h"
+
+/**
+ * @brief Class enabling restricted access to BoundUnit.
+ * @details BoundUnitListKey uses the pass-key idiom to grant
+ *  BoundUnitList exclusive access to some of its members.
+ */
+class BoundUnitListKey
+{
+ private:
+  friend class BoundUnitList;
+  /**
+   * @brief Default constructor (can only be created by friends).
+   */
+  BoundUnitListKey (void) {}
+};
 
 /**
  * @brief The BoundUnit class describes a bound unit.
@@ -140,6 +155,17 @@ class BoundUnit
    */
   int strand (void) const;
 
+  /**
+   * @brief Accessor to position of unit within BoundUnitList.
+   * @param key used to ensure that this function can only be called by a
+   *  BoundUnitList.
+   * @return List of indices of unit within the various BoundUnitLists in
+   *  which it is stored.
+   * @details The list of position is very useful to locate the unit very
+   *  quickly within BoundUnitLists.
+   */
+  std::vector<int>& list_indices(const BoundUnitListKey& key) const;
+
   // ==================
   //  Public Constants
   // ==================
@@ -171,6 +197,8 @@ private:
   int _reading_frame;
   /** @brief Specific strand on which the bound unit is located. */
   int _strand;
+  /** @brief Index of unit in various BoundUnitLists. */
+  mutable std::vector<int> _list_indices;
 };
 
 // ======================
@@ -225,5 +253,11 @@ inline int BoundUnit::strand (void) const
 {
   return _strand;
 }
+
+inline std::vector<int>& BoundUnit::list_indices(const BoundUnitListKey& key) const
+{
+  return _list_indices;
+}
+
 
 #endif // BOUND_UNIT_H
