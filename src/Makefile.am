@@ -10,11 +10,11 @@ AM_LDFLAGS = $(BOOST_LDFLAGS)
 noinst_LIBRARIES = libsrc.a
 
 # the program to build (the names of the final binaries)
-bin_PROGRAMS = simulator
+bin_PROGRAMS = mybacteria
 
-# list of sources for the 'simulator' binary
-simulator_SOURCES = main.cpp
-simulator_LDADD = libsrc.a
+# list of sources for the 'mybacteria' binary
+mybacteria_SOURCES = main.cpp
+mybacteria_LDADD = libsrc.a
 
 # list of sources for 'libsrc.la' convenience library
 # main file and utility files

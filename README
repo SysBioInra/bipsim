@@ -1,0 +1,98 @@
+MyBacteria: stochastic simulation of cell processes
+===================================================
+
+A Gillespie-based simulator used to simulate biological processes
+stochastically on a molecular level.
+
+Getting Started
+---------------
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
+### Prerequisites
+
+You need a UNIX system running autoconf to install this software. Decently
+recent [boost](http://boost.org/) libraries are highly recommended.
+
+### Installing
+
+When in the main repository run the following commands:
+
+```
+./configure
+make
+```
+
+If boost is not installed on your system, consider running (not recommended):
+
+```
+./configure --disable-boost
+make
+```
+
+You can make installation system-wide by running
+
+```
+sudo make install
+```
+You may also try reading the [INSTALL](INSTALL) file for more advanced uses.
+
+### Running
+
+Once you have setup your parameter file and reactions files, run
+
+```
+src/mybacteria path/to/params.in
+```
+
+If you do not run the program from the build directory, do not forget to
+add the full path to `src/mybacteria`.
+If you made installation system-wide, you may simply run
+
+```
+mybacteria path/to/params.in
+```
+
+For example, you can use the data provided in sample for your first run:
+
+```
+cd sample
+../src/mybacteria input/params.in
+```
+
+3 output files are generated in `sample/output`
+ - concentrations.txt: concentration of some chemicals over time.
+ - reactions.txt: most popular reactions in the sytem over time.
+ - chromosome.txt: evolution of double strand synthesis over time.
+
+Running tests
+-------------
+
+A couple of unit and integration tests are provided. In order to run them,
+you need to reconfigure the package:
+
+```
+./configure --enable-unit-tests --enable-integration-tests
+make check
+```
+
+Built With
+----------
+
+* [boost](http://boost.org/) - random numbers, unit tests.
+* [autoconf](http://gnu.org/software/autoconf/) - automated building.
+
+Authors
+-------
+
+* Marc Dinh, Stephan Fischer: implementation, theoretical background.
+* Vincent Fromion, Anne Goelzer, Vincent Henry: theoretical background.
+
+License
+-------
+
+This project is licensed under the GPLv3 License - see the [COPYING](COPYING) file for details.
+
+Acknowledgments
+---------------
+
