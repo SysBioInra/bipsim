@@ -6,8 +6,8 @@ for (f in scripts) source(file.path(scripts_path, f))
 
 input_dir = "output"
 output_dir = "results"
-min_time = 12000
-max_time = 300000
+min_time = 12000 # skip first couple of cell cycles
+max_time = Inf
 data_conc = "concentrations.out"
 
 my_pdf = function (filename, w, h) { 
