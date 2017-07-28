@@ -1,25 +1,37 @@
+"""Generate all simulations used for Application Note article."""
 
+from __future__ import absolute_import, division, print_function
 from subprocess import call
 
-from generate_simulator_files import *
+from generate_simulator_files import export_simulation_data, read_data
 
-params = []
-target_dir = []
-# base simulations
-params += [('AN', 'detailed', m) for m in ['detailed', 'stacked', 'constant']]
-target_dir += ['AN_detailed_' + m for m in ['detailed', 'stacked', 'constant']]
-params += [('AN', 'hybrid', m) for m in ['stacked', 'constant']]
-target_dir += ['AN_hybrid_' + m for m in ['stacked', 'constant']]
-params += [('AN', 'agregated', m) for m in ['stacked', 'constant']]
-target_dir += ['AN_agregated_' + m for m in ['stacked', 'constant']]
 
-# paulsson simulations
-params += [('paulsson', 'detailed', 'constant'),
-           ('paulsson', 'agregated', 'constant')]
-target_dir += ['paulsson_' + m for m in ['detailed', 'agregated']]
+def main():
+    """Generate all simulation files for article."""
+    params = []
+    target_dir = []
+    # base simulations
+    full_set = ['detailed', 'stacked', 'constant']
+    quick_set = ['stacked', 'constant']
+    params += [('AN', 'detailed', m) for m in full_set]
+    target_dir += ['AN_detailed_' + m for m in full_set]
+    params += [('AN', 'hybrid', m) for m in quick_set]
+    target_dir += ['AN_hybrid_' + m for m in quick_set]
+    params += [('AN', 'aggregated', m) for m in quick_set]
+    target_dir += ['AN_aggregated_' + m for m in quick_set]
+    # paulsson simulations
+    params += [('paulsson', 'detailed', 'constant'),
+               ('paulsson', 'aggregated', 'constant')]
+    target_dir += ['paulsson_' + m for m in ['detailed', 'aggregated']]
 
-for p, t in zip(params, target_dir):
-    # generate files
-    export_simulation_data(p[0], p[1], p[2])
-    # copy them
-    call('cp -r output/* ../' + t + '/input', shell=True)
+    # get data
+    TUs, gene_TUs = read_data()
+    for p, t in zip(params, target_dir):
+        # generate files
+        export_simulation_data(TUs, gene_TUs, *p)
+        # copy them
+        call('cp -r output/* ../' + t + '/input', shell=True)
+
+
+if __name__ == '__main__':
+    main()

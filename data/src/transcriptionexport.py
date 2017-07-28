@@ -1,203 +1,174 @@
+"""Classes exporting transcription files for MyBacteria."""
 
-from processexport import *
-import math
+from __future__ import absolute_import, division, print_function
+from src.lineformat import header, free_chemical, bound_chemical
 
-class TranscriptionExport(ProcessExport):
-    def __init__(self):
-        super(TranscriptionExport, self).__init__()
-        self.set_test_parameters()
 
-    def set_test_parameters(self):
-        self._sigma_factors = ['A','B']
-        self._absent_sigma_factors = ['D','EF','GF','H','I','K','L','WXY','-']
-        self.agregated_TUs = []
-        # initial values
-        self.RNAP = 1000
-        self.mg = 1000
-        self.nuta = 100
-        self.sigma = 1000
-        # rates
-        self.k_on = 10
-        self.k_off = 1
-        self.loading = 1
-        self.mg_recruitment = 1
-        self.translocation = 6
-        self.release = 1
-        self.agregation_rate = 5
-        self.degradation = 9e-6
-        
-    def set_AN_parameters(self):
-        self.set_test_parameters()
-        self._sigma_factors = ['A']
-        self._absent_sigma_factors = ['B','D','EF','GF','H','I','K','L','WXY','-']
-        # initial values
-        # rates
-        self.k_on = 1
-        self.k_off = 0.1
-        self.loading = 5e-3
-        self.mg_recruitment = 500
-        self.translocation = 50
-        self.release = 100
-        self.agregation_rate = 50
-        self.degradation = -1
+class TranscriptionExport(object):
+    """Export transcription files for MyBacteria."""
 
-    def set_paulsson_parameters(self):
-        self.set_AN_parameters()
-        # half life of 2.6min = 156s
-        self.degradation = math.log(2) / 156
+    def __init__(self, params):
+        """Build export object from parameters."""
+        self.params = params
 
-    def write_input(self, output_stream):
-        lines = self._header('Transcription input')
-        lines += self._free_chemical(['RNAP'], [self.RNAP])
-        for s in self._sigma_factors:
-            lines += self._free_chemical(['Sig'+s], [self.sigma])
-        for s in self._absent_sigma_factors:
-            lines += self._free_chemical(['Sig'+s])
-        lines += self._free_chemical(['Mg2+'],[self.mg])
-        lines += self._free_chemical(['NutA'], [self.nuta])
-        lines += '# not a real chemical: only used to count production.\n'
-        lines += self._free_chemical(['rna_tracker'])
-        lines += '\n'
-        output_stream.write(lines)
-        
-    def write_pre_initiation(self, output_stream):
-        lines = self._header('Transcription pre-initiation')
-        for s in self._sigma_factors + self._absent_sigma_factors:
-            lines += self._free_chemical(['RNAP_Sig'+s])
-        lines += '\n'
-        for s in self._sigma_factors:
-            lines += 'ChemicalReaction RNAP -1 Sig' + s + ' -1 ' \
-                     + 'RNAP_Sig' + s + ' 1 rates 1 1\n'
-        lines += '\n'
-        output_stream.write(lines)
-            
-    def write_initiation(self, output_stream):
-        lines = self._header('Transcription initiation')
-        for s in self._sigma_factors:
-            lines += self._bound_chemical(['bound_RNAP_Sig'+s, \
-                                           'stable_RNAP_Sig'+s,])
-        lines += self._bound_chemical(['stable_RNAP'])
-        lines += '\n'
-        for s in self._sigma_factors:
-            lines += 'SequenceBinding RNAP_Sig' + s + ' bound_RNAP_Sig' + s \
-                     + ' promoter_Sig' + s + '\n'
-            lines += 'ChemicalReaction bound_RNAP_Sig' + s + ' -1 ' \
-                     + 'stable_RNAP_Sig' + s + ' 1 rates 1 0\n'
-            lines += 'ChemicalReaction stable_RNAP_Sig' + s + ' -1 ' \
-                     + 'stable_RNAP 1 Sig' + s + ' 1 rates 1 0\n'
-        lines += '\n'
-        output_stream.write(lines)
+    def input(self):
+        """Return input section of transcription file."""
+        lines = [header('Transcription input')]
+        lines.append(free_chemical(['RNAP'], [self.params.RNAP]))
+        fmt = free_chemical(['Sig{}'], [self.params.sigma])
+        lines += [fmt.format(s) for s in self.params.sigma_factors]
+        fmt = free_chemical(['Sig{}'])
+        lines += [fmt.format(s) for s in self.params.absent_sigma_factors]
+        lines.append(free_chemical(['Mg2+'], [self.params.mg]))
+        lines.append(free_chemical(['NutA'], [self.params.nuta]))
+        lines.append('# not a real chemical: only used to count production.\n')
+        lines.append(free_chemical(['rna_tracker']))
+        lines.append('\n')
+        return ''.join(lines)
 
-    def write_elongation(self, output_stream):
-        lines = self._header('Transcription elongation')
-        lines += self._bound_chemical(['loaded_RNAP', 'stalled_RNAP', \
-                                       'translocating_RNAP'])
-        lines += '\n'
+    def pre_initiation(self):
+        """Return pre-initiation section of transcription file."""
+        lines = [header('Transcription pre-initiation')]
+        fmt = free_chemical(['RNAP_Sig{}'])
+        for s in self.params.sigma_factors + self.params.absent_sigma_factors:
+            lines.append(fmt.format(s))
+        lines.append('\n')
+        fmt = 'ChemicalReaction RNAP -1 Sig{0} -1 RNAP_Sig{0} 1 rates 1 1\n'
+        lines += [fmt.format(s) for s in self.params.sigma_factors]
+        lines.append('\n')
+        return ''.join(lines)
+
+    def initiation(self):
+        """Return initiation section of transcription file."""
+        lines = [header('Transcription initiation')]
+        fmt = bound_chemical(['bound_RNAP_Sig{0}', 'stable_RNAP_Sig{0}'])
+        lines += [fmt.format(s) for s in self.params.sigma_factors]
+        lines.append(bound_chemical(['stable_RNAP']))
+        lines.append('\n')
+        fmt = (
+            'SequenceBinding RNAP_Sig{0} bound_RNAP_Sig{0} promoter_Sig{0}\n'
+            'ChemicalReaction bound_RNAP_Sig{0} -1 stable_RNAP_Sig{0} 1 '
+            'rates 1 0\n'
+            'ChemicalReaction stable_RNAP_Sig{0} -1 stable_RNAP 1 Sig{0} 1 '
+            'rates 1 0\n'
+            )
+        lines += [fmt.format(s) for s in self.params.sigma_factors]
+        lines.append('\n')
+        return ''.join(lines)
+
+    def elongation(self):
+        """Return elongation section of transcription file."""
+        lines = [header('Transcription elongation')]
+        lines.append(bound_chemical(['loaded_RNAP', 'stalled_RNAP',
+                                     'translocating_RNAP']))
+        lines.append('\n')
         templates = ['A', 'C', 'G', 'T']
         to_load = ['UTP', 'GTP', 'CTP', 'ATP']
-        loading_cases = [t + ' ' + l + ' loaded_RNAP ' + str(self.loading) \
-                         for t, l in zip(templates, to_load)]
-        lines += 'LoadingTable NTP_loading ' + ', '.join(loading_cases) + '\n'
-        lines += 'ProductLoading stable_RNAP NTP_loading\n'
-        lines += 'ChemicalReaction loaded_RNAP -1 Mg2+ -2 ' \
-                 + 'translocating_RNAP 1 PPi 1 Mg2+ 2 rates ' \
-                 + str(self.mg_recruitment) + ' 0\n'
-        lines += 'Translocation translocating_RNAP stable_RNAP ' \
-                 + 'stalled_RNAP 1 ' + str(self.translocation) + '\n'
-        lines += '\n'
-        output_stream.write(lines)
+        fmt = '{} {} loaded_RNAP ' + str(self.params.loading)
+        loading_cases = [fmt.format(t, l) for t, l in zip(templates, to_load)]
+        lines.append('LoadingTable NTP_loading '
+                     + ', '.join(loading_cases) + '\n')
+        lines.append('ProductLoading stable_RNAP NTP_loading\n')
+        lines.append('ChemicalReaction loaded_RNAP -1 Mg2+ -2 '
+                     'translocating_RNAP 1 PPi 1 Mg2+ 2 rates {} 0\n'
+                     .format(self.params.mg_recruitment))
+        lines.append('Translocation translocating_RNAP stable_RNAP '
+                     'stalled_RNAP 1 {}\n'.format(self.params.translocation))
+        lines.append('\n')
+        return ''.join(lines)
 
-    def write_agregated_elongation(self, output_stream, TUs):
-        if len(TUs) == 0: return
-        lines = self._header('Agregated transcription elongation')
-        output_stream.write(lines)
+    def aggregated_elongation(self, TUs):
+        """Return aggregated elongation section of transcription file."""
+        if not TUs:
+            return ''
+        lines = [header('Agregated transcription elongation')]
+        switch_fmt = 'Switch {} stable_RNAP {}\n'
+        s_site_fmt = 'SwitchSite {} {} {}\n'
+        trans_fmt = 'Translocation {0} {1} {1} 50 1\n'
+        release_fmt = ('ChemicalReaction {} -1 {} RNAP 1 {} 1 {} 1 '
+                       'rna_tracker 1 rates {} 0\n')
         for TU in TUs:
-            if TU.sense == 1:
-                parent = 'sensedna'
-            else:
-                parent = 'antisensedna'
+            # retrieve TU information
+            parent = 'sensedna' if TU.sense == 1 else 'antisensedna'
             name = TU.name
             name_RNAP = 'RNAP_' + name
             active_RNAP = 'transcribing_' + name_RNAP
-            lines = self._bound_chemical([name_RNAP, active_RNAP])
+            lines.append(bound_chemical([name_RNAP, active_RNAP]))
             # switch once sigma_factor is released
             switch_name = name + '_translation'
-            lines += 'Switch ' +  switch_name + ' ' \
-                     + 'stable_RNAP ' + name_RNAP + '\n'
-            lines += 'SwitchSite ' + parent + ' ' + str(TU.start) + ' ' \
-                     + switch_name + '\n'
+            lines.append(switch_fmt.format(switch_name, name_RNAP))
+            lines.append(s_site_fmt.format(parent, TU.start, switch_name))
             # translocate RNAP further into cds
-            lines += '# arbitrary translocation inside TU.\n'
-            lines += 'Translocation ' + name_RNAP + ' ' + \
-                     active_RNAP + ' ' + active_RNAP + ' 50 1\n'
-            rate = float(self.agregation_rate) / sum(TU.composition)
-            lines += 'ChemicalReaction ' + active_RNAP + ' -1 ' \
-                     + self._TU_reactants(TU) + ' ' \
-                     + 'RNAP' + ' 1 ' + TU.sigma + ' 1 ' + TU.name + ' 1 '\
-                     + 'rna_tracker 1 rates ' + str(rate) + ' 0\n'
-            lines += '\n'
-            output_stream.write(lines)
+            lines.append('# arbitrary translocation inside TU.\n')
+            lines.append(trans_fmt.format(name_RNAP, active_RNAP))
+            rate = self.params.aggregation_rate / sum(TU.composition)
+            lines.append(release_fmt.format(
+                active_RNAP, self._TU_reactants(TU), TU.sigma,
+                TU.name, rate
+                ))
+            lines.append('\n')
+        return ''.join(lines)
 
-    def write_termination(self, output_stream):
-        lines = self._header('Transcription termination')
-        lines += self._bound_chemical(['empty_RNAP','terminating_RNAP'])
-        lines += self._bound_chemical(['continuing_RNAP'])
-        lines += '\n'
-        lines += 'Switch hairpin stable_RNAP terminating_RNAP\n'
-        lines += 'Release terminating_RNAP empty_RNAP continuing_RNAP rnas ' \
-                 + str(self.release) + '\n'
-        lines += 'ChemicalReaction empty_RNAP -1 NutA -1 NutA 1 RNAP 1 ' \
-                 + 'rna_tracker 1 rates ' + str(self.release) + ' 0\n'
-        lines += 'ProductLoading continuing_RNAP NTP_loading\n'
-        lines += '\n'
-        output_stream.write(lines)
+    def termination(self):
+        """Return termination section of transcription file."""
+        lines = [header('Transcription termination')]
+        lines.append(bound_chemical(['empty_RNAP', 'terminating_RNAP']))
+        lines.append(bound_chemical(['continuing_RNAP']))
+        lines.append('\n')
+        lines.append('Switch hairpin stable_RNAP terminating_RNAP\n')
+        lines.append('Release terminating_RNAP empty_RNAP continuing_RNAP '
+                     'rnas {}\n'.format(self.params.release))
+        lines.append('ChemicalReaction empty_RNAP -1 NutA -1 NutA 1 RNAP 1 '
+                     'rna_tracker 1 rates {} 0\n'.format(self.params.release))
+        lines.append('ProductLoading continuing_RNAP NTP_loading\n')
+        lines.append('\n')
+        return ''.join(lines)
 
-    def write_TUs(self, output_stream, TUs):
-        lines = self._header('General information')
-        lines += 'TransformationTable dna2rna A U, C G, G C, T A\n'
-        lines += 'ProductTable rnas dna2rna\n'
-        lines += '\n'
-        lines += self._header('Sequence information')
-        output_stream.write(lines)
+    def transcription_units(self, TUs):
+        """Return declation of transcription units."""
+        lines = [header('General information')]
+        lines.append('TransformationTable dna2rna A U, C G, G C, T A\n')
+        lines.append('ProductTable rnas dna2rna\n')
+        lines.append('\n')
+        lines.append(header('Sequence information'))
+        tu_fmt = 'ChemicalSequence {} product_of {} {} {} rnas\n'
+        prom_fmt = 'BindingSite promoter_{} {} {} {} {} {} {}\n'
+        s_site_fmt = 'SwitchSite {} {} hairpin\n'
         for TU in TUs:
             # handle TU output
-            if TU.sense == 1:
-                parent = 'sensedna'
-            else:
-                parent = 'antisensedna'
-            lines = 'ChemicalSequence ' + TU.name \
-                    + ' product_of ' + parent + ' ' \
-                    + str(TU.start) + ' ' + str(TU.end) \
-                    + ' rnas\n'
+            parent = 'sensedna' if TU.sense == 1 else 'antisensedna'
             promoter_start = TU.start - 35
             promoter_end = TU.start + 1
             reading_frame = TU.start
-            lines += 'BindingSite promoter_' + TU.sigma \
-                     + ' ' + parent + ' ' + str(promoter_start) \
-                     + ' ' + str(promoter_end) + ' ' + str(self.k_on) \
-                     + ' ' + str(self.k_off) + ' ' + str(reading_frame) + '\n'
-            terminator = str(TU.end + 1)
-            lines += 'SwitchSite ' + parent + ' ' + terminator + ' hairpin\n'
-            output_stream.write(lines)
-        lines = '\n'
-        output_stream.write(lines)
+            terminator = TU.end + 1
+            lines.append(tu_fmt.format(TU.name, parent, TU.start, TU.end))
+            lines.append(prom_fmt.format(
+                TU.sigma, parent, promoter_start, promoter_end,
+                self.params.k_on, self.params.k_off, reading_frame
+                ))
+            lines.append(s_site_fmt.format(parent, terminator))
+        lines.append('\n')
+        return ''.join(lines)
 
-    def write_degradation(self, output_stream, TUs):
-        if self.degradation <= 0: return
-        lines = self._header('Degradation')
-        lines += 'CompositionTable rna_composition A AMP, C CMP, G GMP, U UMP\n'
-        lines += '\n'
-        for TU in TUs:
-            lines += 'Degradation ' + TU.name + ' rna_composition ' \
-                     + str(self.degradation) + '\n'
-        lines += '\n'
-        output_stream.write(lines)
+    def degradation(self, TUs):
+        """Return degradation section of transcription units."""
+        if self.params.degradation <= 0:
+            return ''
+        lines = [header('Degradation')]
+        lines.append('CompositionTable rna_composition A AMP, C CMP, '
+                     'G GMP, U UMP\n')
+        lines.append('\n')
+        fmt = 'Degradation {} rna_composition {}\n'
+        lines += [fmt.format(TU.name, self.params.degradation) for TU in TUs]
+        lines.append('\n')
+        return ''.join(lines)
 
     def _TU_reactants(self, TU):
+        """Return reactants/byproducts of TU aggregated synthesis."""
         nb_bases = sum(TU.composition)
-        return 'ATP ' + str(-TU.composition[0]) + ' order 0 ' \
-            + 'CTP ' + str(-TU.composition[1]) + ' order 0 ' \
-            + 'GTP ' + str(-TU.composition[2]) + ' order 0 ' \
-            + 'UTP ' + str(-TU.composition[3]) + ' order 0 ' \
-            + 'Mg2+ ' + str(-2) + ' order 0 ' \
-            + 'PPi ' + str(nb_bases) + ' Mg2+ ' + str(2)
+        return ('ATP ' + str(-TU.composition[0]) + ' order 0 '
+                'CTP ' + str(-TU.composition[1]) + ' order 0 '
+                'GTP ' + str(-TU.composition[2]) + ' order 0 '
+                'UTP ' + str(-TU.composition[3]) + ' order 0 '
+                'Mg2+ ' + str(-2) + ' order 0 '
+                'PPi ' + str(nb_bases) + ' Mg2+ ' + str(2))

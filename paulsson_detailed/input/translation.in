@@ -60,8 +60,8 @@ FreeChemical tRNA_Y 0 CONSTANT
 
 FreeChemical EFTud 0 CONSTANT
 
-# RNAs were set to act as constant chemicals, we skip
-# tRNA activation reactions.
+# RNAs were set to act as constant chemicals,
+# we skip tRNA activation reactions.
 
 ##############################
 # Translation pre-initiation #

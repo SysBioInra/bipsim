@@ -13,7 +13,7 @@ class TU:
         self.composition = [sequence.count('a'), sequence.count('c'), \
                             sequence.count('g'), sequence.count('t')]
 
-    def associate_genes(self, genes, log_stream):
+    def associate_genes(self, genes, log_stream=None):
         not_found = self.annotation_genes[:]
         for g in genes:
             if (g.name in not_found) and self._overlaps(g):
@@ -39,7 +39,7 @@ class TU:
                     + 'could not be retrieved: ' + ', '.join(not_found) \
                     + '\n'
             log_stream.write(msg)
-        
+
     def _contains_gene(self, gene):
         return (gene.sense == self.sense) and \
             (gene.rbs_start >= self.start) and (gene.end <= self.end)
@@ -91,7 +91,7 @@ class TUReader:
                 genes = []
             self.TUs.append(TU(name, position, sequence, sense, sigma, genes))
 
-    def associate_genes(self, genes, log_stream = None):        
+    def associate_genes(self, genes, log_stream = None):
         # remove orphan genes
         if log_stream:
             log_stream.write('Removing orphan genes: ')
