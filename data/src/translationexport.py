@@ -49,9 +49,14 @@ class TranslationExport(object):
     def input(self):
         """Return input section of translation file."""
         lines = [header('Translation input')]
-        lines.append(free_chemical(['30S', '50S'],
-                                   [self.params.nb_ribosomes]*2))
-        lines.append(free_chemical(['IF1', 'IF2', 'IF3'], self.params.IF_123))
+        if self.params.constant_initiation:
+            lines.append(free_chemical(['30S', '50S'],
+                                       [1, self.params.nb_ribosomes], True))
+        else:
+            lines.append(free_chemical(['30S', '50S'],
+                                       [self.params.nb_ribosomes]*2))
+            lines.append(free_chemical(['IF1', 'IF2', 'IF3'],
+                                       self.params.IF_123))
         lines.append(free_chemical(['EFG', 'RF'], self.params.EF_G_RF))
         if self.params.cut_slow_reactions:
             lines.append(free_chemical(['tRNA_fM_c'], [0], True))
@@ -115,6 +120,8 @@ class TranslationExport(object):
 
     def pre_initiation(self):
         """Return pre-initiation section of translation file."""
+        if self.params.constant_initiation:
+            return ''
         lines = [header('Translation pre-initiation')]
         lines.append(free_chemical(['30S1', '30S3', '30S31']))
         lines.append('\n')
@@ -125,6 +132,8 @@ class TranslationExport(object):
 
     def initiation(self):
         """Return initiation section of translation file."""
+        if self.params.constant_initiation:
+            return self.constant_initiation()
         lines = [header('Translation initiation')]
         if self.params.cut_slow_reactions:
             lines.append(free_chemical(['IF2d', 'fMet2a', 'fMet2d'],
@@ -155,6 +164,22 @@ class TranslationExport(object):
         lines.append('ChemicalReaction m30S12a -1 50S -1 '
                      'translocating_70S 1 IF1 1 IF2d 1 Pi 1 tRNA_fM 1 '
                      'rates 1 0\n')
+        lines.append('\n')
+        return ''.join(lines)
+
+    def constant_initiation(self):
+        """Return simplified initiation section of translation file."""
+        lines = [header('Translation initiation')]
+        lines.append(free_chemical(['IF2d', 'fMet2a'],
+                                   [0, self.params.fMet], True))
+        lines.append(bound_chemical(['m30S', 'm30S2a', 'translocating_70S']))
+        lines.append('\n')
+        lines.append('SequenceBinding 30S m30S RBS\n')
+        lines.append('ChemicalReaction fMet2a -1 m30S -1 m30S2a 1 '
+                     'rates 10 0\n')
+        lines.append('ChemicalReaction m30S2a -1 50S -1 '
+                     'translocating_70S 1 IF2d 1 Pi 1 tRNA_fM 1 '
+                     'rates 10 0\n')
         lines.append('\n')
         return ''.join(lines)
 
@@ -212,7 +237,8 @@ class TranslationExport(object):
         known_70S = []
         s_site_fmt = 'SwitchSite {} {} {}\n'
         switch_fmt = 'Switch {} translocating_70S {}\n'
-        trans_fmt = 'Translocation {0} {1} {1} 50 1\n'
+        trans_fmt = ('Translocation {0} {1} {1} 50 '
+                     + str(self.params.rbs_clearance) + '\n')
         elongation_fmt = ('ChemicalReaction {} -1 {} 30S 1 50S 1 '
                           '{} 1 protein_tracker 1 rates {} 0\n')
         for TU in TUs:
@@ -242,7 +268,7 @@ class TranslationExport(object):
                 lines.append('\n')
         return ''.join(lines)
 
-    def proteins(self, TUs):
+    def proteins(self, TUs, rbs=None):
         """Return declaration of proteins carried by TUs."""
         lines = [header('General information')]
         codon_aa = []
@@ -259,10 +285,14 @@ class TranslationExport(object):
         for TU in TUs:
             for g in TU.genes:
                 name = g.name + '_' + g.bsu
+                if rbs:
+                    k_on, k_off = rbs[g.bsu]
+                else:
+                    k_on = self.params.k_on
+                    k_off = self.params.k_off
                 lines.append(seq_fmt.format(name, TU.name, g.start, g.end-3))
                 lines.append(rbs_fmt.format(
-                    TU.name, g.rbs_start, g.rbs_end,
-                    self.params.k_on, self.params.k_off, g.start
+                    TU.name, g.rbs_start, g.rbs_end, k_on, k_off, g.start
                     ))
         lines.append('\n')
         return ''.join(lines)
@@ -276,15 +306,22 @@ class TranslationExport(object):
                      + ', '.join([aa + ' aa_' + aa for aa in self._aas])
                      + '\n')
         lines.append('\n')
-        already_treated = []
+        prot_names = set(g.name + '_' + g.bsu for TU in TUs for g in TU.genes)
         deg_fmt = ('Degradation {} protein_composition '
                    + str(self.params.degradation) + '\n')
-        for TU in TUs:
-            for g in TU.genes:
-                name = g.name + '_' + g.bsu
-                if name not in already_treated:
-                    already_treated.append(name)
-                    lines.append(deg_fmt.format(name))
+        lines += [deg_fmt.format(p) for p in prot_names]
+        lines.append('\n')
+        return ''.join(lines)
+
+    def initial_values(self, TUs, values=None):
+        """Return initial_values section of proteins carried by TUs."""
+        if not values:
+            return ''
+        lines = [header('Initial values')]
+        prots = set(g for TU in TUs for g in TU.genes)
+        fmt = 'event 0 SET {} {}\n'
+        lines += [fmt.format(p.name + '_' + p.bsu, values[p.bsu])
+                  for p in prots]
         lines.append('\n')
         return ''.join(lines)
 

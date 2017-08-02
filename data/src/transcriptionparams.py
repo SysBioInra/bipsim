@@ -31,8 +31,13 @@ def AN_parameters():
 def paulsson_parameters():
     """Return transcription parameters for Paulsson simulations."""
     params = AN_parameters()
+    params.RNAP_constant = True
+    params.sigma_factors = []
+    params.absent_sigma_factors = []
+    params.prom_clearance = 100
     # half life of 2.6min = 156s
     params.degradation = math.log(2) / 156
+    params.RNAP = 1
     return params
 
 
@@ -49,6 +54,7 @@ class TranscriptionParams(object):
         self.aggregated_TUs = []
         # initial values
         self.RNAP = 1000
+        self.RNAP_constant = False
         self.mg = 1000
         self.nuta = 100
         self.sigma = 1000
@@ -60,4 +66,9 @@ class TranscriptionParams(object):
         self.translocation = 6
         self.release = 1
         self.aggregation_rate = 5
+        self.prom_clearance = 1
         self.degradation = 9e-6
+        # individual rates
+        self.promoters = None
+        self.deg_rates = None
+        self.initial_values = None

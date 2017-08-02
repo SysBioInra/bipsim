@@ -33,6 +33,8 @@ def AN_parameters():
 def paulsson_parameters():
     """Return translation parameters for Paulsson simulations."""
     params = AN_parameters()
+    params.constant_initiation = True
+    params.rbs_clearance = 100
     # equal to growth rate 40min-1 = 2400s-1
     params.degradation = 1.0/2400
     return params
@@ -46,6 +48,7 @@ class TranslationParams(object):
         self.aggregate_slow_reactions = False
         self.cut_slow_reactions = False
         # initial values
+        self.constant_initiation = False
         self.nb_ribosomes = 1000
         self.IF_123 = [100, 400, 100]
         self.EFTu = 60000
@@ -60,4 +63,8 @@ class TranslationParams(object):
         self.transpeptidation = 1
         self.release = 1
         self.aggregation_rate = 1
+        self.rbs_clearance = 1
         self.degradation = -1
+        # individual rates
+        self.rbs = None
+        self.initial_values = None

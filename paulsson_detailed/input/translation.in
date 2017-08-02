@@ -1,11 +1,8 @@
 #####################
 # Translation input #
 #####################
-FreeChemical 30S 18000
-FreeChemical 50S 18000
-FreeChemical IF1 5500
-FreeChemical IF2 6600
-FreeChemical IF3 4400
+FreeChemical 30S 1 CONSTANT
+FreeChemical 50S 18000 CONSTANT
 FreeChemical EFG 15000
 FreeChemical RF 4000
 FreeChemical tRNA_fM_c 0 CONSTANT
@@ -63,33 +60,18 @@ FreeChemical EFTud 0 CONSTANT
 # RNAs were set to act as constant chemicals,
 # we skip tRNA activation reactions.
 
-##############################
-# Translation pre-initiation #
-##############################
-FreeChemical 30S1
-FreeChemical 30S3
-FreeChemical 30S31
-
-ChemicalReaction 30S -1 IF3 -1 30S3 1 rates 1 1
-ChemicalReaction 30S3 -1 IF1 -1 30S31 1 rates 1 1
-
 ##########################
 # Translation initiation #
 ##########################
 FreeChemical IF2d 0 CONSTANT
 FreeChemical fMet2a 3000 CONSTANT
-FreeChemical fMet2d 0 CONSTANT
-BoundChemical m30S31
-BoundChemical m30S312a
-BoundChemical m30S312d
-BoundChemical m30S12a
+BoundChemical m30S
+BoundChemical m30S2a
 BoundChemical translocating_70S
 
-SequenceBinding 30S31 m30S31 RBS
-ChemicalReaction fMet2a -1 m30S31 -1 m30S312a 1 rates 1 0
-ChemicalReaction fMet2d -1 m30S31 -1 m30S312d 1 rates 1 10
-ChemicalReaction m30S312a -1 IF3 1 m30S12a 1 rates 1 0
-ChemicalReaction m30S12a -1 50S -1 translocating_70S 1 IF1 1 IF2d 1 Pi 1 tRNA_fM 1 rates 1 0
+SequenceBinding 30S m30S RBS
+ChemicalReaction fMet2a -1 m30S -1 m30S2a 1 rates 10 0
+ChemicalReaction m30S2a -1 50S -1 translocating_70S 1 IF2d 1 Pi 1 tRNA_fM 1 rates 10 0
 
 ##########################
 # Translation elongation #

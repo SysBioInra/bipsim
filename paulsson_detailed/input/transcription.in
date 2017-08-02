@@ -1,18 +1,7 @@
 #######################
 # Transcription input #
 #######################
-FreeChemical RNAP 1000
-FreeChemical SigA 1000
-FreeChemical SigB
-FreeChemical SigD
-FreeChemical SigEF
-FreeChemical SigGF
-FreeChemical SigH
-FreeChemical SigI
-FreeChemical SigK
-FreeChemical SigL
-FreeChemical SigWXY
-FreeChemical Sig-
+FreeChemical RNAP 1 CONSTANT
 FreeChemical Mg2+ 1000
 FreeChemical NutA 100
 # not a real chemical: only used to count production.
@@ -21,30 +10,14 @@ FreeChemical rna_tracker
 ################################
 # Transcription pre-initiation #
 ################################
-FreeChemical RNAP_SigA
-FreeChemical RNAP_SigB
-FreeChemical RNAP_SigD
-FreeChemical RNAP_SigEF
-FreeChemical RNAP_SigGF
-FreeChemical RNAP_SigH
-FreeChemical RNAP_SigI
-FreeChemical RNAP_SigK
-FreeChemical RNAP_SigL
-FreeChemical RNAP_SigWXY
-FreeChemical RNAP_Sig-
 
-ChemicalReaction RNAP -1 SigA -1 RNAP_SigA 1 rates 1 1
 
 ############################
 # Transcription initiation #
 ############################
-BoundChemical bound_RNAP_SigA
-BoundChemical stable_RNAP_SigA
 BoundChemical stable_RNAP
 
-SequenceBinding RNAP_SigA bound_RNAP_SigA promoter_SigA
-ChemicalReaction bound_RNAP_SigA -1 stable_RNAP_SigA 1 rates 1 0
-ChemicalReaction stable_RNAP_SigA -1 stable_RNAP 1 SigA 1 rates 1 0
+SequenceBinding RNAP stable_RNAP promoter_
 
 ############################
 # Transcription elongation #

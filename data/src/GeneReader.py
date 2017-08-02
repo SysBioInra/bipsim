@@ -1,5 +1,7 @@
+"""Module reading gene/protein information from subtilis data set."""
 
 import csv
+
 
 class Gene:
     def __init__(self, name, bsu, position, rbs, sense, aa_seq, TUs):
@@ -11,8 +13,8 @@ class Gene:
         self.rbs_end = rbs[1]
         self.sense = sense
         self.TUs = TUs
-        aas = ['A','C','D','E','F','G','H','I','K','L','M','N', \
-               'P','Q','R','S','T','V','W','Y']
+        aas = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N',
+               'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
         self.aa_composition = []
         # we do not count initial fMet
         aa_seq = aa_seq[1:]
@@ -20,12 +22,12 @@ class Gene:
             self.aa_composition.append(aa_seq.count(aa))
 
     def name_and_size(self):
-        return self.name + ' [' + str(self.rbs_start) + ':' \
-            + str(self.end) + ']'                
+        return '{} [{}:{}]'.format(self.name, self.rbs_start, self.end)
+
 
 class GeneReader:
-    def __init__(self, input_stream, dna_length, log_stream = None):
-        parser = csv.reader(input_stream, delimiter = '\t')
+    def __init__(self, input_stream, dna_length, log_stream=None):
+        parser = csv.reader(input_stream, delimiter='\t')
         header = parser.next()
         name_index = header.index('name')
         bsu_index = header.index('BSU')
@@ -56,7 +58,7 @@ class GeneReader:
             sense = int(r[sense_index])
             if sense != 1:
                 self._invert_position(position, dna_length)
-                
+
             # read RBS info
             rbs = [int(r[rbs_start_index]), int(r[rbs_end_index])]
             if rbs[0] == rbs[1] == 0:
@@ -72,7 +74,7 @@ class GeneReader:
                     long_RBS.append(name)
                     rbs[0] = position[0] - 21
             rbs[1] = position[0] + 2
-            
+
             # check sequence
             sequence = r[sequence_index].strip()
             aa_seq = r[aa_seq_index].strip()
@@ -96,9 +98,9 @@ class GeneReader:
                 TUs = []
 
             # create gene
-            self.genes.append(Gene(name, bsu, position, rbs, sense, \
+            self.genes.append(Gene(name, bsu, position, rbs, sense,
                                    aa_seq, TUs))
-            
+
         # log all relevant information
         if log_stream:
             msg = 'Genes with no RBS info, ' \
@@ -109,12 +111,13 @@ class GeneReader:
             log_stream.write(msg + ', '.join(invalid_RBS) + '.\n\n')
             msg = 'Genes with RBS far away from gene, RBS was set' \
                   + ' at 21 bases from start codon: '
-            log_stream.write(msg + ', '.join(long_RBS) + '.\n\n')            
+            log_stream.write(msg + ', '.join(long_RBS) + '.\n\n')
             msg = 'Genes with invalid stop codon (they were excluded): '
             log_stream.write(msg + ', '.join(invalid_stop) + '.\n\n')
             msg = 'Genes with invalid start codon: '
             log_stream.write(msg + ', '.join(invalid_start) + '.\n\n')
-            msg = 'Genes with invalid length or containing a stop codon (they were excluded): '
+            msg = ('Genes with invalid length or containing a stop codon '
+                   '(they were excluded): ')
             log_stream.write(msg + ', '.join(invalid_sequence) + '.\n\n')
             msg = 'Genes with invalid aa sequence (they were excluded): '
             log_stream.write(msg + ', '.join(invalid_aa_seq) + '.\n\n')
@@ -129,7 +132,7 @@ class GeneReader:
 
     def _is_valid_sequence(self, sequence):
         # check sequence length
-        if (len(sequence)) % 3 != 0:
+        if len(sequence) % 3 != 0:
             return False
         # we do not count the stop codon here
         nb_codons = len(sequence) / 3 - 1

@@ -14,7 +14,8 @@ class TranscriptionExport(object):
     def input(self):
         """Return input section of transcription file."""
         lines = [header('Transcription input')]
-        lines.append(free_chemical(['RNAP'], [self.params.RNAP]))
+        lines.append(free_chemical(['RNAP'], [self.params.RNAP],
+                                   self.params.RNAP_constant))
         fmt = free_chemical(['Sig{}'], [self.params.sigma])
         lines += [fmt.format(s) for s in self.params.sigma_factors]
         fmt = free_chemical(['Sig{}'])
@@ -53,6 +54,8 @@ class TranscriptionExport(object):
             'rates 1 0\n'
             )
         lines += [fmt.format(s) for s in self.params.sigma_factors]
+        if not self.params.sigma_factors:
+            lines.append('SequenceBinding RNAP stable_RNAP promoter_\n')
         lines.append('\n')
         return ''.join(lines)
 
@@ -84,8 +87,9 @@ class TranscriptionExport(object):
         lines = [header('Agregated transcription elongation')]
         switch_fmt = 'Switch {} stable_RNAP {}\n'
         s_site_fmt = 'SwitchSite {} {} {}\n'
-        trans_fmt = 'Translocation {0} {1} {1} 50 1\n'
-        release_fmt = ('ChemicalReaction {} -1 {} RNAP 1 {} 1 {} 1 '
+        trans_fmt = ('Translocation {0} {1} {1} 50 '
+                     + str(self.params.prom_clearance) + '\n')
+        release_fmt = ('ChemicalReaction {} -1 {} RNAP 1 {} 1 '
                        'rna_tracker 1 rates {} 0\n')
         for TU in TUs:
             # retrieve TU information
@@ -103,8 +107,7 @@ class TranscriptionExport(object):
             lines.append(trans_fmt.format(name_RNAP, active_RNAP))
             rate = self.params.aggregation_rate / sum(TU.composition)
             lines.append(release_fmt.format(
-                active_RNAP, self._TU_reactants(TU), TU.sigma,
-                TU.name, rate
+                active_RNAP, self._TU_reactants(TU), TU.name, rate
                 ))
             lines.append('\n')
         return ''.join(lines)
@@ -124,7 +127,7 @@ class TranscriptionExport(object):
         lines.append('\n')
         return ''.join(lines)
 
-    def transcription_units(self, TUs):
+    def transcription_units(self, TUs, promoters=None):
         """Return declation of transcription units."""
         lines = [header('General information')]
         lines.append('TransformationTable dna2rna A U, C G, G C, T A\n')
@@ -141,16 +144,21 @@ class TranscriptionExport(object):
             promoter_end = TU.start + 1
             reading_frame = TU.start
             terminator = TU.end + 1
+            if promoters:
+                k_on, k_off = promoters[TU.name]
+            else:
+                k_on = self.params.k_on
+                k_off = self.params.k_off
             lines.append(tu_fmt.format(TU.name, parent, TU.start, TU.end))
             lines.append(prom_fmt.format(
                 TU.sigma, parent, promoter_start, promoter_end,
-                self.params.k_on, self.params.k_off, reading_frame
+                k_on, k_off, reading_frame
                 ))
             lines.append(s_site_fmt.format(parent, terminator))
         lines.append('\n')
         return ''.join(lines)
 
-    def degradation(self, TUs):
+    def degradation(self, TUs, rates=None):
         """Return degradation section of transcription units."""
         if self.params.degradation <= 0:
             return ''
@@ -158,8 +166,23 @@ class TranscriptionExport(object):
         lines.append('CompositionTable rna_composition A AMP, C CMP, '
                      'G GMP, U UMP\n')
         lines.append('\n')
-        fmt = 'Degradation {} rna_composition {}\n'
-        lines += [fmt.format(TU.name, self.params.degradation) for TU in TUs]
+        if rates:
+            fmt = 'Degradation {} rna_composition {}\n'
+            lines += [fmt.format(TU.name, rates[TU.name]) for TU in TUs]
+        else:
+            fmt = ('Degradation {} rna_composition '
+                   + str(self.params.degradation) + '\n')
+            lines += [fmt.format(TU.name) for TU in TUs]
+        lines.append('\n')
+        return ''.join(lines)
+
+    def initial_values(self, TUs, values=None):
+        """Return initial_values section of transcription units."""
+        if not values:
+            return ''
+        lines = [header('Initial values')]
+        fmt = 'event 0 SET {} {}\n'
+        lines += [fmt.format(TU.name, values[TU.name]) for TU in TUs]
         lines.append('\n')
         return ''.join(lines)
 
