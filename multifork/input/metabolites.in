@@ -1,0 +1,14 @@
+###############
+# Metabolites #
+###############
+FreeChemical dATP 100000000.0
+FreeChemical dAMP
+FreeChemical dCTP 100000000.0
+FreeChemical dCMP
+FreeChemical dGTP 100000000.0
+FreeChemical dGMP
+FreeChemical dTTP 100000000.0
+FreeChemical dTMP
+FreeChemical Pi 0 CONSTANT
+FreeChemical PPi 0 CONSTANT
+

@@ -13,8 +13,10 @@ def main():
     simulation_file = sys.argv[1]
     theoretical_file = sys.argv[2]
     # read data
-    bsus, rnas, prots, rnas_var, prots_var = \
+    bsus, rna_b, rna_d, protein_b, protein_d = \
         read_theoretical_data(theoretical_file)
+    rnas, prots, rnas_var, prots_var = \
+        theoretical_statistics(rna_b, rna_d, protein_b, protein_d)
     simu_bsus, simu_rnas, simu_prots, simu_rnas_var, simu_prots_var = \
         read_simulation_data(simulation_file)
     # filter data (keep only simulated genes)
@@ -27,8 +29,9 @@ def main():
     fig = statistics_figure(rnas, prots, rnas_var, prots_var, simu_rnas,
                             simu_prots, simu_rnas_var, simu_prots_var)
     fig.savefig('results/statistics.pdf')
-    fig = residuals_figure(rnas, prots, simu_rnas, simu_prots)
-    fig.savefig('results/residuals_average.pdf')
+    fig = residuals_figure(rnas, prots, rnas_var, prots_var, simu_rnas,
+                           simu_prots, simu_rnas_var, simu_prots_var)
+    fig.savefig('results/residuals.pdf')
 
 
 def statistics_figure(rnas, prots, rnas_var, prots_var,
@@ -53,34 +56,44 @@ def plot_simulation_vs_theory(ax, theory, simulation, title=None):
     ax.set_xlabel('Theory')
     ax.set_ylabel('Simulation')
     ax.loglog(theory, simulation, 'o')
-    diagonal = [numpy.min(theory), numpy.max(theory)]
-    ax.plot(diagonal, diagonal, 'k')
+    data_range = [numpy.min(theory), numpy.max(theory)]
+    ax.plot(data_range, data_range, 'k')
 
 
-def residuals_figure(rnas, prots, simu_rnas, simu_prots):
+def residuals_figure(rnas, prots, rnas_var, prots_var,
+                     simu_rnas, simu_prots, simu_rnas_var, simu_prots_var):
     fig = plt.figure()
-    ax = fig.add_subplot(211)
+    ax = fig.add_subplot(221)
     plot_residuals(ax, rnas, simu_rnas)
-    ax = fig.add_subplot(212)
+    ax = fig.add_subplot(222)
     plot_residuals(ax, prots, simu_prots)
+    ax = fig.add_subplot(223)
+    plot_residuals(ax, rnas_var, simu_rnas_var)
+    ax = fig.add_subplot(224)
+    plot_residuals(ax, prots_var, simu_prots_var)
     fig.tight_layout()
     return fig
 
 
-def plot_residuals(ax, theory, simulation):
+def plot_residuals(ax, theory, simulation, title=None):
+    if title:
+        ax.set_title(title)
     ax.set_xlabel('Theory')
     ax.set_ylabel('Residuals')
-    f_percent = five_percent_limit(theory, simulation)
-    print(f_percent)
-    keep = theory > f_percent
-    th = theory[keep]
-    ax.plot(th, (simulation[keep]-th)/th, 'o')
+    frac = 0.1
+    limit = relative_limit(theory, simulation, frac)
+    data_range = [numpy.min(theory), numpy.max(theory)]
+    ax.semilogx(theory, (simulation-theory)/theory, 'o')
+    ax.axhline(-frac, ls=':')
+    ax.axhline(frac, ls=':')
+    ax.axvline(limit, ls=':')
+    ax.text(limit, 0.5, '{0:.1f}'.format(limit))
 
 
-def five_percent_limit(theory, simulation):
+def relative_limit(theory, simulation, fraction):
     order = numpy.argsort(theory)
     residuals = ((simulation - theory) / theory)[order]
-    max_ind = numpy.where(abs(residuals) > 0.1)[0][-1]
+    max_ind = numpy.where(abs(residuals) > fraction)[0][-1]
     return theory[order][max_ind]
 
 
@@ -116,10 +129,19 @@ def read_simulation_data(output):
             var[:nb_genes], var[nb_genes:])
 
 
-def read_theoretical_data(input):
-    """Return expected averages."""
+def theoretical_statistics(rna_b, rna_d, prot_b, prot_d):
+    """Return expected averages and variances."""
+    rnas = rna_b / rna_d
+    rnas_var = rnas
+    prots = rnas * prot_b / prot_d
+    prots_var = prots * (1 + prot_b / (rna_d + prot_d))
+    return rnas, prots, rnas_var, prots_var
+
+
+def read_theoretical_data(input_file):
+    """Return birth/death rates for RNAs and proteins."""
     # read rates
-    with open(input, 'r') as f:
+    with open(input_file, 'r') as f:
         header = next(f)
         bsus = []
         rates = []
@@ -132,11 +154,7 @@ def read_theoretical_data(input):
     rna_d = numpy.fromiter((r[1] for r in rates), 'float')
     prot_b = numpy.fromiter((r[2] for r in rates), 'float')
     prot_d = numpy.fromiter((r[3] for r in rates), 'float')
-    rnas = rna_b / rna_d
-    rnas_var = rnas
-    prots = rnas * prot_b / prot_d
-    prots_var = prots * (1 + prot_b / (rna_d + prot_d))
-    return bsus, rnas, prots, rnas_var, prots_var
+    return bsus, rna_b, rna_d, prot_b, prot_d
 
 
 if __name__ == '__main__':
