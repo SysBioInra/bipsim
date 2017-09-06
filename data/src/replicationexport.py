@@ -46,8 +46,9 @@ class ReplicationExport(object):
         lines.append(self._elongation_reactions('fork'))
         lines.append('\n')
         lines.append('# Lagging strand\n')
-        lines.append('DoubleStrandRecruitment DNAP_fork free_DNAP '
-                     'DNAP_lagging {}\n'.format(self.params.recruitment))
+        lines.append('DoubleStrandRecruitment translocating_DNAP_fork '
+                     'free_DNAP DNAP_lagging {}\n'
+                     .format(self.params.recruitment))
         lines.append(self._elongation_reactions('lagging'))
         lines.append('\n')
         return ''.join(lines)

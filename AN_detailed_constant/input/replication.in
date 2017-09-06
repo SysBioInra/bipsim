@@ -36,7 +36,7 @@ Translocation translocating_DNAP_fork DNAP_fork stalled_DNAP_fork 1 750
 ChemicalReaction stalled_DNAP_fork -1 free_DNAP 1 rates 1000 0
 
 # Lagging strand
-DoubleStrandRecruitment DNAP_fork free_DNAP DNAP_lagging 5
+DoubleStrandRecruitment translocating_DNAP_fork free_DNAP DNAP_lagging 0.1
 LoadingTable dNTP_loading_lagging A dTTP loaded_DNAP_lagging 0.001, C dGTP loaded_DNAP_lagging 0.001, G dCTP loaded_DNAP_lagging 0.001, T dATP loaded_DNAP_lagging 0.001
 DoubleStrandLoading DNAP_lagging dNTP_loading_lagging stalled_DNAP_lagging
 ChemicalReaction loaded_DNAP_lagging -1 PPi 1 translocating_DNAP_lagging 1 rates 10000 0

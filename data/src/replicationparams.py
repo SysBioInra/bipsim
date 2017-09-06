@@ -16,7 +16,7 @@ def AN_parameters():
     params.loading = 1e-3
     params.ligation = 10000
     params.translocation = 750
-    params.recruitment = 5
+    params.recruitment = 0.1
     params.release = 1000
     return params
 
