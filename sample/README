@@ -1,7 +1,7 @@
-MyCellS Sample Directory
+BiPSim Sample Directory
 ===========================
 
-Sample directory showing how `MyCellS` is typically used.
+Sample directory showing how `BiPSim` is typically used.
 
 Directory structure
 -------------------
@@ -19,10 +19,10 @@ Directory structure
 Examples
 --------
 
-Once you have installed MyCellS, move into this directory and run
+Once you have installed BiPSim, move into this directory and run
 
 ```
-../src/mycells input/params.in
+../src/bipsim input/params.in
 ```
 
 or (equivalently):
@@ -37,7 +37,7 @@ performed stochastically. Data used comes from *B. subtilis* annotation.
 You can also run:
 
 ```
-../src/mycells input/params_tetracyclin.in
+../src/bipsim input/params_tetracyclin.in
 ```
 
 This will run the same simulation with an additional input file that describes

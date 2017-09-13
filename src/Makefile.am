@@ -10,11 +10,11 @@ AM_LDFLAGS = $(BOOST_LDFLAGS)
 noinst_LIBRARIES = libsrc.a
 
 # the program to build (the names of the final binaries)
-bin_PROGRAMS = mycells
+bin_PROGRAMS = bipsim
 
-# list of sources for the 'mycells' binary
-mycells_SOURCES = main.cpp
-mycells_LDADD = libsrc.a
+# list of sources for the 'bipsim' binary
+bipsim_SOURCES = main.cpp
+bipsim_LDADD = libsrc.a
 
 # list of sources for 'libsrc.la' convenience library
 # main file and utility files

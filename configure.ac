@@ -3,7 +3,7 @@
 
 # initial information about the project
 AC_PREREQ([2.63])
-AC_INIT([MyCellS], [1.0])
+AC_INIT([BiPSim], [1.0])
 
 # automake initialization
 AM_INIT_AUTOMAKE([subdir-objects])

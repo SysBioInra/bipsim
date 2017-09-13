@@ -1,4 +1,4 @@
-MyCellS: stochastic simulation of cell processes
+BiPSim: stochastic simulation of cell processes
 ===================================================
 
 A Gillespie-based simulator used to simulate biological processes
@@ -41,22 +41,22 @@ You may also try reading the [INSTALL](INSTALL) file for more advanced uses (thi
 Once you have setup your parameter file and reactions files, run
 
 ```
-src/mycells path/to/params.in
+src/bipsim path/to/params.in
 ```
 
 If you do not run the program from the build directory, do not forget to
-add the full path to `src/mycells`.
+add the full path to `src/bipsim`.
 If you made installation system-wide, you may simply run
 
 ```
-mycells path/to/params.in
+bipsim path/to/params.in
 ```
 
 For example, you can use the data provided in sample for your first run:
 
 ```
 cd sample
-../src/mycells input/params.in
+../src/bipsim input/params.in
 ```
 
 3 output files are generated in `sample/output`

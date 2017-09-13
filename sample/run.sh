@@ -2,7 +2,7 @@
 #!/bin/sh
 
 SRC_PATH=../src
-EXE_NAME=mycells
+EXE_NAME=bipsim
 
 PARAMS_IN=params.in
 
