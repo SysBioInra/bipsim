@@ -2,7 +2,7 @@
 #!/bin/sh
 
 SRC_PATH=../src
-EXE_NAME=mybacteria
+EXE_NAME=mycells
 
 PARAMS_IN=params.in
 

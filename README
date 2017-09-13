@@ -1,4 +1,4 @@
-MyBacteria: stochastic simulation of cell processes
+MyCellS: stochastic simulation of cell processes
 ===================================================
 
 A Gillespie-based simulator used to simulate biological processes
@@ -11,8 +11,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-You need a UNIX system running autoconf to install this software. Decently
-recent [boost](http://boost.org/) libraries are highly recommended.
+You need a UNIX system running autoconf to install this software. Recent [boost](http://boost.org/) libraries are highly recommended.
 
 ### Installing
 
@@ -35,29 +34,29 @@ You can make installation system-wide by running
 ```
 sudo make install
 ```
-You may also try reading the [INSTALL](INSTALL) file for more advanced uses.
+You may also try reading the [INSTALL](INSTALL) file for more advanced uses (this is a file that comes with autoconf, we did not write it).
 
 ### Running
 
 Once you have setup your parameter file and reactions files, run
 
 ```
-src/mybacteria path/to/params.in
+src/mycells path/to/params.in
 ```
 
 If you do not run the program from the build directory, do not forget to
-add the full path to `src/mybacteria`.
+add the full path to `src/mycells`.
 If you made installation system-wide, you may simply run
 
 ```
-mybacteria path/to/params.in
+mycells path/to/params.in
 ```
 
 For example, you can use the data provided in sample for your first run:
 
 ```
 cd sample
-../src/mybacteria input/params.in
+../src/mycells input/params.in
 ```
 
 3 output files are generated in `sample/output`

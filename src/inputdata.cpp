@@ -24,8 +24,7 @@
 // ==========================
 //
 InputData::InputData (const std::vector <std::string>& input_file_names)
-  : _file (0)
-  , _line_number (0)
+  : _line_number (0)
   , _file_line_number (0)
   , _line ("")
   , _input_line ("")
