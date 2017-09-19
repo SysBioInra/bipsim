@@ -1,3 +1,14 @@
+// 
+// Copyright 2017 INRA
+// Authors: M. Dinh, S. Fischer
+// Last modification: 2017-09-19
+// 
+// 
+// Licensed under the GNU General Public License.
+// You should have received a copy of the GNU General Public License
+// along with BiPSim.  If not, see <http://www.gnu.org/licenses/>.
+// 
+
 
 /**
  * @file reactionlogger.cpp
