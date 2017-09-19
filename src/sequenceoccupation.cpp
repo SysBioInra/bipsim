@@ -28,8 +28,8 @@
 //
 SequenceOccupation::SequenceOccupation (int length)
   : _number_sequences (0)
-  , _occupancy (length, 0)
   , _number_segments (length, 0)
+  , _occupancy (length, 0)
 {
 }
 
@@ -39,7 +39,8 @@ SequenceOccupation::SequenceOccupation (int length)
 
 SequenceOccupation::~SequenceOccupation (void)
 {
-  for (int i = 0; i < _site_groups.size(); ++i)  { delete _site_groups[i]; }
+  for (std::size_t i = 0; i < _site_groups.size(); ++i)
+    { delete _site_groups[i]; }
   for (std::vector <PartialStrand*>::iterator strand_it 
 	 = _partials.begin();
        strand_it != _partials.end(); ++strand_it)
@@ -127,7 +128,7 @@ void SequenceOccupation::release_strand_id (int strand_id)
   _partial_creation_order.remove (strand_id);
   _unused_partials.push (strand_id);
   ++_number_sequences;
-  for (int i = 0; i < _occupancy.size(); ++i) 
+  for (std::size_t i = 0; i < _occupancy.size(); ++i) 
     { ++_occupancy [i]; _number_segments [i] -= 1; }
 }
 
@@ -135,7 +136,7 @@ void SequenceOccupation::watch_site (BindingSite& site)
 {
   // look if site should be added to an existing group
   bool new_group = true;
-  int ind_g = position_to_group (site.first());
+  std::size_t ind_g = position_to_group (site.first());
   if (ind_g < _site_groups.size())
     {
       SiteGroup* g = _site_groups [ind_g];
@@ -244,7 +245,7 @@ std::list <std::vector <int> > SequenceOccupation::partial_strands (void) const
 //  Private Methods
 // =================
 //
-void SequenceOccupation::fuse_groups (int index)
+void SequenceOccupation::fuse_groups (std::size_t index)
 {
   // if group is last in vector no fusion with a follower is possible
   if (index >= _site_groups.size()-1) return;
@@ -258,15 +259,16 @@ void SequenceOccupation::fuse_groups (int index)
   fuse_groups (index);
 }
 
-int SequenceOccupation::position_to_group (int position) const
+std::size_t SequenceOccupation::position_to_group (int position) const
 {
   if (_site_groups.size() == 0) { return 1; }
   if (_site_groups[0]->last() >= position) { return 0; }
 
   // we look for the largest i such that
   //  _site_groups[i].last() < position
-  int i_min = 0; int i_max = _site_groups.size()-1;
-  int i;
+  std::size_t i_min = 0;
+  std::size_t i_max = _site_groups.size()-1;
+  std::size_t i;
   while (i_min < i_max)
     {
       i = (i_min + i_max + 1)/2;
@@ -282,15 +284,15 @@ void SequenceOccupation::notify_change (int a, int b) const
 {
   if (_site_groups.size() > 0)
     {
-      int last_group = position_to_group (b);
+      std::size_t last_group = position_to_group (b);
       if (last_group == _site_groups.size()) { --last_group; }
-      for (int i = position_to_group (a); i <= last_group; ++i)
+      for (std::size_t i = position_to_group (a); i <= last_group; ++i)
 	{ _site_groups [i]->update (a, b); }
     }
 }
 
 void SequenceOccupation::notify_all_sites (void) const
 {
-  for (int i = 0; i < _site_groups.size(); ++i)
+  for (std::size_t i = 0; i < _site_groups.size(); ++i)
     { _site_groups [i]->update_all(); }
 }

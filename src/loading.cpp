@@ -28,8 +28,8 @@
 //
 Loading::Loading (BoundChemical& loader, const LoadingTable& table)
   : _loader (loader)
-  , _template_filter (table)
   , _table (table)
+  , _template_filter (table)
   , _volume_constant (1)
 {
   // ask loader to classify units according to templates read

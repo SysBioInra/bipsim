@@ -36,8 +36,11 @@
  * @brief Abstract class for RateContainer factories.
  */
 class RateContainerFactory
-{
+{  
  public:
+  /** @brief Destructor (empty but virtual). */
+  virtual ~RateContainerFactory (void) {};
+
   // ===========================
   //  Public Methods - Commands
   // ===========================

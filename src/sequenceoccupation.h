@@ -166,7 +166,7 @@ private:
    *  sequence or the number of groups if there are no groups between the 
    *  position and the end of the sequence.
    */
-  int position_to_group (int position) const;
+  std::size_t position_to_group (int position) const;
 
   /**
    * @brief Send notifications knowing that a change occurred between two
@@ -190,7 +190,7 @@ private:
    *  fuse the group recursively with following groups, as it assumes that the
    *  first group was extended towards the end of the sequence.
    */
-  void fuse_groups (int index);
+  void fuse_groups (std::size_t index);
 
   // ============
   //  Attributes

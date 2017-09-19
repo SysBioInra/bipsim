@@ -33,11 +33,11 @@
 ConstantRateGroup::ConstantRateGroup (const SimulationParams& params,
 				      const std::vector<Reaction*>& reactions,
 				      double initial_time, double time_step)
-  : _next_reaction_time (initial_time)
+  : _rate_manager (params, reactions)
+  , _next_reaction_time (initial_time)
   , _next_reaction (0)
   , _final_time (initial_time + time_step)
   , _time_step (time_step)
-  , _rate_manager (params, reactions)
 {
   reinitialize (initial_time);
 }

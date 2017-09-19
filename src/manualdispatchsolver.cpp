@@ -37,7 +37,7 @@ ManualDispatchSolver (const SimulationParams& params,
   for (int i = 0; i < number_groups; ++i)
     {
       if (classification.time_step (i) 
-	  == ReactionClassification::ALWAYS_UPDATED)
+	  == ReactionClassification::ALWAYS_UPDATED())
 	{
 	  // if rates are always updated, we use UpdatedRateGroup
 	  _updated_rate_groups.push_back 
@@ -65,9 +65,9 @@ ManualDispatchSolver (const SimulationParams& params,
 ManualDispatchSolver::~ManualDispatchSolver (void)
 {  
   // delete all allocated reaction groups
-  for (int i = 0; i < _constant_rate_groups.size(); ++i)
+  for (std::size_t i = 0; i < _constant_rate_groups.size(); ++i)
     { delete _constant_rate_groups [i]; }
-  for (int i = 0; i < _updated_rate_groups.size(); ++i)
+  for (std::size_t i = 0; i < _updated_rate_groups.size(); ++i)
     { delete _updated_rate_groups [i]; }
 }
 

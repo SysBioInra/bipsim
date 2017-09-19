@@ -55,9 +55,9 @@ class FlyRateVector : public RateContainer
    */
   FlyRateVector (int size = 0, bool forward = true)
     : _rates (size, 0)
-    , _forward (forward)
     , _total_rate (0)
     , _last_max_rate (0)
+    , _forward (forward)
   {
   }
 
@@ -191,7 +191,7 @@ inline int FlyRateVector::random_index (void) const
     (1e-16*total_rate(), total_rate());
   if (_forward)
     {
-      int index_drawn = 0;
+      unsigned int index_drawn = 0;
       while (index_drawn < _rates.size()) 
 	{
 	  u -= _rates [index_drawn]; 

@@ -33,7 +33,7 @@ CompositionTable::CompositionTable (const std::vector <char>& letters,
   /** @pre Vectors must not be empty. */
   REQUIRE (letters.size() != 0);
 
-  for (int i = 0; i < letters.size(); ++i) 
+  for (std::size_t i = 0; i < letters.size(); ++i) 
     {
       _rules [letters [i]] = compositions [i];
     }

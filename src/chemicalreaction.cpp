@@ -35,12 +35,12 @@ ChemicalReaction::ChemicalReaction (const std::vector<FreeChemical*>& chemicals,
 				    double backward_rate_constant,
 				    BoundChemical* forward_bound /*= 0*/,
 				    BoundChemical* backward_bound /*= 0*/)
-  : _k_1 (forward_rate_constant)
+  : _forward_bound (forward_bound)
+  , _backward_bound (backward_bound)
+  , _k_1 (forward_rate_constant)
   , _k_m1 (backward_rate_constant)
   , _forward_constant (forward_rate_constant)
   , _backward_constant (backward_rate_constant)    
-  , _forward_bound (forward_bound)
-  , _backward_bound (backward_bound)
   , _forward_order (0)
   , _backward_order (0)
 {
@@ -60,7 +60,7 @@ ChemicalReaction::ChemicalReaction (const std::vector<FreeChemical*>& chemicals,
   
   // fill in reactant and stoichiometry vectors with free chemicals
   CRFree new_free;
-  for (int i = 0; i < chemicals.size(); ++i)
+  for (std::size_t i = 0; i < chemicals.size(); ++i)
     {
       /** @pre Orders must be positive. */
       REQUIRE (orders [i] >= 0);

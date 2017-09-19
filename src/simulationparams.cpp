@@ -202,7 +202,7 @@ void SimulationParams::_write_params_out (void) const
   file << _base_volume_tag << ": " << _base_volume << "\n";
   file << _volume_step_tag << ": " << _volume_step << "\n";
   file << _volume_modifier_tag << ":";
-  for (int i = 0; i < _volume_modifiers.size(); ++i)
+  for (std::size_t i = 0; i < _volume_modifiers.size(); ++i)
     { file << "\n\t" << _volume_modifiers [i] << " " << _volume_weights [i]; }
   file << "\n";
 }

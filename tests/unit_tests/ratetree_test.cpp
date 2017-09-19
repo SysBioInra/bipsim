@@ -79,6 +79,7 @@ double cumulative (int index)
     case 3: return 8.0/14;
     case 4: return 1;
     }
+  return -1;
 }
 
 BOOST_AUTO_TEST_CASE (random_index_tenThousandDraws_statisticsAreCorrect)

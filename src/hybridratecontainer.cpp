@@ -26,17 +26,17 @@
 //
 HybridRateContainer::HybridRateContainer (int number_rates, double base_rate)
   : _base_rate (base_rate)
+  , _current_max_rate (base_rate)
   , _tokens (number_rates)
   , _groups (1)
-  , _update_stack (new RateValidity (1))
   , _group_container (1, false)
-  , _current_max_rate (base_rate)
+  , _update_stack (new RateValidity (1))
 {
   // create one group to start with
   _groups [0] = new RateGroup (0, base_rate);
   
   // initialize tokens
-  for (int i = 0; i < _tokens.size(); ++i)
+  for (std::size_t i = 0; i < _tokens.size(); ++i)
     {
       _tokens [i] = new RateToken (i);
       _tokens [i]->set_group (GroupKey(), NULL_GROUP);
@@ -49,13 +49,9 @@ HybridRateContainer::HybridRateContainer (int number_rates, double base_rate)
 
 HybridRateContainer::~HybridRateContainer (void)
 {
-  // destroy groups
-  for (int i = 0; i < _groups.size(); ++i) { delete _groups [i]; }
-  
-  // destroy tokens
-  for (int i = 0; i < _tokens.size(); ++i) { delete _tokens [i]; }
-  
-  // destroy update stack
+  // destroy groups, tokens and update stack
+  for (std::size_t i = 0; i < _groups.size(); ++i) { delete _groups [i]; }
+  for (std::size_t i = 0; i < _tokens.size(); ++i) { delete _tokens [i]; }
   delete _update_stack;
 }
 

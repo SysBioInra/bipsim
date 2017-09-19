@@ -23,8 +23,8 @@
 //
 PartialStrand::PartialStrand (int length)
   : _length (length)
-  , _occupied (length, false)
   , _number_occupied (0)
+  , _occupied (length, false)
 {
 }
 

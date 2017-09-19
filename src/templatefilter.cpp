@@ -31,8 +31,8 @@
 //
 TemplateFilter::TemplateFilter (const LoadingTable& table)
   : _table (table)
-  , _rate_validity (table.size())
   , _loading_rates (table.size())
+  , _rate_validity (table.size())
 {
   // resize unit_map and leave it empty
   _unit_map.resize (table.size());

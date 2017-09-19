@@ -35,7 +35,7 @@ DependencyRateManager::DependencyRateManager (const SimulationParams& params,
   const std::vector <Reaction*>& _reactions = this->reactions();
 
   // loop through reactions and create observers
-  for (int i = 0; i < _reactions.size(); ++i)
+  for (std::size_t i = 0; i < _reactions.size(); ++i)
     {
       const std::vector <Reactant*>& reactants = _reactions [i]->reactants();
       for (std::vector <Reactant*>::const_iterator reactant_it = reactants.begin();

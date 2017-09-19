@@ -111,7 +111,7 @@ class ReactionClassification
   /**
    * @brief Return reactions belonging to a given class.
    * @param class_id Integer identifier of the class.
-   * @return reactions Vector of reactions belonging to the class.
+   * @return Vector of reactions belonging to the class.
    */
   const std::vector<Reaction*>& reactions (int class_id) const;
 
@@ -121,13 +121,13 @@ class ReactionClassification
   //
   /**
    * @brief Time step value for reactions whose rate should always be updated.
-   *
-   * ReactionClassification::ALWAYS_UPDATED should be used to specify the 
-   * time_step of classes containing reaction rates that need to be updated 
+   * @details ReactionClassification::ALWAYS_UPDATED should be used to specify
+   * the time_step of classes containing reaction rates that need to be updated 
    * after evry reaction. The corresponding numerical value should never be 
    * used, as it could change over time.
+   * @return Double value representing 'null' time step.
    */
-  static const double ALWAYS_UPDATED = -1;
+  static double ALWAYS_UPDATED (void) { return -1; }
 
 private:
   // =================

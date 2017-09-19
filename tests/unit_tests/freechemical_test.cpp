@@ -83,7 +83,7 @@ public:
     : observers (3)
     , _rate_validity (3)
   {
-    for (int i = 0; i < observers.size(); ++i)
+    for (std::size_t i = 0; i < observers.size(); ++i)
       { 
 	observers [i] = new MockRateInvalidator (_rate_validity, i); 
 	free_chemical.attach (*(observers[i]));
@@ -93,7 +93,7 @@ public:
   
   ~FreeChemicalThreeObserversFixture (void)
   {
-    for (int i = 0; i < observers.size(); ++i)
+    for (std::size_t i = 0; i < observers.size(); ++i)
       { delete observers [i]; }
   }
 

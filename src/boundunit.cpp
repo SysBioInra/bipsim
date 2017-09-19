@@ -27,11 +27,11 @@
 //
 BoundUnit::BoundUnit (const BindingSite& site)
   : _initial_reading_frame (site.reading_frame())
+  , _location (&site.location())
+  , _binding_site (&site)
   , _first (site.first())
   , _last (site.last())
   , _reading_frame (site.reading_frame())
-  , _location (&site.location())
-  , _binding_site (&site)
   , _strand (NO_STRAND)
 {
 }
@@ -39,11 +39,11 @@ BoundUnit::BoundUnit (const BindingSite& site)
 BoundUnit::BoundUnit (ChemicalSequence& location, int first, 
 		      int last, int reading_frame)
   : _initial_reading_frame (reading_frame)
+  , _location (&location)
+  , _binding_site (0)
   , _first (first)
   , _last (last)
   , _reading_frame (reading_frame)
-  , _location (&location)
-  , _binding_site (0)
   , _strand (NO_STRAND)
 {
 }

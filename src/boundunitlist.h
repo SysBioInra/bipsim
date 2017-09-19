@@ -134,7 +134,7 @@ inline void BoundUnitList::remove (BoundUnit& unit)
   {
     if (&unit == _v[*i])
     {
-      int index = *i;
+      unsigned int index = *i;
       // swap unit with last element if it is not the last element
       if (index < _v.size()-1)
       {

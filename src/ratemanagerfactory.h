@@ -36,8 +36,11 @@
  * @brief Abstract class for RateManager factories.
  */
 class RateManagerFactory
-{
+{  
  public:
+  /** @brief Destructor (empty but virtual). */
+  virtual ~RateManagerFactory (void) {};
+
   // ===========================
   //  Public Methods - Commands
   // ===========================

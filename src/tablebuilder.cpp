@@ -92,7 +92,6 @@ bool LoadingTableBuilder::match (InputLine& text_input)
   int mark = text_input.mark();
   if (!_header_format.match (text_input)) { return false; } 
   _templates.clear(); _bases.clear(); _occupied.clear(); _rates.clear();
-  bool next = true;
   do
     {
       if (!_line_format.match (text_input)) 

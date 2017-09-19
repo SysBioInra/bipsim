@@ -28,9 +28,9 @@ LoadingTable::LoadingTable (const std::vector <std::string>& templates,
 			    const std::vector <FreeChemical*>& chemicals_to_load,
 			    const std::vector <BoundChemical*>& occupied_states,
 			    const std::vector <double>& loading_rates)
-  : _chemicals_to_load (chemicals_to_load)
+  : _loading_rates (loading_rates)
+  , _chemicals_to_load (chemicals_to_load)
   , _occupied_states (occupied_states)
-  , _loading_rates (loading_rates)
 {
   /** @pre Vectors size must match. */
   REQUIRE ((templates.size() == chemicals_to_load.size())
@@ -40,7 +40,7 @@ LoadingTable::LoadingTable (const std::vector <std::string>& templates,
   REQUIRE (templates.size() != 0) ;
 
   _template_length = templates [0].length();
-  for (int i = 0; i < templates.size(); ++i)
+  for (std::size_t i = 0; i < templates.size(); ++i)
     {
       /** @pre All templates must have same length. */
       REQUIRE (templates[i].length() == _template_length); 

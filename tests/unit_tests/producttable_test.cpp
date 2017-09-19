@@ -51,8 +51,8 @@ class ParentL60
 {
 public:
   ParentL60 (void)
-    : parent_ABC (ABCStringFactory::make (20))
-    , _tt (AaTTFactory::make())
+    : _tt (AaTTFactory::make())
+    , parent_ABC (ABCStringFactory::make (20))
     , table_Aa_Bb_Cc (*_tt)
   {
   }

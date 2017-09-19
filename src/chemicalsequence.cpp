@@ -25,12 +25,12 @@
 ChemicalSequence::ChemicalSequence (const std::string& sequence,
 				    int starting_position /*= 1*/,
 				    bool is_circular /* = false */)
-  : _sequence (sequence)
-  , _length (sequence.size())
+  : _length (sequence.size())
   , _starting_position (starting_position)
+  , _sequence (sequence)
   , _is_circular (is_circular)
-  , _occupation (sequence.size())
   , _appariated_sequence (0)
+  , _occupation (sequence.size())
 {
 }
 

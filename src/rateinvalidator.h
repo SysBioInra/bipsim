@@ -57,6 +57,9 @@ class RateInvalidator
 
   // /* @brief Destructor. */
   // ~RateInvalidator (void);    
+#ifdef PERFORM_TESTS
+  virtual ~RateInvalidator (void) {}
+#endif
 
   // ===========================
   //  Public Methods - Commands

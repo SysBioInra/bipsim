@@ -262,7 +262,7 @@ parse_chemicals (const std::vector <std::string>& names,
 {
   _bound_product = 0; _bound_reactant = 0;
   _free_chemicals.clear(); _stoichiometries.clear(); _orders.clear();
-  for (int i = 0; i < names.size(); ++i)
+  for (std::size_t i = 0; i < names.size(); ++i)
     {
       int stoichiometry = stoichiometries[i];
       int order = orders[i];

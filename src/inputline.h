@@ -145,7 +145,7 @@ private:
   std::vector <std::string> _words;
 
   /** @brief Word currently read. */
-  int _current_word;
+  unsigned int _current_word;
 };
 
 // ======================

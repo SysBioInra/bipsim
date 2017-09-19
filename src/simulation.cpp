@@ -169,7 +169,7 @@ void Simulation::create_loggers (void)
 	(new ChemicalLogger (_params.concentration_file(),
 			     chemical_refs, _params.output_entities()));
     }
-  for (int i = 0; i < double_strands.size(); ++i)
+  for (std::size_t i = 0; i < double_strands.size(); ++i)
     {
       _loggers.push_back 
 	(new DoubleStrandLogger (_params.output_dir() 
@@ -181,7 +181,7 @@ void Simulation::create_loggers (void)
   // convert reactions to unmodifiable reactions
   // (logger is only supposed to access reactions, nothing more)
   std::vector <const Reaction*> reactions (_cell_state.reactions().size());
-  for (int i = 0; i < reactions.size(); ++i)
+  for (std::size_t i = 0; i < reactions.size(); ++i)
     { reactions[i] = _cell_state.reactions()[i]; }
   _loggers.push_back (new ReactionLogger (_params.reaction_file(), reactions));
 }

@@ -88,7 +88,7 @@ set_volume_parameters (double base_volume,
 void CellState::modify_volume (void)
 {
   double volume = _base_volume;
-  for (int i = 0; i < _volume_modifiers.size(); ++i)
+  for (std::size_t i = 0; i < _volume_modifiers.size(); ++i)
     { volume += _volume_weights[i] * _volume_modifiers[i]->number(); }
   /** @post Result must be positive. */
   ENSURE (volume > 0);

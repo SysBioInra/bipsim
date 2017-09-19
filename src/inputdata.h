@@ -160,10 +160,10 @@ private:
   std::vector <std::string>::iterator _file_name;
 
   /** @brief Number of line being read (summed over all files). */
-  int _line_number;
+  unsigned int _line_number;
 
   /** @brief Number of line being read (relative to its file). */
-  int _file_line_number;
+  unsigned int _file_line_number;
 
   /** @brief Line being read. */
   std::string _line;

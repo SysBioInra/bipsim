@@ -188,10 +188,10 @@ std::vector<int> BiasedWheel<T>::sorted_indices (const std::vector<T>& vector_to
 template <typename T>
 bool BiasedWheel<T>::check_weight_positivity (const std::vector<T>& v) const
 {
-  if (v [0] < 0) return false;
-  for (int i = 1; i < v.size(); ++i)
+  if (v [0] < 0) { return false; }
+  for (std::size_t i = 1; i < v.size(); ++i)
     {
-      if (v[i] < v[i-1]) return false;
+      if (v[i] < v[i-1]) { return false; }
     }
   return true;
 }

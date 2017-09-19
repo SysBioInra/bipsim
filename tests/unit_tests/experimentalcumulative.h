@@ -17,7 +17,7 @@
 template <typename T>
 class ExperimentalCumulative
 {
-public:
+ public:
   void add_pick (T value)
   {
     typename std::list<T>::iterator v_it = _drawn_values.begin();
@@ -70,8 +70,10 @@ public:
 	{
 	  output << *jump_it << " " << ecf(*jump_it) << "\n";
 	}
+      return output;
     }
-private:
+  
+ private:
   std::list<T> _drawn_values;
 };
 

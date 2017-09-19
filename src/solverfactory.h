@@ -39,6 +39,9 @@
 class SolverFactory
 {
  public:
+  /** @brief Destructor (empty but virtual). */
+  virtual ~SolverFactory (void) {}
+
   // ===========================
   //  Public Methods - Commands
   // ===========================
@@ -51,7 +54,7 @@ class SolverFactory
    * @return New Solver whose type is determined by the factory used.
    */
   virtual Solver* create (const SimulationParams& params,
-			  CellState& cell_state) const = 0;
+			  CellState& cell_state) const = 0;  
 };
 
 /**

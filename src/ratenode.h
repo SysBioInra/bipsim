@@ -42,7 +42,7 @@ class RateNode
   /**
    * @brief Default constructor.
    */
-  RateNode (void) : _parent (0), _invalidated (false), _rate (0)  {}
+  RateNode (void) : _parent (0),  _rate (0), _invalidated (false)  {}
 
   // Not needed for this class (use of compiler-generated versions)
   // (3-0 rule: either define all 3 following or none of them)

@@ -161,7 +161,7 @@ inline Reaction& RateManager::random_reaction (void)
 
 inline void RateManager::compute_all_rates (void)
 {
-  for (int i = 0; i < _reactions.size(); ++i) { update_reaction (i); }
+  for (std::size_t i = 0; i < _reactions.size(); ++i) { update_reaction (i); }
 }
 
 inline void RateManager::cumulate_rates (void)

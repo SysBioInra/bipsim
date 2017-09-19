@@ -26,19 +26,19 @@ class RGBaseTests
 {
 public:
   RGBaseTests (void)
-    : group_10_20 (10, 20)
+    : tolerance (1e-13)
+    , group_10_20 (10, 20)
     , group_0_1 (0, 1)
     , token_10 (0)
-    , tolerance (1e-13)
     , token_0_9 (10)
   {
-    for (int i = 0; i < token_0_9.size(); ++i)
+    for (std::size_t i = 0; i < token_0_9.size(); ++i)
       { token_0_9 [i] = new RateToken (i); }
   }
 
   ~RGBaseTests (void)
   {
-    for (int i = 0; i < token_0_9.size(); ++i) { delete token_0_9 [i]; }
+    for (std::size_t i = 0; i < token_0_9.size(); ++i) { delete token_0_9 [i]; }
   }
 
   double tolerance;

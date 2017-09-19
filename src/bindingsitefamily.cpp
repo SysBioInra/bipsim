@@ -26,8 +26,8 @@
 // ==========================
 //
 BindingSiteFamily::BindingSiteFamily (void) 
-  : _rate_validity_size (10)
-  , _rate_validity (0)
+  : _rate_validity (0)
+  , _rate_validity_size (10)
 {
   _rate_validity = new RateValidity (_rate_validity_size);
 }

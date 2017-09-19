@@ -137,7 +137,7 @@ inline int RateTree::find (double value) const
   REQUIRE (value <= total_rate());
   /** @pre value must be strictly positive. */
   REQUIRE (value > 0);
-  int index = _root->find (value);
+  unsigned int index = _root->find (value);
   // rarely, the algorithm will fail because of rounding problems and return
   // a leaf with zero rate. We just take the next nonzero rate.
   while (_leaves [index]->rate() == 0) 

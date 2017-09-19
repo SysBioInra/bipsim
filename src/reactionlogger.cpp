@@ -76,7 +76,7 @@ void ReactionLogger::log (double simulation_time)
   // update number of reactions performed since last log
   long long int _previous_total = _total_number_reactions;
   _total_number_reactions = 0;
-  for (int i = 0; i < _reactions.size(); ++i)
+  for (std::size_t i = 0; i < _reactions.size(); ++i)
     {
       _total_number_reactions += _reactions[i]->number_performed();
       _values[i] = _reactions[i]->number_performed() - _previous[i];
@@ -84,20 +84,20 @@ void ReactionLogger::log (double simulation_time)
     }
 
   // sort indices based on vector _values
-  for (int i = 0; i < _indices.size(); ++i) { _indices [i] = i; }    
+  for (std::size_t i = 0; i < _indices.size(); ++i) { _indices [i] = i; }    
   std::sort(_indices.begin(), _indices.end(), CompareValues (_values));
 
   // print output
   long long int number_reactions = _total_number_reactions - _previous_total;
   _output << "\nt = " << simulation_time
 	  << " (" << number_reactions << " reactions)\n";
-  for (int i = 0; i < _log_number; ++i)
+  for (unsigned int i = 0; i < _log_number; ++i)
     { 
       if (_values [_indices[i]] == 0) { return; }
       _output << "\"" << _reactions[_indices[i]]->name() << "\""
 	      << "\t" << _values[_indices[i]]
 	      << " (" << 100 * _values[_indices[i]] / number_reactions
-	      << "\%)\n"; 
+	      << "%%)\n"; 
     }
 }
 

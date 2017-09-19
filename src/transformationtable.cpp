@@ -35,7 +35,7 @@ TransformationTable::TransformationTable
   REQUIRE (input_motifs.size() != 0);
 
   _motif_length = input_motifs[0].length();
-  for (int i = 0; i < input_motifs.size(); ++i)
+  for (std::size_t i = 0; i < input_motifs.size(); ++i)
     {
       /** @pre All input motifs must have equal length. */
       REQUIRE (input_motifs[i].length() == _motif_length);
@@ -60,7 +60,7 @@ std::string TransformationTable::transform (const std::string& sequence) const
 
   std::istringstream seq_stream (sequence);
   std::string result;
-  char next_motif [_motif_length+1];
+  char * next_motif = new char [_motif_length+1];
   std::map <std::string, std::string>::const_iterator rule;
   while (seq_stream.get (next_motif, _motif_length+1))
     {
@@ -68,6 +68,7 @@ std::string TransformationTable::transform (const std::string& sequence) const
       if (rule == _rules.end()) { return ""; } // unknown input motif
       result += rule->second;
     }
+  delete[] next_motif;
   return result;
 }
 

@@ -60,7 +60,7 @@ void DoubleStrandLogger::write_sites (const ChemicalSequence& sequence)
        it != strands.end(); ++it, ++id)
     {
       _output << "Strand " << id << ":";
-      for (int i = 0; i < it->size(); i+=2)
+      for (std::size_t i = 0; i < it->size(); i+=2)
 	{ _output << "[" << (*it)[i] << " " << (*it)[i+1] << "]"; }
       _output << "\n";
     }
