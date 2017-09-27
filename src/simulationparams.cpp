@@ -55,7 +55,7 @@ const std::string SimulationParams::_base_volume_tag = "BASE_VOLUME";
 const std::string SimulationParams::_volume_modifier_tag = "VOLUME_MODIFIER";
 const std::string SimulationParams::_volume_step_tag = "VOLUME_STEP";
 
-const std::string SimulationParams::_concentration_file = "concentrations.out";
+const std::string SimulationParams::_concentration_file = "chemicals.out";
 const std::string SimulationParams::_reaction_file = "reactions.out";
 const std::string SimulationParams::_param_file = "params.out";
 

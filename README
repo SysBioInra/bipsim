@@ -30,7 +30,10 @@ If boost is not installed on your system, consider running (not recommended):
 make
 ```
 
-You can make installation system-wide by running
+You can also install boost by following our recommandations below
+(see 'Install Boost' section).
+
+You can make installation system-wide by running (not necessary)
 
 ```
 sudo make install
@@ -60,10 +63,13 @@ cd sample
 ../src/bipsim input/params.in
 ```
 
-3 output files are generated in `sample/output`
- - concentrations.txt: concentration of some chemicals over time.
- - reactions.txt: most popular reactions in the sytem over time.
- - chromosome.txt: evolution of double strand synthesis over time.
+See sample/README for further information about files needed to setup a simulation.
+
+4 output files are generated in `sample/output`
+ - params.out: parameters used for simulation.
+ - chemicals.out: number of some chemicals over time.
+ - reactions.out: most popular reactions in the sytem over time.
+ - chromosome.out: evolution of double strand synthesis over time.
 
 
 Running tests
@@ -102,6 +108,25 @@ make
 ```
 
 which generates the `refman.pdf` product with `doc/latex`.
+
+
+Install Boost
+-------------
+
+Download the latest boost archive from http://boost.org. Execute
+
+```
+tar --bzip2 -xf /path/to/boost_1_65_1.tar.bz2
+```
+
+BipSim only uses the `random` and `test` libraries from boost.
+To shorten installation time, we recommend installing only these libraries:
+
+```
+cd path/to/boost_1_65_1
+./bootstrap.sh --with-libraries=random,test
+sudo ./b2 install
+```
 
 
 Built With

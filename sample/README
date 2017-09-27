@@ -44,10 +44,11 @@ This will run the same simulation with an additional input file that describes
 the injection of tetracyclin from t=1000 to t=1500. Tetracyclin is a drug that
 inhibts translation by competing with tRNAs during the loading phase.
 
-For each run, 3 output files are generated in `sample/output`
- - concentrations.txt: concentration of some chemicals over time.
- - reactions.txt: most popular reactions in the sytem over time.
- - chromosome.txt: evolution of double strand synthesis over time.
+For each run, 4 output files are generated in `sample/output`
+ - params.out: parameters used for simulation.
+ - chemicals.out: concentration of some chemicals over time.
+ - reactions.out: most popular reactions in the sytem over time.
+ - chromosome.out: evolution of double strand synthesis over time.
  
 Developping your own simulation
 -------------------------------
