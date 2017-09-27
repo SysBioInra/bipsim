@@ -1,4 +1,4 @@
-# bipsim
+# BiPSim
 Gillespie-based simulator of biochemical processes
 
 This project contains two archives:
@@ -16,7 +16,7 @@ Next, install BiPSim by following instructions in
 bipsim-1.0/README
 ```
 
-You can run sample simulations by followin instructions in
+You can run sample simulations by following instructions in
 ```
 simulations/README
 ```
