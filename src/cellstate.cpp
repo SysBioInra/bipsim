@@ -1,20 +1,20 @@
-// 
+//
 // Copyright 2017 INRA
 // Authors: M. Dinh, S. Fischer
 // Last modification: 2017-09-19
-// 
-// 
+//
+//
 // Licensed under the GNU General Public License.
 // You should have received a copy of the GNU General Public License
 // along with BiPSim.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 
 
 
 /**
  * @file cellstate.cpp
  * @brief Implementation of the CellState class.
- * 
+ *
  * @authors Marc Dinh, Stephan Fischer
  */
 
@@ -72,7 +72,7 @@ void CellState::store (SimulatorInput* element,
 }
 
 void CellState::
-set_volume_parameters (double base_volume, 
+set_volume_parameters (double base_volume,
 		       const std::vector <std::string>& modifiers,
 		       const std::vector <double>& modifier_weights)
 {
@@ -91,6 +91,15 @@ set_volume_parameters (double base_volume,
 //  Public Methods - Accessors
 // ============================
 //
+double CellState::volume (void) const
+{
+  double volume = _base_volume;
+  for (std::size_t i = 0; i < _volume_modifiers.size(); ++i)
+    { volume += _volume_weights[i] * _volume_modifiers[i]->number(); }
+    /** @post Result must be positive. */
+    ENSURE (volume > 0);
+  return volume;
+}
 
 // =================
 //  Private Methods
@@ -98,12 +107,8 @@ set_volume_parameters (double base_volume,
 //
 void CellState::modify_volume (void)
 {
-  double volume = _base_volume;
-  for (std::size_t i = 0; i < _volume_modifiers.size(); ++i)
-    { volume += _volume_weights[i] * _volume_modifiers[i]->number(); }
-  /** @post Result must be positive. */
-  ENSURE (volume > 0);
+  double vol = volume();
   for (std::vector <Reaction*>::const_iterator it = reactions().begin();
        it != reactions().end(); ++it)
-    { (*it)->handle_volume_change (volume); }
+    { (*it)->handle_volume_change (vol); }
 }

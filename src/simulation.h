@@ -1,13 +1,13 @@
-// 
+//
 // Copyright 2017 INRA
 // Authors: M. Dinh, S. Fischer
 // Last modification: 2017-09-19
-// 
-// 
+//
+//
 // Licensed under the GNU General Public License.
 // You should have received a copy of the GNU General Public License
 // along with BiPSim.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 
 
 /**
@@ -38,7 +38,7 @@
 
 /**
  * @brief Class that creates and handles the whole simulation.
- * @details Simulation is the main object in the simulator. It reads 
+ * @details Simulation is the main object in the simulator. It reads
  * configuration parameters and then creates every object needed.
  */
 class Simulation
@@ -72,18 +72,59 @@ class Simulation
   // ===========================
   //
   /**
-   * @brief Run simulator for given amount of time.
+   * @brief Run simulator until end of simulation time.
    */
   void run (void);
+
+  /**
+   * @brief Perform next reaction within simulation time.
+   */
+  void perform_next_reaction (void);
+
+  /**
+   * @brief Skip reactions until given time.
+   * @param time Time where simulation should resume.
+   */
+  void skip (double time);
+
+  /**
+   * @brief Change number of free chemicals.
+   * @details Reaction rates are updated when this method is called, it is
+   *  strongly advised to change all concentrations in a single call.
+   * @param names Names of free chemicals.
+   * @param values New number values.
+   */
+  void set_free_chemicals (
+    const std::vector<std::string>& names, const std::vector<int>& values
+  );
+
+  /**
+   * @brief Reset ignored variation for constant free chemicals.
+   * @param name Name of free chemical.
+   */
+  void reset_ignored_variation (const std::string& name);
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
   /**
-   * @brief Accessor to CellState object.
-   * @return Reference to CellState object holding most proprietes of the cell
-   *  such as reactions and reactants.
+   * @brief Accessor to simulation time.
+   * @return Current simulation time.
+   */
+  double time (void) const;
+
+  /**
+   * @brief Accessor to next reaction time.
+   * @return Next reaction time. This is only an estimate based on current
+   *  cell state; it is accurate if no external event or volume change
+   *  occurs in the interval,
+   */
+  double next_reaction_time (void) const;
+
+  /**
+   * @brief Read-only accessor to cellular state.
+   * @return CellState object.
    */
   const CellState& cell_state (void) const;
 
@@ -132,9 +173,21 @@ private:
 //  Inline declarations
 // ======================
 //
+#include "solver.h"
+
 inline const CellState& Simulation::cell_state (void) const
 {
   return _cell_state;
+}
+
+inline double Simulation::time (void) const
+{
+  return _solver->time();
+}
+
+inline double Simulation::next_reaction_time (void) const
+{
+  return _solver->next_reaction_time();
 }
 
 #endif // SIMULATION_H

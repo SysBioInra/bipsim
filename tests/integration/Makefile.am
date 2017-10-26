@@ -20,8 +20,8 @@ TESTS += tRNA_consumption/run_test.sh missing_tRNA/run_test.sh
 
 # we use the convenience library created in src to link to the simulator
 tRNA_consumption_test_SOURCES = tRNA_consumption/test.cpp
-tRNA_consumption_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(top_srcdir)/src/libsrc.a
+tRNA_consumption_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(top_srcdir)/src/libbipsim.la
 
 missing_tRNA_test_SOURCES = missing_tRNA/test.cpp
-missing_tRNA_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(top_srcdir)/src/libsrc.a
+missing_tRNA_test_LDADD = $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(top_srcdir)/src/libbipsim.la
 

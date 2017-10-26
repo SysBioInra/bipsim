@@ -1,20 +1,20 @@
-// 
+//
 // Copyright 2017 INRA
 // Authors: M. Dinh, S. Fischer
 // Last modification: 2017-09-19
-// 
-// 
+//
+//
 // Licensed under the GNU General Public License.
 // You should have received a copy of the GNU General Public License
 // along with BiPSim.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 
 
 
 /**
  * @file reactionclassification.cpp
  * @brief Implementation of the ReactionClassification class.
- * 
+ *
  * @authors Marc Dinh, Stephan Fischer
  */
 
@@ -52,7 +52,7 @@ ReactionClassification::ReactionClassification (void)
 int ReactionClassification::create_new_class (double time_step)
 {
   /** @pre time_step must be strictly positive or equal to ALWAYS_UPDATED. */
-  REQUIRE ((time_step > 0) || (time_step == ALWAYS_UPDATED));
+  REQUIRE ((time_step > 0) || (time_step == ALWAYS_UPDATED()));
 
   // increase current number of classes
   ++_current_size;

@@ -3,126 +3,133 @@
 # THE PROGRAMS TO BUILD
 ###############################################################################
 
-AM_CPPFLAGS = $(BOOST_CPPFLAGS)
+AM_CPPFLAGS = -fPIC $(BOOST_CPPFLAGS)
 AM_LDFLAGS = $(BOOST_LDFLAGS)
 
-# convenience library containing all the source files (used by unit tests)
-noinst_LIBRARIES = libsrc.a
+# library containing all the source files
+lib_LTLIBRARIES = libbipsim.la
+libbipsim_la_LDFLAGS = -version-info 0:0:0
 
 # the program to build (the names of the final binaries)
 bin_PROGRAMS = bipsim
 
 # list of sources for the 'bipsim' binary
 bipsim_SOURCES = main.cpp
-bipsim_LDADD = libsrc.a
+bipsim_LDADD = libbipsim.la
 
-# list of sources for 'libsrc.la' convenience library
-# main file and utility files
-libsrc_a_SOURCES = \
-	macros.h forwarddeclarations.h \
-	biasedwheel.cpp biasedwheel.h \
-	randomhandler.cpp randomhandler.h \
-	logger.h \
-	chemicallogger.cpp chemicallogger.h \
-	reactionlogger.cpp reactionlogger.h \
-	doublestrandlogger.cpp doublestrandlogger.h
+# list of sources for 'libbipsim.la' library
+# utility files
+libbipsim_la_SOURCES = \
+	biasedwheel.cpp randomhandler.cpp chemicallogger.cpp \
+	reactionlogger.cpp doublestrandlogger.cpp 
 
 # factories
-libsrc_a_SOURCES += \
-	solverfactory.h ratemanagerfactory.h ratecontainerfactory.h \
-	boundunitfactory.cpp boundunitfactory.h
+libbipsim_la_SOURCES += boundunitfactory.cpp
 
 # reaction sources
-libsrc_a_SOURCES += \
-	backwardreaction.h bidirectionalreaction.h \
-	chemicalreaction.cpp chemicalreaction.h \
-	doublestrandrecruitment.cpp doublestrandrecruitment.h \
-	forwardreaction.h \
-	loading.cpp loading.h \
-	reaction.h \
-	release.cpp release.h \
-	sequencebinding.cpp sequencebinding.h \
-	translocation.cpp translocation.h
+libbipsim_la_SOURCES += \
+	chemicalreaction.cpp doublestrandrecruitment.cpp loading.cpp \
+	release.cpp sequencebinding.cpp translocation.cpp
 
 # chemical entity sources
-libsrc_a_SOURCES += \
-	boundchemical.cpp boundchemical.h \
-	boundunit.cpp boundunit.h \
-	boundunitlist.h \
-	boundunitfilter.h \
-	familyfilter.cpp familyfilter.h \
-	templatefilter.cpp templatefilter.h \
-	freechemical.h chemical.h reactant.h
+libbipsim_la_SOURCES += \
+	boundchemical.cpp boundunit.cpp familyfilter.cpp templatefilter.cpp
 
 # site sources
-libsrc_a_SOURCES += \
-	bindingsite.cpp bindingsite.h \
-	bindingsitefamily.cpp bindingsitefamily.h \
-	switch.h
+libbipsim_la_SOURCES += bindingsite.cpp bindingsitefamily.cpp
 
 # sequence related sources
-libsrc_a_SOURCES += \
-	chemicalsequence.cpp chemicalsequence.h \
-	doublestrand.cpp doublestrand.h \
-	partialstrand.cpp partialstrand.h \
-	sequenceoccupation.cpp sequenceoccupation.h \
-	sitegroup.cpp sitegroup.h 
+libbipsim_la_SOURCES += \
+	chemicalsequence.cpp doublestrand.cpp partialstrand.cpp \
+	sequenceoccupation.cpp sitegroup.cpp
 
 # table sources
-libsrc_a_SOURCES += \
-	compositiontable.cpp compositiontable.h \
-	loadingtable.cpp loadingtable.h \
-	producttable.h \
-	transformationtable.cpp transformationtable.h
+libbipsim_la_SOURCES += \
+	compositiontable.cpp loadingtable.cpp transformationtable.cpp
 
 # parser, handler and builder sources
-libsrc_a_SOURCES += \
-	builder.h \
-	eventhandler.cpp eventhandler.h \
-	eventbuilder.cpp eventbuilder.h event.h \
-	inputline.h interpreter.h \
-	handler.h \
-	inputdata.cpp inputdata.h \
-	parser.cpp parser.h \
-	reactantbuilder.cpp reactantbuilder.h \
-	reactionbuilder.cpp reactionbuilder.h \
-	simulation.cpp simulation.h \
-	simulationparams.cpp simulationparams.h \
-	simulatorinput.h \
-	tablebuilder.cpp tablebuilder.h 
+libbipsim_la_SOURCES += \
+	eventhandler.cpp eventbuilder.cpp inputdata.cpp parser.cpp \
+	reactantbuilder.cpp reactionbuilder.cpp simulation.cpp \
+	simulationparams.cpp tablebuilder.cpp
 
 # solver sources
-libsrc_a_SOURCES += \
-	cellstate.cpp cellstate.h \
-	constantrategroup.cpp constantrategroup.h \
-	manualdispatchsolver.cpp manualdispatchsolver.h \
-	naivesolver.cpp naivesolver.h \
-	reactiongroup.h \
-	reactionclassification.cpp reactionclassification.h \
-	solver.cpp solver.h \
-	updatedrategroup.cpp updatedrategroup.h
+libbipsim_la_SOURCES += \
+	cellstate.cpp constantrategroup.cpp manualdispatchsolver.cpp \
+	naivesolver.cpp reactionclassification.cpp solver.cpp \
+	updatedrategroup.cpp
 
 # rate related classes
-libsrc_a_SOURCES += \
-	ratemanager.cpp ratemanager.h \
-	naiveratemanager.cpp naiveratemanager.h \
-	dependencyratemanager.cpp dependencyratemanager.h \
-	rateinvalidator.h \
-	ratevalidity.cpp ratevalidity.h
+libbipsim_la_SOURCES += \
+	ratemanager.cpp naiveratemanager.cpp dependencyratemanager.cpp \
+	ratevalidity.cpp
 
 # rate containers
-libsrc_a_SOURCES += \
+libbipsim_la_SOURCES += ratetree.cpp hybridratecontainer.cpp
+
+
+# headers
+# utility files
+include_HEADERS = \
+	biasedwheel.h randomhandler.h logger.h chemicallogger.h \
+	reactionlogger.h doublestrandlogger.h
+
+# factories
+include_HEADERS += \
+	solverfactory.h ratemanagerfactory.h ratecontainerfactory.h \
+	boundunitfactory.h
+
+# reaction sources
+include_HEADERS += \
+	backwardreaction.h bidirectionalreaction.h chemicalreaction.h \
+	doublestrandrecruitment.h forwardreaction.h loading.h reaction.h \
+	release.h sequencebinding.h translocation.h
+
+# chemical entity sources
+include_HEADERS += \
+	boundchemical.h boundunit.h boundunitlist.h boundunitfilter.h \
+	familyfilter.h templatefilter.h freechemical.h chemical.h reactant.h
+
+# site sources
+include_HEADERS += bindingsite.h bindingsitefamily.h switch.h
+
+# sequence related sources
+include_HEADERS += \
+	chemicalsequence.h doublestrand.h partialstrand.h \
+	sequenceoccupation.h sitegroup.h 
+
+# table sources
+include_HEADERS += \
+	compositiontable.h loadingtable.h producttable.h transformationtable.h
+
+# parser, handler and builder sources
+include_HEADERS += \
+	builder.h eventhandler.h eventbuilder.h event.h \
+	inputline.h interpreter.h handler.h inputdata.cpp inputdata.h \
+	parser.h reactantbuilder.h reactionbuilder.h simulation.h \
+	simulationparams.h simulatorinput.h tablebuilder.h 
+
+# solver sources
+include_HEADERS += \
+	cellstate.h constantrategroup.h manualdispatchsolver.h \
+	naivesolver.cpp naivesolver.h reactiongroup.h reactionclassification.h \
+	solver.h updatedrategroup.h
+
+# rate related classes
+include_HEADERS += \
+	ratemanager.h naiveratemanager.h dependencyratemanager.h \
+	rateinvalidator.h ratevalidity.h
+
+# rate containers
+include_HEADERS += \
 	ratecontainer.h ratevector.h updatedtotalratevector.h \
-	flyratevector.h \
-	ratetree.cpp ratetree.h ratenode.h \
-	hybridratecontainer.cpp hybridratecontainer.h  \
+	flyratevector.h ratetree.h ratenode.h hybridratecontainer.h  \
 	rategroup.h ratetoken.h
 
 # generic containers
-libsrc_a_SOURCES += \
-	vectorqueue.h
+include_HEADERS += vectorqueue.h
 
 # exceptions
-libsrc_a_SOURCES += simulatorexception.h
+include_HEADERS += simulatorexception.h
 
 ###############################################################################

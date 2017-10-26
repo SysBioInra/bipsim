@@ -1,13 +1,13 @@
-// 
+//
 // Copyright 2017 INRA
 // Authors: M. Dinh, S. Fischer
 // Last modification: 2017-09-19
-// 
-// 
+//
+//
 // Licensed under the GNU General Public License.
 // You should have received a copy of the GNU General Public License
 // along with BiPSim.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 
 
 /**
@@ -73,17 +73,17 @@ class CellState
    * @param name Name of element (optional).
    */
   void store (SimulatorInput* element, const std::string& name = "");
-  
+
   /**
    * @brief Change volume parameters.
    * @param base_volume Minimal volume value.
    * @param modifiers Names of chemicals influencing volume (may be empty).
-   * @param modifier_weights Weight of chemicals influencing volume 
+   * @param modifier_weights Weight of chemicals influencing volume
    *  (may be empty).
-   * @details Volume is given by base_volume + 
+   * @details Volume is given by base_volume +
    *  sum (modifier_weights_i * modifiers_i->number()).
    */
-  void set_volume_parameters (double base_volume, 
+  void set_volume_parameters (double base_volume,
 			      const std::vector <std::string>& modifiers,
 			      const std::vector <double>& modifier_weights);
 
@@ -105,12 +105,12 @@ class CellState
    */
   template <class T>
     T* find (const std::string& name) const;
-  
+
   /**
    * @brief Fetch element by name.
    * @tparam Type of element to fetch.
    * @param name Name of element.
-   * @return Reference to element corresponding to name. Throws a 
+   * @return Reference to element corresponding to name. Throws a
    *  DependencyException if required element is not found
    */
   template <typename T>
@@ -127,6 +127,20 @@ class CellState
    * @return Number of chemicals in the cell.
    */
   int number_chemicals (void) const;
+
+  /**
+   * @brief Return current volume.
+   * @return Current volume.
+   */
+  double volume (void) const;
+
+  /**
+   * @brief Return pointer to a free chemical.
+   * @param name Name of FreeChemical.
+   * @return Pointer to FreeChemical or zero if element not found.
+   */
+  FreeChemical& free_chemical (const std::string& name);
+
 
 private:
   // =================
@@ -219,7 +233,7 @@ inline T* CellState::find (const std::string& name) const
 
   BidirectionalReaction* br = _bireaction_handler.find (name);
   if (r != 0) { return dynamic_cast <T*> (br); }
-  
+
   CompositionTable* ct = _composition_table_handler.find (name);
   if (ct != 0) { return dynamic_cast <T*> (ct); }
 
@@ -248,6 +262,13 @@ inline bool CellState::update_volume (void)
   if (_volume_modifiers.size() == 0) { return false; }
   modify_volume();
   return true;
+}
+
+inline FreeChemical& CellState::free_chemical (const std::string& name)
+{
+  Chemical* c = _chemical_handler.find (name);
+  if (c == 0) { throw DependencyException (name); }
+  return *dynamic_cast <FreeChemical*> (c);
 }
 
 

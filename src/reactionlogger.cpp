@@ -108,7 +108,7 @@ void ReactionLogger::log (double simulation_time)
       _output << "\"" << _reactions[_indices[i]]->name() << "\""
 	      << "\t" << _values[_indices[i]]
 	      << " (" << 100 * _values[_indices[i]] / number_reactions
-	      << "%%)\n"; 
+	      << "%)\n"; 
     }
 }
 

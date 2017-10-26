@@ -1,13 +1,13 @@
-// 
+//
 // Copyright 2017 INRA
 // Authors: M. Dinh, S. Fischer
 // Last modification: 2017-09-19
-// 
-// 
+//
+//
 // Licensed under the GNU General Public License.
 // You should have received a copy of the GNU General Public License
 // along with BiPSim.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 
 
 /**
@@ -45,7 +45,7 @@ class FreeChemical : public Chemical
   //
   // Not needed for this class (use of compiler-generated versions)
   /** @brief Default constructor. */
-  FreeChemical (void) : _constant (false) {}
+  FreeChemical (void) : _constant (false), _ignored_variation (0) {}
 
   // (3-0 rule: either define all 3 following or none of them)
   // /* @brief Copy constructor. */
@@ -59,27 +59,49 @@ class FreeChemical : public Chemical
   //  Public Methods - Commands
   // ===========================
   //
-  // redefined from Chemical  
-  void add (int quantity) { if (!_constant) Chemical::add (quantity); }
-  void remove (int quantity) { if (!_constant) Chemical::remove (quantity); }
-  
+  // redefined from Chemical
+  void add (int quantity) {
+    if (!_constant)
+      { Chemical::add (quantity); }
+    else
+      { _ignored_variation += quantity; }
+  }
+  void remove (int quantity) {
+    if (!_constant)
+      { Chemical::remove (quantity); }
+    else
+      { _ignored_variation -= quantity; }
+  }
+
   /**
-   * @brief Specify whether chemical's concentration should change over time. 
-   * @param is_constant If set to true, all add and remove 
+   * @brief Specify whether chemical's concentration should change over time.
+   * @param is_constant If set to true, all add and remove
    *  commands will be ignored.
    */
   void set_constant (bool is_constant) { _constant = is_constant; }
+
+  /**
+   * @brief Reset counter recording add/record events for constant chemicals.
+   */
+  void reset_ignored_variation (void) { _ignored_variation = 0; }
 
   // ============================
   //  Public Methods - Accessors
   // ============================
   //
   /**
-   * @brief Accessor to flag specifying if chemical has constant concentration. 
+   * @brief Accessor to flag specifying if chemical has constant concentration.
    * @return True if chemical has constant concentartion (i.e. it ignores all
    *  add and remove commands).
    */
   bool is_constant (void) const { return _constant; }
+
+  /**
+   * @brief Return number of molecules added/removed while constant.
+   * @return Integer reflecting add() and remove() commands that were
+   *  ignored because the chemical was defined as constant.
+   */
+  int ignored_variation (void) const { return _ignored_variation; }
 
 private:
   // =================
@@ -93,6 +115,8 @@ private:
   //
   /** @brief Whether chemical has constant concentration or not. */
   bool _constant;
+  /** @brief Number of molecules added/removed while constant. */
+  int _ignored_variation;
 };
 
 // ======================

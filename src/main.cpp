@@ -1,13 +1,13 @@
-// 
+//
 // Copyright 2017 INRA
 // Authors: M. Dinh, S. Fischer
 // Last modification: 2017-09-19
-// 
-// 
+//
+//
 // Licensed under the GNU General Public License.
 // You should have received a copy of the GNU General Public License
 // along with BiPSim.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 
 /**
  * @file main.cpp
@@ -36,7 +36,7 @@
  * @brief Program initiation.
  */
 int main (int argc, char *argv[])
-{ 
+{
   // read parameters
   std::string param_file;
   if (argc > 1)
@@ -49,7 +49,7 @@ int main (int argc, char *argv[])
   if (param_file != "")
     {
       clock_t t = clock();
-      try 
+      try
 	{
 	  Simulation simulation (param_file);
 	  simulation.run();
