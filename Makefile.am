@@ -4,6 +4,10 @@
 # the subdirectories of the project to go into
 SUBDIRS = src tests
 
+if HAVE_PYTHON_BINDING
+SUBDIRS += python
+endif
+
 ACLOCAL_AMFLAGS = -I m4
 
 # add sample directory to distribution
@@ -25,4 +29,3 @@ dist-hook:
 
 # boost
 #EXTRA_DIST = bootstrap
-
