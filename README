@@ -128,6 +128,23 @@ cd path/to/boost_1_65_1
 sudo ./b2 install
 ```
 
+If you prefer using Boost locally, run
+```
+cd path/to/boost_1_65_1
+./bootstrap.sh --with-libraries=test,random,python
+./b2
+```
+
+*With a local installation*, when running configure, you need to specify
+the path to the local installation
+```
+cd path/to/bipsim
+./configure BOOST_ROOT=path/to/boost_1_65_1 LDFLAGS="-Wl,-R,path/to/boost_1_65_1/stage/lib"
+```
+
+If you are an expert and know of a better way to deal with a local boost
+installation, please let us know ;)
+
 
 Built With
 ----------
@@ -151,4 +168,3 @@ This project is licensed under the GPLv3 License - see the [COPYING](COPYING) fi
 
 Acknowledgments
 ---------------
-

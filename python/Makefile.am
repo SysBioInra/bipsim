@@ -3,13 +3,8 @@
 #         FLAGS         #
 #########################
 #
-#$(PYTHON_CPPFLAGS)
-#$(PYTHON_LIBS)
-#$(PYTHON_EXTRA_LDFLAGS)
-#$(PYTHON_EXTRA_LIBS)
-
 AM_CPPFLAGS = -I$(top_srcdir)/src -fPIC $(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS)
-AM_LDFLAGS = 
+AM_LDFLAGS =
 
 #########################
 # THE PROGRAMS TO BUILD #

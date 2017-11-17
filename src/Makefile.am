@@ -3,12 +3,11 @@
 # THE PROGRAMS TO BUILD
 ###############################################################################
 
-AM_CPPFLAGS = -fPIC $(BOOST_CPPFLAGS)
+AM_CPPFLAGS = $(BOOST_CPPFLAGS)
 AM_LDFLAGS = $(BOOST_LDFLAGS)
 
 # library containing all the source files
-lib_LTLIBRARIES = libbipsim.la
-libbipsim_la_LDFLAGS = -version-info 0:0:0
+noinst_LTLIBRARIES = libbipsim.la
 
 # the program to build (the names of the final binaries)
 bin_PROGRAMS = bipsim
@@ -21,7 +20,7 @@ bipsim_LDADD = libbipsim.la
 # utility files
 libbipsim_la_SOURCES = \
 	biasedwheel.cpp randomhandler.cpp chemicallogger.cpp \
-	reactionlogger.cpp doublestrandlogger.cpp 
+	reactionlogger.cpp doublestrandlogger.cpp
 
 # factories
 libbipsim_la_SOURCES += boundunitfactory.cpp
@@ -96,7 +95,7 @@ include_HEADERS += bindingsite.h bindingsitefamily.h switch.h
 # sequence related sources
 include_HEADERS += \
 	chemicalsequence.h doublestrand.h partialstrand.h \
-	sequenceoccupation.h sitegroup.h 
+	sequenceoccupation.h sitegroup.h
 
 # table sources
 include_HEADERS += \
@@ -107,7 +106,7 @@ include_HEADERS += \
 	builder.h eventhandler.h eventbuilder.h event.h \
 	inputline.h interpreter.h handler.h inputdata.cpp inputdata.h \
 	parser.h reactantbuilder.h reactionbuilder.h simulation.h \
-	simulationparams.h simulatorinput.h tablebuilder.h 
+	simulationparams.h simulatorinput.h tablebuilder.h
 
 # solver sources
 include_HEADERS += \
