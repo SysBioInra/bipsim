@@ -63,6 +63,8 @@ AC_C_INLINE
 AM_CONDITIONAL([HAVE_BOOST], [test "x${boost}" = xyes])
 AM_CONDITIONAL([HAVE_UNIT_TESTS], [test "x${unit_tests}" = xyes])
 AM_CONDITIONAL([HAVE_INTEGRATION_TESTS], [test "x${integration_tests}" = xyes])
+AM_CONDITIONAL([HAVE_PYTHON_BINDING], [test "x${python_binding}" = xyes])
+
 AM_COND_IF([HAVE_BOOST],
 	   [AX_BOOST_BASE(
 		 [1.41],
@@ -77,19 +79,6 @@ if test "x${boost}" = xyes; then
 	if test "x${python_binding}" = xyes; then
 		AX_BOOST_PYTHON
 	fi
-fi
-
-# Python
-AM_CONDITIONAL([HAVE_PYTHON_BINDING], [test "x${python_binding}" = xyes])
-if test "x${python_binding}" = xyes; then
-	AM_PATH_PYTHON([2.7])
-	AC_PATH_PROG([PYTHON_CONFIG], [python$PYTHON_VERSION-config python-config], no)
-	if test "x${PYTHON_CONFIG}" = xno; then
-		AC_MSG_ERROR([Python explicitly required and python-config not found])
-	else
-		PYTHON_INCLUDES=`$PYTHON_CONFIG --includes`
-	fi
-	AC_SUBST(PYTHON_INCLUDES)
 fi
 
 # add approriate define flags
