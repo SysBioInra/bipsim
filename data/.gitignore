@@ -1,0 +1,8 @@
+.cache/
+input/
+log.txt
+proteins.txt
+src/.cache/
+src/__pycache__/
+src/tests/.cache
+src/tests/__pycache__/

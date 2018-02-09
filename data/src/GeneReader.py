@@ -25,59 +25,46 @@ class Gene:
         return '{} [{}:{}]'.format(self.name, self.rbs_start, self.end)
 
 
+class ColumnIndices(object):
+
+    def __init__(self, header):
+        self.name = header.index('name')
+        self.bsu = header.index('BSU')
+        self.start = header.index('start')
+        self.end = header.index('end')
+        self.rbs_start = header.index('RBSstart')
+        self.rbs_end = header.index('RBSend')
+        self.sense = header.index('brin_DNA')
+        self.sequence = header.index('seq')
+        self.aa_seq = header.index('aaseq')
+        self.TU = header.index('TUs')
+        self.type = header.index('gene_category')
+
+
 class GeneReader:
+
     def __init__(self, input_stream, dna_length, log_stream=None):
         parser = csv.reader(input_stream, delimiter='\t')
-        header = parser.next()
-        name_index = header.index('name')
-        bsu_index = header.index('BSU')
-        start_index = header.index('start')
-        end_index = header.index('end')
-        rbs_start_index = header.index('RBSstart')
-        rbs_end_index = header.index('RBSend')
-        sense_index = header.index('brin_DNA')
-        sequence_index = header.index('seq')
-        aa_seq_index = header.index('aaseq')
-        TU_index = header.index('TUs')
-        type_index = header.index('gene_category')
+        header = next(parser)
+        indices = ColumnIndices(header)
         self.genes = []
-        no_RBS = []
-        invalid_RBS = []
-        long_RBS = []
+        self._no_RBS = []
+        self._invalid_RBS = []
+        self._long_RBS = []
         invalid_start = []
         invalid_stop = []
         invalid_sequence = []
         invalid_aa_seq = []
         for r in parser:
-            if r[type_index] != 'CDS':
+            if r[indices.type] != 'CDS':
                 continue
-            name = r[name_index]
-            bsu = r[bsu_index]
-            position = [int(r[start_index]), int(r[end_index])]
-            assert(position[0] < position[1])
-            sense = int(r[sense_index])
-            if sense != 1:
-                self._invert_position(position, dna_length)
-
-            # read RBS info
-            rbs = [int(r[rbs_start_index]), int(r[rbs_end_index])]
-            if rbs[0] == rbs[1] == 0:
-                no_RBS.append(name)
-                rbs[0] = position[0] - 21
-            else:
-                if sense != 1:
-                    self._invert_position(rbs, dna_length)
-                if rbs[0] > position[0]:
-                    invalid_RBS.append(name)
-                    rbs[0] = position[0] - 21
-                if rbs[0] < position[0] - 50:
-                    long_RBS.append(name)
-                    rbs[0] = position[0] - 21
-            rbs[1] = position[0] + 2
+            name, bsu, position, sense = \
+                self._extract_base_info(indices, dna_length)
+            rbs = self._extract_rbs(indices, position, dna_length)
 
             # check sequence
-            sequence = r[sequence_index].strip()
-            aa_seq = r[aa_seq_index].strip()
+            sequence = r[indices.sequence].strip()
+            aa_seq = r[indices.aa_seq].strip()
             assert(len(sequence) == (position[1] - position[0] + 1))
             if not self._is_valid_sequence(sequence):
                 invalid_sequence.append(name)
@@ -92,8 +79,8 @@ class GeneReader:
                 continue
 
             # read TUs
-            if (r[TU_index] != ''):
-                TUs = map(str.strip, r[TU_index].split(','))
+            if (r[indices.TU] != ''):
+                TUs = map(str.strip, r[indices.TU].split(','))
             else:
                 TUs = []
 
@@ -122,6 +109,43 @@ class GeneReader:
             msg = 'Genes with invalid aa sequence (they were excluded): '
             log_stream.write(msg + ', '.join(invalid_aa_seq) + '.\n\n')
 
+    def _get_base_info(self, indices):
+        name = r[indices.name]
+        bsu = r[indices.bsu]
+        position = [int(r[indices.start]), int(r[indices.end])]
+        assert(position[0] < position[1])
+        sense = int(r[indices.sense])
+        if sense != 1:
+            position = self._invert_position(position, dna_length)
+        return name, bsu, position, sense
+
+    def _invert_position(self, position, dna_length):
+        return [dna_length - position[0] + 1, dna_length - position[1] + 1]
+
+    def _extract_rbs(self, indices, position, dna_length):
+        [int(r[indices.rbs_start]), int(r[indices.rbs_end])]
+        if self._is_undefined_rbs(rbs):
+            no_RBS.append(name)
+            rbs[0] = self._default_rba_start(position)
+        else:
+            if sense != 1:
+                rbs = self._invert_position(rbs, dna_length)
+            if rbs[0] > position[0]:
+                invalid_RBS.append(name)
+                rbs[0] = self._default_rba_start(position)
+            if rbs[0] < position[0] - 50:
+                long_RBS.append(name)
+                rbs[0] = self._default_rba_start(position)
+        rbs[1] = position[0] + 2
+        return rbs
+
+    def _is_undefined_rbs(self, rbs):
+        return rbs[0] == rbs[1] == 0
+
+    def _default_rba_start(self, position):
+        return position[0] - 21
+
+
     def _is_valid_start_codon(self, sequence):
         start_codon = sequence[:3]
         return start_codon in ['atg', 'ctg', 'gtg', 'ttg']
@@ -141,8 +165,3 @@ class GeneReader:
             if self._is_valid_stop_codon(c):
                 return False
         return True
-
-    def _invert_position(self, position, dna_length):
-        tmp = dna_length - position[1] + 1
-        position[1] = dna_length - position[0] + 1
-        position[0] = tmp
