@@ -1,0 +1,9 @@
+params['SEED'] = '0'
+params['INITIAL_TIME'] = '0'
+params['FINAL_TIME'] = '1000'
+params['INPUT_FILES'] = ['input.in']
+params['OUTPUT_DIR'] = 'output'
+params['OUTPUT_STEP'] = '100'
+params['OUTPUT_ENTITIES'] = []
+params['DRAWING_ALGORITHM'] = 'hybrid'
+params['HYBRID_BASE_RATE'] = '1e-6'
