@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import subprocess
 import os.path
 
-from ncascade import copasi, sbml
+from src import copasi, sbml, bipsim
 
 
 class NCascade(object):
@@ -26,6 +26,12 @@ class NCascade(object):
             self.chemicals[0].initial_value = initial_value
 
     def to_bipsim(self, output_dir):
+        bipsim.write_run_script(output_dir)
+        params = bipsim.Params()
+        params.set_max_time(self.length)
+        params.set_output_entities([self.chemicals[0].id,
+                                    self.chemicals[-1].id])
+        params.write(output_dir)
         with open(self._bipsim_input_file(output_dir), 'w') as output:
             output.write('\n'.join(c.to_bipsim_format()
                                    for c in self.chemicals))

@@ -2,7 +2,7 @@
 from __future__ import absolute_import, division, print_function
 from lxml import etree
 
-from ncascade.copasi import CopasiTask, CopasiReport
+from src.copasi import CopasiTask, CopasiReport
 
 
 EXPECTED_COPASI_TASK = """<Task key="Task_benchmark" name="Time-Course" type="timeCourse" scheduled="true" updateModel="false">
@@ -31,14 +31,6 @@ EXPECTED_COPASI_REPORT = """<Report key="Report_benchmark" name="Time, Particle 
   <Table printTitle="1">
     <Object cn="CN=Root,Model=NoName,Reference=Time"/>
     <Object cn="CN=Root,Model=NoName,Vector=Compartments[cytosol],Vector=Metabolites[A_0],Reference=ParticleNumber"/>
-    <Object cn="CN=Root,Model=NoName,Vector=Compartments[cytosol],Vector=Metabolites[A_1],Reference=ParticleNumber"/>
-    <Object cn="CN=Root,Model=NoName,Vector=Compartments[cytosol],Vector=Metabolites[A_2],Reference=ParticleNumber"/>
-    <Object cn="CN=Root,Model=NoName,Vector=Compartments[cytosol],Vector=Metabolites[A_3],Reference=ParticleNumber"/>
-    <Object cn="CN=Root,Model=NoName,Vector=Compartments[cytosol],Vector=Metabolites[A_4],Reference=ParticleNumber"/>
-    <Object cn="CN=Root,Model=NoName,Vector=Compartments[cytosol],Vector=Metabolites[A_5],Reference=ParticleNumber"/>
-    <Object cn="CN=Root,Model=NoName,Vector=Compartments[cytosol],Vector=Metabolites[A_6],Reference=ParticleNumber"/>
-    <Object cn="CN=Root,Model=NoName,Vector=Compartments[cytosol],Vector=Metabolites[A_7],Reference=ParticleNumber"/>
-    <Object cn="CN=Root,Model=NoName,Vector=Compartments[cytosol],Vector=Metabolites[A_8],Reference=ParticleNumber"/>
     <Object cn="CN=Root,Model=NoName,Vector=Compartments[cytosol],Vector=Metabolites[A_9],Reference=ParticleNumber"/>
   </Table>
 </Report>
