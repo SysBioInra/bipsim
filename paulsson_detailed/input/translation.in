@@ -1,0 +1,140 @@
+#####################
+# Translation input #
+#####################
+FreeChemical 30S 1 CONSTANT
+FreeChemical 50S 18000 CONSTANT
+FreeChemical EFG 15000
+FreeChemical RF 4000
+FreeChemical tRNA_fM_c 0 CONSTANT
+FreeChemical EtRNA_A_ca 16000 CONSTANT
+FreeChemical EtRNA_C_ca 8000 CONSTANT
+FreeChemical EtRNA_D_ca 8000 CONSTANT
+FreeChemical EtRNA_E_ca 8000 CONSTANT
+FreeChemical EtRNA_F_ca 8000 CONSTANT
+FreeChemical EtRNA_G_ca 16000 CONSTANT
+FreeChemical EtRNA_H_ca 8000 CONSTANT
+FreeChemical EtRNA_I_ca 12000 CONSTANT
+FreeChemical EtRNA_K_ca 8000 CONSTANT
+FreeChemical EtRNA_L_ca 24000 CONSTANT
+FreeChemical EtRNA_M_ca 4000 CONSTANT
+FreeChemical EtRNA_N_ca 8000 CONSTANT
+FreeChemical EtRNA_P_ca 16000 CONSTANT
+FreeChemical EtRNA_Q_ca 8000 CONSTANT
+FreeChemical EtRNA_R_ca 24000 CONSTANT
+FreeChemical EtRNA_S_ca 24000 CONSTANT
+FreeChemical EtRNA_T_ca 16000 CONSTANT
+FreeChemical EtRNA_V_ca 16000 CONSTANT
+FreeChemical EtRNA_W_ca 4000 CONSTANT
+FreeChemical EtRNA_Y_ca 8000 CONSTANT
+
+# not a real chemical, used to count production
+FreeChemical protein_tracker
+
+###################
+# tRNA activation #
+###################
+FreeChemical tRNA_fM 0 CONSTANT
+FreeChemical tRNA_A 0 CONSTANT
+FreeChemical tRNA_C 0 CONSTANT
+FreeChemical tRNA_D 0 CONSTANT
+FreeChemical tRNA_E 0 CONSTANT
+FreeChemical tRNA_F 0 CONSTANT
+FreeChemical tRNA_G 0 CONSTANT
+FreeChemical tRNA_H 0 CONSTANT
+FreeChemical tRNA_I 0 CONSTANT
+FreeChemical tRNA_K 0 CONSTANT
+FreeChemical tRNA_L 0 CONSTANT
+FreeChemical tRNA_M 0 CONSTANT
+FreeChemical tRNA_N 0 CONSTANT
+FreeChemical tRNA_P 0 CONSTANT
+FreeChemical tRNA_Q 0 CONSTANT
+FreeChemical tRNA_R 0 CONSTANT
+FreeChemical tRNA_S 0 CONSTANT
+FreeChemical tRNA_T 0 CONSTANT
+FreeChemical tRNA_V 0 CONSTANT
+FreeChemical tRNA_W 0 CONSTANT
+FreeChemical tRNA_Y 0 CONSTANT
+
+FreeChemical EFTud 0 CONSTANT
+
+# RNAs were set to act as constant chemicals,
+# we skip tRNA activation reactions.
+
+##########################
+# Translation initiation #
+##########################
+FreeChemical IF2d 0 CONSTANT
+FreeChemical fMet2a 3000 CONSTANT
+BoundChemical m30S
+BoundChemical m30S2a
+BoundChemical translocating_70S
+
+SequenceBinding 30S m30S RBS
+ChemicalReaction fMet2a -1 m30S -1 m30S2a 1 rates 10 0
+ChemicalReaction m30S2a -1 50S -1 translocating_70S 1 IF2d 1 Pi 1 tRNA_fM 1 rates 10 0
+
+##########################
+# Translation elongation #
+##########################
+BoundChemical stalled_ribosome
+BoundChemical 70S
+BoundChemical pre_translocation_70S
+BoundChemical Et70S_A
+BoundChemical Et70S_C
+BoundChemical Et70S_D
+BoundChemical Et70S_E
+BoundChemical Et70S_F
+BoundChemical Et70S_G
+BoundChemical Et70S_H
+BoundChemical Et70S_I
+BoundChemical Et70S_K
+BoundChemical Et70S_L
+BoundChemical Et70S_M
+BoundChemical Et70S_N
+BoundChemical Et70S_P
+BoundChemical Et70S_Q
+BoundChemical Et70S_R
+BoundChemical Et70S_S
+BoundChemical Et70S_T
+BoundChemical Et70S_V
+BoundChemical Et70S_W
+BoundChemical Et70S_Y
+
+# translocation
+ChemicalReaction pre_translocation_70S -1 EFG -1 GTP -1 translocating_70S 1 EFG 1 GDP 1 Pi 1 rates 150 0 
+Translocation translocating_70S 70S stalled_ribosome 3 150
+
+# tRNA loading
+LoadingTable EtRNA_loading GCA EtRNA_A_ca Et70S_A 0.002, GCC EtRNA_A_ca Et70S_A 0.002, GCG EtRNA_A_ca Et70S_A 0.002, GCU EtRNA_A_ca Et70S_A 0.002, UGC EtRNA_C_ca Et70S_C 0.002, UGU EtRNA_C_ca Et70S_C 0.002, GAC EtRNA_D_ca Et70S_D 0.002, GAU EtRNA_D_ca Et70S_D 0.002, GAA EtRNA_E_ca Et70S_E 0.002, GAG EtRNA_E_ca Et70S_E 0.002, UUC EtRNA_F_ca Et70S_F 0.002, UUU EtRNA_F_ca Et70S_F 0.002, GGA EtRNA_G_ca Et70S_G 0.002, GGC EtRNA_G_ca Et70S_G 0.002, GGG EtRNA_G_ca Et70S_G 0.002, GGU EtRNA_G_ca Et70S_G 0.002, CAC EtRNA_H_ca Et70S_H 0.002, CAU EtRNA_H_ca Et70S_H 0.002, AUA EtRNA_I_ca Et70S_I 0.002, AUC EtRNA_I_ca Et70S_I 0.002, AUU EtRNA_I_ca Et70S_I 0.002, AAA EtRNA_K_ca Et70S_K 0.002, AAG EtRNA_K_ca Et70S_K 0.002, UUA EtRNA_L_ca Et70S_L 0.002, UUG EtRNA_L_ca Et70S_L 0.002, CUA EtRNA_L_ca Et70S_L 0.002, CUC EtRNA_L_ca Et70S_L 0.002, CUG EtRNA_L_ca Et70S_L 0.002, CUU EtRNA_L_ca Et70S_L 0.002, AUG EtRNA_M_ca Et70S_M 0.002, AAC EtRNA_N_ca Et70S_N 0.002, AAU EtRNA_N_ca Et70S_N 0.002, CCA EtRNA_P_ca Et70S_P 0.002, CCC EtRNA_P_ca Et70S_P 0.002, CCG EtRNA_P_ca Et70S_P 0.002, CCU EtRNA_P_ca Et70S_P 0.002, CAA EtRNA_Q_ca Et70S_Q 0.002, CAG EtRNA_Q_ca Et70S_Q 0.002, CGA EtRNA_R_ca Et70S_R 0.002, CGC EtRNA_R_ca Et70S_R 0.002, CGG EtRNA_R_ca Et70S_R 0.002, CGU EtRNA_R_ca Et70S_R 0.002, AGA EtRNA_R_ca Et70S_R 0.002, AGG EtRNA_R_ca Et70S_R 0.002, UCA EtRNA_S_ca Et70S_S 0.002, UCC EtRNA_S_ca Et70S_S 0.002, UCG EtRNA_S_ca Et70S_S 0.002, UCU EtRNA_S_ca Et70S_S 0.002, AGC EtRNA_S_ca Et70S_S 0.002, AGU EtRNA_S_ca Et70S_S 0.002, ACA EtRNA_T_ca Et70S_T 0.002, ACC EtRNA_T_ca Et70S_T 0.002, ACG EtRNA_T_ca Et70S_T 0.002, ACU EtRNA_T_ca Et70S_T 0.002, GUA EtRNA_V_ca Et70S_V 0.002, GUC EtRNA_V_ca Et70S_V 0.002, GUG EtRNA_V_ca Et70S_V 0.002, GUU EtRNA_V_ca Et70S_V 0.002, UGG EtRNA_W_ca Et70S_W 0.002, UAC EtRNA_Y_ca Et70S_Y 0.002, UAU EtRNA_Y_ca Et70S_Y 0.002, UAA RF stalled_ribosome 1, UAG RF stalled_ribosome 1, UGA RF stalled_ribosome 1
+ProductLoading 70S EtRNA_loading
+
+# transpeptidation
+ChemicalReaction Et70S_A -1 pre_translocation_70S 1 tRNA_A 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_C -1 pre_translocation_70S 1 tRNA_C 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_D -1 pre_translocation_70S 1 tRNA_D 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_E -1 pre_translocation_70S 1 tRNA_E 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_F -1 pre_translocation_70S 1 tRNA_F 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_G -1 pre_translocation_70S 1 tRNA_G 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_H -1 pre_translocation_70S 1 tRNA_H 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_I -1 pre_translocation_70S 1 tRNA_I 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_K -1 pre_translocation_70S 1 tRNA_K 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_L -1 pre_translocation_70S 1 tRNA_L 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_M -1 pre_translocation_70S 1 tRNA_M 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_N -1 pre_translocation_70S 1 tRNA_N 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_P -1 pre_translocation_70S 1 tRNA_P 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_Q -1 pre_translocation_70S 1 tRNA_Q 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_R -1 pre_translocation_70S 1 tRNA_R 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_S -1 pre_translocation_70S 1 tRNA_S 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_T -1 pre_translocation_70S 1 tRNA_T 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_V -1 pre_translocation_70S 1 tRNA_V 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_W -1 pre_translocation_70S 1 tRNA_W 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_Y -1 pre_translocation_70S 1 tRNA_Y 1 EFTud 1 Pi 1 rates 150 0
+
+###########################
+# Translation termination #
+###########################
+BoundChemical empty_ribosome
+
+Release stalled_ribosome empty_ribosome 70S proteins 150
+ChemicalReaction empty_ribosome -1 30S 1 50S 1 protein_tracker 1 RF 1 rates 150 0
+

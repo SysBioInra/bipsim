@@ -1,0 +1,72 @@
+#######################
+# Transcription input #
+#######################
+FreeChemical RNAP 1000
+FreeChemical SigA 1000
+FreeChemical SigB
+FreeChemical SigD
+FreeChemical SigEF
+FreeChemical SigGF
+FreeChemical SigH
+FreeChemical SigI
+FreeChemical SigK
+FreeChemical SigL
+FreeChemical SigWXY
+FreeChemical Sig-
+FreeChemical Mg2+ 1000
+FreeChemical NutA 100
+# not a real chemical: only used to count production.
+FreeChemical rna_tracker
+
+################################
+# Transcription pre-initiation #
+################################
+FreeChemical RNAP_SigA
+FreeChemical RNAP_SigB
+FreeChemical RNAP_SigD
+FreeChemical RNAP_SigEF
+FreeChemical RNAP_SigGF
+FreeChemical RNAP_SigH
+FreeChemical RNAP_SigI
+FreeChemical RNAP_SigK
+FreeChemical RNAP_SigL
+FreeChemical RNAP_SigWXY
+FreeChemical RNAP_Sig-
+
+ChemicalReaction RNAP -1 SigA -1 RNAP_SigA 1 rates 1 1
+
+############################
+# Transcription initiation #
+############################
+BoundChemical bound_RNAP_SigA
+BoundChemical stable_RNAP_SigA
+BoundChemical stable_RNAP
+
+SequenceBinding RNAP_SigA bound_RNAP_SigA promoter_SigA
+ChemicalReaction bound_RNAP_SigA -1 stable_RNAP_SigA 1 rates 1 0
+ChemicalReaction stable_RNAP_SigA -1 stable_RNAP 1 SigA 1 rates 1 0
+
+############################
+# Transcription elongation #
+############################
+BoundChemical loaded_RNAP
+BoundChemical stalled_RNAP
+BoundChemical translocating_RNAP
+
+LoadingTable NTP_loading A UTP loaded_RNAP 0.005, C GTP loaded_RNAP 0.005, G CTP loaded_RNAP 0.005, T ATP loaded_RNAP 0.005
+ProductLoading stable_RNAP NTP_loading
+ChemicalReaction loaded_RNAP -1 Mg2+ -2 translocating_RNAP 1 PPi 1 Mg2+ 2 rates 500 0
+Translocation translocating_RNAP stable_RNAP stalled_RNAP 1 50
+
+#############################
+# Transcription termination #
+#############################
+BoundChemical empty_RNAP
+BoundChemical terminating_RNAP
+BoundChemical continuing_RNAP
+
+Switch hairpin stable_RNAP terminating_RNAP
+Release terminating_RNAP empty_RNAP continuing_RNAP rnas 100
+ChemicalReaction empty_RNAP -1 NutA -1 NutA 1 RNAP 1 rna_tracker 1 rates 100 0
+ProductLoading continuing_RNAP NTP_loading
+

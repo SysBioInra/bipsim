@@ -1,0 +1,16 @@
+ChemicalSequence seq sequence AAAAA 1
+FreeChemical A 100 CONSTANT
+BoundChemical B
+BindingSite binding_motif seq 1 1 1 0 1
+
+SequenceBinding A B binding_motif
+
+BoundChemical C
+Switch test_switch B C
+SwitchSite seq 1 test_switch
+
+BoundChemical D
+Switch test_switch_2 C D
+SwitchSite seq 4 test_switch_2
+
+Translocation C C C 1 100
