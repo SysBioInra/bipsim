@@ -240,7 +240,7 @@ class TranslationExport(object):
         trans_fmt = ('Translocation {0} {1} {1} 50 '
                      + str(self.params.rbs_clearance) + '\n')
         elongation_fmt = ('ChemicalReaction {} -1 {} 30S 1 50S 1 '
-                          '{} 1 protein_tracker 1 rates {} 0\n')
+                          '{} 1 protein_tracker 1 rates {:.12g} 0\n')
         for TU in TUs:
             parent = TU.name
             for g in TU.genes:

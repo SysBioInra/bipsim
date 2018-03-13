@@ -90,7 +90,7 @@ class TranscriptionExport(object):
         trans_fmt = ('Translocation {0} {1} {1} 50 '
                      + str(self.params.prom_clearance) + '\n')
         release_fmt = ('ChemicalReaction {} -1 {} RNAP 1 {} 1 '
-                       'rna_tracker 1 rates {} 0\n')
+                       'rna_tracker 1 rates {:.12g} 0\n')
         for TU in TUs:
             # retrieve TU information
             parent = 'sensedna' if TU.sense == 1 else 'antisensedna'
