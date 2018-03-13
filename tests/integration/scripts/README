@@ -1,0 +1,5 @@
+
+This directory contains script that are frequently used by integration tests to compare statistics. Ideally a script should be iterable, i.e. define a generic interface for performing a precise task (e.g. comparing distributions) but implementation (what test is really used)  may vary over time WITHOUT NEEDING TO REWRITE ALL INTEGRATION TESTS.
+
+Scripts are:
+ - 

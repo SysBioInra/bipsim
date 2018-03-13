@@ -1,0 +1,22 @@
+
+SCENARIO
+--------
+A missing tRNA necessary to create a protein block the translation process.
+
+INPUT
+-----
+ - genetic code
+ - translation-like process
+ - one mRNA using a codon loading a tRNA whose concentration is 0.
+ - several ribosomes.
+
+OUTPUT
+------
+Number of proteins produced.
+
+VALIDATION METRICS
+------------------
+Number of proteins should be 0. If simulation is run until all ribosomes are jammed, total reaction rate should reach 0.
+
+NOTES
+-----

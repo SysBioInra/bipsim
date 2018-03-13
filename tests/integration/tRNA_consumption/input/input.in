@@ -1,0 +1,43 @@
+
+# chemicals used in the system
+FreeChemical ribosome 1
+BoundChemical stalled_ribosome
+FreeChemical idle_ribosome
+BoundChemical 70S
+BoundChemical loaded_70S
+
+# tRNAs and release factors
+FreeChemical tRNA_A 
+FreeChemical tRNA_C 
+FreeChemical tRNA_D 
+FreeChemical tRNA_E 
+FreeChemical tRNA_F 100
+FreeChemical tRNA_G 
+FreeChemical tRNA_H 
+FreeChemical tRNA_I 
+FreeChemical tRNA_K 
+FreeChemical tRNA_L 
+FreeChemical tRNA_M 
+FreeChemical tRNA_N 
+FreeChemical tRNA_P 
+FreeChemical tRNA_Q 
+FreeChemical tRNA_R 
+FreeChemical tRNA_S 
+FreeChemical tRNA_T 
+FreeChemical tRNA_V 
+FreeChemical tRNA_W 
+FreeChemical tRNA_Y 
+FreeChemical RF
+
+# table use for codon anticodin mapping
+LoadingTable tRNA_loading UUU tRNA_F loaded_70S 1, UUC tRNA_F loaded_70S 1, UUA tRNA_L loaded_70S 1, UUG tRNA_L loaded_70S 1, CUU tRNA_L loaded_70S 1, CUC tRNA_L loaded_70S 1, CUA tRNA_L loaded_70S 1, CUG tRNA_L loaded_70S 1, AUU tRNA_I loaded_70S 1, AUC tRNA_I loaded_70S 1, AUA tRNA_I loaded_70S 1, AUG tRNA_M loaded_70S 1, GUU tRNA_V loaded_70S 1, GUC tRNA_V loaded_70S 1, GUA tRNA_V loaded_70S 1, GUG tRNA_V loaded_70S 1, UCU tRNA_S loaded_70S 1, UCC tRNA_S loaded_70S 1, UCA tRNA_S loaded_70S 1, UCG tRNA_S loaded_70S 1, CCU tRNA_P loaded_70S 1, CCC tRNA_P loaded_70S 1, CCA tRNA_P loaded_70S 1, CCG tRNA_P loaded_70S 1, ACU tRNA_T loaded_70S 1, ACC tRNA_T loaded_70S 1, ACA tRNA_T loaded_70S 1, ACG tRNA_T loaded_70S 1, GCU tRNA_A loaded_70S 1, GCC tRNA_A loaded_70S 1, GCA tRNA_A loaded_70S 1, GCG tRNA_A loaded_70S 1, UAU tRNA_Y loaded_70S 1, UAC tRNA_Y loaded_70S 1, CAU tRNA_H loaded_70S 1, CAC tRNA_H loaded_70S 1, CAA tRNA_Q loaded_70S 1, CAG tRNA_Q loaded_70S 1, AAU tRNA_N loaded_70S 1, AAC tRNA_N loaded_70S 1, AAA tRNA_K loaded_70S 1, AAG tRNA_K loaded_70S 1, GAU tRNA_D loaded_70S 1, GAC tRNA_D loaded_70S 1, GAA tRNA_E loaded_70S 1, GAG tRNA_E loaded_70S 1, UGU tRNA_C loaded_70S 1, UGC tRNA_C loaded_70S 1, UGG tRNA_W loaded_70S 1, CGU tRNA_R loaded_70S 1, CGC tRNA_R loaded_70S 1, CGA tRNA_R loaded_70S 1, CGG tRNA_R loaded_70S 1, AGU tRNA_S loaded_70S 1, AGC tRNA_S loaded_70S 1, AGA tRNA_R loaded_70S 1, AGG tRNA_R loaded_70S 1, GGU tRNA_G loaded_70S 1, GGC tRNA_G loaded_70S 1, GGA tRNA_G loaded_70S 1, GGG tRNA_G loaded_70S 1, UAA RF stalled_ribosome 1, UAG RF stalled_ribosome 1, UGA RF stalled_ribosome 1
+
+# mRNA is 10 UUU codons and a stop codon
+ChemicalSequence mRNA sequence UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUGA 1
+BindingSite RBS mRNA 1 1 10 0 1
+
+# reactions
+SequenceBinding ribosome 70S RBS
+ProductLoading 70S tRNA_loading
+Translocation loaded_70S 70S stalled_ribosome 3 10
+ChemicalReaction stalled_ribosome -1 idle_ribosome 1 rates 1 0

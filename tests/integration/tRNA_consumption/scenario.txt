@@ -1,0 +1,27 @@
+
+SCENARIO
+--------
+
+Right amount of metabolites is consumed in a translation-like process.
+
+INPUT
+-----
+
+ - genetic code (codon to tRNA mapping).
+ - translation process with simplified loading + translocation steps.
+ - one ribosome that is inactivated at the end of translation.
+ - tRNAs
+ - mRNA with a predefined codon composition.
+
+OUTPUT
+------
+
+Metabolite concentrations at the end of simulation (when all reactions have been performed).
+
+VALIDATION METRICS
+------------------
+
+Number of metabolites consumed must strictly match codon composition of mRNA.
+
+NOTES
+-----

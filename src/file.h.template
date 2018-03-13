@@ -1,0 +1,79 @@
+
+/**
+ * @file FILE.h
+ * @brief Header for the ClassName class.
+ * @authors Marc Dinh, Stephan Fischer
+ */
+
+// Multiple include protection
+//
+#ifndef CLASS_NAME_H
+#define CLASS_NAME_H
+
+// ==================
+//  General Includes
+// ==================
+//
+
+// ==================
+//  Project Includes
+// ==================
+//
+
+// ======================
+//  Forward declarations
+// ======================
+//
+#include "forwarddeclarations.h"
+
+/**
+ * @brief BRIEF DESCRIPTION OF CLASS
+ *
+ * DETAILED DESCRIPTION OF CLASS
+ */
+class ClassName
+{
+ public:
+  // ==========================
+  //  Constructors/Destructors
+  // ==========================
+  //
+  // Not needed for this class (use of compiler-generated versions)
+  // /* @brief Constructor. */
+  // ClassName (void);
+  // (3-0 rule: either define all 3 following or none of them)
+  // /* @brief Copy constructor. */
+  // ClassName (const ClassName& other);
+  // /* @brief Assignment operator. */
+  // ClassName& operator= (const ClassName& other);
+  // /* @brief Destructor. */
+  // ~ClassName (void);
+
+  // ===========================
+  //  Public Methods - Commands
+  // ===========================
+  //
+
+  // ============================
+  //  Public Methods - Accessors
+  // ============================
+  //
+
+private:
+  // =================
+  //  Private Methods
+  // =================
+  //
+
+  // ============
+  //  Attributes
+  // ============
+  //  
+};
+
+// ======================
+//  Inline declarations
+// ======================
+//
+
+#endif // CLASS_NAME_H

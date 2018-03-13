@@ -1,0 +1,42 @@
+
+/**
+ * @file FILE.cpp
+ * @brief Implementation of the ClassName class.
+ * @authors Marc Dinh, Stephan Fischer
+ */
+
+// ==================
+//  General Includes
+// ==================
+//
+
+// ==================
+//  Project Includes
+// ==================
+//
+#include "FILE.h"
+
+// ==========================
+//  Constructors/Destructors
+// ==========================
+//
+// Not needed for this class (use of compiler-generated versions)
+// ClassName::ClassName (void);
+// ClassName::ClassName (const ClassName& other);
+// ClassName& ClassName::operator= (const ClassName& other);
+// ClassName::~ClassName (void);
+
+// ===========================
+//  Public Methods - Commands
+// ===========================
+//
+
+// ============================
+//  Public Methods - Accessors
+// ============================
+//
+
+// =================
+//  Private Methods
+// =================
+//
