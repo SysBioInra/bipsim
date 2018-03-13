@@ -1,9 +1,11 @@
 """Module reading TU information from subtilis data set."""
 
+from __future__ import absolute_import, division, print_function
+
 import csv
 
 
-class TU:
+class TU(object):
     def __init__(self, name, position, sequence, sense, sigma, genes):
         self.name = name
         self.start = position[0]
@@ -57,7 +59,7 @@ class TU:
 class TUReader:
     def __init__(self, input_stream, dna):
         parser = csv.reader(input_stream, delimiter='\t')
-        header = parser.next()
+        header = next(parser)
         name_index = header.index('name')
         start_index = header.index('start')
         end_index = header.index('end')
@@ -82,7 +84,7 @@ class TUReader:
                 sequence = c_dna[position[0]-1:position[1]-1]
             sigma = r[sigma_index]
             if (r[gene_index] != ''):
-                genes = map(str.strip, r[gene_index].split(','))
+                genes = [word.strip() for word in r[gene_index].split(',')]
             else:
                 genes = []
             self.TUs.append(TU(name, position, sequence, sense, sigma, genes))
@@ -109,8 +111,8 @@ class TUReader:
         for TU_1 in self.TUs:
             for TU_2 in self.TUs:
                 if self._overlaps(TU_1, TU_2):
-                    print TU_1.name_and_size() + ' overlaps ' \
-                        + TU_2.name_and_size() + '.'
+                    print(TU_1.name_and_size() + ' overlaps '
+                          + TU_2.name_and_size() + '.')
 
     def _overlaps(self, TU_1, TU_2):
         # we consider that two TUs overlap if they share some bases

@@ -205,7 +205,7 @@ def simulation_parameters(data, parameters):
         transcription.initial_values = {k + '_rna': v[0]
                                         for k, v in initial_values.items()}
         translation.rbs = {r.bsu: (r.rbs, 0) for r in rates}
-        translation.degradation = rates[0].prot_deg
+        translation.degradation = float(rates[0].prot_deg)
         translation.initial_values = {k: v[1]
                                       for k, v in initial_values.items()}
 

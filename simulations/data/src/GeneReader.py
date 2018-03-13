@@ -1,5 +1,7 @@
 """Module reading gene/protein information from subtilis data set."""
 
+from __future__ import absolute_import, division, print_function
+
 import csv
 
 
