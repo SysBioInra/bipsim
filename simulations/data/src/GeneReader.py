@@ -41,21 +41,22 @@ class GeneReader(object):
             self._long_RBS.append(self.gene.name)
 
     def _check_sequence(self):
-        if not self.gene.has_valid_sequence_length():
+        if (not self.gene.has_valid_sequence_length() or
+                self.gene.contains_premature_stop_codon()):
             self._invalid_sequence.append(self.gene.name)
+            return
+        if not self.gene.is_aa_sequence_consistent_with_sequence():
+            self._invalid_aa_seq.append(self.gene.name)
+            return
         if not self.gene.has_valid_start_codon():
             self._invalid_start.append(self.gene.name)
         if not self.gene.has_valid_stop_codon():
             self._invalid_stop.append(self.gene.name)
-        if self.gene.contains_premature_stop_codon():
-            self._invalid_sequence.append(self.gene.name)
-        if not self.gene.is_aa_sequence_consistent_with_sequence():
-            self._invalid_aa_seq.append(self.gene.name)
 
     def _log_errors(self, log_stream):
         if log_stream:
             log_stream.write(self._rbs_errors() + '\n\n'
-                             + self._sequence_errors())
+                             + self._sequence_errors() + '\n\n')
 
     def _rbs_errors(self):
         return '\n\n'.join((
@@ -170,10 +171,13 @@ class Gene(object):
     def set_rbs_at_valid_location(self):
         if (self.is_rbs_after_start_codon() or
                 self.is_rbs_too_far_before_stop_codon()):
-            self.set_rbs_at_default_location()
+            self.set_rbs_start_at_default_location()
+        self.reset_rbs_end()
 
-    def set_rbs_at_default_location(self):
+    def set_rbs_start_at_default_location(self):
         self.rbs_start = self.start - 21
+
+    def reset_rbs_end(self):
         self.rbs_end = self.start + 2
 
     def is_rbs_after_start_codon(self):
