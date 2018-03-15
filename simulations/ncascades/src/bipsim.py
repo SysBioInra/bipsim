@@ -2,7 +2,7 @@
 from __future__ import absolute_import, division, print_function
 import os.path
 
-EXE_NAME = '$HOME/travail/simulateur/src/bipsim'
+EXE_NAME = 'bipsim'
 
 
 def write_run_script(output_dir):

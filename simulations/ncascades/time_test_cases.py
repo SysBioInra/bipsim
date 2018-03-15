@@ -23,8 +23,15 @@ def time_case(directory):
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     time_output = process.communicate()[1]
     os.chdir(current_dir)
-    return float(time_output.strip().split()[2])
+    return user_time_old_format(time_output)
 
+
+def user_time_old_format(output):
+    return float(output[:4])
+
+
+def user_time_new_format(output):
+    return float(output.strip().split()[2])
 
 if __name__ == '__main__':
     main()

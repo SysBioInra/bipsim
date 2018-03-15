@@ -4,7 +4,7 @@ import os.path
 from lxml import etree
 
 
-EXE_NAME = '/Applications/COPASI/CopasiSE'
+EXE_NAME = 'CopasiSE'
 
 
 def write_run_script(output_dir, input_file):
