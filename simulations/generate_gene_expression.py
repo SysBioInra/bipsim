@@ -3,7 +3,7 @@
 from __future__ import absolute_import, division, print_function
 from subprocess import call
 
-from generate_simulator_files import export_simulation_data, read_data
+from simgenerator.simulation_exporter import export_simulation_data, read_data
 
 
 def main():

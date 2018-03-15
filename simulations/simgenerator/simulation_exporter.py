@@ -22,19 +22,6 @@ SimulationParameters = namedtuple(
     )
 
 
-def main():
-    """Export files for MyBacteria."""
-    import sys
-    if len(sys.argv) == 4:
-        data = read_data()
-        parameters = sys.argv[1:4]
-        export_simulation_data(data, parameters)
-    else:
-        print('ERROR: run program with arguments:\n'
-              '\tDATA_SET PROCESS_AGGREGATION_LEVEL '
-              'METABOLISM_AGGREGATION_LEVEL')
-
-
 def read_data():
     """Import subtilis data for dna, rnas and proteins."""
     input_dir = 'data'

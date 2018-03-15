@@ -5,7 +5,7 @@ from __future__ import absolute_import, division, print_function
 from os import path
 from collections import namedtuple
 
-from generate_simulator_files import export_simulation_data, read_data
+from simgenerator.simulation_exporter import export_simulation_data, read_data
 
 Rates = namedtuple('Rates', 'bsu promoter rna_deg rbs prot_deg')
 
