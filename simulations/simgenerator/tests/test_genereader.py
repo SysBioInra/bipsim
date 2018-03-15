@@ -1,7 +1,7 @@
 
 from io import StringIO
 
-from src.GeneReader import GeneReader
+from simgenerator.GeneReader import GeneReader
 
 
 class SampleData(object):

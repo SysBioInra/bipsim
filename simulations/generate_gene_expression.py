@@ -19,11 +19,11 @@ def gene_expression():
     full_set = ['detailed', 'stacked', 'constant']
     quick_set = ['stacked', 'constant']
     params += [('AN', 'detailed', m) for m in full_set]
-    target_dir += ['../gene_expression/detailed_' + m for m in full_set]
+    target_dir += ['gene_expression/detailed_' + m for m in full_set]
     params += [('AN', 'hybrid', m) for m in quick_set]
-    target_dir += ['../gene_expression/hybrid_' + m for m in quick_set]
+    target_dir += ['gene_expression/hybrid_' + m for m in quick_set]
     params += [('AN', 'aggregated', m) for m in quick_set]
-    target_dir += ['../gene_expression/aggregated_' + m for m in quick_set]
+    target_dir += ['gene_expression/aggregated_' + m for m in quick_set]
     return params, target_dir
 
 

@@ -5,14 +5,14 @@ from __future__ import absolute_import, division, print_function
 import os.path
 from collections import namedtuple
 
-from src.TUreader import TUReader, TU
-from src.GeneReader import GeneReader
-from src.replicationexport import ReplicationExport
-from src.transcriptionexport import TranscriptionExport
-from src.translationexport import TranslationExport
-from src.metabolismexport import MetabolismExport
-from src import (replicationparams, transcriptionparams,
-                 translationparams, metabolismparams)
+from simgenerator.TUreader import TUReader, TU
+from simgenerator.GeneReader import GeneReader
+from simgenerator.replicationexport import ReplicationExport
+from simgenerator.transcriptionexport import TranscriptionExport
+from simgenerator.translationexport import TranslationExport
+from simgenerator.metabolismexport import MetabolismExport
+from simgenerator import (replicationparams, transcriptionparams,
+                          translationparams, metabolismparams)
 
 
 Rates = namedtuple('Rates', 'bsu promoter rna_deg rbs prot_deg')
@@ -37,7 +37,7 @@ def main():
 
 def read_data():
     """Import subtilis data for dna, rnas and proteins."""
-    input_dir = '../data'
+    input_dir = 'data'
     # open global log file
     log_file = open('log.txt', 'w')
 
@@ -66,7 +66,7 @@ def read_data():
 
 def read_rates():
     """Read rna and protein production and degradation rates."""
-    input_dir = '../data'
+    input_dir = 'data'
     with open(os.path.join(input_dir, 'parametre_simulation.csv')) as f:
         # skip header
         next(f)

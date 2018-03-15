@@ -1,7 +1,7 @@
 """Classes exporting transcription files for MyBacteria."""
 
 from __future__ import absolute_import, division, print_function
-from src.lineformat import header, free_chemical, bound_chemical
+from simgenerator.lineformat import header, free_chemical, bound_chemical
 
 
 class TranscriptionExport(object):

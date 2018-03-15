@@ -17,19 +17,19 @@ def main():
         export_simulation_data(data, p, t)
     # generate minimal paulsson
     rates, initial_values = read_rates()
-    export_simulation(rates, initial_values, '../paulsson/minimal/input')
+    export_simulation(rates, initial_values, 'paulsson/minimal/input')
 
 
 def paulsson_non_minimal():
     params = [('paulsson', 'detailed', 'constant'),
               ('paulsson', 'aggregated', 'constant')]
-    target_dir = ['../paulsson/' + m for m in ['detailed', 'aggregated']]
+    target_dir = ['paulsson/' + m for m in ['detailed', 'aggregated']]
     return params, target_dir
 
 
 def read_rates():
     """Read rna and protein production and degradation rates."""
-    input_dir = '../data'
+    input_dir = 'data'
     with open(path.join(input_dir, 'parametre_simulation.csv')) as f:
         # skip header
         next(f)
