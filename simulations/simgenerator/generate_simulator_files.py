@@ -59,10 +59,6 @@ def read_data():
     known_bsus = [r[0] for r in rates]
     known_genes = [g for g in gene_reader.genes if g.bsu in known_bsus]
     gene_TUs = adjust_TUs_to_genes(known_genes, dna)
-    with open('proteins.txt', 'w') as f:
-        prot_names = [g.name + '_' + g.bsu for g in known_genes]
-        TU_names = [TU.name for TU in gene_TUs]
-        f.write(' '.join(TU_names + prot_names) + '\n')
     # close log file
     log_file.close()
     return TU_reader.TUs, gene_TUs, rates, initial_values
