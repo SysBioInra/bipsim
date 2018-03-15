@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import, division, print_function
 
+import os.path
 from collections import namedtuple
 
 from src.TUreader import TUReader, TU
@@ -36,17 +37,18 @@ def main():
 
 def read_data():
     """Import subtilis data for dna, rnas and proteins."""
+    input_dir = '../data'
     # open global log file
     log_file = open('log.txt', 'w')
 
     # read input files
-    dna_file = open('input/dna.txt', 'r')
+    dna_file = open(os.path.join(input_dir, 'dna.txt'), 'r')
     dna = dna_file.readline().strip()
     dna_file.close()
-    gene_file = open('input/genes.txt', 'r')
+    gene_file = open(os.path.join(input_dir, 'genes.txt'), 'r')
     gene_reader = GeneReader(gene_file, len(dna), log_file)
     gene_file.close()
-    tu_file = open('input/TUs.txt', 'r')
+    tu_file = open(os.path.join(input_dir, 'TUs.txt'), 'r')
     TU_reader = TUReader(tu_file, dna)
     tu_file.close()
     # associate genes to TUs and store TUs
@@ -68,7 +70,8 @@ def read_data():
 
 def read_rates():
     """Read rna and protein production and degradation rates."""
-    with open('input/parametre_simulation.csv') as f:
+    input_dir = '../data'
+    with open(os.path.join(input_dir, 'parametre_simulation.csv')) as f:
         # skip header
         next(f)
         rates = []
@@ -82,20 +85,20 @@ def read_rates():
     return rates, initial_values
 
 
-def export_simulation_data(data, parameters):
+def export_simulation_data(data, parameters, target_dir):
     """Write simulation files."""
     # get parameters
     params = simulation_parameters(data, parameters)
 
     # write files
-    with open('output/replication.in', 'w') as f:
+    with open(os.path.join(target_dir, 'input/replication.in'), 'w') as f:
         if params.replication.export:
             replication = ReplicationExport(params.replication)
             f.write(replication.input())
             f.write(replication.initiation())
             f.write(replication.elongation())
     transcription = TranscriptionExport(params.transcription)
-    with open('output/rnas.in', 'w') as f:
+    with open(os.path.join(target_dir, 'input/rnas.in'), 'w') as f:
         f.write(transcription.transcription_units(
             params.TUs, params.transcription.promoters,
             ))
@@ -105,7 +108,7 @@ def export_simulation_data(data, parameters):
         f.write(transcription.initial_values(
             params.TUs, params.transcription.initial_values
         ))
-    with open('output/transcription.in', 'w') as f:
+    with open(os.path.join(target_dir, 'input/transcription.in'), 'w') as f:
         f.write(transcription.input())
         f.write(transcription.pre_initiation())
         f.write(transcription.initiation())
@@ -113,13 +116,13 @@ def export_simulation_data(data, parameters):
         f.write(transcription.termination())
         f.write(transcription.aggregated_elongation(params.aggregated_TUs))
     translation = TranslationExport(params.translation)
-    with open('output/proteins.in', 'w') as f:
+    with open(os.path.join(target_dir, 'input/proteins.in'), 'w') as f:
         f.write(translation.proteins(params.TUs, params.translation.rbs))
         f.write(translation.degradation(params.TUs))
         f.write(translation.initial_values(
             params.TUs, params.translation.initial_values
         ))
-    with open('output/translation.in', 'w') as f:
+    with open(os.path.join(target_dir, 'input/translation.in'), 'w') as f:
         f.write(translation.input())
         f.write(translation.tRNA_activation())
         f.write(translation.pre_initiation())
@@ -127,7 +130,7 @@ def export_simulation_data(data, parameters):
         f.write(translation.elongation())
         f.write(translation.termination())
         f.write(translation.aggregated_elongation(params.aggregated_TUs))
-    with open('output/metabolites.in', 'w') as f:
+    with open(os.path.join(target_dir, 'input/metabolites.in'), 'w') as f:
         metabolism = MetabolismExport(params.metabolism)
         f.write(metabolism.input())
         f.write(metabolism.pseudo_metabolism())

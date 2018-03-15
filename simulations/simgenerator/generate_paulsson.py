@@ -5,20 +5,32 @@ from __future__ import absolute_import, division, print_function
 from os import path
 from collections import namedtuple
 
+from generate_simulator_files import export_simulation_data, read_data
+
 Rates = namedtuple('Rates', 'bsu promoter rna_deg rbs prot_deg')
 
 
 def main():
     """Export files for MyBacteria."""
-    import sys
-    output_dir = sys.argv[1]
+    data = read_data()
+    for p, t in zip(*paulsson_non_minimal()):
+        export_simulation_data(data, p, t)
+    # generate minimal paulsson
     rates, initial_values = read_rates()
-    export_simulation(rates, initial_values, output_dir)
+    export_simulation(rates, initial_values, '../paulsson/minimal/input')
+
+
+def paulsson_non_minimal():
+    params = [('paulsson', 'detailed', 'constant'),
+              ('paulsson', 'aggregated', 'constant')]
+    target_dir = ['../paulsson/' + m for m in ['detailed', 'aggregated']]
+    return params, target_dir
 
 
 def read_rates():
     """Read rna and protein production and degradation rates."""
-    with open('input/parametre_simulation.csv') as f:
+    input_dir = '../data'
+    with open(path.join(input_dir, 'parametre_simulation.csv')) as f:
         # skip header
         next(f)
         rates = []
