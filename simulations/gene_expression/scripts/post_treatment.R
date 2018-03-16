@@ -2,18 +2,18 @@
 ## subdir corresponding to "standard" simulation must appear first
 input_dir = commandArgs(trailingOnly=TRUE)
 
-scripts_path = "../scripts";
-scripts = c("load_concentrations.R", "load_replication.R", "plot_concentrations.R", "plot_DNA.R");
+scripts = c("../scripts/load_concentrations.R", "../../scripts/load_replication.R",
+            "../scripts/plot_concentrations.R", "../../scripts/plot_DNA.R");
 
-for (f in scripts) source(file.path(scripts_path, f))
+for (f in scripts) source(f)
 
 output_dir = "results"
 min_time = 0
 max_time = 600
-data_conc = "concentrations.out"
+data_conc = "chemicals.out"
 data_dna = "chromosome.out"
 
-my_pdf = function (filename, w, h) { 
+my_pdf = function (filename, w, h) {
     pdf(file.path(output_dir,filename), width=w, height=h);
 }
 
@@ -24,13 +24,13 @@ min = data$sense[[1]][2]-10;
 max = data$sense[[1]][2]+1000;
 my_pdf('DNA_zoom.pdf'); plot_linear_DNA(data, min, max); dev.off();
 
-my_pdf('simulation_results.pdf', 4, 3); 
+my_pdf('simulation_results.pdf', 4, 3);
 par(mfrow=c(2,2),
-    oma = c(0,0,0,0),	
+    oma = c(0,0,0,0),
     mar = c(1,1,1,0)+1)
 
 ## plot DNA
-plot_DNA (data); 
+plot_DNA (data);
 title ("Replication status");
 
 ## load concentration information
@@ -39,7 +39,7 @@ data = data[(data['time']>=min_time) & (data['time']<=max_time),];
 time = data['time'] / 60;
 
 ## plot dNTPs
-plot_concentrations(time, data[c('dATP','dCTP','dGTP','dTTP')]); 
+plot_concentrations(time, data[c('dATP','dCTP','dGTP','dTTP')]);
 title("dNTP levels");
 
 ## plot rnas

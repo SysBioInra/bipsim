@@ -1,1 +1,1 @@
-sh ../scripts/run_AN_wo_injection.sh
+sh ../scripts/run_wo_injection.sh

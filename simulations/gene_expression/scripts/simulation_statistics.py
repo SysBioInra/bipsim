@@ -11,7 +11,7 @@ def main():
     metab = (['constant', 'stacked'] * 2 + ['constant'] * 3 +
              ['stacked'] * 3 + ['detailed'] * 3)
     tcn = ['no_tcn'] * 4 + ['no_tcn', 'tcn', 'tcn'] * 3
-    sim_names = ['AN_{}_{}_{}'.format(s, m, t)
+    sim_names = ['{}_{}_{}'.format(s, m, t)
                  for s, m, t in zip(sim_set, metab, tcn)]
     reactions, times = parse_results(sys.argv[1])
     lines = []
