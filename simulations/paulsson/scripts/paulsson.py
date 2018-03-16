@@ -110,7 +110,7 @@ def read_simulation_data(output):
         var_test = []
         for line in f:
             fields = line.rstrip().split('\t')
-            if fields[0] > min_time:
+            if float(fields[0]) > min_time:
                 nb_points += 1
                 data = numpy.fromiter((d for d in fields[3:]),
                                       'float', len(names))
@@ -124,7 +124,7 @@ def read_simulation_data(output):
     nb_genes = int(len(names) / 2)
     bsus = [n[:-4] for n in names[:nb_genes]]
     plt.plot(var_test)
-    plt.savefig('estimator.pdf')
+    plt.savefig('results/estimator.pdf')
     return (bsus, moment_1[:nb_genes], moment_1[nb_genes:],
             var[:nb_genes], var[nb_genes:])
 
