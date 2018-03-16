@@ -1,7 +1,8 @@
 
 CURR_DIR=`pwd`
 LOG_FILE=${CURR_DIR}"/log_simulations.txt"
-EXP_DIR="gene_expression/agregated_constant gene_expression/agregated_stacked gene_expression/hybrid_constant gene_expression/hybrid_stacked gene_expression/detailed_constant gene_expression/detailed_stacked gene_expression/detailed_detailed"
+#EXP_DIR="gene_expression/aggregated_constant gene_expression/aggregated_stacked gene_expression/hybrid_constant gene_expression/hybrid_stacked gene_expression/detailed_constant gene_expression/detailed_stacked gene_expression/detailed_detailed"
+EXP_DIR=paulsson/minimal
 
 rm -f $LOG_FILE
 for DIR in $EXP_DIR
