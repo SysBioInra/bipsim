@@ -1,5 +1,8 @@
 """Chemical sequences loaded into simulations"""
 
+import re
+from collections import Counter
+
 
 class Rnas(object):
     parser = re.compile(r'ChemicalSequence ([\w]+) '

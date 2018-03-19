@@ -2,9 +2,7 @@
 
 from __future__ import absolute_import, print_function, division
 
-import re
 from os import path
-from collections import Counter
 
 
 class Input(object):
