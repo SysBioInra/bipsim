@@ -2,7 +2,8 @@
 
 import sys
 
-from output_molecules import Input, Rnas, Proteins, OutputEntities
+from output_molecules import Input, OutputEntities
+from chemical_sequences import Rnas, Proteins
 
 
 def main():
