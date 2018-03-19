@@ -1,21 +1,10 @@
-"""Update output molecules."""
+"""Handle output molecules."""
 
 from __future__ import absolute_import, print_function, division
 
-import sys
 import re
 from os import path
 from collections import Counter
-
-
-def main():
-    input_ = Input(sys.argv[1])
-    rnas = Rnas(input_.path('rnas.in'))
-    proteins = Proteins(input_.path('proteins.in'))
-    test = OutputEntities(input_.path('params.in'))
-    test.add(rnas.elements)
-    test.add(proteins.unique_elements)
-    test.export()
 
 
 class Input(object):
@@ -47,9 +36,8 @@ class OutputEntities(object):
         self._entities += elements
 
     def export(self):
-        with open(self._param_file) as input_stream:
-            lines = input_stream.readlines()
-        with open(self._param_file + '.test', 'w') as output_stream:
+        lines = self._file_content()
+        with open(self._param_file, 'w') as output_stream:
             for line in lines:
                 if not self._is_output_entities_line(line):
                     output_stream.write(line)
@@ -57,8 +45,26 @@ class OutputEntities(object):
                     output_stream.write('# ' + line)
                     output_stream.write(self._formatted_entities() + '\n')
 
+    def _file_content(self):
+        with open(self._param_file) as input_stream:
+            return input_stream.readlines()
+
     def _formatted_entities(self):
         return self.PARAM_TAG + ' ' + ' '.join(self._entities)
+
+    def revert(self):
+        lines = self._file_content()
+        with open(self._param_file, 'w') as output_stream:
+            for line in lines:
+                if self._is_output_entities_line(line):
+                    pass
+                elif self._is_commented_output_entities_line(line):
+                    output_stream.write(line[2:])
+                else:
+                    output_stream.write(line)
+
+    def _is_commented_output_entities_line(self, line):
+        return line.startswith('# ' + self.PARAM_TAG)
 
 
 class Rnas(object):
@@ -79,7 +85,3 @@ class Proteins(object):
             self.elements = self.parser.findall(input_.read())
         self.count = Counter(p[0] for p in self.elements)
         self.unique_elements = set(p[0] for p in self.elements)
-
-
-if __name__ == '__main__':
-    main()
