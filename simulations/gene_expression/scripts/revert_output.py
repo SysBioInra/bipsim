@@ -2,12 +2,12 @@
 
 import sys
 
-from output_molecules import Input, OutputEntities
+from output_molecules import SimulationFiles, OutputEntities
 
 
 def main():
-    input_ = Input(sys.argv[1])
-    params = OutputEntities(input_.path('params.in'))
+    files = SimulationFiles(sys.argv[1])
+    params = OutputEntities(files.input_path('params.in'))
     params.revert()
 
 

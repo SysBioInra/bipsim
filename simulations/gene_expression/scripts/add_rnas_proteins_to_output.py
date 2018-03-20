@@ -2,15 +2,15 @@
 
 import sys
 
-from output_molecules import Input, OutputEntities
+from output_molecules import SimulationFiles, OutputEntities
 from chemical_sequences import Rnas, Proteins
 
 
 def main():
-    input_ = Input(sys.argv[1])
-    rnas = Rnas(input_.path('rnas.in'))
-    proteins = Proteins(input_.path('proteins.in'))
-    params = OutputEntities(input_.path('params.in'))
+    files = SimulationFiles(sys.argv[1])
+    rnas = Rnas(files.input_path('rnas.in'))
+    proteins = Proteins(files.input_path('proteins.in'))
+    params = OutputEntities(files.input_path('params.in'))
     params.add(rnas.elements)
     params.add(proteins.unique_elements)
     params.export()

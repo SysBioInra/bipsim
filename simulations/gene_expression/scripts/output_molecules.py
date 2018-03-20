@@ -5,12 +5,15 @@ from __future__ import absolute_import, print_function, division
 from os import path
 
 
-class Input(object):
+class SimulationFiles(object):
     def __init__(self, input_dir):
         self._input_dir = input_dir
 
-    def path(self, filename):
+    def input_path(self, filename):
         return path.join(self._input_dir, 'input', filename)
+
+    def output_path(self, filename):
+        return path.join(self._input_dir, 'output', filename)
 
 
 class OutputEntities(object):
