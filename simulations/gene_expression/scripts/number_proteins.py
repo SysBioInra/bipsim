@@ -13,10 +13,11 @@ from chemical_sequences import Proteins
 def main():
     markers = ['o', 's', '^']
     stat_list = [protein_stats(dir) for dir in sys.argv[1:]]
+    f = plt.figure()
     for stats, marker in zip(stat_list, markers[:len(stat_list)]):
         plt.scatter([s[1] for s in stats], [s[2] for s in stats],
                     facecolors='none', edgecolors='k', marker=marker)
-    plt.show()
+    f.savefig('number_proteins.pdf', bbox_inches='tight')
 
 
 def protein_stats(simulation_directory):
