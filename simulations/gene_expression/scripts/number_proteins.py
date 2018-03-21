@@ -11,14 +11,22 @@ from chemical_sequences import Proteins
 
 
 def main():
-    files = SimulationFiles(sys.argv[1])
-    chemicals = pandas.read_csv(files.output_path('chemicals.out'), sep='\t')
+    markers = ['o', 's', '^']
+    stat_list = [protein_stats(dir) for dir in sys.argv[1:]]
+    for stats, marker in zip(stat_list, markers[:len(stat_list)]):
+        plt.scatter([s[1] for s in stats], [s[2] for s in stats],
+                    facecolors='none', edgecolors='k', marker=marker)
+    plt.show()
+
+
+def protein_stats(simulation_directory):
+    files = SimulationFiles(simulation_directory)
+    chemicals = pandas.read_csv(files.output_path('chemicals.out'),
+                                sep='\t')
     final_numbers = chemicals.iloc[-1]
     proteins = Proteins(files.input_path('proteins.in'))
-    stats = [(id_, rna_number, final_numbers[id_])
-             for id_, rna_number in proteins.count.items()]
-    plt.plot([s[1] for s in stats], [s[2] for s in stats], 'bs')
-    plt.show()
+    return [(id_, rna_number, final_numbers[id_])
+            for id_, rna_number in proteins.count.items()]
 
 
 if __name__ == '__main__':
