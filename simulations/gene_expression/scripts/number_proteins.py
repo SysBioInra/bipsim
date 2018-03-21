@@ -11,23 +11,31 @@ from chemical_sequences import Proteins
 
 
 def main():
+    stat_list = [ProteinStats(dir) for dir in sys.argv[1:]]
+    number_vs_rnas(stat_list).savefig(
+        'number_proteins.pdf', bbox_inches='tight'
+    )
+
+
+def number_vs_rnas(stat_list):
+    fig = plt.figure()
     markers = ['o', 's', '^']
-    stat_list = [protein_stats(dir) for dir in sys.argv[1:]]
-    f = plt.figure()
     for stats, marker in zip(stat_list, markers[:len(stat_list)]):
-        plt.scatter([s[1] for s in stats], [s[2] for s in stats],
+        plt.scatter(stats.rnas, stats.final_numbers,
                     facecolors='none', edgecolors='k', marker=marker)
-    f.savefig('number_proteins.pdf', bbox_inches='tight')
+    return fig
 
 
-def protein_stats(simulation_directory):
-    files = SimulationFiles(simulation_directory)
-    chemicals = pandas.read_csv(files.output_path('chemicals.out'),
-                                sep='\t')
-    final_numbers = chemicals.iloc[-1]
-    proteins = Proteins(files.input_path('proteins.in'))
-    return [(id_, rna_number, final_numbers[id_])
-            for id_, rna_number in proteins.count.items()]
+class ProteinStats(object):
+    def __init__(self, simulation_directory):
+        files = SimulationFiles(simulation_directory)
+        chemicals = pandas.read_csv(files.output_path('chemicals.out'),
+                                    sep='\t')
+        final_numbers = chemicals.iloc[-1]
+        self.proteins = Proteins(files.input_path('proteins.in'))
+        self.ids = list(self.proteins.count.keys())
+        self.rnas = list(self.proteins.count.values())
+        self.final_numbers = [final_numbers[p] for p in self.ids]
 
 
 if __name__ == '__main__':
