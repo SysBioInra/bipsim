@@ -13,10 +13,10 @@ from chemical_sequences import Proteins
 def main():
     stat_list = [ProteinStats(dir) for dir in sys.argv[1:]]
     number_vs_rnas(stat_list).savefig(
-        'number_vs_rnas.pdf', bbox_inches='tight'
+        'ge_proteins_vs_rnas.pdf', bbox_inches='tight'
     )
     protein_statistics(stat_list).savefig(
-        'protein_statistics.pdf', bbox_inches='tight'
+        'ge_proteins_per_rnas.pdf', bbox_inches='tight'
     )
 
 
