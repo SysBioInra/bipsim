@@ -6,11 +6,12 @@ from collections import Counter
 
 class Rnas(object):
     parser = re.compile(r'ChemicalSequence ([\w]+) '
-                        'product_of [\w]+ [0-9]+ [0-9]+ rnas')
+                        'product_of [\w]+ ([0-9]+) ([0-9]+) rnas')
 
     def __init__(self, file):
         with open(file) as input_:
-            self.elements = self.parser.findall(input_.read())
+            elements = self.parser.findall(input_.read())
+        self.start_and_stop = {e[0]: (e[1], e[2]) for e in elements}
 
 
 class Proteins(object):

@@ -22,10 +22,10 @@ def main():
 
 def number_vs_rnas(stat_list):
     fig = plt.figure()
-    markers = ['o', 's', '^']
+    markers = ['r', 'g', 'b']
     for stats, marker in zip(stat_list, markers[:len(stat_list)]):
         plt.scatter(stats.rnas, stats.final_numbers,
-                    facecolors='none', edgecolors='k', marker=marker)
+                    facecolors=marker)
     return fig
 
 
