@@ -54,7 +54,7 @@ OUTPUT_STEP 10
 #   OUTPUT_ENTITIES name1 name2 etc.
 ################################################################################
 
-OUTPUT_ENTITIES rna_tracker protein_tracker dATP dCTP dGTP dTTP ATP CTP GTP UTP chromosome U1 U4 U5 U10 U13 U726 U727 U728 U733 U734
+OUTPUT_ENTITIES rna_tracker protein_tracker dATP dCTP dGTP dTTP ATP CTP GTP UTP chromosome U1 U4 U5 U10 U13 U726 U727 U728 U733 U734 30S 50S 70S pre_translocation_70S translocating_70S
 
 
 ################################################################################

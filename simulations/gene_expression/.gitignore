@@ -1,1 +1,6 @@
 *.pdf
+*.png
+
+time_stats.txt
+
+*_tree/
