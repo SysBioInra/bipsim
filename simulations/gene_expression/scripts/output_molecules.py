@@ -18,6 +18,7 @@ class SimulationFiles(object):
 
 class OutputEntities(object):
     PARAM_TAG = 'OUTPUT_ENTITIES'
+    OUTPUT_DIR_TAG = 'OUTPUT_DIR'
 
     def __init__(self, param_file):
         self._param_file = param_file
@@ -36,15 +37,22 @@ class OutputEntities(object):
     def add(self, elements):
         self._entities += elements
 
-    def export(self):
+    def export(self, filename):
         lines = self._file_content()
-        with open(self._param_file, 'w') as output_stream:
+        with open(filename, 'w') as output_stream:
             for line in lines:
-                if not self._is_output_entities_line(line):
-                    output_stream.write(line)
-                else:
+                if self._is_output_entities_line(line):
                     output_stream.write('# ' + line)
                     output_stream.write(self._formatted_entities() + '\n')
+                elif self._is_output_directory_line(line):
+                    output_stream.write('# ' + line)
+                    output_stream.write(self.OUTPUT_DIR_TAG + ' output/full_output\n')
+                else:
+                    output_stream.write(line)
+                    
+    def _is_output_directory_line(self, line):
+        tag = line.split(None, 1)
+        return tag and (tag[0] == self.OUTPUT_DIR_TAG)
 
     def _file_content(self):
         with open(self._param_file) as input_stream:
