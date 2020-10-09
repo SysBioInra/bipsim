@@ -20,5 +20,5 @@ class TestCase(object):
     def copasi_directory(self):
         return 'copasi_{}_{}'.format(self._length, self._initial_value)
 
-    def bipsim_directory(self):
-        return 'bipsim_{}_{}'.format(self._length, self._initial_value)
+    def bipsim_directory(self, method):
+        return 'bipsim_{}_{}_{}'.format(method, self._length, self._initial_value)

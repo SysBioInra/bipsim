@@ -11,10 +11,11 @@ from src import test_case
 def main():
     for case in test_case.read_file(sys.argv[1]):
         n_cascade = case.generate_n_cascade()
-        create_dir(case.bipsim_directory())
-        n_cascade.to_bipsim(case.bipsim_directory())
-        create_dir(case.copasi_directory())
-        n_cascade.to_copasi(case.copasi_directory())
+        for method in ["vector", "tree", "hybrid"]:
+            create_dir(case.bipsim_directory(method))
+            n_cascade.to_bipsim(case.bipsim_directory(method), method)
+        #create_dir(case.copasi_directory())
+        #n_cascade.to_copasi(case.copasi_directory())
 
 
 def create_dir(dirname):

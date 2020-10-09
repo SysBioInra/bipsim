@@ -25,9 +25,9 @@ class NCascade(object):
         if self.chemicals:
             self.chemicals[0].initial_value = initial_value
 
-    def to_bipsim(self, output_dir):
+    def to_bipsim(self, output_dir, method):
         bipsim.write_run_script(output_dir)
-        params = bipsim.Params()
+        params = bipsim.Params(method)
         params.set_max_time(self.length)
         params.set_output_entities([self.chemicals[0].id,
                                     self.chemicals[-1].id])
