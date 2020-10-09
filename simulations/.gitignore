@@ -1,5 +1,4 @@
-
-*.pyc
+.ipynb_checkpoints
 __pycache__
 
-paulsson_minimal/input/output_species.in
+log_simulations.txt
