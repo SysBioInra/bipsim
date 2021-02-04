@@ -107,7 +107,7 @@ class TranslationExport(object):
         lines.append('\n')
 
         stoichio = '1000 order 1' if is_aggregated else '1'
-        lines.append('ChemicalReaction EFTud -{0} GTP -{0} EFTua {0} GDP {0} '
+        lines.append('ChemicalReaction EFTud -{0} GTP -{0} EFTua {0} '
                      'rates 1 0\n'.format(stoichio))
         lines.append('\n')
 
@@ -210,7 +210,7 @@ class TranslationExport(object):
         lines.append('\n')
         lines.append('# transpeptidation\n')
         fmt = ('ChemicalReaction Et70S_{0} -1 pre_translocation_70S 1 '
-               'tRNA_{0} 1 EFTud 1 Pi 1 rates '
+               'tRNA_{0} 1 EFTud 1 GDP 1 Pi 1 rates '
                + str(self.params.transpeptidation) + ' 0\n')
         lines += [fmt.format(aa) for aa in self._aas]
         lines.append('\n')
