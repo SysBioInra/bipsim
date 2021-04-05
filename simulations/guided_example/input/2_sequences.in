@@ -1,0 +1,10 @@
+# Definition of linear pseudo-DNA
+TransformationTable dna2dna A T, C G, G C, T A
+DoubleStrandSequence chromosome sense_dna TAGAAAAAGCCGAAAAAAATCATAGGTGTCTCCAATAGCTGTTGTAAAAGTGTAATGGTTGGGGACACCTGTTCCAAAAAAGTTGTCCAACAGGCGAAACACCTATTCTAACACTGTTGGTAACGTTCGAGAGCAAATAAAACCATAATATAAACACAAAATTGAGAACTAATGATTAGGATGGAAAGGAGAAATAGGTGTTTCACACCTATTCAACACCTAACTAAAGTGTGTCGAACACATCTTCCAACAGGTGTT antisense_dna dna2dna LINEAR 1
+
+# Definition of one pseudo-RNA
+TransformationTable dna2rna A U, C G, G C, T A
+ProductTable rnas dna2rna
+ChemicalSequence rna_1 product_of sense_dna 10 100 rnas
+ChemicalSequence rna_2 product_of sense_dna 50 150 rnas 2
+

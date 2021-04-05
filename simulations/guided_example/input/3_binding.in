@@ -1,0 +1,6 @@
+
+BindingSite promoter sense_dna 5 15 1 0.1 10
+BindingSite promoter sense_dna 45 55 1 0.1 50
+
+BoundChemical bound_RNAP
+SequenceBinding RNAP_sigma bound_RNAP promoter

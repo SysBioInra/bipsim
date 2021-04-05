@@ -1,0 +1,21 @@
+This directory contains an example building a simplified transcription process step-by-step.
+Each step adds a new input file to the simulation model, progressively adding complexity to the model.
+To run the models, simply type:
+
+```
+bipsim <param_file_name.in>
+```
+
+replacing with parameter file corresponding to the model of interest.
+Note that the program will prompt you to create the output directory if it does not already exist.
+
+The 6 steps illustrated in the example are:
+ 1. "Free chemicals" (-> 1_params_free_chemicals.in, input/1_free_chemicals.in): binding/unbinding of the RNA polymerase (RNAP) and the sigma factor.
+ 2. "Sequences": we add a stretch of DNA including two RNA products to the model.
+ 3. "Binding": binding sites and a binding reaction specifies how the RNAP/sigma complex can bind to DNA.
+ 4. "Polymerization": we add a translocation and loading reactions, enabling the RNA to move along the DNA and synthesize the RNA by matching the DNA template with the corresponding NTP.
+ 5. "Regulation": we add a termination site and a release reaction, effectively terminating the transcription process.
+ 6. "Annotations": we add new potential RNA products to the model by annotating their position along the DNA, their promoter and their termination site.
+ 
+plot_results.R is a plotting script which can be used to visualize how molecule numbers evolve over time.
+Run `Rscript plot_results.R` in a command line (you need to have an R installation with the tidyverse package for this to work).
