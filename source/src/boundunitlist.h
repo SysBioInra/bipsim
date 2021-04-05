@@ -143,7 +143,7 @@ inline void BoundUnitList::remove (BoundUnit& unit)
   // find the position corresponding to the current list
   for (std::vector<int>::iterator i = indices.begin(); i != indices.end(); ++i)
   {
-    if (&unit == _v[*i])
+    if ((*i < _v.size()) && (&unit == _v[*i]))
     {
       unsigned int index = *i;
       // swap unit with last element if it is not the last element
