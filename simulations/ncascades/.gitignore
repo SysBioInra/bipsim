@@ -1,6 +1,7 @@
 copasi_*
 bipsim_*
 bionetgen_*
+bng_*
 
 log.out
 vector_tree.log
