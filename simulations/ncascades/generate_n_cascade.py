@@ -10,14 +10,17 @@ def main():
     case_file = "test_cases.txt"
     for case in test_case.read_file(case_file):
         n_cascade = case.generate_n_cascade()
-        for method in ["ssa", "nf"]:
-            os.makedirs(case.bionetgen_directory(method), exist_ok=True)
-            n_cascade.to_bionetgen(case.bionetgen_directory(method), method)
+        method = "ssa"
+        os.makedirs(case.bionetgen_directory(method), exist_ok=True)
+        n_cascade.to_bionetgen(case.bionetgen_directory(method), method, True)
+        method = "nf"
+        os.makedirs(case.bionetgen_directory(method), exist_ok=True)
+        n_cascade.to_bionetgen(case.bionetgen_directory(method), method, False)
         for method in ["vector", "tree", "hybrid"]:
             os.makedirs(case.bipsim_directory(method), exist_ok=True)
             n_cascade.to_bipsim(case.bipsim_directory(method), method)
-        #os.makedirs(case.copasi_directory(), exist_ok=True)
-        #n_cascade.to_copasi(case.copasi_directory())
+        os.makedirs(case.copasi_directory(), exist_ok=True)
+        n_cascade.to_copasi(case.copasi_directory())
 
 
 if __name__ == '__main__':

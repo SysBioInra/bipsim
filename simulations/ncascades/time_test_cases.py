@@ -13,20 +13,27 @@ def main():
     for case in test_case.read_file(case_file):
         for method in ["ssa", "nf"]:
             time_case(case.bionetgen_directory(method))
-        #for method in ["vector", "tree", "hybrid"]:
-        #    time_case(case.bipsim_directory(method))
-        #copasi_time = time_case(case.copasi_directory())
+        for method in ["vector", "tree", "hybrid"]:
+            time_case(case.bipsim_directory(method))
+        copasi_time = time_case(case.copasi_directory())
 
 
 def time_case(directory):
+    print(directory)
     current_dir = os.getcwd()
     os.chdir(directory)
     
     start_time = time.time()
     try:
-        result = subprocess.run(['sh', 'run.sh'], timeout = 7200)
+        result = subprocess.run(['sh', 'run.sh'], timeout = 7200, capture_output=True)
     except subprocess.TimeoutExpired:
         print(directory + " timed out.")
+    finally:
+        if result.stderr:
+            print("An error occurred (see stderr.txt)!")
+            with open(os.path.join(output_dir, "stderr.txt"), "wb") as f:
+                f.write(result.stderr)
+
     end_time = time.time()
     total_time = end_time-start_time
     with open("time.txt", "w") as f:

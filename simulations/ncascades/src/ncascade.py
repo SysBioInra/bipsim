@@ -70,7 +70,7 @@ class NCascade(object):
     def _copasi_input_file(self, output_dir):
         return os.path.join(output_dir, 'input.cps')
 
-    def to_bionetgen(self, output_dir, method):
+    def to_bionetgen(self, output_dir, method, observables=True):
         bionetgen.write_run_script(output_dir)
         with open(self._bionetgen_input_file(output_dir), 'w') as output:
             output.write('begin model\n')
@@ -86,10 +86,11 @@ class NCascade(object):
                                    for c in self.chemicals
                                    if c.initial_value>0))
             output.write('\nend seed species\n')
-            output.write('begin observables\n')
-            output.write('\n'.join(c.to_bng_observable()
-                                   for c in self.chemicals))            
-            output.write('\nend observables\n')
+            if observables:
+                output.write('begin observables\n')
+                output.write('\n'.join(c.to_bng_observable()
+                                       for c in self.chemicals))            
+                output.write('\nend observables\n')
             output.write('begin reaction rules\n')
             output.write('\n'.join(r.to_bng() for r in self.reactions))
             output.write('\nend reaction rules\n')
