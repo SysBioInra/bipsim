@@ -103,7 +103,7 @@ ChemicalReaction tRNA_V -1 ATP -1 AMP 1 PPi 1 tRNA_V_c 1 rates 1 0
 ChemicalReaction tRNA_W -1 ATP -1 AMP 1 PPi 1 tRNA_W_c 1 rates 1 0
 ChemicalReaction tRNA_Y -1 ATP -1 AMP 1 PPi 1 tRNA_Y_c 1 rates 1 0
 
-ChemicalReaction EFTud -1 GTP -1 EFTua 1 GDP 1 rates 1 0
+ChemicalReaction EFTud -1 GTP -1 EFTua 1 rates 1 0
 
 ChemicalReaction tRNA_A_c -1 EFTua -1 EtRNA_A_ca 1 rates 1 0
 ChemicalReaction tRNA_C_c -1 EFTua -1 EtRNA_C_ca 1 rates 1 0
@@ -199,26 +199,26 @@ LoadingTable EtRNA_loading GCA EtRNA_A_ca Et70S_A 0.002, GCC EtRNA_A_ca Et70S_A 
 ProductLoading 70S EtRNA_loading
 
 # transpeptidation
-ChemicalReaction Et70S_A -1 pre_translocation_70S 1 tRNA_A 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_C -1 pre_translocation_70S 1 tRNA_C 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_D -1 pre_translocation_70S 1 tRNA_D 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_E -1 pre_translocation_70S 1 tRNA_E 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_F -1 pre_translocation_70S 1 tRNA_F 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_G -1 pre_translocation_70S 1 tRNA_G 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_H -1 pre_translocation_70S 1 tRNA_H 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_I -1 pre_translocation_70S 1 tRNA_I 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_K -1 pre_translocation_70S 1 tRNA_K 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_L -1 pre_translocation_70S 1 tRNA_L 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_M -1 pre_translocation_70S 1 tRNA_M 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_N -1 pre_translocation_70S 1 tRNA_N 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_P -1 pre_translocation_70S 1 tRNA_P 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_Q -1 pre_translocation_70S 1 tRNA_Q 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_R -1 pre_translocation_70S 1 tRNA_R 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_S -1 pre_translocation_70S 1 tRNA_S 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_T -1 pre_translocation_70S 1 tRNA_T 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_V -1 pre_translocation_70S 1 tRNA_V 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_W -1 pre_translocation_70S 1 tRNA_W 1 EFTud 1 Pi 1 rates 150 0
-ChemicalReaction Et70S_Y -1 pre_translocation_70S 1 tRNA_Y 1 EFTud 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_A -1 pre_translocation_70S 1 tRNA_A 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_C -1 pre_translocation_70S 1 tRNA_C 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_D -1 pre_translocation_70S 1 tRNA_D 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_E -1 pre_translocation_70S 1 tRNA_E 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_F -1 pre_translocation_70S 1 tRNA_F 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_G -1 pre_translocation_70S 1 tRNA_G 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_H -1 pre_translocation_70S 1 tRNA_H 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_I -1 pre_translocation_70S 1 tRNA_I 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_K -1 pre_translocation_70S 1 tRNA_K 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_L -1 pre_translocation_70S 1 tRNA_L 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_M -1 pre_translocation_70S 1 tRNA_M 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_N -1 pre_translocation_70S 1 tRNA_N 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_P -1 pre_translocation_70S 1 tRNA_P 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_Q -1 pre_translocation_70S 1 tRNA_Q 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_R -1 pre_translocation_70S 1 tRNA_R 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_S -1 pre_translocation_70S 1 tRNA_S 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_T -1 pre_translocation_70S 1 tRNA_T 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_V -1 pre_translocation_70S 1 tRNA_V 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_W -1 pre_translocation_70S 1 tRNA_W 1 EFTud 1 GDP 1 Pi 1 rates 150 0
+ChemicalReaction Et70S_Y -1 pre_translocation_70S 1 tRNA_Y 1 EFTud 1 GDP 1 Pi 1 rates 150 0
 
 ###########################
 # Translation termination #

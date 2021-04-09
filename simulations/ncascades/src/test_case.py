@@ -18,7 +18,10 @@ class TestCase(object):
         return NCascade(int(self._length), int(self._initial_value))
 
     def copasi_directory(self):
-        return 'copasi_{}_{}'.format(self._length, self._initial_value)
+        return 'copasi/n_{}_{}'.format(self._length, self._initial_value)
 
-    def bipsim_directory(self):
-        return 'bipsim_{}_{}'.format(self._length, self._initial_value)
+    def bipsim_directory(self, method):
+        return 'bipsim_{}/n_{}_{}'.format(method, self._length, self._initial_value)
+
+    def bionetgen_directory(self, method):
+        return 'bng_{}/n_{}_{}'.format(method, self._length, self._initial_value)

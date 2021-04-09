@@ -1,0 +1,7 @@
+# chemical entities
+FreeChemical RNAP 10
+FreeChemical sigma_factor 20
+FreeChemical RNAP_sigma
+
+# reactions
+ChemicalReaction RNAP -1 sigma_factor -1 RNAP_sigma 1 rates 1 1

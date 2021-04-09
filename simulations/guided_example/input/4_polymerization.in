@@ -1,0 +1,12 @@
+
+FreeChemical ATP 1000
+FreeChemical CTP 1000
+FreeChemical GTP 1000
+FreeChemical UTP 1000
+BoundChemical stalled_RNAP
+BoundChemical translocating_RNAP
+
+ProductLoading bound_RNAP NTP_loading
+LoadingTable NTP_loading A UTP translocating_RNAP 0.005, C GTP translocating_RNAP 0.005, G CTP translocating_RNAP 0.005, T ATP translocating_RNAP 0.005
+
+Translocation translocating_RNAP bound_RNAP stalled_RNAP 1 50

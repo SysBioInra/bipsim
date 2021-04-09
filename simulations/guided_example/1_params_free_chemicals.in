@@ -1,0 +1,77 @@
+################################################################################
+# SEED
+# Random handler seed. Format is  
+#   SEED <integer value>
+################################################################################
+
+SEED 0
+
+################################################################################
+# INITIAL TIME 
+# Time at the beginning of simulation. Format is  
+#   INITIAL_TIME <real value>
+################################################################################
+
+INITIAL_TIME 0
+
+################################################################################
+# FINAL TIME 
+# Time at which simulation should stop. Format is  
+#   FINAL_TIME <real value>
+################################################################################
+
+FINAL_TIME 10
+
+################################################################################
+# INPUT FILES 
+# Path to input files relative to binary. Any number of files can be
+# specified. Format is 
+#   INPUT_FILES path/to/file1 path/to/file2 etc.
+################################################################################
+
+INPUT_FILES input/1_free_chemicals.in
+
+################################################################################
+# OUTPUT DIRECTORY
+# Path to output directory relative to binary. Format is 
+#   OUTPUT_DIR path/to/output/directory
+################################################################################
+
+OUTPUT_DIR output/free_chemicals
+
+################################################################################
+# OUTPUT STEP
+# Time step at which concentrations should be logged.
+# Format is
+#   OUTPUT_STEP <real value>
+################################################################################
+
+OUTPUT_STEP 0.1
+
+################################################################################
+# OUTPUT ENTITIES
+# Entities which should be logged in the output file. Format is
+#   OUTPUT_ENTITIES name1 name2 etc.
+################################################################################
+
+OUTPUT_ENTITIES RNAP sigma_factor RNAP_sigma
+
+
+################################################################################
+# DRAWING_ALGORITHM
+# Algorithm to use to determine next reaction to perform. Format is
+#   DRAWING_ALGORITHM <algorithm>
+#   HYBRID_BASE_RATE <real value>
+#
+# where <algorithm> is picked among
+#  - vector (rates stored/drawn from a vector - complexity O(N))
+#  - tree (rates stored/drawn from a tree - complexity O(logN))
+#  - hybrid (group structure using a rejection method - complexity O(1))
+#
+# HYBRID_BASE_RATE is only relevant if "hybrid" was chosen.
+################################################################################
+
+DRAWING_ALGORITHM hybrid
+
+HYBRID_BASE_RATE 1e-12
+

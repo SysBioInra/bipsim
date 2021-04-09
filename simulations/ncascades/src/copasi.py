@@ -4,7 +4,7 @@ import os.path
 from lxml import etree
 
 
-EXE_NAME = 'CopasiSE'
+EXE_NAME = '/home/fischer/myapps/copasi/COPASI-4.27.217-Linux-64bit/bin/CopasiSE'
 
 
 def write_run_script(output_dir, input_file):
@@ -88,6 +88,8 @@ class CopasiTask(object):
         result = etree.Element('Method')
         result.set('name', 'Stochastic (Gibson + Bruck)')
         result.set('type', 'DirectMethod')
+        #result.set('name', 'Stochastic (Direct method)')
+        #result.set('type', 'Stochastic')
         result.extend([
             self._create_parameter('Max Internal Steps', 'integer', '1000000'),
             self._create_parameter('Subtype', 'unsignedInteger', '2'),

@@ -1,0 +1,7 @@
+
+ChemicalSequence rna_1b product_of sense_dna 15 100 rnas
+BindingSite promoter sense_dna 10 20 1 0.1 15
+
+ChemicalSequence rna_3 product_of antisense_dna 10 100 rnas
+BindingSite promoter antisense_dna 5 15 1 0.1 10
+SwitchSite antisense_dna 101 hairpin

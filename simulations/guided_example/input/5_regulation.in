@@ -1,0 +1,18 @@
+
+# definition of termination process
+BoundChemical hairpin_RNAP
+Switch hairpin bound_RNAP hairpin_RNAP
+
+# annotation of termination sites (+1 compared to last transcribed base)
+#  - rna_1 goes from 10 to 100 -> hairpin at 101
+#  - rna 2 goes from 50 to 150 -> hairpin at 151
+SwitchSite sense_dna 101 hairpin
+SwitchSite sense_dna 151 hairpin
+
+# if the thermination site leads to a valid product, the product is released
+# and the RNAP enters termination, otherwise continue polymerization
+BoundChemical terminating_RNAP
+BoundChemical continuing_RNAP
+Release hairpin_RNAP terminating_RNAP continuing_RNAP rnas 100
+ChemicalReaction terminating_RNAP -1 RNAP_sigma 1 rates 100 0
+ProductLoading continuing_RNAP NTP_loading

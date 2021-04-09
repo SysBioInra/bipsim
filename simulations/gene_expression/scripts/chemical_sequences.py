@@ -12,6 +12,7 @@ class Rnas(object):
         with open(file) as input_:
             elements = self.parser.findall(input_.read())
         self.start_and_stop = {e[0]: (e[1], e[2]) for e in elements}
+        self.unique_elements = set(e[0] for e in elements)
 
 
 class Proteins(object):

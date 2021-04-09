@@ -12,7 +12,7 @@ def write_run_script(output_dir):
 
 
 class Params(object):
-    def __init__(self):
+    def __init__(self, method):
         self._data = {}
         self._data['SEED'] = '0'
         self._data['INITIAL_TIME'] = '0'
@@ -21,7 +21,7 @@ class Params(object):
         self._data['OUTPUT_DIR'] = '.'
         self._data['OUTPUT_STEP'] = '100'
         self._data['OUTPUT_ENTITIES'] = ''
-        self._data['DRAWING_ALGORITHM'] = 'hybrid'
+        self._data['DRAWING_ALGORITHM'] = method
         self._data['HYBRID_BASE_RATE'] = '1e-6'
 
     def set_max_time(self, time):

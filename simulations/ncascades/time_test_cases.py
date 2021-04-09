@@ -1,37 +1,45 @@
 
-from __future__ import absolute_import, division, print_function
 import sys
 import os
 import subprocess
+import time
 
 from src import test_case
 
 
 def main():
-    print('N I bipsim Copasi')
-    for case in test_case.read_file(sys.argv[1]):
-        bipsim_time = time_case(case.bipsim_directory())
+    case_file = "test_cases.txt"
+    
+    for case in test_case.read_file(case_file):
+        for method in ["ssa", "nf"]:
+            time_case(case.bionetgen_directory(method))
+        for method in ["vector", "tree", "hybrid"]:
+            time_case(case.bipsim_directory(method))
         copasi_time = time_case(case.copasi_directory())
-        print('{} {} {} {}'.format(case._length, case._initial_value,
-                                   bipsim_time, copasi_time))
 
 
 def time_case(directory):
+    print(directory)
     current_dir = os.getcwd()
     os.chdir(directory)
-    process = subprocess.Popen(['time', 'sh', 'run.sh'],
-                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    time_output = process.communicate()[1]
+    
+    start_time = time.time()
+    try:
+        result = subprocess.run(['sh', 'run.sh'], timeout = 7200, capture_output=True)
+    except subprocess.TimeoutExpired:
+        print(directory + " timed out.")
+    finally:
+        if result.stderr:
+            print("An error occurred (see stderr.txt)!")
+            with open(os.path.join(output_dir, "stderr.txt"), "wb") as f:
+                f.write(result.stderr)
+
+    end_time = time.time()
+    total_time = end_time-start_time
+    with open("time.txt", "w") as f:
+        f.write(str(total_time))
     os.chdir(current_dir)
-    return user_time_old_format(time_output)
 
-
-def user_time_old_format(output):
-    return float(output[:4])
-
-
-def user_time_new_format(output):
-    return float(output.strip().split()[2])
-
+                    
 if __name__ == '__main__':
     main()
