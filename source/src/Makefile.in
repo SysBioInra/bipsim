@@ -428,24 +428,24 @@ libbipsim_la_SOURCES = biasedwheel.cpp randomhandler.cpp \
 # exceptions
 include_HEADERS = biasedwheel.h randomhandler.h logger.h \
 	chemicallogger.h reactionlogger.h doublestrandlogger.h \
-	solverfactory.h ratemanagerfactory.h ratecontainerfactory.h \
-	boundunitfactory.h backwardreaction.h bidirectionalreaction.h \
-	chemicalreaction.h doublestrandrecruitment.h forwardreaction.h \
-	loading.h reaction.h release.h sequencebinding.h \
-	translocation.h boundchemical.h boundunit.h boundunitlist.h \
-	boundunitfilter.h familyfilter.h templatefilter.h \
-	freechemical.h chemical.h reactant.h bindingsite.h \
-	bindingsitefamily.h switch.h chemicalsequence.h doublestrand.h \
-	partialstrand.h sequenceoccupation.h sitegroup.h \
-	compositiontable.h loadingtable.h producttable.h \
-	transformationtable.h builder.h eventhandler.h eventbuilder.h \
-	event.h inputline.h interpreter.h handler.h inputdata.cpp \
-	inputdata.h parser.h reactantbuilder.h reactionbuilder.h \
-	simulation.h simulationparams.h simulatorinput.h \
-	tablebuilder.h cellstate.h constantrategroup.h \
-	manualdispatchsolver.h naivesolver.cpp naivesolver.h \
-	reactiongroup.h reactionclassification.h solver.h \
-	updatedrategroup.h ratemanager.h naiveratemanager.h \
+	forwarddeclarations.h solverfactory.h ratemanagerfactory.h \
+	ratecontainerfactory.h boundunitfactory.h backwardreaction.h \
+	bidirectionalreaction.h chemicalreaction.h \
+	doublestrandrecruitment.h forwardreaction.h loading.h \
+	reaction.h release.h sequencebinding.h translocation.h \
+	boundchemical.h boundunit.h boundunitlist.h boundunitfilter.h \
+	familyfilter.h templatefilter.h freechemical.h chemical.h \
+	reactant.h bindingsite.h bindingsitefamily.h switch.h \
+	chemicalsequence.h doublestrand.h partialstrand.h \
+	sequenceoccupation.h sitegroup.h compositiontable.h \
+	loadingtable.h producttable.h transformationtable.h builder.h \
+	eventhandler.h eventbuilder.h event.h inputline.h \
+	interpreter.h handler.h inputdata.cpp inputdata.h parser.h \
+	reactantbuilder.h reactionbuilder.h simulation.h \
+	simulationparams.h simulatorinput.h tablebuilder.h cellstate.h \
+	constantrategroup.h manualdispatchsolver.h naivesolver.cpp \
+	naivesolver.h reactiongroup.h reactionclassification.h \
+	solver.h updatedrategroup.h ratemanager.h naiveratemanager.h \
 	dependencyratemanager.h rateinvalidator.h ratevalidity.h \
 	ratecontainer.h ratevector.h updatedtotalratevector.h \
 	flyratevector.h ratetree.h ratenode.h hybridratecontainer.h \
