@@ -1,6 +1,6 @@
 *.o
 *.lo
-config.*
+config.log
 
 Makefile
 
