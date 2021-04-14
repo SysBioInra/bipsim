@@ -12,7 +12,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-You need a UNIX system running autoconf to install this software. Recent [boost](http://boost.org/) libraries are highly recommended.
+You need a UNIX system (Linux, MacOS, or Windows Subsystem for Linux) to install this software. Recent [boost](http://boost.org/) libraries are highly recommended.
 
 ### Installing
 
@@ -23,17 +23,14 @@ When in the main repository run the following commands:
 make
 ```
 
-If boost is not installed on your system, consider running (not recommended):
+If a recent boost library is not installed on your system, you can install boost by following our recommandations below (see 'Install Boost' sections below). If you prefer skipping boost installation, consider running (not recommended):
 
 ```
 ./configure --disable-boost
 make
 ```
 
-You can also install boost by following our recommandations below
-(see 'Install Boost' sections below).
-
-You can make installation system-wide by running (not necessary)
+If desired, you can make installation system-wide by running (not necessary, but allows to call bipsim from any directory without having to provid the path to the executable):
 
 ```
 sudo make install
@@ -50,7 +47,7 @@ Miniconda [here](https://docs.conda.io/en/latest/miniconda.html).
 Download the installation script that best fits your OS, then run it, for example:
 
 ```
-sh Miniconda3-py39_4.9.2-Linux-x86_64.sh
+./Miniconda3-py39_4.9.2-Linux-x86_64.sh
 ```
 
 Once the installation is done, close and reopen your console or terminal for
@@ -61,14 +58,24 @@ by default every time you open a terminal. To avoid this behavior, you can run
 conda config --set auto_activate_base false
 ```
 
-Whenever you want to access or leave your base environment you can use the following commands:
+Whenever you want to access or leave your conda environment you can use the following commands:
 
 ```
 conda activate # activate base environment
 conda deactivate # deactivate base environment
 ```
 
-To install boost, simply run
+First, install a "local" version of gcc
+
+```
+# For Linux users
+conda install -c conda-forge gcc_linux-64
+
+# For MacOS users
+conda install -c conda-forge clang_osx-64
+```
+
+then install boost
 
 ```
 conda install boost
