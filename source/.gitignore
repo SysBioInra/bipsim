@@ -1,15 +1,14 @@
 *.o
 *.lo
+config.*
 
 Makefile
-Makefile.in
 
 .deps
 .libs
 
 aclocal.m4
 autom4te.cache/
-config.*
 libtool
 ltmain.sh
 stamp-h1
