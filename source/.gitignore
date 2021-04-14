@@ -7,10 +7,8 @@ Makefile
 .deps
 .libs
 
-aclocal.m4
 autom4te.cache/
 libtool
-ltmain.sh
 stamp-h1
 
 src/bipsim
