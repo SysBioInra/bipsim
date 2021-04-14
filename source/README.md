@@ -1,4 +1,4 @@
-BiPSim: stochastic simulation of cell processes
+BiPSim: stochastic simulation of sequence-based cell processes
 ===================================================
 
 A Gillespie-based simulator used to simulate biological processes
