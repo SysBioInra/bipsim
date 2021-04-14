@@ -71,7 +71,7 @@ libbipsim_la_SOURCES += ratetree.cpp hybridratecontainer.cpp
 # utility files
 include_HEADERS = \
 	biasedwheel.h randomhandler.h logger.h chemicallogger.h \
-	reactionlogger.h doublestrandlogger.h forwarddeclarations.h
+	reactionlogger.h doublestrandlogger.h forwarddeclarations.h macros.h
 
 # factories
 include_HEADERS += \

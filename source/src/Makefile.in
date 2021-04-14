@@ -428,9 +428,9 @@ libbipsim_la_SOURCES = biasedwheel.cpp randomhandler.cpp \
 # exceptions
 include_HEADERS = biasedwheel.h randomhandler.h logger.h \
 	chemicallogger.h reactionlogger.h doublestrandlogger.h \
-	forwarddeclarations.h solverfactory.h ratemanagerfactory.h \
-	ratecontainerfactory.h boundunitfactory.h backwardreaction.h \
-	bidirectionalreaction.h chemicalreaction.h \
+	forwarddeclarations.h macros.h solverfactory.h \
+	ratemanagerfactory.h ratecontainerfactory.h boundunitfactory.h \
+	backwardreaction.h bidirectionalreaction.h chemicalreaction.h \
 	doublestrandrecruitment.h forwardreaction.h loading.h \
 	reaction.h release.h sequencebinding.h translocation.h \
 	boundchemical.h boundunit.h boundunitlist.h boundunitfilter.h \
