@@ -2,3 +2,4 @@
 __pycache__
 
 log_simulations.txt
+tbox_leader/*.pdf
