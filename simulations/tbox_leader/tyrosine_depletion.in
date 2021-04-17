@@ -1,6 +1,6 @@
-FreeChemical S 10000 CONSTANT
-ChemicalReaction tRNA_S -100 order 1 ATP -100 order 1 S -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_S_c 100 order 1 rates 1e-11 0
+FreeChemical Y 10000 CONSTANT
+ChemicalReaction tRNA_Y -100 order 1 ATP -100 order 1 Y -100 order 1 AMP 100 order 1 PPi 100 order 1 tRNA_Y_c 100 order 1 rates 1e-11 0
 
-# tyrosine depletion
-event 200 SET S 100
-event 600 SET S 10000
+# tyrosine injection and depletion
+event 200 SET Y 100
+event 600 SET Y 10000

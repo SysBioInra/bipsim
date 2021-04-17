@@ -4,6 +4,6 @@ ChemicalSequence aborted_U2303 product_of antisensedna 1175625 1177483 rnas
 
 BoundChemical tbox_RNAP
 Switch tbox_hairpin stable_RNAP tbox_RNAP
-ChemicalReaction tbox_RNAP -1 tRNA_S -1 continuing_RNAP 1 tRNA_S 1 rates 1 0
-ChemicalReaction tbox_RNAP -1 tRNA_S_c -1 terminating_RNAP 1 tRNA_S_c 1 rates 1 0
-ChemicalReaction tbox_RNAP -1 EtRNA_S_ca -1 terminating_RNAP 1 EtRNA_S_ca 1 rates 1 0
+ChemicalReaction tbox_RNAP -1 tRNA_Y -1 continuing_RNAP 1 tRNA_Y 1 rates 1 0
+ChemicalReaction tbox_RNAP -1 tRNA_Y_c -1 terminating_RNAP 1 tRNA_Y_c 1 rates 1 0
+ChemicalReaction tbox_RNAP -1 EtRNA_Y_ca -1 terminating_RNAP 1 EtRNA_Y_ca 1 rates 1 0
