@@ -7,12 +7,18 @@ cp README_archive.md $SIM_DIR/README.md
 
 mkdir $SIM_DIR/gene_expression
 EXP_DIR="aggregated_constant aggregated_stacked hybrid_constant hybrid_stacked detailed_constant detailed_stacked detailed_detailed"
-
 for DIR in $EXP_DIR
 do
     mkdir $SIM_DIR/gene_expression/$DIR
     mkdir $SIM_DIR/gene_expression/$DIR/output
     cp -r ../gene_expression/$DIR/input $SIM_DIR/gene_expression/$DIR/
+done
+EXP_DIR="detailed_constant detailed_stacked detailed_detailed"
+for DIR in $EXP_DIR
+do
+    mkdir $SIM_DIR/gene_expression/$DIR/output/normal
+    mkdir $SIM_DIR/gene_expression/$DIR/output/injection1
+    mkdir $SIM_DIR/gene_expression/$DIR/output/injection2
 done
 
 mkdir $SIM_DIR/paulsson
