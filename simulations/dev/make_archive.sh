@@ -1,6 +1,6 @@
 # run this script on a freshly checked out repo to avoid copying results file etc.
 
-SIM_DIR=simulation-1.1
+SIM_DIR=simulations-1.1
 mkdir $SIM_DIR
 
 cp README_archive.md $SIM_DIR/README.md
